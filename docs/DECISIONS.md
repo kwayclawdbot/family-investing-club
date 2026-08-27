@@ -31,3 +31,16 @@ Stack: Next.js 16 (App Router) + React 19 + Tailwind 4 + TypeScript, per plan §
 | 16 | Vote page never pre-votes for the user: tally starts at 2 of 4 and reaches the artboard's "3 of 4 · waiting on Arielle" when you tap For. |
 | 17 | Artboard 24's key numbers (P/E 34.8) win on the dossier; tap-to-learn definitions still come from the metrics fixture. |
 | 18 | Where two artboards show one screen (05/11 My Club, 07/12 Community) the lower-numbered v4/v5 board is canonical. |
+
+## Rounds 4–5 — Verified collective investing (v7) + XP & belts (v8), 2026-08-27
+| # | Decision |
+|---|---|
+| 19 | Brokerage connect is **never in onboarding**; it triggers contextually after the first Pick (sheet) and from Profile. Everything works without it. |
+| 20 | Badge language is locked: "Brokerage Connected ✓" / "Verified Owner ✓" / "Verified Holding ✓". "Verified Investor" is banned (sounds like vetted competence). |
+| 21 | Sharing defaults to the most private level; the preview card shows exactly what a club member would see for each level. Disconnect removes verification instantly. |
+| 22 | Club Portfolio has two views: **Club Model** (what we agreed) and **Verified Exposure ✓** (what consenting adults actually hold, percentages only, with completeness: "based on 3 of 4 members"). Mismatch → concentration lesson, never advice. |
+| 23 | Consensus = "what members think — opinions, not advice or a recommendation". Club consensus (with verified-owner count and model-vs-exposure) sits above the dossier; FIC consensus below it. |
+| 24 | Leaderboards: many boards, each states window / rules / data basis (practice, pick-based, brokerage-verified); adults are never ranked by dollars or account size. |
+| 25 | Five identity systems, kept separate: Belt (lifetime XP & participation) · Reputation (resolved pick accuracy) · Specialist badges · Verification (ownership, not skill) · Achievements. XP never comes from trade count, account size, risk or returns. |
+| 26 | Belt ladder: 7 levels, 5 colours, no rank names — White I/II, Yellow I/II, Blue, Purple, Black. Belt colours are identity-only, never UI accents. Ring on avatar + chip beside name everywhere; promotion is a ceremonial screen, feeds get only the chip. |
+| 27 | Sample brokerage link: "Connect securely" creates a labelled sample read-only link until a licensed aggregator is wired — never presented as a real connection. |
