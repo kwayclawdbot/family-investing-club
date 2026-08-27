@@ -1,0 +1,3 @@
+# Family Investing Club runs on the existing FTA Supabase project (zvkercqohmmeyofycbgr).
+# Apply: supabase login → supabase link --project-ref zvkercqohmmeyofycbgr → supabase db push
+project_id = "family-investing-club"
