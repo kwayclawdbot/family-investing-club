@@ -1,15 +1,17 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import type { ClubPortfolio, ClubProposal } from "@/lib/types";
+import type { ClubPortfolio, ClubProposal, VerifiedExposure } from "@/lib/types";
+import { VerifiedExposureView } from "@/components/verify/VerifiedExposure";
 import { cx } from "@/components/ui";
 import { proposalTitle, tally } from "./MyClub";
 import { ProposalStrip, ScreenHeader, TickerTile } from "./club-shared";
 import { useStored } from "./storage";
 
 /** Artboard 09 — the club's own practice portfolio: holdings link to proposals, decision journal. */
-export function ClubPortfolioView({ portfolio, proposals }: { portfolio: ClubPortfolio; proposals: ClubProposal[] }) {
+export function ClubPortfolioView({ portfolio, proposals, exposure, view: initialView = "model", connected }: { portfolio: ClubPortfolio; proposals: ClubProposal[]; exposure: VerifiedExposure; view?: "model" | "verified"; connected?: boolean }) {
   const [all, setAll] = useState(false);
+  const [view, setView] = useState<"model" | "verified">(initialView);
   const [local] = useStored<ClubProposal[]>("fic.proposals", []);
   const open = [...local, ...proposals].filter((p) => p.status === "open");
   const rows = all ? portfolio.holdings : portfolio.holdings.slice(0, 3);
@@ -19,6 +21,15 @@ export function ClubPortfolioView({ portfolio, proposals }: { portfolio: ClubPor
       <ScreenHeader backHref="/club" center title={<span className="bg-green-tint text-green rounded-[20px] px-[13px] py-[5px] text-[11px] font-black">PRACTICE · SIMULATED</span>} />
       <h1 className="mt-3 text-[20px] font-black text-ink">{portfolio.name}</h1>
       <div className="text-[11.5px] font-bold text-ink-3">No pooled money — decisions are real, dollars are practice</div>
+      <div className="mt-3 flex bg-[#EFE7D6] rounded-[13px] p-1" role="tablist" aria-label="Portfolio view">
+        {([["model", "Club Model"], ["verified", "Verified Exposure ✓"]] as const).map(([id, label]) => (
+          <button key={id} role="tab" aria-selected={view === id} onClick={() => setView(id)} className={cx("flex-1 rounded-[10px] py-2 text-[12.5px] font-black transition", view === id ? "bg-[#FFFDF7] text-ink shadow-[0_1px_3px_rgba(46,42,33,0.1)]" : "text-ink-3")}>{label}</button>
+        ))}
+      </div>
+      {view === "verified" ? (
+        <VerifiedExposureView e={exposure} connected={connected} />
+      ) : (
+      <>
       <div className="flex gap-[9px] mt-[11px]">
         <div className="flex-1 bg-card border border-line rounded-[14px] px-[13px] py-[11px]">
           <div className="text-[10px] font-extrabold text-ink-3">VALUE · YTD</div>
@@ -71,6 +82,8 @@ export function ClubPortfolioView({ portfolio, proposals }: { portfolio: ClubPor
         <Link href="/club/propose" className="flex-1 bg-card border-[1.5px] border-[#DDD4F0] text-purple-2 rounded-[12px] py-[10px] text-center text-[12px] font-black">Propose a change</Link>
         <Link href="/club/portfolio/fic-growth" className="flex-1 bg-card border-[1.5px] border-line text-ink-2 rounded-[12px] py-[10px] text-center text-[12px] font-black">Public model portfolios</Link>
       </div>
+      </>
+      )}
     </div>
   );
 }

@@ -7,7 +7,7 @@ import { SearchField } from "./SearchField";
 import { Sparkline } from "./LineChart";
 import { money, pct, tileTone } from "./format";
 
-export function CompanyList({ companies, tiles }: { companies: Company[]; tiles?: ReactNode }) {
+export function CompanyList({ companies, tiles, placeholder }: { companies: Company[]; tiles?: ReactNode; placeholder?: string }) {
   const [q, setQ] = useState("");
   const list = useMemo(() => {
     const s = q.trim().toLowerCase();
@@ -17,7 +17,7 @@ export function CompanyList({ companies, tiles }: { companies: Company[]; tiles?
 
   return (
     <>
-      <SearchField value={q} onChange={setQ} />
+      <SearchField value={q} onChange={setQ} placeholder={placeholder} />
       {!q && tiles}
       <h2 className="mt-4 text-[15px] font-black text-ink">{q ? "Results" : "Companies you're learning about"}</h2>
       <Card className="mt-2 !py-1 !px-4">

@@ -1,6 +1,8 @@
 "use client";
-import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ConnectPromptSheet } from "@/components/verify/ConnectPromptSheet";
+import { BROKERAGE_KEY, PROMPTED_KEY, readJSON } from "@/components/verify/storage";
 import type { Club, Company, Pick, PickStance } from "@/lib/types";
 import { cx } from "@/components/ui";
 import { CloseIcon, SearchIcon } from "@/components/ui/icons";
@@ -12,7 +14,15 @@ const HORIZONS: Pick["horizon"][] = ["1y", "3y", "5y+"];
 const MAX = 140;
 
 /** Artboard 13 — bottom-sheet composer over a dimmed backdrop: fast, honest, timestamped. */
-export function PickComposer({ club, companies, costco, initialSymbol }: { club: Club; companies: Company[]; costco: Quote; initialSymbol?: string }) {
+export function PickComposer(props: { club: Club; companies: Company[]; costco: Quote; initialSymbol?: string }) {
+  return (
+    <Suspense fallback={null}>
+      <PickComposerInner {...props} />
+    </Suspense>
+  );
+}
+
+function PickComposerInner({ club, companies, costco, initialSymbol }: { club: Club; companies: Company[]; costco: Quote; initialSymbol?: string }) {
   const router = useRouter();
   const universe = useMemo<Quote[]>(() => [costco, ...companies.map((c) => ({ symbol: c.symbol, name: c.name, price: c.price, changePct: c.changePct }))], [companies, costco]);
   const [q, setQ] = useState<Quote>(() => universe.find((u) => u.symbol === initialSymbol?.toUpperCase()) ?? costco);
@@ -23,6 +33,10 @@ export function PickComposer({ club, companies, costco, initialSymbol }: { club:
   const [horizon, setHorizon] = useState<Pick["horizon"]>("3y");
   const [conf, setConf] = useState<Pick["confidence"]>(3);
   const [vis, setVis] = useState<Pick["visibility"]>("club");
+  const sp = useSearchParams();
+  const previewConnect = sp.get("preview") === "connect";
+  const connectedOverride = sp.get("connected"); // proof-only render override
+  const [promptFor, setPromptFor] = useState<string | null>(previewConnect ? q.symbol : null);
   const results = universe.filter((u) => !query || u.symbol.toLowerCase().includes(query.toLowerCase()) || u.name.toLowerCase().includes(query.toLowerCase()));
 
   function share() {
@@ -31,9 +45,15 @@ export function PickComposer({ club, companies, costco, initialSymbol }: { club:
       reason: reason.trim(), horizon, confidence: conf, priceAtPick: q.price, agree: 0, notSure: 0, replies: [], visibility: vis,
     };
     write("fic.picks", [pick, ...read<Pick[]>("fic.picks", [])]);
+    // Contextual connect (artboard 01): once, after the first shared Pick — never in onboarding.
+    const connected = connectedOverride === "1" ? true : connectedOverride === "0" ? false : !!readJSON(BROKERAGE_KEY, null);
+    const prompted = !!readJSON(PROMPTED_KEY, 0);
+    if (!connected && !prompted) { setPromptFor(q.symbol); return; }
     router.push("/club");
   }
   const seg = (on: boolean) => cx("flex-1 rounded-[13px] py-[11px] text-center text-[13.5px] transition", on ? "bg-green-tint border-2 border-green-2 text-green font-black" : "bg-card border-[1.5px] border-line text-ink-3 font-extrabold");
+
+  if (promptFor) return <ConnectPromptSheet symbol={promptFor} onNotNow={() => router.push("/club")} />;
 
   return (
     <div className="absolute inset-0 z-50 bg-[#C9BFA8] flex flex-col">

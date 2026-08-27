@@ -262,6 +262,14 @@ export function MembersList({ club, onInvite }: { club: Club; onInvite: () => vo
           </div>
         ))}
       </div>
+      <Link href="/club/leaderboards" className="mt-3 flex items-center gap-[11px] rounded-[16px] border border-line bg-card px-[15px] py-[12px]">
+        <span className="w-[34px] h-[34px] rounded-[10px] bg-[#FBF3DC] flex items-center justify-center text-[17px]" aria-hidden>🏆</span>
+        <span className="flex-1 min-w-0">
+          <span className="block text-[13px] font-black text-ink">Leaderboards</span>
+          <span className="block text-[10.5px] font-bold text-ink-3">Many ways to win — not just returns</span>
+        </span>
+        <span className="font-black text-ink-4" aria-hidden>›</span>
+      </Link>
       <p className="mt-3 text-center text-[11px] font-bold text-ink-4">Roles come from the household: guardians manage kids&apos; settings in Family.</p>
     </div>
   );

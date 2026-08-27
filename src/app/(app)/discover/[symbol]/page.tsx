@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getCompany, getMetrics, getNews, getClubFeed, getWatchlist, getClub, getPicks, getProposals, getResearch, clubWatchers } from "@/lib/data";
+import { getCompany, getMetrics, getNews, getClubFeed, getWatchlist, getClub, getPicks, getProposals, getResearch, clubWatchers, getClubConsensus, getFicConsensus } from "@/lib/data";
 import { Card } from "@/components/ui";
 import { BookmarkIcon, ChevronLeft } from "@/components/ui/icons";
 import { CompanyChart } from "@/components/markets/CompanyChart";
@@ -9,6 +9,7 @@ import { NewsRow } from "@/components/markets/NewsRow";
 import { ClubSocialLayer } from "@/components/markets/ClubSocialLayer";
 import { DossierCard } from "@/components/markets/Dossier";
 import { LearnBridge } from "@/components/markets/LearnBridge";
+import { ClubConsensusCard, NoClubConsensus, FicConsensusCard, ConsensusActions } from "@/components/markets/Consensus";
 import { dossierFor } from "@/components/markets/dossier-data";
 import { resolveCompany, isSampleQuote } from "@/components/markets/companies-extra";
 import { money, pct } from "@/components/markets/format";
@@ -18,8 +19,8 @@ export default async function CompanyPage(props: PageProps<"/discover/[symbol]">
   const { symbol } = await props.params;
   const c = resolveCompany(await getCompany(symbol), symbol);
   if (!c) notFound();
-  const [metrics, news, feed, watchlist, club, picks, proposals, research] = await Promise.all([
-    getMetrics(c.symbol), getNews(), getClubFeed(), getWatchlist(), getClub(), getPicks(), getProposals(), getResearch(),
+  const [metrics, news, feed, watchlist, club, picks, proposals, research, clubCons, ficCons] = await Promise.all([
+    getMetrics(c.symbol), getNews(), getClubFeed(), getWatchlist(), getClub(), getPicks(), getProposals(), getResearch(), getClubConsensus(c.symbol), getFicConsensus(c.symbol),
   ]);
   const related = news.filter((n) => n.symbols.includes(c.symbol));
   const idea = feed.flatMap((p) => (p.kind === "idea" ? [p.idea] : [])).find((i) => i.companies.some((x) => x.symbol === c.symbol));
@@ -31,6 +32,7 @@ export default async function CompanyPage(props: PageProps<"/discover/[symbol]">
   const task = research.find((r) => r.symbol === c.symbol && r.status === "open");
   const dossier = dossierFor(c.symbol, c.name, Object.fromEntries(metrics.map((m) => [m.key, m.value])));
   const peMetric = metrics.find((m) => m.key === "pe");
+  const consensusVoters = clubCons ? clubCons.voters.map((id) => club.members.find((m) => m.id === id)).filter((m): m is NonNullable<typeof m> => !!m) : [];
 
   return (
     <div className="pt-[14px] pb-6">
@@ -44,11 +46,18 @@ export default async function CompanyPage(props: PageProps<"/discover/[symbol]">
         <span className="text-ink-4" aria-hidden><BookmarkIcon size={16} /></span>
       </div>
 
+      {/* Consensus layer — canvas v7 artboard 02 (opinions, not advice) */}
+      {clubCons ? <ClubConsensusCard c={clubCons} clubName={club.shortName} symbol={c.symbol} voters={consensusVoters} /> : <NoClubConsensus symbol={c.symbol} />}
+      {ficCons && <FicConsensusCard f={ficCons} />}
+      {(clubCons || ficCons) && <ConsensusActions symbol={c.symbol} />}
+
       {/* Private-club social layer (above the dossier) */}
       <ClubSocialLayer symbol={c.symbol} clubName={club.shortName} watchers={watchers} picks={symbolPicks} proposal={proposal} research={task} />
 
       {/* The dossier — unchanged */}
-      <DossierCard firstName={firstName} dossier={dossier} metrics={metrics} compact />
+      <div id="dossier" className="scroll-mt-4">
+        <DossierCard firstName={firstName} dossier={dossier} metrics={metrics} compact />
+      </div>
 
       {peMetric && <LearnBridge concept="P/E" minutes={4} href={peMetric.lessonHref} />}
 

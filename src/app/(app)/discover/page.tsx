@@ -1,21 +1,25 @@
 import Link from "next/link";
-import { getCompanies, getDiscover, getResearch } from "@/lib/data";
+import { getCompanies, getDiscover, getResearch, getDiscoverSignals } from "@/lib/data";
 import { Card } from "@/components/ui";
 import { CompanyList } from "@/components/markets/CompanyList";
 import { QuickTiles } from "@/components/markets/QuickTiles";
 import { DiscoverView } from "@/components/markets/DiscoverView";
+import { DiscoverSignals } from "@/components/markets/DiscoverSignals";
 import { KaiFab } from "@/components/shell/KaiFab";
 
-/** Discover (was Markets): search → quick tiles → curated categories → companies you're learning about. */
+/** Discover v2 (canvas v7): "People Like Me" signals lead; round-3 content (tiles, research strip, categories, companies) follows. */
 export default async function DiscoverPage() {
-  const [companies, categories, research] = await Promise.all([getCompanies(), getDiscover(), getResearch()]);
+  const [companies, categories, research, signals] = await Promise.all([getCompanies(), getDiscover(), getResearch(), getDiscoverSignals()]);
   const open = research.filter((r) => r.status === "open");
   return (
     <div className="pt-[14px] pb-6">
+      <h1 className="text-[21px] font-black text-ink">Discover</h1>
       <CompanyList
         companies={companies}
+        placeholder="Companies, ETFs, ideas, clubs, people…"
         tiles={
           <>
+            <DiscoverSignals s={signals} />
             <QuickTiles />
             {open.length > 0 && (
               <Link href="/discover/watchlist" className="block mt-3">
