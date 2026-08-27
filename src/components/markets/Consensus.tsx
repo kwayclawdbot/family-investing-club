@@ -30,8 +30,8 @@ export function ClubConsensusCard({ c, clubName, symbol, voters }: { c: ClubCons
     <>
       <section className="mt-3 rounded-[18px] border-2 border-green-2 bg-card px-4 py-[14px]" aria-label="Club consensus">
         <div className="flex items-center justify-between">
-          <span className="text-[12px] font-black text-green">🏠 CLUB CONSENSUS · {clubName.toUpperCase()}</span>
-          <span className="rounded-[8px] bg-green-tint px-[9px] py-[3px] text-[10px] font-black text-green">CONFIDENCE {c.confidencePct}%</span>
+          <span className="text-[11px] leading-tight font-black text-green">🏠 CLUB CONSENSUS · {clubName.toUpperCase()}</span>
+          <span className="shrink-0 whitespace-nowrap rounded-[8px] bg-green-tint px-[9px] py-[3px] text-[10px] font-black text-green">CONFIDENCE {c.confidencePct}%</span>
         </div>
         <StanceBar emoji="🟢" label="Buy" count={c.buy} total={total} color="bg-green-2" />
         <StanceBar emoji="🟡" label="Watch" count={c.watch} total={total} color="bg-gold" />

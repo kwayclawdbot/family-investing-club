@@ -47,7 +47,7 @@ const ROUTES = [
   ["belt-promotion", "/profile/belt"],
   ["xp-leaderboard", "/club/xp"],
   // round 4 — verified collective investing
-  ["connect-prompt", "/club/pick/new?connected=0"],
+  ["connect-prompt", "/club/pick/new?connected=0&preview=connect"],
   ["brokerage", "/profile/brokerage"],
   ["privacy", "/profile/privacy"],
   ["my-portfolio", "/profile/portfolio"],
