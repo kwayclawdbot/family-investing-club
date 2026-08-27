@@ -22,7 +22,8 @@ function FabWithParams() {
 function FabInner() {
   const sheet = useSheet();
   const path = usePathname();
-  const hidden = path.startsWith("/circle/"); // rooms have their own composer (board 14)
+  // rooms have their own composer (board 14); company pages carry a sticky Make a Pick bar (board 02)
+  const hidden = path.startsWith("/circle/") || /^\/discover\/[^/]+$/.test(path);
   return (
     <>
       {!sheet && !hidden && (
