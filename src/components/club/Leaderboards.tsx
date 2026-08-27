@@ -3,7 +3,10 @@ import { useState } from "react";
 import type { Club, Leaderboards as LB, LeaderRow } from "@/lib/types";
 import { cx } from "@/components/ui";
 import { Sheet } from "@/components/ui/extras";
+import Link from "next/link";
 import { MemberAvatar, ScreenHeader } from "@/components/club/club-shared";
+import { BeltChip } from "@/components/ui/belt";
+import { RingedAvatar, beltOf } from "@/components/belts/identity";
 
 /**
  * Leaderboards — many ways to win, methodology labelled (canvas v7, artboard 07).
@@ -26,6 +29,7 @@ export function Leaderboards({ club, lb }: { club: Club; lb: LB }) {
   return (
     <div className="pb-6">
       <ScreenHeader backHref="/club/members" />
+      <Link href="/club/xp" className="mt-2 inline-block text-[11px] font-extrabold text-purple-2">Looking for progression? XP board →</Link>
       <h1 className="text-[21px] font-black text-ink">Leaderboards</h1>
       <p className="mt-[2px] text-[11.5px] font-bold text-ink-3">{club.shortName} · many ways to win — not just returns</p>
 
@@ -49,8 +53,8 @@ export function Leaderboards({ club, lb }: { club: Club; lb: LB }) {
             return (
               <div key={r.memberId} className={cx("flex items-center gap-[10px] py-[9px]", i < lb.rows.length - 1 && "border-b border-paper-2")}>
                 <span className="w-5 text-center text-[12px] font-black text-ink-3" aria-label={`Rank ${r.rank}`}>{MEDAL[r.rank - 1] ?? r.rank}</span>
-                {m ? <MemberAvatar m={m} size={30} /> : <span className="w-[30px] h-[30px] rounded-full bg-line-3" />}
-                <span className="flex-1 text-[13px] font-extrabold text-ink">{r.name}{r.ageLabel ? ` · ${r.ageLabel}` : ""}</span>
+                {m ? <RingedAvatar belt={beltOf(m.id)}><MemberAvatar m={m} size={30} /></RingedAvatar> : <span className="w-[30px] h-[30px] rounded-full bg-line-3" />}
+                <span className="flex-1 min-w-0 text-[13px] font-extrabold text-ink flex items-center gap-[6px] flex-wrap">{r.name}{r.ageLabel ? ` · ${r.ageLabel}` : ""}{beltOf(r.memberId) && <BeltChip belt={beltOf(r.memberId)!} />}</span>
                 <span className={cx("rounded-[6px] px-[7px] py-[2px] text-[8.5px] font-black", BASIS[r.basis].cls)}>{r.basis}</span>
                 <span className="w-[56px] text-right text-[13px] font-black text-[#3A8C4A]">+{r.valuePct}%</span>
               </div>

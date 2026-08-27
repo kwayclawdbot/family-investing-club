@@ -7,6 +7,10 @@ import { cx } from "@/components/ui";
 import { Sheet } from "@/components/ui/extras";
 import { ChevronRight } from "@/components/ui/icons";
 import { AvatarStack, ClubToggle, InviteSheet, MemberAvatar, StanceTag, TickerTile, dots, useStoredClub } from "./club-shared";
+import { activityXp } from "@/lib/data";
+import { clubXpGoal } from "@/lib/fixtures/belts";
+import { BeltChip } from "@/components/ui/belt";
+import { RingedAvatar, beltOf, summariseBelts } from "@/components/belts/identity";
 import { NewClubEmpty, splitName } from "./NewClubEmpty";
 import { useStored } from "./storage";
 
@@ -74,6 +78,16 @@ export function MyClub({ club, visible, picks, proposals, research, activity, po
 
       {tab === "Feed" && (
         <>
+          <div className="mt-[11px] bg-card border border-line rounded-[16px] px-[15px] py-3">
+            <div className="flex justify-between items-center">
+              <span className="text-[11px] font-black text-ink-3">CLUB XP · {clubXpGoal.window}</span>
+              <span className="text-[11.5px] font-black text-green">{clubXpGoal.current} / {clubXpGoal.goal}</span>
+            </div>
+            <div className="h-[9px] rounded-[5px] bg-line-2 mt-2 overflow-hidden" role="progressbar" aria-valuenow={Math.round((clubXpGoal.current / clubXpGoal.goal) * 100)} aria-valuemin={0} aria-valuemax={100}>
+              <div className="h-full rounded-[5px] bg-green-2" style={{ width: `${Math.round((clubXpGoal.current / clubXpGoal.goal) * 100)}%` }} />
+            </div>
+            <div className="mt-[6px] text-[10.5px] font-bold text-ink-3">Cooperative goal — everyone&apos;s learning, research &amp; picks count · 🏁 milestone: {clubXpGoal.milestone}</div>
+          </div>
           <div className="flex gap-[7px] mt-[10px]" role="tablist" aria-label="Filter">
             {FILTERS.map((f) => (
               <button key={f} role="tab" aria-selected={filter === f} onClick={() => setFilter(f)} className={cx("rounded-[16px] px-[13px] py-[5px] text-[11px] transition", filter === f ? "bg-ink text-cream-text font-black" : "bg-card border border-line text-ink-3 font-extrabold")}>
@@ -94,9 +108,9 @@ export function MyClub({ club, visible, picks, proposals, research, activity, po
             <div className="mt-[9px] bg-card border border-line rounded-[16px] px-[15px] py-1">
               {(filter !== "Ideas" ? allPicks : []).map((pk, i, arr) => (
                 <Link key={pk.id} href={`/club/pick/${pk.id}`} className={cx("flex gap-[10px] py-[11px]", (i < arr.length - 1 || filter === "All") && "border-b border-paper-2")}>
-                  <MemberAvatar m={avatarFor(club, pk.authorId, pk.author)} />
+                  <RingedAvatar belt={beltOf(pk.authorId)}><MemberAvatar m={avatarFor(club, pk.authorId, pk.author)} /></RingedAvatar>
                   <div className="flex-1 min-w-0">
-                    <div className="text-[12.5px] font-bold text-[#4A4436]"><b className="font-black">{pk.author}</b> · Pick · {pk.ago}</div>
+                    <div className="text-[12.5px] font-bold text-[#4A4436] flex items-center gap-[7px] flex-wrap"><b className="font-black">{pk.author}</b>{beltOf(pk.authorId) && <BeltChip belt={beltOf(pk.authorId)!} />}<span className="text-ink-4">· Pick · {pk.ago}{activityXp.a1 && pk.id === "andwele-nvda" ? ` · +${activityXp.a1} XP` : ""}</span></div>
                     <div className="mt-[5px] bg-paper border border-line rounded-[11px] px-[11px] py-2 flex items-center gap-2">
                       <StanceTag symbol={pk.symbol} stance={pk.stance} />
                       <span className="text-[11.5px] font-bold text-ink-2 truncate">&quot;{shortQuote(pk.reason)}&quot; · {pk.horizon} · {dots(pk.confidence)}</span>
@@ -107,9 +121,9 @@ export function MyClub({ club, visible, picks, proposals, research, activity, po
               ))}
               {filter !== "Picks" && activity.filter((a) => a.kind === "research").slice(0, 1).map((a) => (
                 <div key={a.id} className="flex gap-[10px] py-[11px]">
-                  <MemberAvatar m={avatarFor(club, a.actorId, a.actor)} />
+                  <RingedAvatar belt={beltOf(a.actorId)}><MemberAvatar m={avatarFor(club, a.actorId, a.actor)} /></RingedAvatar>
                   <div className="flex-1">
-                    <div className="text-[12.5px] font-bold text-[#4A4436]"><b className="font-black">{a.actor}</b> finished <b className="font-black">Costco</b> research · {a.ago}</div>
+                    <div className="text-[12.5px] font-bold text-[#4A4436] flex items-center gap-[7px] flex-wrap"><b className="font-black">{a.actor}</b>{beltOf(a.actorId) && <BeltChip belt={beltOf(a.actorId)!} />}<span>finished <b className="font-black">Costco</b> research · {a.ago}{activityXp[a.id] ? ` · +${activityXp[a.id]} XP` : ""}</span></div>
                     {a.quote && <div className="mt-1 text-[11.5px] font-bold text-ink-2">&quot;{a.quote}&quot;</div>}
                     <Link href="/club/new?from=research" className="mt-1 inline-block text-[10.5px] font-extrabold text-purple-2">Turn into an Idea →</Link>
                   </div>
@@ -127,6 +141,18 @@ export function MyClub({ club, visible, picks, proposals, research, activity, po
                 <span className="flex-1 text-[11.5px] font-extrabold text-orange-2">Family Investing Night — {club.investingNight.when} · {club.investingNight.topic}</span>
                 <button onClick={() => setRsvp(!rsvp)} aria-pressed={rsvp} className="text-[10.5px] font-black text-orange-2">{rsvp ? "Going ✓" : "RSVP ›"}</button>
               </div>
+              <div className="mt-[10px] bg-card border border-line rounded-[16px] px-[15px] py-3">
+                <div className="text-[11px] font-black text-ink-3">MEMBERS · COLLECTIVE PROGRESSION</div>
+                <div className="flex gap-[14px] mt-[9px] items-center">
+                  {club.members.map((m) => (
+                    <RingedAvatar key={m.id} belt={beltOf(m.id)}><MemberAvatar m={m} size={34} /></RingedAvatar>
+                  ))}
+                  <span className="text-[10.5px] font-bold text-ink-3 leading-[1.4]">
+                    {summariseBelts(club.members.map((m) => beltOf(m.id)).filter((b): b is NonNullable<typeof b> => !!b)).map((line) => <span key={line} className="block">{line}</span>)}
+                  </span>
+                </div>
+              </div>
+              <p className="mt-[9px] text-center text-[10px] font-bold text-ink-4">Belt = participation &amp; progression. Pick accuracy and verified holdings live on their own layers.</p>
               <div className="mt-[9px] mb-24 text-center text-[11px] font-bold text-ink-4">🔥 Club streak: {club.streakWeeks} weeks of activity — light touch, no pressure</div>
             </>
           )}
@@ -251,10 +277,11 @@ export function MembersList({ club, onInvite }: { club: Club; onInvite: () => vo
       <div className="mt-2 bg-card border border-line rounded-[16px] px-[15px] py-1">
         {members.map((m, i) => (
           <div key={m.id} className={cx("flex items-center gap-[11px] py-[10px]", i < members.length - 1 && "border-b border-paper-2")}>
-            <MemberAvatar m={m} size={34} />
+            <RingedAvatar belt={beltOf(m.id)}><MemberAvatar m={m} size={34} /></RingedAvatar>
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-[6px]">
+              <div className="flex items-center gap-[6px] flex-wrap">
                 <span className="text-[13px] font-black text-ink">{m.name}{m.isYou ? " (you)" : ""}</span>
+                {beltOf(m.id) && <BeltChip belt={beltOf(m.id)!} />}
                 <span className={cx("rounded-[6px] px-[7px] py-[2px] text-[9.5px] font-black", roleLabel[m.role].cls)}>{roleLabel[m.role].text}</span>
               </div>
               <div className="text-[10.5px] font-bold text-ink-3">{m.level} level{m.voteGated ? ` · 🎓 ${m.gateReason}` : ""}</div>
@@ -267,6 +294,14 @@ export function MembersList({ club, onInvite }: { club: Club; onInvite: () => vo
         <span className="flex-1 min-w-0">
           <span className="block text-[13px] font-black text-ink">Leaderboards</span>
           <span className="block text-[10.5px] font-bold text-ink-3">Many ways to win — not just returns</span>
+        </span>
+        <span className="font-black text-ink-4" aria-hidden>›</span>
+      </Link>
+      <Link href="/club/xp" className="mt-2 flex items-center gap-[11px] rounded-[16px] border border-line bg-card px-[15px] py-[12px]">
+        <span className="w-[34px] h-[34px] rounded-[10px] bg-green-tint flex items-center justify-center text-[17px]" aria-hidden>🏅</span>
+        <span className="flex-1 min-w-0">
+          <span className="block text-[13px] font-black text-ink">XP board</span>
+          <span className="block text-[10.5px] font-bold text-ink-3">Progression &amp; participation — never returns</span>
         </span>
         <span className="font-black text-ink-4" aria-hidden>›</span>
       </Link>

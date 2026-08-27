@@ -49,7 +49,7 @@ export function useBrokerage(override?: boolean): { brokerage: StoredBrokerage |
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate from localStorage after mount
     setStored(readJSON<StoredBrokerage | null>(BROKERAGE_KEY, null));
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- same hydration
+     
     setReady(true);
   }, []);
   const brokerage = override === true ? (stored ?? SAMPLE_BROKERAGE) : override === false ? null : stored;

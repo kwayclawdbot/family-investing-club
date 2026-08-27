@@ -1,5 +1,8 @@
 import Link from "next/link";
 import { Avatar, ArtPlaceholder } from "@/components/ui";
+import { BeltChip } from "@/components/ui/belt";
+import { RingedAvatar } from "@/components/belts/identity";
+import { beltOf } from "@/components/belts/belt-of";
 import { BellIcon, ChevronRight } from "@/components/ui/icons";
 import type { Club, ClubMember, ClubProposal, ResearchAssignment, ClubActivity, ClubPortfolio, Community, LiveSession, Portfolio } from "@/lib/types";
 
@@ -90,9 +93,9 @@ export function ClubHome({ club, members, proposal, research, activity, portfoli
           const actor = members.find((m) => m.id === a.actorId);
           return (
             <Link key={a.id} href={a.href} className={`flex items-center gap-[10px] py-[10px] ${i < arr.length - 1 ? "border-b border-paper-2" : ""}`}>
-              <Avatar name={a.actor} color={actor?.color} size={30} className="border-2 border-[#FFFDF7]" />
+              <RingedAvatar belt={beltOf(a.actorId)}><Avatar name={a.actor} color={actor?.color} size={30} className="border-2 border-[#FFFDF7]" /></RingedAvatar>
               <span className="flex-1 text-[12.5px] font-bold text-[#4A4436] leading-[1.4]">
-                <b>{a.actor}</b> {a.kind === "pick" ? (
+                <b>{a.actor}</b>{beltOf(a.actorId) && <> <BeltChip belt={beltOf(a.actorId)!} className="align-middle" /></>} {a.kind === "pick" ? (
                   <>made a Pick: <b className="text-green">{a.text.replace("made a Pick: ", "")}</b></>
                 ) : (
                   a.text.replace(/(Costco|NVDA|CEG)/, "§$1§").split("§").map((part, j) => (part === "Costco" || part === "NVDA" || part === "CEG" ? <b key={j}>{part}</b> : part))

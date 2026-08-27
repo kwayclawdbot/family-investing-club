@@ -7,6 +7,8 @@ import { Sheet } from "@/components/ui/extras";
 import { SendIcon } from "@/components/ui/icons";
 import { avatarFor } from "./MyClub";
 import { Chip, MemberAvatar, ScreenHeader, StanceTag, dots } from "./club-shared";
+import { BeltChip } from "@/components/ui/belt";
+import { RingedAvatar, beltOf } from "@/components/belts/identity";
 import { newId, read, useStored } from "./storage";
 
 /** Artboard 02 — a Pick's discussion thread with the Kai summarize bridge. */
@@ -43,9 +45,9 @@ export function PickThread({ pick: initial, club, id }: { pick?: Pick; club: Clu
 
       <div className="mt-3 bg-card border border-line rounded-[16px] px-[15px] py-[13px]">
         <div className="flex items-center gap-[10px]">
-          <MemberAvatar m={avatarFor(club, pick.authorId, pick.author)} size={34} />
+          <RingedAvatar belt={beltOf(pick.authorId)}><MemberAvatar m={avatarFor(club, pick.authorId, pick.author)} size={34} /></RingedAvatar>
           <div className="flex-1 min-w-0">
-            <div className="text-[13.5px] font-black text-ink">{possessive}</div>
+            <div className="text-[13.5px] font-black text-ink flex items-center gap-[7px] flex-wrap">{possessive}{beltOf(pick.authorId) && <BeltChip belt={beltOf(pick.authorId)!} />}</div>
             <div className="text-[10.5px] font-bold text-ink-3">{pick.ago === "now" ? "just now" : `${pick.ago} ago`} · {pick.visibility === "club" ? "visible to club only" : "public"}</div>
           </div>
           <StanceTag symbol={pick.symbol} stance={pick.stance} size="md" />
@@ -64,9 +66,9 @@ export function PickThread({ pick: initial, club, id }: { pick?: Pick; club: Clu
 
       {replies.map((r) => (
         <div key={r.id} className="mt-[10px] flex gap-[9px]">
-          <MemberAvatar m={avatarFor(club, r.author.toLowerCase(), r.author)} size={30} />
+          <RingedAvatar belt={beltOf(r.author)}><MemberAvatar m={avatarFor(club, r.author.toLowerCase(), r.author)} size={30} /></RingedAvatar>
           <div className="flex-1 bg-card border border-line rounded-[4px_15px_15px_15px] px-[13px] py-[10px] text-[12.5px] font-semibold text-ink leading-[1.45]">
-            <b className="font-black">{r.author}</b> · {r.ago}<br />{r.text}
+            <span className="inline-flex items-center gap-[6px] flex-wrap"><b className="font-black">{r.author}</b>{beltOf(r.author) && <BeltChip belt={beltOf(r.author)!} />}<span>· {r.ago}</span></span><br />{r.text}
           </div>
         </div>
       ))}

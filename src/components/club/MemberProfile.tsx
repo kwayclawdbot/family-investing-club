@@ -3,6 +3,8 @@ import Link from "next/link";
 import { useState } from "react";
 import type { Member, Idea } from "@/lib/types";
 import { Avatar, Tag, cx } from "@/components/ui";
+import { BeltChip } from "@/components/ui/belt";
+import { RingedAvatar, beltOf } from "@/components/belts/identity";
 import { EmptyState, Sheet, StatTile } from "@/components/ui/extras";
 import { IdeaCard } from "./cards";
 import { useStored } from "./storage";
@@ -22,9 +24,9 @@ export function MemberProfile({ m, ideas }: { m: Member; ideas: Idea[] }) {
   return (
     <div className="pb-6">
       <div className="flex items-center gap-4 mt-1">
-        <Avatar name={m.name} size={64} color={youth ? "bg-gold" : undefined} />
+        <RingedAvatar belt={beltOf(m.name)}><Avatar name={m.name} size={64} color={youth ? "bg-gold" : undefined} /></RingedAvatar>
         <div className="flex-1 min-w-0">
-          <h1 className="text-[21px] font-black text-ink leading-tight">{m.name}</h1>
+          <h1 className="text-[21px] font-black text-ink leading-tight flex items-center gap-2 flex-wrap">{m.name}{beltOf(m.name) && <BeltChip belt={beltOf(m.name)!} size="md" />}</h1>
           <div className="mt-1 flex items-center gap-2 flex-wrap">
             <Tag tone={tone}>{youth ? "Young learner" : m.role}</Tag>
             {m.ageBadge && <Tag tone="gold">{m.ageBadge}</Tag>}
