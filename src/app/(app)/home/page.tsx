@@ -1,19 +1,19 @@
 import { HomeSwitch } from "@/components/home/HomeSwitch";
-import { HomeV4 } from "@/components/home/HomeV4";
+import { PulseHome } from "@/components/home/PulseHome";
+import { HomeExtras } from "@/components/home/HomeExtras";
 import { ChildHome } from "@/components/home/ChildHome";
-import { getChildHome, getClub, getProposal, identityOf, beltFor } from "@/lib/data-live";
+import { getChildHome, getHomePulse, identityOf, beltFor, nextBelt } from "@/lib/data-live";
 
-/** Home v4 — conversation-first (canvas v11, board 12). Child accounts keep the protected composition. */
+/** Prototype v2 `home`: performance pulse + MY PERFORMANCE CENTER + ACTIVE TRADE IDEAS + Your World. Child accounts keep the protected composition. */
 export default async function HomePage(props: PageProps<"/home">) {
   const sp = await props.searchParams;
   const forceChild = sp.as === "child";
-  const initialFeed = sp.feed === "private" ? "private" : "main";
-  const [child, club, proposal] = await Promise.all([getChildHome(), getClub(), getProposal("add-ceg-4")]);
-  const belt = beltFor(identityOf("kway")?.lifetimeXp ?? 2640).color;
-  const open = proposal && proposal.status === "open"
-    ? { id: proposal.id, text: `${proposal.symbol} vote closes in ${proposal.endsIn.replace(/^in /, "")}`, voted: proposal.votes.filter((v) => v.vote).length, eligible: proposal.votes.length - 1, hoursLeft: 8 }
-    : null;
+  const [child, pulse] = await Promise.all([getChildHome(), getHomePulse()]);
+  const xp = identityOf("kway")?.lifetimeXp ?? pulse.tiles.xp;
+  const belt = beltFor(xp); const next = nextBelt(xp);
   return (
-    <HomeSwitch forceChild={forceChild} adult={<HomeV4 belt={belt} clubName={club.shortName} initialFeed={initialFeed} openProposal={open} />} child={<ChildHome data={child} />} />
+    <HomeSwitch forceChild={forceChild}
+      adult={<PulseHome p={pulse} belt={belt} nextBeltLabel={next?.label ?? null} xpToNext={next ? next.minXp - xp : null} extras={<HomeExtras />} />}
+      child={<ChildHome data={child} />} />
   );
 }

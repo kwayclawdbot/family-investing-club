@@ -1,9 +1,9 @@
 import Link from "next/link";
 
 const PROPS = [
-  { n: 1, text: "Build your investing club with family & friends — research, pick and vote together", cls: "bg-green-tint text-green" },
-  { n: 2, text: "Learn as you invest with 5-minute interactive lessons", cls: "bg-orange-tint text-orange-2" },
-  { n: 3, text: "Practice with virtual portfolios — decisions are real, dollars aren't", cls: "bg-purple-tint text-purple-2" },
+  { n: 1, text: "See what your people are investing in", cls: "bg-green-tint text-green" },
+  { n: 2, text: "Research together · make picks · vote as a club", cls: "bg-orange-tint text-orange-2" },
+  { n: 3, text: "Earn your belt — from White to Black — as you learn", cls: "bg-purple-tint text-purple-2" },
 ];
 
 export default function WelcomePage() {
@@ -14,7 +14,7 @@ export default function WelcomePage() {
           FIC
         </div>
         <h1 className="text-[25px] font-black text-ink leading-[1.15]">Family Investing Club</h1>
-        <p className="text-[14.5px] font-extrabold text-orange">Invest Together. Learn Together. Grow Together.</p>
+        <p className="text-[14.5px] font-extrabold text-orange">Learn. Invest. Grow Together.</p>
       </div>
 
       <div
@@ -38,7 +38,7 @@ export default function WelcomePage() {
 
       <div className="mt-auto pt-6 pb-[calc(24px+env(safe-area-inset-bottom))] sm:pb-[44px]">
         <Link
-          href="/onboarding/who"
+          href="/signup"
           className="block w-full rounded-[16px] bg-orange p-4 text-center text-[16px] font-black text-cream-text shadow-[0_3px_0_#C96D25] active:translate-y-[2px] active:shadow-none transition"
         >
           Get Started

@@ -7,13 +7,13 @@ import { Sparkline } from "@/components/markets/LineChart";
 import { Eyebrow } from "@/components/markets/v12/bits";
 
 const CHIPS = ["Games", "Charts", "Scenarios", "Portfolio"] as const;
-export function PracticeHub({ portfolio }: { portfolio: { value: number; changePct: number; holdings: number; series: number[] } }) {
+export function PracticeHub({ portfolio, embedded }: { portfolio: { value: number; changePct: number; holdings: number; series: number[] }; embedded?: boolean }) {
   const [chip, setChip] = useState<(typeof CHIPS)[number]>("Games");
   const games = chip === "Charts" ? practiceGames.filter((g) => g.id === "chart-rush") : chip === "Scenarios" ? [] : practiceGames;
   return (
-    <div className="pt-[14px] pb-6">
-      <h1 className="text-[21px] font-black text-ink">Practice</h1>
-      <p className="text-[11px] font-bold text-ink-3">Apply what you know — zero real money</p>
+    <div className={embedded ? "" : "pt-[14px] pb-6"}>
+      {!embedded && <><h1 className="text-[21px] font-black text-ink">Practice</h1>
+      <p className="text-[11px] font-bold text-ink-3">Apply what you know — zero real money</p></>}
       <div className="mt-3 rounded-[12px] bg-[#EFE7D6] p-[3px] flex">{CHIPS.map((c) => <button key={c} onClick={() => setChip(c)} className={`flex-1 h-[30px] rounded-[9px] text-[11.5px] font-bold ${chip === c ? "bg-[#FFFDF7] text-ink font-black shadow-sm" : "text-ink-3"}`}>{c}</button>)}</div>
       {chip === "Scenarios" && <Link href="/learn/scenarios" className="mt-3 block bg-card border border-line rounded-[15px] px-4 py-3 text-[13px] font-black text-ink">Scenario lessons → decide under pressure, then review ›</Link>}
       {chip === "Portfolio" && <Link href="/practice/portfolio" className="mt-3 block bg-card border border-line rounded-[15px] px-4 py-3 text-[13px] font-black text-ink">Open your practice portfolio ›</Link>}

@@ -11,7 +11,7 @@ const COLOR: Record<PromotionSummary["belt"]["color"], { main: string; shadow: s
 };
 
 /** Belt promotion — the ceremonial moment (canvas v8, artboard 02). One restrained fade/scale on mount, motion-safe only. */
-export function Promotion({ p }: { p: PromotionSummary }) {
+export function Promotion({ p }: { p: PromotionSummary & { lifetimeXp?: number; toNext?: number; nextLabel?: string } }) {
   const c = COLOR[p.belt.color];
   const stats: [number, string][] = [
     [p.lessons, "LESSONS MASTERED"],
@@ -33,7 +33,7 @@ export function Promotion({ p }: { p: PromotionSummary }) {
         </div>
         <div className="mt-6 text-[14px] font-black text-ink-3 tracking-[1px]">YOU EARNED</div>
         <div className="mt-[2px] text-[34px] font-black leading-tight" style={{ color: c.main }}>{p.belt.label}</div>
-        <div className="mt-[6px] text-[12.5px] font-bold text-ink-3">{p.belt.minXp.toLocaleString()} lifetime XP · level {p.belt.level} of 7</div>
+        <div className="mt-[6px] text-[12.5px] font-bold text-ink-3">{(p.lifetimeXp ?? p.belt.minXp).toLocaleString()} lifetime XP · level {p.belt.level} of 7{p.toNext ? ` · ${p.toNext} to ${p.nextLabel}` : ""}</div>
         <div className="mt-[18px] grid grid-cols-2 gap-2 w-full">
           {stats.map(([n, l]) => (
             <div key={l} className="bg-[#FFFDF7] border border-line rounded-[13px] p-[10px] text-left">
@@ -43,7 +43,7 @@ export function Promotion({ p }: { p: PromotionSummary }) {
           ))}
         </div>
         <p className="mt-[14px] text-[11.5px] font-bold text-ink-3 leading-[1.55] max-w-[300px]">
-          Your new belt now shows on your profile, Picks, Club activity, leaderboards and community identity.
+          Now on your profile, picks, club activity and leaderboards.
         </p>
       </div>
       <div className="relative pb-6 pt-4">

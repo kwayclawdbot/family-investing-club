@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { HoldingsRows } from "./HoldingsRows";
 import type { ClubOverview, PortfolioTab } from "@/lib/types";
 import { cx } from "@/components/ui";
 import { performanceTiles } from "@/lib/fixtures/v12-club";
@@ -42,6 +43,8 @@ export function PerformancePane({ o, p }: { o: ClubOverview; p: PortfolioTab }) 
           </div>
         ))}
       </Panel>
+      <SectionLabel className="mt-3 mb-[6px]">HOLDINGS · {p.holdings.length}</SectionLabel>
+      <HoldingsRows holdings={p.holdings} />
       <SectionLabel className="mt-3 mb-[6px]">ALLOCATION</SectionLabel>
       <Panel className="px-[15px] py-3 flex gap-[14px] items-center">
         <svg width="76" height="76" viewBox="0 0 76 76" className="shrink-0" aria-hidden>

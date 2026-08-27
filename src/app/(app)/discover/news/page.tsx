@@ -1,12 +1,12 @@
-import { getNews, getWatchlist, getPortfolio } from "@/lib/data-live";
-import { NewsList } from "@/components/markets/NewsList";
+import { getNews, getCompanies } from "@/lib/data-live";
+import { newsItems } from "@/lib/fixtures/v13-discover";
+import { NewsV13 } from "@/components/markets/v13/NewsV13";
 
+/** News — prototype v2: My companies · Club · Markets, every story with "why this matters". */
 export default async function NewsPage() {
-  const [news, watchlist, portfolio] = await Promise.all([getNews(), getWatchlist(), getPortfolio()]);
-  return (
-    <div className="pt-[14px] pb-6">
-      <NewsList news={news} baseWatchlist={watchlist} holdings={portfolio.holdings} />
-      <p className="mt-4 text-[11px] font-bold text-ink-4 text-center">Fewer headlines, more “why this matters” · sample stories for learning</p>
-    </div>
-  );
+  const [live, companies] = await Promise.all([getNews(), getCompanies()]);
+  const quotes = Object.fromEntries(companies.map((c) => [c.symbol, { changePct: c.changePct }]));
+  const fixtureHeads = new Set(newsItems.map((n) => n.headline.toLowerCase()));
+  const extra = live.filter((n) => n.url && !fixtureHeads.has(n.headline.toLowerCase()));
+  return <NewsV13 items={newsItems} live={extra} quotes={quotes} />;
 }

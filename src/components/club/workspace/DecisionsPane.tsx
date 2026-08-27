@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ClubOverview } from "@/lib/types";
 import { cx } from "@/components/ui";
 import { decisionsJournal } from "@/lib/fixtures/v12-club";
+import { decisionChips, publicPoll, decisionRecord } from "@/lib/fixtures/v13-club";
 import { Panel, Ring, SectionLabel } from "./shared";
 
 const GLYPH = { "✓": "bg-green-tint text-green", "✕": "bg-[#F7E9E5] text-red", "⇅": "bg-orange-tint text-orange-2" } as const;
@@ -11,7 +12,10 @@ export function DecisionsPane({ o }: { o: ClubOverview }) {
   const d = o.activeDecision;
   return (
     <>
-      <SectionLabel className="mt-[13px] mb-[6px]">OPEN DECISIONS</SectionLabel>
+      <div className="mt-[12px] flex gap-[6px]">
+        {decisionChips.map((c, i) => <span key={c.label} className={cx("rounded-[9px] px-[9px] py-[5px] text-[10.5px] font-black", i === 0 ? "bg-ink text-cream-text" : "bg-card border border-line text-ink-2")}>{c.label} · {c.n}</span>)}
+      </div>
+      <SectionLabel className="mt-[13px] mb-[6px]">🔒 YOUR CLUB · NEEDS YOUR VOTE</SectionLabel>
       {d ? (
         <div className="bg-purple-tint border border-[#DDD4F0] rounded-[16px] px-[15px] py-[13px]">
           <div className="flex items-center gap-3">
@@ -24,6 +28,28 @@ export function DecisionsPane({ o }: { o: ClubOverview }) {
           </div>
         </div>
       ) : <Panel className="px-4 py-5 text-center text-[12px] font-bold text-ink-3">No open decisions — propose one from a Pick or research note.</Panel>}
+      <SectionLabel className="mt-[13px] mb-[6px]">🌍 PUBLIC · POLLS YOU FOLLOW</SectionLabel>
+      <Panel className="px-[13px] py-[10px] flex items-center gap-[10px]">
+        <span className="w-9 h-9 rounded-[10px] bg-[#F5EEE0] flex items-center justify-center text-[17px]">{publicPoll.emoji}</span>
+        <span className="flex-1 min-w-0">
+          <span className="block text-[12px] font-black text-ink">{publicPoll.question} <span className="text-[9.5px] font-extrabold text-ink-4">· {publicPoll.circle} circle</span></span>
+          <span className="block text-[9.5px] font-extrabold text-ink-3">{publicPoll.votes.toLocaleString()} votes · {publicPoll.yesPct}% yes · {publicPoll.closes}</span>
+        </span>
+        <Link href="/circle/fed-decision" className="bg-purple text-cream-text rounded-[9px] px-[11px] py-[6px] text-[10px] font-black">Vote</Link>
+      </Panel>
+      <div className="mt-[13px] mb-[6px] flex items-baseline justify-between"><SectionLabel>📊 MY DECISION RECORD</SectionLabel><Link href="/profile/performance" className="text-[10px] font-black text-green">Full record ›</Link></div>
+      <Panel className="px-[13px] py-3">
+        <div className="grid grid-cols-3 gap-2 text-center">
+          {[[decisionRecord.votesCast, "VOTES CAST"], [`${decisionRecord.agedWellPct}%`, "AGED WELL"], [decisionRecord.avgOutcome, "AVG OUTCOME"]].map(([v, l]) => <div key={l as string}><div className="text-[16px] font-black text-ink">{v as string}</div><div className="text-[8.5px] font-black tracking-[0.4px] text-ink-4">{l as string}</div></div>)}
+        </div>
+        {decisionRecord.rows.map((r) => (
+          <div key={r.symbol} className="mt-2 flex items-center gap-2 border-t border-paper-2 pt-2">
+            <span className="w-7 h-7 rounded-[8px] bg-green-tint text-green text-[8px] font-black flex items-center justify-center">{r.symbol}</span>
+            <span className="flex-1 text-[10.5px] font-extrabold text-ink-2">{r.text}</span>
+            <span className="text-[10.5px] font-black text-[#3A8C4A]">{r.outcome}</span>
+          </div>
+        ))}
+      </Panel>
       <SectionLabel className="mt-[13px] mb-[6px]">RESEARCHING</SectionLabel>
       <Panel className="px-[14px] py-[3px]">
         {o.research.map((r, i) => (

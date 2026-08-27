@@ -17,7 +17,7 @@ function partOfDay(h: number) { return h < 12 ? "morning" : h < 17 ? "afternoon"
 const money = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
 
 /** Home v3 — performance pulse (canvas v9, artboard 04). One hero, borderless stream, one continue card. */
-export function PulseHome({ p, belt, nextBeltLabel, xpToNext }: { p: HomePulse; belt: Belt; nextBeltLabel: string | null; xpToNext: number | null }) {
+export function PulseHome({ p, belt, nextBeltLabel, xpToNext, extras }: { p: HomePulse; belt: Belt; nextBeltLabel: string | null; xpToNext: number | null; extras?: React.ReactNode }) {
   const [scope, setScope] = useState<"me" | "club">("me");
   const [range, setRange] = useState(p.ranges[0]);
   const [hour] = useState(() => new Date().getHours());
@@ -98,6 +98,7 @@ export function PulseHome({ p, belt, nextBeltLabel, xpToNext }: { p: HomePulse; 
         </div>
       </div>
 
+      {extras}
       {/* club snapshot + ONE decision */}
       <div className="mt-3 bg-card border border-line rounded-[16px] px-[15px] py-3">
         <Link href="/club" className="flex items-center gap-[9px]">

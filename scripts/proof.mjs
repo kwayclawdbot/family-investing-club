@@ -43,6 +43,13 @@ const ROUTES = [
   ["club-research", "/club/research"],
   ["club-members", "/club/members"],
   ["child-home", "/home?as=child"],
+  // round 8 — prototype v2
+  ["screener", "/screener"],
+  ["theme", "/theme/nuclear-energy"],
+  ["learn-courses", "/learn?tab=courses"],
+  ["learn-live", "/learn?tab=live"],
+  ["learn-practice", "/learn?tab=practice"],
+  ["scenario-crash", "/learn/scenarios/market-crash"],
   // round 7 — v11/v12
   ["home-v4-private", "/home?feed=private"],
   ["home-compose", "/home?compose=1"],

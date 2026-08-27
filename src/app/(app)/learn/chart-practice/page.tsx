@@ -1,8 +1,4 @@
-import { ChartPractice } from "@/components/learn/ChartPractice";
+import { ChartRush } from "@/components/learn/ChartRush";
 import { getChartDrills } from "@/lib/data-live";
-
-/** Artboard 18 — Chart Practice / Chart Sprint. */
-export default async function ChartPracticePage() {
-  const drills = await getChartDrills();
-  return <ChartPractice drills={drills} />;
-}
+/** Chart Rush (prototype v2 `chartdrill`). */
+export default async function ChartPracticePage() { return <ChartRush drills={await getChartDrills()} />; }

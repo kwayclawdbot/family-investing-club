@@ -72,3 +72,10 @@ Stack: Next.js 16 (App Router) + React 19 + Tailwind 4 + TypeScript, per plan §
 | 41 | The universal ＋ wheel is replaced by the ✎ **Share** FAB → Compose modal with an audience picker and artifact chips (Pick, Chart, Poll, Research, Ask Kai, $Ticker). Kai is embedded (`@Kai`), not a destination. |
 | 42 | Every page answers one question; modules that don't answer it were moved (Discover lost portfolio/lesson strips; Learn's games moved to Practice; the practice portfolio lives at `/practice/portfolio`). |
 | 43 | Company page = understand + sticky Make a Pick; chart/metrics/news sit behind "More". Key numbers other than market cap are dossier copy until live fundamentals are added to the seam. |
+
+## Round 8 — Clickable Prototype v2 (the reconciled IA), 2026-08-27
+| # | Decision |
+|---|---|
+| 44 | Nav v5 per the prototype: Home · Discover · Club · Learn · **More**. Home = performance pulse + My Performance Center + Active trade ideas; Club = chat with the circles rail inside; Discover = signals with 🔬 Screener and Theme pages behind it; Learn = LMS hub (Path · Courses · Live · Practice · Review; `/practice` redirects); More = Me. |
+| 45 | The ＋ wheel is back (Pick · Research · Ask the Club · Proposal · Ask Kai); ✎ compose lives in the Club composer. Pick and Kai are contextual sheets with live prices. |
+| 46 | Every `data-go` in the prototype maps to a real route or sheet (map in `docs/BUILD-BRIEF-round-8.md`). |
