@@ -9,14 +9,15 @@ import { HomeIcon, LearnIcon, MarketsIcon, ClubIcon, ProfileIcon } from "@/compo
  * Profile lives behind the header avatar. Small actions are sheets via the universal ＋ (PlusFab).
  * Child accounts (Explorer / Builder): Home · Learn · Practice · Family · Me — public community hidden.
  */
-/** Nav v4 (canvas v12): Home · Discover · Learn · Practice · Me. Private clubs live inside Home's Main | Private
- *  switch; club pages, circles and community are drill-ins from Home. Kai is embedded (@Kai), not a destination. */
+/** Nav v5 (Clickable Prototype v2): Home · Discover · Club · Learn · More.
+ *  Home = performance pulse · Club = chat + circles · Discover = signals (screener behind 🔬) · Learn = LMS hub
+ *  (Path · Courses · Live · Practice · Review) · More = Me / notifications / settings. */
 const ADULT = [
-  { href: "/home", label: "Home", Icon: HomeIcon, also: ["/club", "/community", "/circle"] },
-  { href: "/discover", label: "Discover", Icon: MarketsIcon, also: ["/search"] },
-  { href: "/learn", label: "Learn", Icon: LearnIcon, also: ["/live", "/lesson"] },
-  { href: "/practice", label: "Practice", Icon: PracticeIcon, also: [] as string[] },
-  { href: "/profile", label: "Me", Icon: ProfileIcon, also: [] as string[] },
+  { href: "/home", label: "Home", Icon: HomeIcon, also: [] as string[] },
+  { href: "/discover", label: "Discover", Icon: MarketsIcon, also: ["/search", "/theme", "/screener"] },
+  { href: "/club", label: "Club", Icon: ClubIcon, also: ["/circle", "/community"] },
+  { href: "/learn", label: "Learn", Icon: LearnIcon, also: ["/live", "/lesson", "/practice"] },
+  { href: "/profile", label: "More", Icon: ProfileIcon, also: ["/family", "/kai"] },
 ];
 const CHILD = [
   { href: "/home", label: "Home", Icon: HomeIcon, also: [] as string[] },
