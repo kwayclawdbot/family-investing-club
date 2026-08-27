@@ -1,28 +1,21 @@
-import { KaiFab } from "@/components/shell/KaiFab";
 import { HomeSwitch } from "@/components/home/HomeSwitch";
-import { ClubHome } from "@/components/home/ClubHome";
+import { PulseHome } from "@/components/home/PulseHome";
 import { ChildHome } from "@/components/home/ChildHome";
-import {
-  getClub, clubVisibleMembers, getProposals, getResearch, getClubActivity, getClubPortfolio, getCommunity, getContinueLesson, getLiveSessions, getPortfolio, getChildHome,
-} from "@/lib/data";
+import { getHomePulse, getChildHome, identityOf, beltFor, nextBelt } from "@/lib/data";
 
-/** Home v2 — club first (artboard 16); child accounts get the protected composition (artboard 10). */
+/** Home v3 — performance pulse (canvas v9, artboard 04); child accounts keep the protected composition (artboard 10). */
 export default async function HomePage(props: PageProps<"/home">) {
   const sp = await props.searchParams;
   const forceChild = sp.as === "child";
-  const [club, proposals, research, activity, portfolio, community, next, sessions, practice, child] = await Promise.all([
-    getClub(), getProposals(), getResearch(), getClubActivity(), getClubPortfolio(), getCommunity(), getContinueLesson(), getLiveSessions(), getPortfolio(), getChildHome(),
-  ]);
-  const proposal = proposals.find((p) => p.status === "open");
-  const live = sessions.find((s) => s.status === "live");
+  const [pulse, child] = await Promise.all([getHomePulse(), getChildHome()]);
+  const xp = identityOf("kway")?.lifetimeXp ?? pulse.tiles.xp;
+  const belt = beltFor(xp);
+  const next = nextBelt(xp);
   return (
-    <>
-      <HomeSwitch
-        forceChild={forceChild}
-        adult={<ClubHome club={club} members={clubVisibleMembers} proposal={proposal} research={research} activity={activity} portfolio={portfolio} community={community} next={next} live={live} practice={practice} />}
-        child={<ChildHome data={child} />}
-      />
-      <KaiFab context="home" />
-    </>
+    <HomeSwitch
+      forceChild={forceChild}
+      adult={<PulseHome p={{ ...pulse, tiles: { ...pulse.tiles, xp } }} belt={belt} nextBeltLabel={next?.label ?? null} xpToNext={next ? next.minXp - xp : null} />}
+      child={<ChildHome data={child} />}
+    />
   );
 }

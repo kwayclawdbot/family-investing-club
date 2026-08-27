@@ -44,3 +44,13 @@ Stack: Next.js 16 (App Router) + React 19 + Tailwind 4 + TypeScript, per plan §
 | 25 | Five identity systems, kept separate: Belt (lifetime XP & participation) · Reputation (resolved pick accuracy) · Specialist badges · Verification (ownership, not skill) · Achievements. XP never comes from trade count, account size, risk or returns. |
 | 26 | Belt ladder: 7 levels, 5 colours, no rank names — White I/II, Yellow I/II, Blue, Purple, Black. Belt colours are identity-only, never UI accents. Ring on avatar + chip beside name everywhere; promotion is a ceremonial screen, feeds get only the chip. |
 | 27 | Sample brokerage link: "Connect securely" creates a labelled sample read-only link until a licensed aggregator is wired — never presented as a real connection. |
+
+## Round 6 — v9 one workflow + v10 collective-performance workspace, 2026-08-27
+| # | Decision |
+|---|---|
+| 28 | Nav v3: Home · Club · Discover · Learn · **Community** (flat). Profile behind the header avatar. Child nav unchanged. |
+| 29 | Sheets over routes: Pick, Ask the Club, Vote, Invite, Ask Kai open as sheets from the universal orange ＋ quarter-wheel; routes remain for deep links. |
+| 30 | Club default view is performance-first; tabs reduce to Overview · Portfolio · Members. Research/picks/votes live inside Overview and company/decision objects. `/club/portfolio` and `/club/members` redirect into the tabs. |
+| 31 | Home v3 is a pulse: identity → Me/My Club hero with event markers → 3 tiles → club snapshot with ONE decision → short stream → one continue card. KaiFab removed (Kai is in the ＋). |
+| 32 | Three visual levels per screen: one hero, borderless stream rows, utility chips. XP/belts ambient (rings, chips, ephemeral +XP toast). Kway = Purple Belt · 2,640 XP; club = 5 members · 2 households. |
+| 33 | Dad renders Yellow II from data (910 XP) even though artboard 03 prints "Yellow I" — the same canvas says he "earned Yellow Belt II". |

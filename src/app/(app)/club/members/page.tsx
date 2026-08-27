@@ -1,7 +1,5 @@
-import { getClub, clubVisibleMembers, getPicks, getProposals, getResearch, getClubActivity, getClubPortfolio } from "@/lib/data";
-import { MyClub } from "@/components/club/MyClub";
-
-export default async function ClubMembersPage() {
-  const [club, picks, proposals, research, activity, portfolio] = await Promise.all([getClub(), getPicks(), getProposals(), getResearch(), getClubActivity(), getClubPortfolio()]);
-  return <MyClub club={club} visible={clubVisibleMembers} picks={picks} proposals={proposals} research={research} activity={activity} portfolio={portfolio} initialTab="Members" />;
+import { redirect } from "next/navigation";
+/** Members now live in the club workspace tab. */
+export default function ClubMembersPage() {
+  redirect("/club?tab=members");
 }

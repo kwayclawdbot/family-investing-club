@@ -1,9 +1,6 @@
-import { getClubPortfolio, getProposals, getVerifiedExposure } from "@/lib/data";
-import { ClubPortfolioView } from "@/components/club/ClubPortfolioView";
-
-const flag = (v: string | string[] | undefined) => (v === "1" ? true : v === "0" ? false : undefined);
-
+import { redirect } from "next/navigation";
+/** The club's own portfolio now lives in the workspace Portfolio tab (Model | Verified). */
 export default async function ClubPortfolioPage(props: PageProps<"/club/portfolio">) {
-  const [sp, portfolio, proposals, exposure] = await Promise.all([props.searchParams, getClubPortfolio(), getProposals(), getVerifiedExposure()]);
-  return <ClubPortfolioView portfolio={portfolio} proposals={proposals} exposure={exposure} view={sp.view === "verified" ? "verified" : "model"} connected={flag(sp.connected)} />;
+  const sp = await props.searchParams;
+  redirect(sp.view === "verified" ? "/club?tab=portfolio&view=verified" : "/club?tab=portfolio");
 }

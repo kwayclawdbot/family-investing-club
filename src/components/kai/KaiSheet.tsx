@@ -18,13 +18,20 @@ function contextLabel(raw: string | null): string {
 export function KaiSheet({
   prompts,
   sample,
+  embedded,
+  onClose,
+  contextOverride,
 }: {
   prompts: string[];
   sample: { question: string; answer: string; lessonLabel: string; lessonHref: string };
+  /** render inside a host (the ＋ sheet): no backdrop/spacer, close via onClose instead of router.back */
+  embedded?: boolean;
+  onClose?: () => void;
+  contextOverride?: string;
 }) {
   const router = useRouter();
   const params = useSearchParams();
-  const context = contextLabel(params.get("context"));
+  const context = contextLabel(contextOverride ?? params.get("context"));
   const [msgs, setMsgs] = useState<Msg[]>([
     { role: "user", text: sample.question },
     { role: "kai", text: sample.answer, lesson: { label: sample.lessonLabel, href: sample.lessonHref } },
@@ -49,16 +56,16 @@ export function KaiSheet({
   }
   function close() {
     setOpen(false);
-    setTimeout(() => router.back(), 180);
+    setTimeout(() => (embedded ? onClose?.() : router.back()), 180);
   }
 
   return (
-    <div className="absolute inset-0 flex flex-col bg-[#C9BFA8]">
-      <button aria-label="Close Kai" onClick={close} className={`h-[120px] shrink-0 transition-opacity ${open ? "opacity-100" : "opacity-0"}`} />
+    <div className={embedded ? "absolute inset-0 z-50 flex flex-col" : "absolute inset-0 flex flex-col bg-[#C9BFA8]"}>
+      <button aria-label="Close Kai" onClick={close} className={`${embedded ? "h-[96px] bg-[#2E2A21]/45" : "h-[120px]"} shrink-0 transition-opacity ${open ? "opacity-100" : "opacity-0"}`} />
       <section
         role="dialog"
         aria-label="Kai, your investing tutor"
-        className={`flex-1 min-h-0 bg-paper rounded-t-[28px] shadow-[0_-8px_30px_rgba(46,42,33,0.25)] flex flex-col px-5 pt-[14px] transition-transform duration-200 ease-out ${
+        className={`flex-1 min-h-0 bg-paper rounded-t-[28px] shadow-[0_-8px_30px_rgba(46,42,33,0.25)] flex flex-col px-5 pt-[14px] transition-transform duration-200 ease-out motion-reduce:transition-none ${
           open ? "translate-y-0" : "translate-y-full"
         }`}
       >

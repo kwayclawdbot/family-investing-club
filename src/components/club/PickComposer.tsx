@@ -14,7 +14,9 @@ const HORIZONS: Pick["horizon"][] = ["1y", "3y", "5y+"];
 const MAX = 140;
 
 /** Artboard 13 — bottom-sheet composer over a dimmed backdrop: fast, honest, timestamped. */
-export function PickComposer(props: { club: Club; companies: Company[]; costco: Quote; initialSymbol?: string }) {
+type Props = { club: Club; companies: Company[]; costco: Quote; initialSymbol?: string; /** render inside a host sheet: no backdrop/chrome, call onDone instead of routing */ embedded?: boolean; onDone?: (shared: boolean) => void };
+
+export function PickComposer(props: Props) {
   return (
     <Suspense fallback={null}>
       <PickComposerInner {...props} />
@@ -22,7 +24,7 @@ export function PickComposer(props: { club: Club; companies: Company[]; costco: 
   );
 }
 
-function PickComposerInner({ club, companies, costco, initialSymbol }: { club: Club; companies: Company[]; costco: Quote; initialSymbol?: string }) {
+function PickComposerInner({ club, companies, costco, initialSymbol, embedded, onDone }: Props) {
   const router = useRouter();
   const universe = useMemo<Quote[]>(() => [costco, ...companies.map((c) => ({ symbol: c.symbol, name: c.name, price: c.price, changePct: c.changePct }))], [companies, costco]);
   const [q, setQ] = useState<Quote>(() => universe.find((u) => u.symbol === initialSymbol?.toUpperCase()) ?? costco);
@@ -49,21 +51,16 @@ function PickComposerInner({ club, companies, costco, initialSymbol }: { club: C
     const connected = connectedOverride === "1" ? true : connectedOverride === "0" ? false : !!readJSON(BROKERAGE_KEY, null);
     const prompted = !!readJSON(PROMPTED_KEY, 0);
     if (!connected && !prompted) { setPromptFor(q.symbol); return; }
+    if (embedded) { onDone?.(true); return; }
     router.push("/club");
   }
+  const dismiss = () => (embedded ? onDone?.(false) : router.back());
   const seg = (on: boolean) => cx("flex-1 rounded-[13px] py-[11px] text-center text-[13.5px] transition", on ? "bg-green-tint border-2 border-green-2 text-green font-black" : "bg-card border-[1.5px] border-line text-ink-3 font-extrabold");
 
-  if (promptFor) return <ConnectPromptSheet symbol={promptFor} onNotNow={() => router.push("/club")} />;
+  if (promptFor) return <ConnectPromptSheet symbol={promptFor} onNotNow={() => (embedded ? onDone?.(true) : router.push("/club"))} />;
 
-  return (
-    <div className="absolute inset-0 z-50 bg-[#C9BFA8] flex flex-col">
-      <button aria-label="Close" onClick={() => router.back()} className="h-[96px] shrink-0" />
-      <div className="flex-1 bg-paper rounded-t-[28px] shadow-[0_-8px_30px_rgba(46,42,33,0.25)] flex flex-col px-5 pt-[14px] overflow-y-auto no-scrollbar">
-        <div className="w-10 h-[5px] rounded-[3px] bg-[#D9CDB2] mx-auto" />
-        <div className="flex items-center justify-between mt-[14px]">
-          <div className="text-[18px] font-black text-ink">Make a Pick</div>
-          <button aria-label="Close" onClick={() => router.back()} className="text-ink-4"><CloseIcon size={18} /></button>
-        </div>
+  const body = (
+    <>
 
         {!changing ? (
           <div className="mt-3 bg-card border border-line rounded-[14px] px-[14px] py-[11px] flex items-center gap-[11px]">
@@ -134,6 +131,20 @@ function PickComposerInner({ club, companies, costco, initialSymbol }: { club: C
           <p className="text-center text-[11px] font-bold text-ink-4 mb-[9px]">Picks are timestamped — the club will see how it plays out. Not financial advice.</p>
           <Raised tone="green" onClick={share} disabled={reason.trim().length < 8}>{vis === "club" ? "Share Pick with the Club" : "Share Pick publicly"}</Raised>
         </div>
+    </>
+  );
+
+  if (embedded) return <div className="flex flex-col flex-1 min-h-0">{body}</div>;
+  return (
+    <div className="absolute inset-0 z-50 bg-[#C9BFA8] flex flex-col">
+      <button aria-label="Close" onClick={dismiss} className="h-[96px] shrink-0" />
+      <div className="flex-1 bg-paper rounded-t-[28px] shadow-[0_-8px_30px_rgba(46,42,33,0.25)] flex flex-col px-5 pt-[14px] overflow-y-auto no-scrollbar">
+        <div className="w-10 h-[5px] rounded-[3px] bg-[#D9CDB2] mx-auto" />
+        <div className="flex items-center justify-between mt-[14px]">
+          <div className="text-[18px] font-black text-ink">Make a Pick</div>
+          <button aria-label="Close" onClick={dismiss} className="text-ink-4"><CloseIcon size={18} /></button>
+        </div>
+        {body}
       </div>
     </div>
   );

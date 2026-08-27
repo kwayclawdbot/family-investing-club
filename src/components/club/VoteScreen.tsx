@@ -8,7 +8,7 @@ import { Chip, MemberAvatar, ScreenHeader } from "./club-shared";
 import { read, useStored } from "./storage";
 
 /** Artboard 04 — the case, learn-before-voting bridge, your vote, the tally. */
-export function VoteScreen({ proposal: initial, club, id }: { proposal?: ClubProposal; club: Club; id: string }) {
+export function VoteScreen({ proposal: initial, club, id, compact, onDone }: { proposal?: ClubProposal; club: Club; id: string; /** sheet mode: no screen header, a Done action */ compact?: boolean; onDone?: () => void }) {
   const [p, setP] = useState<ClubProposal | undefined>(initial);
   useEffect(() => {
     if (initial) return;
@@ -32,7 +32,11 @@ export function VoteScreen({ proposal: initial, club, id }: { proposal?: ClubPro
 
   return (
     <div className="flex flex-col min-h-full">
-      <ScreenHeader backHref="/club" center title={<span className="bg-purple-tint text-purple-2 rounded-[20px] px-[13px] py-[5px] text-[11px] font-black">{closed ? `PROPOSAL · ${p.status.toUpperCase()}` : `PROPOSAL · ENDS IN ${p.endsIn.toUpperCase()}`}</span>} />
+      {compact ? (
+        <div className="flex justify-center mt-1"><span className="bg-purple-tint text-purple-2 rounded-[20px] px-[13px] py-[5px] text-[11px] font-black">{closed ? `PROPOSAL · ${p.status.toUpperCase()}` : `PROPOSAL · ENDS IN ${p.endsIn.toUpperCase()}`}</span></div>
+      ) : (
+        <ScreenHeader backHref="/club" center title={<span className="bg-purple-tint text-purple-2 rounded-[20px] px-[13px] py-[5px] text-[11px] font-black">{closed ? `PROPOSAL · ${p.status.toUpperCase()}` : `PROPOSAL · ENDS IN ${p.endsIn.toUpperCase()}`}</span>} />
+      )}
       <h1 className="mt-[14px] text-[21px] font-black text-ink leading-[1.3]">
         {proposalTitle(p)} {p.kind !== "remove" && <span className="font-bold text-ink-3">({p.fromWeightPct}% → {p.toWeightPct}%)</span>}
       </h1>
@@ -100,6 +104,12 @@ export function VoteScreen({ proposal: initial, club, id }: { proposal?: ClubPro
       <p className="mt-[10px] mb-6 text-center text-[11px] font-bold text-ink-4">
         {closed ? "Every decision stays attached to its reasoning in the journal." : mine && cast === eligible.length ? `${passing ? "Passes" : "Fails"} when the window closes · executes in the practice portfolio · journal entry auto-drafted` : "Passes on majority · executes in the practice portfolio · journal entry auto-drafted"}
       </p>
+      {compact && (
+        <div className="flex gap-[10px] mb-[calc(8px+env(safe-area-inset-bottom))]">
+          <Link href={`/club/vote/${id}`} onClick={onDone} className="flex-1 h-[44px] rounded-[14px] bg-card border border-line flex items-center justify-center text-[13px] font-black text-ink">Full case &amp; discussion</Link>
+          <button onClick={onDone} className="flex-1 h-[44px] rounded-[14px] bg-green text-cream-text text-[13px] font-black">{mine ? "Done" : "Later"}</button>
+        </div>
+      )}
     </div>
   );
 }

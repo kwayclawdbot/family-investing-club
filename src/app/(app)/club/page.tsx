@@ -1,8 +1,14 @@
-import { getClub, clubVisibleMembers, getPicks, getProposals, getResearch, getClubActivity, getClubPortfolio } from "@/lib/data";
-import { MyClub } from "@/components/club/MyClub";
+import { getClub, getClubOverview, getPortfolioTab, getMemberCards, getVerifiedExposure } from "@/lib/data";
+import { ClubWorkspace, type WorkspaceTab } from "@/components/club/workspace/ClubWorkspace";
+
+const asTab = (v: string | string[] | undefined): WorkspaceTab => (v === "portfolio" || v === "members" ? v : "overview");
 
 export default async function ClubPage(props: PageProps<"/club">) {
-  const sp = await props.searchParams;
-  const [club, picks, proposals, research, activity, portfolio] = await Promise.all([getClub(), getPicks(), getProposals(), getResearch(), getClubActivity(), getClubPortfolio()]);
-  return <MyClub club={club} visible={clubVisibleMembers} picks={picks} proposals={proposals} research={research} activity={activity} portfolio={portfolio} forceNew={sp.state === "new"} />;
+  const [sp, club, overview, portfolio, members, exposure] = await Promise.all([props.searchParams, getClub(), getClubOverview(), getPortfolioTab(), getMemberCards(), getVerifiedExposure()]);
+  return (
+    <ClubWorkspace
+      club={club} overview={overview} portfolio={portfolio} members={members} exposure={exposure}
+      initialTab={asTab(sp.tab)} portfolioView={sp.view === "verified" ? "verified" : "model"} forceNew={sp.state === "new"}
+    />
+  );
 }
