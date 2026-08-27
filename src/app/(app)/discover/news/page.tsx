@@ -6,7 +6,7 @@ export default async function NewsPage() {
   const [news, watchlist] = await Promise.all([getNews(), getWatchlist()]);
   return (
     <div className="-mx-[18px] pb-6">
-      <TopBar backHref="/markets" title="News" />
+      <TopBar backHref="/discover" title="News" />
       <div className="px-[18px]">
         <p className="text-[12.5px] font-bold text-ink-3">Fewer headlines, more “why this matters”.</p>
         <NewsList news={news} baseWatchlist={watchlist} />

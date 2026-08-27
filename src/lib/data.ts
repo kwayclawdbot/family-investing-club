@@ -5,6 +5,7 @@
  */
 import * as fx from "@/lib/fixtures";
 import * as r2 from "@/lib/fixtures/round2";
+import * as c from "@/lib/fixtures/club";
 import type { Company, Idea, LearningPath } from "@/lib/types";
 
 export async function getUser() { return fx.user; }
@@ -60,3 +61,19 @@ export async function getNotifications() { return r2.notifications; }
 export async function getFaqs() { return r2.faqs; }
 export const referral = r2.referral;
 export const subscription = r2.subscription;
+
+/* ── Round 3: Investing Club layer ──────────────────────────────────── */
+export async function getClub() { return c.club; }
+export const clubVisibleMembers = c.visibleMembers;
+export async function getClubMember(id: string) { return c.club.members.find((m) => m.id === id); }
+export async function getPicks() { return c.picks; }
+export async function getPick(id: string) { return c.picks.find((p) => p.id === id) ?? c.community.publicPicks.find((p) => p.id === id); }
+export async function getProposals() { return c.proposals; }
+export async function getProposal(id: string) { return c.proposals.find((p) => p.id === id); }
+export async function getClubPortfolio() { return c.clubPortfolio; }
+export async function getResearch() { return c.research; }
+export async function getClubActivity() { return c.activity; }
+export async function getCommunity() { return c.community; }
+export async function getChildHome() { return c.childHome; }
+export function clubWatchers(symbol: string) { return c.clubWatching[symbol.toUpperCase()] ?? []; }
+export const costcoQuote = c.costcoQuote;

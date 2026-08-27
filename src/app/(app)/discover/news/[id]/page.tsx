@@ -9,7 +9,7 @@ import { SymbolTile } from "@/components/markets/SymbolTile";
 import { conceptOf } from "@/components/markets/concepts";
 import { money, pct } from "@/components/markets/format";
 
-export default async function NewsItemPage(props: PageProps<"/markets/news/[id]">) {
+export default async function NewsItemPage(props: PageProps<"/discover/news/[id]">) {
   const { id } = await props.params;
   const n = await getNewsItem(id);
   if (!n) notFound();
@@ -17,7 +17,7 @@ export default async function NewsItemPage(props: PageProps<"/markets/news/[id]"
 
   return (
     <div className="-mx-[18px] pb-6">
-      <TopBar backHref="/markets/news" />
+      <TopBar backHref="/discover/news" />
       <div className="px-[18px]">
         <h1 className="text-[22px] font-black text-ink leading-[1.25]">{n.headline}</h1>
         <div className="mt-2 text-[12px] font-bold text-ink-3">{n.source} · {n.ago}</div>
@@ -47,7 +47,7 @@ export default async function NewsItemPage(props: PageProps<"/markets/news/[id]"
             <h2 className="mt-4 mb-2 text-[15px] font-black text-ink">Companies in this story</h2>
             <Card className="!py-1 !px-4">
               {companies.map((c, i) => (
-                <Link key={c.symbol} href={`/markets/${c.symbol}`} className={`flex items-center gap-[11px] py-[11px] ${i < companies.length - 1 ? "border-b border-paper-2" : ""}`}>
+                <Link key={c.symbol} href={`/discover/${c.symbol}`} className={`flex items-center gap-[11px] py-[11px] ${i < companies.length - 1 ? "border-b border-paper-2" : ""}`}>
                   <SymbolTile symbol={c.symbol} />
                   <span className="flex-1 min-w-0">
                     <span className="block text-[13.5px] font-extrabold text-ink truncate">{c.name}</span>

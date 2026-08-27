@@ -38,7 +38,7 @@ export default async function MarketsPage() {
         <div className="mt-1 text-[19px] font-black text-ink leading-[1.25]">Why is NVIDIA up 4.2% today?</div>
         <div className="mt-1 text-[12.5px] font-bold text-ink-3">Learn 3 key concepts in under 5 minutes.</div>
         <div className="mt-3 flex items-center gap-3">
-          <Link href="/markets/NVDA" className="inline-flex items-center h-[36px] px-4 rounded-[12px] bg-green text-cream-text text-[13px] font-black">Start Lesson</Link>
+          <Link href="/discover/NVDA" className="inline-flex items-center h-[36px] px-4 rounded-[12px] bg-green text-cream-text text-[13px] font-black">Start Lesson</Link>
           <Link href="/kai?context=symbol:NVDA&q=Why%20did%20NVIDIA%20go%20up%20today%3F" className="text-[12px] font-extrabold text-green">Ask Kai →</Link>
         </div>
       </Card>

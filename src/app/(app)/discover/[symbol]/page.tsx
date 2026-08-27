@@ -11,7 +11,7 @@ import { NewsRow } from "@/components/markets/NewsRow";
 import { money, signed, pct } from "@/components/markets/format";
 import { KaiFab } from "@/components/shell/KaiFab";
 
-export default async function CompanyPage(props: PageProps<"/markets/[symbol]">) {
+export default async function CompanyPage(props: PageProps<"/discover/[symbol]">) {
   const { symbol } = await props.params;
   const c = await getCompany(symbol);
   if (!c) notFound();
@@ -68,7 +68,7 @@ export default async function CompanyPage(props: PageProps<"/markets/[symbol]">)
 
       <div className="flex items-center justify-between mt-4 mb-2">
         <h2 className="text-[15px] font-black text-ink">In the news</h2>
-        <Link href="/markets/news" className="text-[12px] font-extrabold text-green">All news</Link>
+        <Link href="/discover/news" className="text-[12px] font-extrabold text-green">All news</Link>
       </div>
       <Card className="!py-1 !px-4">
         {related.length === 0 ? (

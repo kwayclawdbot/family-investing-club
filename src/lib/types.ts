@@ -133,3 +133,47 @@ export type Member = { id: string; name: string; role: string; level: Explanatio
 export type FamilyLearner = { id: string; name: string; role: "parent" | "child" | "teen"; level: ExplanationLevel; pathTitle: string; pathProgress: number; streak: number; weekXp: number; needs: string[]; tasks: { title: string; done: boolean }[]; lastActive: string; color: string };
 export type Notification = { id: string; kind: "lesson" | "family" | "club" | "live" | "system"; title: string; body: string; ago: string; href: string; read: boolean };
 export type Faq = { q: string; a: string };
+
+/* ── Round 3: the Investing Club object layer (Product Shift v3, §8–§12, §19) ── */
+/** A Household is an account relationship; an Investing Club is the social object. Never render a household directly. */
+export type ClubKind = "family" | "friends" | "mixed";
+export type ClubMember = { id: string; name: string; initial: string; color: string; role: "founder" | "admin" | "member" | "child"; level: ExplanationLevel; isYou?: boolean; voteGated?: boolean; gateReason?: string };
+export type Club = {
+  id: string; name: string; shortName: string; kind: ClubKind; privacy: "private" | "public"; est: string; members: ClubMember[];
+  inviteCode: string; inviteLink: string; rules: { votes: "majority" | "unanimous" | "founder"; kidsCanVote: boolean; maxWeightPct: number; weeklyPrompt: string };
+  streakWeeks: number; investingNight: { when: string; topic: string };
+};
+export type PickStance = "buy" | "watch" | "pass";
+export type Pick = {
+  id: string; clubId: string | "public"; authorId: string; author: string; ago: string; symbol: string; name: string; stance: PickStance; reason: string;
+  horizon: "1y" | "3y" | "5y+"; confidence: 1 | 2 | 3 | 4 | 5; priceAtPick: number; agree: number; notSure: number; replies: Comment[]; visibility: "club" | "public";
+};
+export type ClubProposal = {
+  id: string; clubId: string; kind: "add" | "remove" | "resize"; symbol: string; name: string; fromWeightPct: number; toWeightPct: number; practiceDollars: number;
+  by: string; byId: string; postedAgo: string; endsIn: string; rationale: string; evidence: { label: string; href: string }[]; sinceBuyPct?: number;
+  conceptGate?: { concept: string; minutes: number; href: string }; votes: { memberId: string; vote: "for" | "against" | null }[]; status: "open" | "passed" | "rejected";
+};
+export type ClubHolding = { symbol: string; name: string; weightPct: number; returnPct: number; origin: string; proposalId?: string };
+export type JournalEntry = { date: string; title: string; believed?: string; wrongIf?: string; review?: string; learned?: string };
+export type ClubPortfolio = { clubId: string; name: string; value: number; ytdPct: number; benchmarkYtdPct: number; holdings: ClubHolding[]; journal: JournalEntry[]; series: number[] };
+export type ResearchAssignment = { id: string; symbol: string; name: string; assigneeId: string; assignee: string; due: string; status: "open" | "done"; notes?: string; reason: string };
+export type ClubActivity = { id: string; actorId: string; actor: string; ago: string; kind: "pick" | "comment" | "research" | "lesson" | "vote" | "add"; text: string; href: string; quote?: string };
+export type PublicClub = { id: string; name: string; emoji: string; members: number; blurb: string; portfolioYtdPct?: number; activeIdeas?: number; moderated?: boolean };
+export type Community = {
+  trendingIdeas: { id: string; title: string; author: string; status: string; following: number; symbols: string[] }[];
+  popularPicks: { symbol: string; stance: PickStance; quote: string; agree: number }[];
+  publicClubs: PublicClub[];
+  mostResearched: { symbol: string; count: number }[];
+  peopleToFollow: { id: string; name: string; initial: string }[];
+  live?: { id: string; title: string; inRoom: number };
+  publicPicks: Pick[];
+};
+export type ChildHome = {
+  name: string; level: ExplanationLevel; streakDays: number;
+  familyRequest?: { fromId: string; from: string; symbol: string; name: string; text: string };
+  nextLesson: { path: string; title: string; minutes: number; href: string };
+  practice: { value: number; changePct: number; note: string };
+  familyVote?: { proposalId: string; text: string; gated: boolean };
+  newBadge?: { emoji: string; label: string; sub: string };
+  investingNight: { when: string; text: string };
+};
