@@ -19,7 +19,12 @@ export function BottomNav() {
       aria-label="Primary"
     >
       {TABS.map(({ href, label, Icon }) => {
-        const active = path === href || path.startsWith(href + "/") || (href === "/markets" && path.startsWith("/practice")) || (href === "/profile" && path.startsWith("/family"));
+        const active =
+          path === href ||
+          path.startsWith(href + "/") ||
+          (href === "/markets" && (path.startsWith("/practice") || path.startsWith("/search"))) ||
+          (href === "/learn" && path.startsWith("/live")) ||
+          (href === "/profile" && path.startsWith("/family"));
         return (
           <Link
             key={href}
