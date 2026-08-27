@@ -1,26 +1,104 @@
 @import "tailwindcss";
 
+/* ── FIC design tokens (from the canvas: warm cream + green / orange / club purple) ── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* surfaces */
+  --canvas: #F1EADB;        /* page backdrop behind the phone */
+  --paper: #FAF3E5;         /* screen background */
+  --paper-2: #F4ECDB;       /* subtle dividers / inset */
+  --card: #FFFFFF;
+  --nav: #FFFCF5;
+  --line: #EBDFC7;          /* card border */
+  --line-2: #F0E6D0;        /* track / nav border */
+  --line-3: #E4DAC4;
+  /* ink */
+  --ink: #2E2A21;
+  --ink-2: #6E6654;
+  --ink-3: #8F8672;         /* muted */
+  --ink-4: #A89F8D;         /* inactive nav */
+  --ink-5: #9A9080;
+  /* brand */
+  --green: #3A6B3E;         /* forest — links, active nav, badges */
+  --green-2: #4C8C4A;       /* progress fill, success */
+  --green-3: #7BA05B;       /* sage */
+  --green-tint: #EAF2E3;
+  --green-tint-2: #F3F8EE;
+  --green-line: #D8E5CE;
+  --orange: #E58234;        /* primary CTA */
+  --orange-2: #B07235;      /* streak copy */
+  --orange-3: #C96D25;
+  --orange-tint: #FBEDD9;
+  --orange-line: #F3DDBC;
+  --purple: #8B7BC7;        /* Kai / club */
+  --purple-2: #6B5CA8;
+  --purple-tint: #EFEBF8;
+  --purple-line: #E3D9F5;
+  --gold: #E9B949;
+  --coral: #D98E73;
+  --red: #C96A57;
+  --cream-text: #FFFCF5;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-canvas: var(--canvas);
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-card: var(--card);
+  --color-nav: var(--nav);
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+  --color-line-3: var(--line-3);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-ink-4: var(--ink-4);
+  --color-ink-5: var(--ink-5);
+  --color-green: var(--green);
+  --color-green-2: var(--green-2);
+  --color-green-3: var(--green-3);
+  --color-green-tint: var(--green-tint);
+  --color-green-tint-2: var(--green-tint-2);
+  --color-green-line: var(--green-line);
+  --color-orange: var(--orange);
+  --color-orange-2: var(--orange-2);
+  --color-orange-3: var(--orange-3);
+  --color-orange-tint: var(--orange-tint);
+  --color-orange-line: var(--orange-line);
+  --color-purple: var(--purple);
+  --color-purple-2: var(--purple-2);
+  --color-purple-tint: var(--purple-tint);
+  --color-purple-line: var(--purple-line);
+  --color-gold: var(--gold);
+  --color-coral: var(--coral);
+  --color-red: var(--red);
+  --color-cream-text: var(--cream-text);
+  --font-sans: var(--font-nunito), "Nunito", ui-rounded, system-ui, sans-serif;
+  --radius-card: 16px;
+  --radius-card-lg: 18px;
+  --radius-btn: 14px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+html, body { height: 100%; }
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* hide scrollbars inside the phone screen but keep scrolling */
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* placeholder art (until the v2 vector set lands) */
+.art-placeholder {
+  background: repeating-linear-gradient(45deg, #EAF2E3 0 7px, #F3F8EE 7px 14px);
+  border: 1px solid #D8E5CE;
+  color: #7BA05B;
+  font-family: ui-monospace, monospace;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
 }

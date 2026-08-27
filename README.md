@@ -1,36 +1,22 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Family Investing Club
 
-## Getting Started
-
-First, run the development server:
+Standalone member app for **Family Investing Club** — the beginner-first, family-first investing
+education product. Built from the Claude Design canvas (`design/Family Investing Club.dc.html`) and
+the product docs in `docs/`. Separate codebase from `cheatcode-ai`; runs on the existing FTA Supabase
+project (keep the engine, rebuild the experience).
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.local.example .env.local   # Supabase URL + anon key
+npm install
+npm run dev                        # http://localhost:3100
+npm run proof                      # screenshots of every screen → proof/
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Map
+- `src/app/(onboarding)` — Welcome + 5-step onboarding
+- `src/app/(app)` — tabbed shell: Home · Learn · Markets · Club · Profile (+ practice, family)
+- `src/app/(full)` — lesson player, Kai sheet (no tab bar)
+- `src/components/shell` — Screen, BottomNav, TopBar, KaiFab
+- `src/components/ui` — tokens-driven primitives + icon set
+- `src/lib/data.ts` — data seam (fixtures today; Supabase next)
+- `design/artboards/*.html` — one reference file per canvas artboard
