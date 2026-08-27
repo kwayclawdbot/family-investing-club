@@ -1,4 +1,4 @@
-import { getClub } from "@/lib/data";
+import { getClub } from "@/lib/data-live";
 import { CreateClub } from "@/components/club/CreateClub";
 
 export default async function CreateClubPage() {

@@ -1,4 +1,4 @@
-import { getNews, getWatchlist, getPortfolio } from "@/lib/data";
+import { getNews, getWatchlist, getPortfolio } from "@/lib/data-live";
 import { NewsList } from "@/components/markets/NewsList";
 
 export default async function NewsPage() {

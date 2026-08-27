@@ -66,9 +66,15 @@ export type Company = {
   changePct: number;
   series: Record<string, number[]>; // "1D" | "1W" ...
   understand: { q: string; concept?: string }[];
+  /** Live-data extras (Polygon); absent on fixtures. */
+  about?: string;
+  logoUrl?: string;
+  marketCap?: number;
+  asOf?: string;
+  freshness?: "delayed" | "eod" | "sample";
 };
 
-export type Holding = { symbol: string; name: string; shares: number; value: number; changePct: number };
+export type Holding = { symbol: string; name: string; shares: number; value: number; changePct: number; price?: number; asOf?: string; freshness?: "delayed" | "eod" | "sample" };
 export type Portfolio = {
   cash: number;
   totalValue: number;
@@ -115,7 +121,7 @@ export type ChartDrill = { id: string; symbol: string; series: number[]; reveal:
 export type Scenario = {
   id: string; title: string; blurb: string; minutes: number; steps: { id: string; text: string; choices: { label: string; next: string | null; outcome?: string; good?: boolean }[] }[];
 };
-export type NewsItem = { id: string; headline: string; source: string; ago: string; symbols: string[]; whyItMatters: string; concepts: string[]; body: string };
+export type NewsItem = { id: string; headline: string; source: string; ago: string; symbols: string[]; whyItMatters: string; concepts: string[]; body: string; url?: string; publishedAt?: string; imageUrl?: string };
 export type WatchItem = { symbol: string; name: string; reason: string; list: "personal" | "family" | "class"; ideaId?: string };
 export type DiscoverCategory = { id: string; title: string; blurb: string; emoji: string; symbols: string[]; why: string };
 export type Metric = { key: string; label: string; value: string; definition: string; lessonHref: string };

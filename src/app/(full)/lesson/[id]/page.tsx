@@ -1,5 +1,5 @@
 import { LessonPlayer } from "@/components/learn/LessonPlayer";
-import { getLessonQuestions } from "@/lib/data";
+import { getLessonQuestions } from "@/lib/data-live";
 
 export default async function LessonPage(props: PageProps<"/lesson/[id]">) {
   const { id } = await props.params;

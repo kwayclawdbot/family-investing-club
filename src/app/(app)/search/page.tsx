@@ -1,4 +1,4 @@
-import { getCompanies, getPaths, getFlashcards, getClubFeed } from "@/lib/data";
+import { getCompanies, getPaths, getFlashcards, getClubFeed } from "@/lib/data-live";
 import { SearchView } from "@/components/markets/SearchView";
 
 export default async function SearchPage(props: PageProps<"/search">) {

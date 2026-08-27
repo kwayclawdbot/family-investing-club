@@ -1,4 +1,4 @@
-import { getWatchlist, getCompanies, getResearch, getClub, clubVisibleMembers } from "@/lib/data";
+import { getWatchlist, getCompanies, getResearch, getClub, clubVisibleMembers } from "@/lib/data-live";
 import { WatchlistView } from "@/components/markets/WatchlistView";
 
 export default async function WatchlistPage() {

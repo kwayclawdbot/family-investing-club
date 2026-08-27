@@ -1,4 +1,4 @@
-import { getClub, getCompanies, costcoQuote } from "@/lib/data";
+import { getClub, getCompanies, costcoQuote } from "@/lib/data-live";
 import { PickComposer } from "@/components/club/PickComposer";
 
 export default async function NewPickPage(props: PageProps<"/club/pick/new">) {

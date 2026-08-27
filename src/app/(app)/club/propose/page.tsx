@@ -1,4 +1,4 @@
-import { getClub, getClubPortfolio, getCompanies, getClubFeed, getProposal, getResearch } from "@/lib/data";
+import { getClub, getClubPortfolio, getCompanies, getClubFeed, getProposal, getResearch } from "@/lib/data-live";
 import type { Idea } from "@/lib/types";
 import { ProposalComposer } from "@/components/club/ProposalComposer";
 

@@ -1,4 +1,4 @@
-import { getLearners, getWatchlist } from "@/lib/data";
+import { getLearners, getWatchlist } from "@/lib/data-live";
 import { TopBar } from "@/components/shell/TopBar";
 import { ResearchList } from "@/components/family/ResearchList";
 

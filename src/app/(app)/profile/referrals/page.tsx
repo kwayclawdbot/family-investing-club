@@ -1,4 +1,4 @@
-import { referral } from "@/lib/data";
+import { referral } from "@/lib/data-live";
 import { StatTile } from "@/components/ui/extras";
 import { TopBar } from "@/components/shell/TopBar";
 import { ShareLink } from "@/components/profile/ShareLink";

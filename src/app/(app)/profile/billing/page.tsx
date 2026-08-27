@@ -1,4 +1,4 @@
-import { subscription } from "@/lib/data";
+import { subscription } from "@/lib/data-live";
 import { Tag } from "@/components/ui";
 import { EmptyState } from "@/components/ui/extras";
 import { TopBar } from "@/components/shell/TopBar";

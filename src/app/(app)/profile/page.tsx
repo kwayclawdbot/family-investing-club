@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getUser, getFamily, getRecentXp, getReputation, identityOf, beltFor, nextBelt, specialistBadges, achievementsCount } from "@/lib/data";
+import { getUser, getFamily, getRecentXp, getReputation, identityOf, beltFor, nextBelt, specialistBadges, achievementsCount } from "@/lib/data-live";
 import { BeltChip, BeltRing } from "@/components/ui/belt";
 import { ProfileSettings } from "@/components/profile/ProfileSettings";
 import { BeltProgress } from "@/components/belts/BeltProgress";

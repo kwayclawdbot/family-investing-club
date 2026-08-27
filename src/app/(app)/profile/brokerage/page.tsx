@@ -1,4 +1,4 @@
-import { brokerages } from "@/lib/data";
+import { brokerages } from "@/lib/data-live";
 import { BrokerageConnect } from "@/components/verify/BrokerageConnect";
 
 const flag = (v: string | string[] | undefined) => (v === "1" ? true : v === "0" ? false : undefined);

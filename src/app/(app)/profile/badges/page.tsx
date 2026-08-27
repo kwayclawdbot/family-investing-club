@@ -1,4 +1,4 @@
-import { getBadges } from "@/lib/data";
+import { getBadges } from "@/lib/data-live";
 import { cx } from "@/components/ui";
 import { TopBar } from "@/components/shell/TopBar";
 

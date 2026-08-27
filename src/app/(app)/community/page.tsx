@@ -1,4 +1,4 @@
-import { getCommunity, getCommunityPosts, getCommunityChats, getCommunityClubs, getCommunityLive, getGroups } from "@/lib/data";
+import { getCommunity, getCommunityPosts, getCommunityChats, getCommunityClubs, getCommunityLive, getGroups } from "@/lib/data-live";
 import { CommunityHub, type Tab } from "@/components/community/CommunityHub";
 
 const TABS: Tab[] = ["feed", "chats", "clubs", "live"];

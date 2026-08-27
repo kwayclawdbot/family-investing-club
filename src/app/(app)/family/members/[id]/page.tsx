@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getLearner } from "@/lib/data";
+import { getLearner } from "@/lib/data-live";
 import { TopBar } from "@/components/shell/TopBar";
 import { LearnerDetail } from "@/components/family/LearnerDetail";
 

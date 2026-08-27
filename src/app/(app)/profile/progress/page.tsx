@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getUser, getMastery, getPaths } from "@/lib/data";
+import { getUser, getMastery, getPaths } from "@/lib/data-live";
 import { ProgressBar, cx } from "@/components/ui";
 import { EmptyState, StatTile } from "@/components/ui/extras";
 import { TopBar } from "@/components/shell/TopBar";

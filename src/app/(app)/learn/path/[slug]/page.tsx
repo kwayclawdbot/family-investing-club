@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { TopBar } from "@/components/shell/TopBar";
 import { ArtPlaceholder, ButtonLink } from "@/components/ui";
 import { LockIcon } from "@/components/ui/icons";
-import { getPath } from "@/lib/data";
+import { getPath } from "@/lib/data-live";
 
 const BookIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinejoin="round" aria-hidden>

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { TopBar } from "@/components/shell/TopBar";
 import { TermMatch } from "@/components/learn/TermMatch";
 import { Card, ButtonLink, Tag, Button } from "@/components/ui";
-import { getGame, termPairs } from "@/lib/data";
+import { getGame, termPairs } from "@/lib/data-live";
 
 export default async function GamePage(props: PageProps<"/learn/games/[id]">) {
   const { id } = await props.params;

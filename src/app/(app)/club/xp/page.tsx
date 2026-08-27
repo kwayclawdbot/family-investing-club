@@ -1,4 +1,4 @@
-import { getXpLeaderboard } from "@/lib/data";
+import { getXpLeaderboard } from "@/lib/data-live";
 import { XpBoard } from "@/components/belts/XpBoard";
 
 export default async function XpLeaderboardPage() {

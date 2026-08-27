@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getGroups } from "@/lib/data";
+import { getGroups } from "@/lib/data-live";
 import { GroupsList } from "@/components/club/Groups";
 import { PlusIcon } from "@/components/ui/icons";
 

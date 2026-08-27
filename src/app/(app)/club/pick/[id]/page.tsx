@@ -1,4 +1,4 @@
-import { getClub, getPick } from "@/lib/data";
+import { getClub, getPick } from "@/lib/data-live";
 import { PickThread } from "@/components/club/PickThread";
 
 export default async function PickPage(props: PageProps<"/club/pick/[id]">) {

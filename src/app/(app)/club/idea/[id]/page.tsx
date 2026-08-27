@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getIdea } from "@/lib/data";
+import { getIdea } from "@/lib/data-live";
 import type { IdeaStatus } from "@/lib/types";
 import { Avatar, cx } from "@/components/ui";
 import { ChevronLeft } from "@/components/ui/icons";

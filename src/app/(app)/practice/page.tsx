@@ -1,4 +1,4 @@
-import { getPortfolio, getOrders, getCompanies } from "@/lib/data";
+import { getPortfolio, getOrders, getCompanies } from "@/lib/data-live";
 import { PracticePortfolio } from "@/components/markets/PracticePortfolio";
 import { KaiFab } from "@/components/shell/KaiFab";
 

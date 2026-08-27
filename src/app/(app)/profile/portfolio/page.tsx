@@ -1,4 +1,4 @@
-import { getClub, getMyPortfolio } from "@/lib/data";
+import { getClub, getMyPortfolio } from "@/lib/data-live";
 import { MyPortfolioView } from "@/components/verify/MyPortfolioView";
 
 const flag = (v: string | string[] | undefined) => (v === "1" ? true : v === "0" ? false : undefined);

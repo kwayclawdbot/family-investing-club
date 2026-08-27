@@ -1,4 +1,4 @@
-import { getClub, getResearch } from "@/lib/data";
+import { getClub, getResearch } from "@/lib/data-live";
 import { ResearchPage } from "@/components/club/workspace/ResearchPage";
 
 export default async function ClubResearchPage() {

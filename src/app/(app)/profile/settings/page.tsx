@@ -1,4 +1,4 @@
-import { getUser } from "@/lib/data";
+import { getUser } from "@/lib/data-live";
 import { TopBar } from "@/components/shell/TopBar";
 import { SettingsForm } from "@/components/profile/SettingsForm";
 

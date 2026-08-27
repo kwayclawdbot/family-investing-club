@@ -1,5 +1,5 @@
 import { LiveList } from "@/components/live/LiveList";
-import { getLiveSessions, getPaths } from "@/lib/data";
+import { getLiveSessions, getPaths } from "@/lib/data-live";
 
 /** Artboard 22 — Live & Classes. */
 export default async function LivePage() {

@@ -1,6 +1,6 @@
 import { XpPill } from "@/components/learn/XpPill";
 import { Library } from "@/components/learn/Library";
-import { getPaths, getUser } from "@/lib/data";
+import { getPaths, getUser } from "@/lib/data-live";
 
 export default async function LibraryPage() {
   const [user, paths] = await Promise.all([getUser(), getPaths()]);

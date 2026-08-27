@@ -5,7 +5,7 @@ import { Avatar, Button, ButtonLink, Card, Tag } from "@/components/ui";
 import { ConceptChip } from "@/components/ui/extras";
 import { Reminder } from "@/components/live/Reminder";
 import { whenLabel } from "@/components/live/format";
-import { getLiveSession, getPath } from "@/lib/data";
+import { getLiveSession, getPath } from "@/lib/data-live";
 
 export default async function SessionPage(props: PageProps<"/live/[id]">) {
   const { id } = await props.params;

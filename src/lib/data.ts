@@ -9,7 +9,8 @@ import * as c from "@/lib/fixtures/club";
 import * as v from "@/lib/fixtures/verified";
 import * as bl from "@/lib/fixtures/belts";
 import * as ws from "@/lib/fixtures/workspace";
-import type { Company, Idea, LearningPath } from "@/lib/types";
+import type { Company, Idea, LearningPath, Metric, NewsItem, Portfolio } from "@/lib/types";
+import * as mkt from "@/lib/market";
 
 export async function getUser() { return fx.user; }
 export async function getFamily() { return fx.family; }
@@ -18,14 +19,73 @@ export async function getContinueLesson() { return fx.continueLesson; }
 export async function getPaths(): Promise<LearningPath[]> { return fx.paths; }
 export async function getPath(slug: string): Promise<LearningPath | undefined> { return fx.paths.find((p) => p.slug === slug); }
 export async function getLessonQuestions(lessonId: string) { return fx.questions.filter((q) => q.lessonId === lessonId); }
-export async function getCompanies(): Promise<Company[]> { return fx.companies; }
-export async function getCompany(symbol: string): Promise<Company | undefined> { return fx.companies.find((c) => c.symbol.toUpperCase() === symbol.toUpperCase()); }
+/* ── Markets: Polygon when POLYGON_API_KEY is set, fixtures otherwise (see src/lib/market) ── */
+const fixtureCompany = (symbol: string) => fx.companies.find((c) => c.symbol.toUpperCase() === symbol.toUpperCase());
+const withSample = (c: Company): Company => ({ ...c, freshness: c.freshness ?? "sample" });
+
+/** Tracked universe with live quotes (one cached daily call per symbol); fixture list when offline. */
+export async function getCompanies(): Promise<Company[]> {
+  const live = mkt.hasPolygon() ? await mkt.companies() : null;
+  return live && live.length ? live : fx.companies.map(withSample);
+}
+export async function getCompany(symbol: string): Promise<Company | undefined> {
+  const live = mkt.hasPolygon() ? await mkt.company(symbol) : null;
+  if (live) return live;
+  const f = fixtureCompany(symbol);
+  return f ? withSample(f) : undefined;
+}
 export async function searchCompanies(q: string): Promise<Company[]> {
   const s = q.trim().toLowerCase();
-  if (!s) return fx.companies;
-  return fx.companies.filter((c) => c.symbol.toLowerCase().includes(s) || c.name.toLowerCase().includes(s));
+  const universe = await getCompanies();
+  if (!s) return universe;
+  const local = universe.filter((c) => c.symbol.toLowerCase().includes(s) || c.name.toLowerCase().includes(s));
+  const hits = mkt.hasPolygon() ? await mkt.searchSymbols(s) : null;
+  if (!hits) return local;
+  const seen = new Set(local.map((c) => c.symbol));
+  const extra = hits.filter((h) => !seen.has(h.symbol)).slice(0, 6);
+  const quotes = extra.length ? await mkt.getQuotes(extra.map((h) => h.symbol), { maxWait: 4_000 }) : {};
+  const live: Company[] = extra.flatMap((h) => {
+    const q = quotes[h.symbol];
+    return q ? [{ symbol: h.symbol, name: h.name, price: q.price, change: q.change, changePct: q.changePct, series: { "1D": [q.prevClose, q.price] }, understand: [{ q: `How does ${h.name} make money?` }, { q: `Is ${h.name} expensive?`, concept: "P/E RATIO" }], asOf: q.asOf, freshness: q.freshness }] : [];
+  });
+  return [...local, ...live];
 }
-export async function getPortfolio() { return fx.portfolio; }
+/** Chart closes for one range; fixture series when offline. */
+export async function getSeries(symbol: string, range: mkt.Range): Promise<{ closes: number[]; freshness: "delayed" | "eod" | "sample" }> {
+  const live = mkt.hasPolygon() ? await mkt.seriesWithTimestamps(symbol, range) : null;
+  if (live && live.closes.length > 1) return { closes: live.closes, freshness: live.freshness };
+  const f = fixtureCompany(symbol);
+  return { closes: f?.series[range] ?? f?.series["1M"] ?? [], freshness: "sample" };
+}
+/** % return since a timestamped pick, from the live price (null when offline). */
+export async function getSincePick(symbol: string, priceAtPick: number) {
+  return mkt.hasPolygon() ? mkt.sincePick(symbol, priceAtPick) : null;
+}
+export async function getCompanyLogo(symbol: string): Promise<string | null> {
+  return mkt.hasPolygon() ? mkt.logo(symbol) : null;
+}
+export async function getLiveQuote(symbol: string) {
+  return mkt.hasPolygon() ? mkt.getQuote(symbol) : null;
+}
+/** Practice portfolio: holding values/day change recomputed from live quotes when available. */
+export async function getPortfolio(): Promise<Portfolio> {
+  const base = fx.portfolio;
+  if (!mkt.hasPolygon()) return base;
+  const quotes = await mkt.getQuotes(base.holdings.map((h) => h.symbol), { maxWait: 10_000 });
+  if (Object.values(quotes).every((q) => q === null)) return base;
+  let fixtureSum = 0, liveSum = 0, dayChange = 0;
+  const holdings = base.holdings.map((h) => {
+    fixtureSum += h.value;
+    const q = quotes[h.symbol.toUpperCase()];
+    if (!q) { liveSum += h.value; return h; }
+    const value = +(h.shares * q.price).toFixed(2);
+    liveSum += value; dayChange += h.shares * q.change;
+    return { ...h, value, changePct: q.changePct, price: q.price, asOf: q.asOf, freshness: q.freshness };
+  });
+  const totalValue = +(base.totalValue + (liveSum - fixtureSum)).toFixed(2);
+  const prevTotal = totalValue - dayChange;
+  return { ...base, holdings, totalValue, dayChange: +dayChange.toFixed(2), dayChangePct: prevTotal > 0 ? +((dayChange / prevTotal) * 100).toFixed(2) : base.dayChangePct };
+}
 export async function getClubFeed() { return fx.clubFeed; }
 export async function getIdea(id: string): Promise<Idea | undefined> { return fx.ideas.find((i) => i.id === id); }
 export async function getBadges() { return fx.badges; }
@@ -43,11 +103,26 @@ export const termPairs = r2.termPairs;
 export async function getChartDrills() { return r2.chartDrills; }
 export async function getScenarios() { return r2.scenarios; }
 export async function getScenario(id: string) { return r2.scenarios.find((s) => s.id === id); }
-export async function getNews() { return r2.news; }
-export async function getNewsItem(id: string) { return r2.news.find((n) => n.id === id); }
+/** News for the companies you follow (watchlist) — Polygon when available, fixture stories otherwise. */
+export async function getNews(): Promise<NewsItem[]> {
+  const symbols = [...new Set(r2.watchlist.map((w) => w.symbol))];
+  const live = mkt.hasPolygon() ? await mkt.newsFor(symbols, 4) : null;
+  return live && live.length ? live : r2.news;
+}
+export async function getNewsItem(id: string): Promise<NewsItem | undefined> {
+  const fixture = r2.news.find((n) => n.id === id);
+  if (fixture) return fixture;
+  const live = mkt.hasPolygon() ? await mkt.newsItem(id) : null;
+  return live ?? undefined;
+}
 export async function getWatchlist() { return r2.watchlist; }
 export async function getDiscover() { return r2.discover; }
-export async function getMetrics(symbol: string) { return r2.metricsFor(symbol.toUpperCase()); }
+/** Key metrics: live from Polygon (same definitions + lesson links), fixture otherwise. */
+export async function getMetrics(symbol: string): Promise<Metric[]> {
+  const defs = r2.metricsFor(symbol.toUpperCase());
+  const live = mkt.hasPolygon() ? await mkt.metrics(symbol, defs) : null;
+  return live ?? defs;
+}
 export async function getOrders() { return r2.orders; }
 export async function getIdeaComments(ideaId: string) { return r2.ideaComments[ideaId] ?? []; }
 export async function getModelPortfolios() { return r2.modelPortfolios; }

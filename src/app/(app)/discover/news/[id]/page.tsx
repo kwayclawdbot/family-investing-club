@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getNewsItem, getCompanies } from "@/lib/data";
+import { getNewsItem, getCompanies } from "@/lib/data-live";
 import { Card } from "@/components/ui";
 import { ConceptChip } from "@/components/ui/extras";
 import { KaiSpark, ChevronRight } from "@/components/ui/icons";

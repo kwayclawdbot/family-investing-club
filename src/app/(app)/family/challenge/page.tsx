@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getChallenge, getFamily, getLiveSession } from "@/lib/data";
+import { getChallenge, getFamily, getLiveSession } from "@/lib/data-live";
 import { ArtPlaceholder, ButtonLink, Tag } from "@/components/ui";
 import { StatTile } from "@/components/ui/extras";
 import { TopBar } from "@/components/shell/TopBar";

@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getChallenge, getGroup } from "@/lib/data";
+import { getChallenge, getGroup } from "@/lib/data-live";
 import { SubHeader } from "@/components/club/SubHeader";
 import { ChallengeDetail } from "@/components/club/Challenges";
 

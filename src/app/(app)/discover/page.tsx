@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getCompanies, getDiscover, getResearch, getDiscoverSignals } from "@/lib/data";
+import { getCompanies, getDiscover, getResearch, getDiscoverSignals } from "@/lib/data-live";
 import { Card } from "@/components/ui";
 import { CompanyList } from "@/components/markets/CompanyList";
 import { QuickTiles } from "@/components/markets/QuickTiles";

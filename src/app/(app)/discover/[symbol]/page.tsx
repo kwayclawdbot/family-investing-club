@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getCompany, getMetrics, getNews, getClubFeed, getWatchlist, getClub, getPicks, getProposals, getResearch, clubWatchers, getClubConsensus, getFicConsensus } from "@/lib/data";
+import { getCompany, getMetrics, getNews, getClubFeed, getWatchlist, getClub, getPicks, getProposals, getResearch, clubWatchers, getClubConsensus, getFicConsensus } from "@/lib/data-live";
 import { Card } from "@/components/ui";
 import { BookmarkIcon, ChevronLeft } from "@/components/ui/icons";
 import { CompanyChart } from "@/components/markets/CompanyChart";

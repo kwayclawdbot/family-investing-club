@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { ScenarioPlayer } from "@/components/learn/ScenarioPlayer";
-import { getScenario } from "@/lib/data";
+import { getScenario } from "@/lib/data-live";
 
 /** Artboard 19 — Scenario lesson + Simbot coach. */
 export default async function ScenarioPage(props: PageProps<"/learn/scenarios/[id]">) {

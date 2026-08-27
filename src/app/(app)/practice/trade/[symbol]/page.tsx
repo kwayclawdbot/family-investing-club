@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getCompany, getPortfolio, getOrders } from "@/lib/data";
+import { getCompany, getPortfolio, getOrders } from "@/lib/data-live";
 import { TopBar } from "@/components/shell/TopBar";
 import { TradeFlow } from "@/components/markets/TradeFlow";
 

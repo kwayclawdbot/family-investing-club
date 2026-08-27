@@ -1,7 +1,7 @@
 import { HomeSwitch } from "@/components/home/HomeSwitch";
 import { PulseHome } from "@/components/home/PulseHome";
 import { ChildHome } from "@/components/home/ChildHome";
-import { getHomePulse, getChildHome, identityOf, beltFor, nextBelt } from "@/lib/data";
+import { getHomePulse, getChildHome, identityOf, beltFor, nextBelt } from "@/lib/data-live";
 
 /** Home v3 — performance pulse (canvas v9, artboard 04); child accounts keep the protected composition (artboard 10). */
 export default async function HomePage(props: PageProps<"/home">) {

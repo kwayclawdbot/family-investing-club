@@ -5,7 +5,7 @@ import { PathMap } from "@/components/learn/PathMap";
 import { LearnHub } from "@/components/learn/LearnHub";
 import { ChevronDown } from "@/components/ui/icons";
 import { KaiFab } from "@/components/shell/KaiFab";
-import { getPath, getUser, getLiveSessions } from "@/lib/data";
+import { getPath, getUser, getLiveSessions } from "@/lib/data-live";
 
 export default async function LearnPage(props: PageProps<"/learn">) {
   const sp = await props.searchParams;

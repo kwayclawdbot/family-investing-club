@@ -54,3 +54,12 @@ Stack: Next.js 16 (App Router) + React 19 + Tailwind 4 + TypeScript, per plan §
 | 31 | Home v3 is a pulse: identity → Me/My Club hero with event markers → 3 tiles → club snapshot with ONE decision → short stream → one continue card. KaiFab removed (Kai is in the ＋). |
 | 32 | Three visual levels per screen: one hero, borderless stream rows, utility chips. XP/belts ambient (rings, chips, ephemeral +XP toast). Kway = Purple Belt · 2,640 XP; club = 5 members · 2 households. |
 | 33 | Dad renders Yellow II from data (910 XP) even though artboard 03 prints "Yellow I" — the same canvas says he "earned Yellow Belt II". |
+
+## Live data, 2026-08-27
+| # | Decision |
+|---|---|
+| 34 | **Two data modes.** Signed-in users read the FTA Supabase project (RLS) through `src/lib/data-live.ts`; signed-out visitors keep the fixture demo. Server pages import `@/lib/data-live`; client components keep the client-safe `@/lib/data`. |
+| 35 | **Additive schema only.** Club objects live in `fic_club_*` tables beside the FTA schema (`supabase/migrations/20260827…`). Applied via the Management API (`scripts/db-apply.mjs`) because two repos share the project and `supabase db push` refuses on history mismatch — never repair/revert FTA's migration history. |
+| 36 | **Polygon on the free tier**: grouped-daily bars (1 call = every ticker) power quotes; freshness is "End of day". Upgrade to Starter + `POLYGON_RPM=300` for 15-min delayed intraday with no code change. |
+| 37 | Mutations go through `src/app/api/club/*` (session-gated, validated); sheets still write localStorage until switched to `src/lib/live/client.ts`. |
+| 38 | Placeholder Mensah members are `auth.users` rows with no login; they become real when invited. Their XP shows 0 under Kway's RLS until a club-mates policy is added. |

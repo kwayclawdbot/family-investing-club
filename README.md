@@ -26,5 +26,6 @@ npm run proof                      # screenshots of every screen → proof/
 - `src/app/(full)` — lesson player, Kai sheet (no tab bar)
 - `src/components/shell` — Screen, BottomNav, TopBar, KaiFab
 - `src/components/ui` — tokens-driven primitives + icon set
-- `src/lib/data.ts` — data seam (fixtures today; Supabase next)
+- `src/lib/data.ts` — client-safe seam: fixtures + Polygon market data · `src/lib/data-live.ts` — server facade: FTA Supabase when signed in, fixtures for demo visitors · `src/lib/live/**` readers · `src/app/api/club/*` mutations · `src/app/api/market/*` quotes/series/search
+- `supabase/migrations` — the additive `fic_club_*` schema (apply with `node scripts/db-apply.mjs <file>`)
 - `design/artboards/*.html` — one reference file per canvas artboard; `docs/BUILD-BRIEF-round-2.md` — the system rules for screens without artboards

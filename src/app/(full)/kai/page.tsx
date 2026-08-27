@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { kai } from "@/lib/data";
+import { kai } from "@/lib/data-live";
 import { KaiSheet } from "@/components/kai/KaiSheet";
 
 export default function KaiPage() {

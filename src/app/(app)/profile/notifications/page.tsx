@@ -1,4 +1,4 @@
-import { getNotifications } from "@/lib/data";
+import { getNotifications } from "@/lib/data-live";
 import { TopBar } from "@/components/shell/TopBar";
 import { Inbox } from "@/components/profile/Inbox";
 

@@ -1,4 +1,4 @@
-import { getFamily, subscription } from "@/lib/data";
+import { getFamily, subscription } from "@/lib/data-live";
 import { TopBar } from "@/components/shell/TopBar";
 import { InviteManager } from "@/components/family/InviteManager";
 

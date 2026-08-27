@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getLearners } from "@/lib/data";
+import { getLearners } from "@/lib/data-live";
 import { Avatar } from "@/components/ui";
 import { ChevronLeft, ChevronRight } from "@/components/ui/icons";
 import { ParentControls } from "@/components/family/ParentControls";

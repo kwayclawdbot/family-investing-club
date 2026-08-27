@@ -1,4 +1,4 @@
-import { getClub, getLeaderboards } from "@/lib/data";
+import { getClub, getLeaderboards } from "@/lib/data-live";
 import { Leaderboards } from "@/components/club/Leaderboards";
 
 export default async function LeaderboardsPage() {

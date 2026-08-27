@@ -2,7 +2,7 @@ import Link from "next/link";
 import { TopBar } from "@/components/shell/TopBar";
 import { Card, Tag } from "@/components/ui";
 import { ClockIcon } from "@/components/ui/icons";
-import { getScenarios } from "@/lib/data";
+import { getScenarios } from "@/lib/data-live";
 
 export default async function ScenariosPage() {
   const list = await getScenarios();

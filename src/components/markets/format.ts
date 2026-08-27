@@ -11,3 +11,6 @@ export const tileTone = (symbol: string) => {
   ];
   return tones[symbol.charCodeAt(0) % tones.length];
 };
+
+/** Data-trust label for a price: Polygon on this tier is ~15 min delayed; fixtures are samples. */
+export const freshnessLabel = (f?: "delayed" | "eod" | "sample" | null) => (f === "delayed" ? "Delayed 15m" : f === "eod" ? "End of day" : "Sample");

@@ -1,4 +1,4 @@
-import { getChallenges } from "@/lib/data";
+import { getChallenges } from "@/lib/data-live";
 import { SubHeader } from "@/components/club/SubHeader";
 import { ChallengesList } from "@/components/club/Challenges";
 

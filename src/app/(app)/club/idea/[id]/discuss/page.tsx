@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getIdea, getIdeaComments } from "@/lib/data";
+import { getIdea, getIdeaComments } from "@/lib/data-live";
 import { SubHeader } from "@/components/club/SubHeader";
 import { DiscussThread } from "@/components/club/DiscussThread";
 

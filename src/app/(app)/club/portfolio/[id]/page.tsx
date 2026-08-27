@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getModelPortfolio } from "@/lib/data";
+import { getModelPortfolio } from "@/lib/data-live";
 import { PortfolioDetail } from "@/components/club/PortfolioDetail";
 
 /** Artboard 27 — Club Model Portfolio (public, educational). */

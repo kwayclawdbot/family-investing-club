@@ -1,4 +1,4 @@
-import { getFaqs } from "@/lib/data";
+import { getFaqs } from "@/lib/data-live";
 import { TopBar } from "@/components/shell/TopBar";
 import { HelpCenter } from "@/components/profile/HelpCenter";
 

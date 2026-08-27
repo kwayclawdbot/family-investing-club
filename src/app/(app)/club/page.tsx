@@ -1,4 +1,4 @@
-import { getClub, getClubOverview, getPortfolioTab, getMemberCards, getVerifiedExposure } from "@/lib/data";
+import { getClub, getClubOverview, getPortfolioTab, getMemberCards, getVerifiedExposure } from "@/lib/data-live";
 import { ClubWorkspace, type WorkspaceTab } from "@/components/club/workspace/ClubWorkspace";
 
 const asTab = (v: string | string[] | undefined): WorkspaceTab => (v === "portfolio" || v === "members" ? v : "overview");

@@ -1,4 +1,4 @@
-import { getCompanies } from "@/lib/data";
+import { getCompanies } from "@/lib/data-live";
 import { SubHeader } from "@/components/club/SubHeader";
 import { IdeaComposer } from "@/components/club/IdeaComposer";
 

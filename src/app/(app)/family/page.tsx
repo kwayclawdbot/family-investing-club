@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getFamily, getWatchlist } from "@/lib/data";
+import { getFamily, getWatchlist } from "@/lib/data-live";
 import { Avatar, ArtPlaceholder, cx } from "@/components/ui";
 import { SettingsIcon } from "@/components/ui/icons";
 import { InviteRow } from "@/components/family/InviteRow";

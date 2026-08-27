@@ -1,6 +1,6 @@
 import { GamesHub } from "@/components/learn/GamesHub";
 import { XpPill } from "@/components/learn/XpPill";
-import { getGames, getUser } from "@/lib/data";
+import { getGames, getUser } from "@/lib/data-live";
 
 /** Artboard 17 — Games Hub / Practice Arcade. */
 export default async function GamesPage() {

@@ -1,5 +1,5 @@
 import { ChartPractice } from "@/components/learn/ChartPractice";
-import { getChartDrills } from "@/lib/data";
+import { getChartDrills } from "@/lib/data-live";
 
 /** Artboard 18 — Chart Practice / Chart Sprint. */
 export default async function ChartPracticePage() {

@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getPaths } from "@/lib/data";
+import { getPaths } from "@/lib/data-live";
 import { STEPS, type Step } from "@/components/onboarding/steps";
 import { WhoStep } from "@/components/onboarding/WhoStep";
 import { CreateStep } from "@/components/onboarding/CreateStep";
