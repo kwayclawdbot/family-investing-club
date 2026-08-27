@@ -208,3 +208,17 @@ export type Leaderboards = {
   window: string; rows: LeaderRow[]; footnote: string;
   others: { emoji: string; label: string; leader: string }[];
 };
+
+/* ── Round 5: XP + Belt rank system (canvas v8) ─────────────────────── */
+/** Five identity systems, kept separate: Belt (lifetime XP & participation) · Reputation (resolved pick accuracy) ·
+ *  Specialist badges (domain strength) · Verification (ownership, not skill) · Achievements (milestones).
+ *  XP never comes from trade count, account size, risk or short-term returns. */
+export type BeltColor = "white" | "yellow" | "blue" | "purple" | "black";
+export type Belt = { level: 1 | 2 | 3 | 4 | 5 | 6 | 7; color: BeltColor; label: string; short: string; minXp: number };
+export type XpEvent = { id: string; emoji: string; text: string; xp: number; ago?: string; kind: "learn" | "research" | "club" | "practice" | "family" };
+export type Reputation = { pickPositivePct: number; resolvedPicks: number };
+export type MemberIdentity = { memberId: string; name: string; initial: string; color: string; lifetimeXp: number; weekXp: number };
+export type ClubXpGoal = { current: number; goal: number; window: string; milestone: string };
+export type XpBoardRow = { rank: number; memberId: string; name: string; initial: string; color: string; lifetimeXp: number; deltaXp: number; isYou?: boolean };
+export type XpLeaderboard = { windows: string[]; scopes: string[]; rows: XpBoardRow[]; callout: string; otherBoards: { emoji: string; label: string; href: string }[] };
+export type PromotionSummary = { belt: Belt; lessons: number; research: number; drills: number; clubActions: number };

@@ -7,6 +7,7 @@ import * as fx from "@/lib/fixtures";
 import * as r2 from "@/lib/fixtures/round2";
 import * as c from "@/lib/fixtures/club";
 import * as v from "@/lib/fixtures/verified";
+import * as bl from "@/lib/fixtures/belts";
 import type { Company, Idea, LearningPath } from "@/lib/types";
 
 export async function getUser() { return fx.user; }
@@ -87,3 +88,18 @@ export async function getFicConsensus(symbol: string) { return v.ficConsensus[sy
 export async function getDiscoverSignals() { return v.discoverSignals; }
 export async function getVerifiedExposure() { return v.verifiedExposure; }
 export async function getLeaderboards() { return v.leaderboards; }
+
+/* ── Round 5: XP + Belt rank system ─────────────────────────────────── */
+export const BELTS = bl.BELTS;
+export const beltFor = bl.beltFor;
+export const nextBelt = bl.nextBelt;
+export const identityOf = bl.identityOf;
+export async function getIdentities() { return bl.identities; }
+export async function getRecentXp() { return bl.recentXp; }
+export async function getReputation() { return bl.reputation; }
+export const specialistBadges = bl.specialistBadges;
+export const achievementsCount = bl.achievementsCount;
+export async function getClubXpGoal() { return bl.clubXpGoal; }
+export const activityXp = bl.activityXp;
+export async function getXpLeaderboard() { return bl.xpLeaderboard; }
+export async function getPromotion() { return bl.promotion; }

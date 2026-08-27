@@ -43,6 +43,9 @@ const ROUTES = [
   ["club-research", "/club/research"],
   ["club-members", "/club/members"],
   ["child-home", "/home?as=child"],
+  // round 5 — belts
+  ["belt-promotion", "/profile/belt"],
+  ["xp-leaderboard", "/club/xp"],
   // round 4 — verified collective investing
   ["connect-prompt", "/club/pick/new?connected=0"],
   ["brokerage", "/profile/brokerage"],
