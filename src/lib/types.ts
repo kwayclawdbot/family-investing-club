@@ -177,3 +177,34 @@ export type ChildHome = {
   newBadge?: { emoji: string; label: string; sub: string };
   investingNight: { when: string; text: string };
 };
+
+/* ── Round 4: verified collective investing (canvas v7) ─────────────── */
+/** Badge language is locked: "Brokerage Connected ✓" / "Verified Owner ✓" / "Verified Holding ✓". Never "Verified Investor". */
+export type SharingLevel = "private" | "positions" | "allocation" | "full";
+export type Brokerage = { id: string; name: string; last4: string; syncedAgo: string; connected: boolean };
+export type RealHolding = { symbol: string; name: string; weightPct: number; bucket: "ETFs" | "Tech" | "Consumer" | "Energy" | "Cash" | "Other" };
+export type MyPortfolio = {
+  brokerage: Brokerage | null; value: number; ytdPct: number; holdings: RealHolding[];
+  allocation: { label: string; pct: number; color: string }[];
+  sharing: { club: SharingLevel; publicBadge: boolean };
+  overlap: { symbol: string; realPct: number; modelPct: number; lessonHref: string; lessonLabel: string; minutes: number };
+};
+export type ConsensusVote = { memberId: string; stance: PickStance; verified?: boolean };
+export type ClubConsensus = {
+  symbol: string; confidencePct: number; buy: number; watch: number; pass: number; verifiedOwners: number; modelTargetPct: number | null; verifiedExposurePct: number | null;
+  why: string; thesis: string; voters: string[]; totalPicks: number;
+};
+export type FicConsensus = { symbol: string; picks: number; buyPct: number; watchPct: number; passPct: number; verifiedOwners: number };
+export type DiscoverSignal = { symbol: string; name: string; line: string };
+export type DiscoverSignals = {
+  familiesLikeYours: DiscoverSignal[]; mostResearched: DiscoverSignal[]; mostOwnedVerified: string[]; mostDiscussed: string[];
+  trendingParents: { text: string; href: string };
+};
+export type ExposureRow = { symbol: string; name: string; ownersOf: string; actualPct: number; modelPct: number | null; warn?: boolean };
+export type VerifiedExposure = { connectedAdults: number; totalAdults: number; rows: ExposureRow[]; mismatch: { text: string; lessonLabel: string; minutes: number; lessonHref: string } };
+export type LeaderRow = { rank: number; memberId: string; name: string; ageLabel?: string; basis: "PRACTICE" | "PICK" | "VERIFIED ✓"; valuePct: number };
+export type Leaderboards = {
+  boards: { id: string; label: string }[];
+  window: string; rows: LeaderRow[]; footnote: string;
+  others: { emoji: string; label: string; leader: string }[];
+};

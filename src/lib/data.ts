@@ -6,6 +6,7 @@
 import * as fx from "@/lib/fixtures";
 import * as r2 from "@/lib/fixtures/round2";
 import * as c from "@/lib/fixtures/club";
+import * as v from "@/lib/fixtures/verified";
 import type { Company, Idea, LearningPath } from "@/lib/types";
 
 export async function getUser() { return fx.user; }
@@ -77,3 +78,12 @@ export async function getCommunity() { return c.community; }
 export async function getChildHome() { return c.childHome; }
 export function clubWatchers(symbol: string) { return c.clubWatching[symbol.toUpperCase()] ?? []; }
 export const costcoQuote = c.costcoQuote;
+
+/* ── Round 4: verified collective investing (canvas v7) ─────────────── */
+export const brokerages = v.brokerages;
+export async function getMyPortfolio() { return v.myPortfolio; }
+export async function getClubConsensus(symbol: string) { return v.clubConsensus[symbol.toUpperCase()]; }
+export async function getFicConsensus(symbol: string) { return v.ficConsensus[symbol.toUpperCase()]; }
+export async function getDiscoverSignals() { return v.discoverSignals; }
+export async function getVerifiedExposure() { return v.verifiedExposure; }
+export async function getLeaderboards() { return v.leaderboards; }

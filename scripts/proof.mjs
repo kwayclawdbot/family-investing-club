@@ -43,6 +43,14 @@ const ROUTES = [
   ["club-research", "/club/research"],
   ["club-members", "/club/members"],
   ["child-home", "/home?as=child"],
+  // round 4 — verified collective investing
+  ["connect-prompt", "/club/pick/new?connected=0"],
+  ["brokerage", "/profile/brokerage"],
+  ["privacy", "/profile/privacy"],
+  ["my-portfolio", "/profile/portfolio"],
+  ["club-exposure", "/club/portfolio?view=verified"],
+  ["leaderboards", "/club/leaderboards"],
+  ["consensus-nvda", "/discover/NVDA"],
   // round 2
   ["signup", "/signup"],
   ["forgot", "/forgot-password"],
