@@ -2,20 +2,31 @@
 import Link from "next/link";
 import { useState } from "react";
 import type { Question } from "@/lib/types";
-import { CloseIcon, KaiSpark } from "@/components/ui/icons";
+import { ChevronLeft, CloseIcon, KaiSpark } from "@/components/ui/icons";
 
-type Phase = "answer" | "correct" | "wrong" | "done";
+/** Artboard 21 — EXPLAIN stage: lesson video + quick check, per lesson. Only if-7 has one today. */
+const EXPLAIN: Record<string, { path: string; lessonNo: number; title: string; goal: string; minutes: number; video: string; check: { q: string; options: string[]; answerIdx: number; why: string } }> = {
+  "if-7": {
+    path: "Investing Foundations", lessonNo: 7, title: "Why do stock prices move?", goal: "Explain supply & demand", minutes: 8, video: "2:14",
+    check: { q: "Who actually sets a stock's price?", options: ["The company", "Buyers & sellers", "The exchange"], answerIdx: 1, why: "Buyers and sellers do — the company and the exchange only host the trade." },
+  },
+};
+
+type Phase = "explain" | "answer" | "correct" | "wrong" | "done";
 const LETTERS = ["A", "B", "C", "D", "E", "F"];
 
 export function LessonPlayer({ lessonId, questions }: { lessonId: string; questions: Question[] }) {
   const [i, setI] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
-  const [phase, setPhase] = useState<Phase>("answer");
+  const explain = EXPLAIN[lessonId];
+  const [phase, setPhase] = useState<Phase>(explain ? "explain" : "answer");
   const [earned, setEarned] = useState(0);
+  const [quick, setQuick] = useState<number | null>(null);
+  const totalXp = questions.reduce((a, b) => a + b.xp, 0);
 
   const q = questions[i];
   const total = questions.length;
-  const progress = ((i + (phase === "answer" ? 0 : 1)) / total) * 100;
+  const progress = 10 + ((i + (phase === "answer" ? 0 : 1)) / total) * 90;
 
   function check() {
     if (picked === null) return;
@@ -38,6 +49,63 @@ export function LessonPlayer({ lessonId, questions }: { lessonId: string; questi
 
   if (phase === "done") return <Celebration xp={earned} lessonId={lessonId} />;
 
+  if (phase === "explain" && explain) {
+    const c = explain.check;
+    const quickRight = quick === c.answerIdx;
+    return (
+      <div className="flex-1 flex flex-col px-5 pt-[18px] pb-[44px]">
+        <div className="flex items-center gap-[14px]">
+          <Link href="/learn" aria-label="Back to path" className="text-ink-3"><ChevronLeft size={22} /></Link>
+          <div className="flex-1 h-[10px] rounded-[6px] bg-line overflow-hidden" role="progressbar" aria-valuenow={10} aria-valuemin={0} aria-valuemax={100}>
+            <div className="h-full rounded-[6px] bg-green-2" style={{ width: "10%" }} />
+          </div>
+          <span className="text-[12px] font-black text-ink-3">⭐ +{totalXp}</span>
+        </div>
+        <div className="mt-4 text-[11.5px] font-extrabold text-orange tracking-[0.3px] uppercase">{explain.path} · Lesson {explain.lessonNo}</div>
+        <h1 className="mt-1 text-[21px] font-black text-ink">{explain.title}</h1>
+        <div className="flex gap-[7px] mt-[9px]">
+          <span className="rounded-[9px] bg-purple-tint px-[11px] py-1 text-[10.5px] font-extrabold text-purple-2 uppercase">Goal: {explain.goal}</span>
+          <span className="rounded-[9px] bg-card border border-line px-[11px] py-1 text-[10.5px] font-extrabold text-ink-3">⏱ {explain.minutes} MIN</span>
+        </div>
+
+        {/* Lesson video — placeholder frame; playback arrives with the video LMS */}
+        <div className="relative mt-3 h-[190px] rounded-[16px] flex items-center justify-center" style={{ background: "repeating-linear-gradient(45deg,#3E3A30 0 10px,#4A4538 10px 20px)" }} aria-label={`Lesson video · ${explain.video}`}>
+          <span className="absolute top-[10px] left-3 font-mono text-[10px] text-[#B9AE94]">lesson video · {explain.video}</span>
+          <span className="w-14 h-14 rounded-full bg-[rgba(250,243,229,0.92)] flex items-center justify-center" aria-hidden>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#2E2A21"><path d="M8 5v14l11-7z" /></svg>
+          </span>
+          <div className="absolute bottom-3 left-3 right-3 h-[5px] rounded-[3px] bg-[rgba(250,243,229,0.3)]"><div className="h-full w-[38%] rounded-[3px] bg-orange" /></div>
+        </div>
+
+        <div className="mt-3 rounded-[16px] border border-line bg-card px-4 py-[14px]">
+          <div className="text-[11.5px] font-black text-green uppercase">Quick check · after the video</div>
+          <div className="mt-[6px] text-[14.5px] font-extrabold text-ink">{c.q}</div>
+          <div className="flex gap-2 mt-[10px]" role="radiogroup">
+            {c.options.map((o, k) => (
+              <button key={o} type="button" role="radio" aria-checked={quick === k} onClick={() => setQuick(k)}
+                className={`flex-1 rounded-[11px] px-[6px] py-[9px] text-center text-[12px] font-extrabold text-ink transition ${quick === k ? (k === c.answerIdx ? "bg-green-tint border-2 border-green-2 font-black" : "bg-[#FBE9E4] border-2 border-red") : "bg-paper border-[1.5px] border-line"}`}>
+                {o}
+              </button>
+            ))}
+          </div>
+          {quick !== null && <p className={`mt-2 text-[12px] font-bold ${quickRight ? "text-green" : "text-red"}`}>{quickRight ? "✓ Right — " : "Not quite — "}{c.why}</p>}
+        </div>
+
+        <Link href={`/kai?context=lesson:${lessonId}`} className="mt-[10px] flex items-center gap-[10px] rounded-[14px] border border-line bg-card px-[14px] py-[11px]">
+          <span className="w-[26px] h-[26px] rounded-[9px] bg-purple text-white flex items-center justify-center"><KaiSpark size={13} /></span>
+          <span className="text-[12.5px] font-bold text-ink-2">Ask <b className="text-purple-2">Kai</b> about this lesson — it knows exactly where you are.</span>
+        </Link>
+
+        <div className="mt-auto pt-5">
+          <button onClick={() => setPhase("answer")} disabled={quick === null}
+            className="w-full rounded-[16px] bg-green-2 py-[15px] text-center text-[15px] font-black text-cream-text shadow-[0_3px_0_#3A6B3E] disabled:opacity-50 disabled:shadow-none active:translate-y-[2px] active:shadow-none transition">
+            Continue → Apply It
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   const answered = phase !== "answer";
 
   return (
@@ -56,18 +124,9 @@ export function LessonPlayer({ lessonId, questions }: { lessonId: string; questi
         </div>
       </div>
 
-      {/* EXPLAIN: lesson video block (first question only) */}
-      {lessonId === "if-7" && i === 0 && phase === "answer" && (
-        <div className="mt-[18px] rounded-[16px] bg-[#2E2A21] aspect-video flex flex-col items-center justify-center text-center">
-          <span className="w-12 h-12 rounded-full bg-cream-text/15 flex items-center justify-center" aria-hidden>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="#FFFCF5"><path d="M8 5v14l11-7z" /></svg>
-          </span>
-          <span className="mt-2 text-[11.5px] font-extrabold text-[#D9CDB2]">Lesson video · 2:40</span>
-        </div>
-      )}
 
       {/* concept chip */}
-      <div className={`${lessonId === "if-7" && i === 0 && phase === "answer" ? "mt-4" : "mt-[22px]"} self-start inline-flex items-center gap-[6px] bg-purple-tint rounded-[20px] px-3 py-[5px]`}>
+      <div className="mt-[22px] self-start inline-flex items-center gap-[6px] bg-purple-tint rounded-[20px] px-3 py-[5px]">
         <span className="w-[7px] h-[7px] rounded-full bg-purple" />
         <span className="text-[11.5px] font-extrabold text-purple-2 uppercase">Concept · {q.concept}</span>
       </div>

@@ -1,9 +1,9 @@
 import Link from "next/link";
 
 const PROPS = [
-  { n: 1, text: "Learn investing in 5-minute interactive lessons", cls: "bg-green-tint text-green" },
-  { n: 2, text: "Practice with a $10k virtual portfolio — zero risk", cls: "bg-orange-tint text-orange-2" },
-  { n: 3, text: "Research and grow together as a family", cls: "bg-purple-tint text-purple-2" },
+  { n: 1, text: "Build your investing club with family & friends — research, pick and vote together", cls: "bg-green-tint text-green" },
+  { n: 2, text: "Learn as you invest with 5-minute interactive lessons", cls: "bg-orange-tint text-orange-2" },
+  { n: 3, text: "Practice with virtual portfolios — decisions are real, dollars aren't", cls: "bg-purple-tint text-purple-2" },
 ];
 
 export default function WelcomePage() {
@@ -14,7 +14,7 @@ export default function WelcomePage() {
           FIC
         </div>
         <h1 className="text-[25px] font-black text-ink leading-[1.15]">Family Investing Club</h1>
-        <p className="text-[14.5px] font-extrabold text-orange">Learn. Invest. Grow Together.</p>
+        <p className="text-[14.5px] font-extrabold text-orange">Invest Together. Learn Together. Grow Together.</p>
       </div>
 
       <div

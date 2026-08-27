@@ -108,7 +108,7 @@ export function PracticePortfolio({ portfolio, orders = [], companies = [] }: { 
           p.holdings.map((h, i) => (
             <Link
               key={h.symbol}
-              href={`/markets/${h.symbol}`}
+              href={`/discover/${h.symbol}`}
               className={`flex items-center gap-[11px] py-[11px] ${i < p.holdings.length - 1 ? "border-b border-paper-2" : ""}`}
             >
               <span className={`w-[34px] h-[34px] rounded-[11px] flex items-center justify-center text-[11px] font-black shrink-0 ${tileTone(h.symbol)}`}>
@@ -124,6 +124,14 @@ export function PracticePortfolio({ portfolio, orders = [], companies = [] }: { 
               </div>
             </Link>
           ))}
+        {tab === "Holdings" && p.holdings.length > 0 && (
+          <div className="flex flex-wrap gap-[6px] py-3 border-t border-paper-2">
+            <span className="w-full text-[10.5px] font-extrabold text-ink-3 uppercase tracking-[0.3px]">Share a holding with My Club</span>
+            {p.holdings.map((h) => (
+              <Link key={`share-${h.symbol}`} href={`/club/pick/new?symbol=${h.symbol}`} className="rounded-[9px] bg-green-tint px-[10px] py-[5px] text-[11px] font-black text-green">▲ {h.symbol} → Pick</Link>
+            ))}
+          </div>
+        )}
         {tab === "Orders" &&
           (allOrders.length === 0 ? (
             <div className="py-7 text-center">
@@ -132,7 +140,7 @@ export function PracticePortfolio({ portfolio, orders = [], companies = [] }: { 
             </div>
           ) : (
             allOrders.map((o, i) => (
-              <Link key={o.id} href={`/markets/${o.symbol}`} className={`flex items-center gap-[11px] py-[11px] ${i < allOrders.length - 1 ? "border-b border-paper-2" : ""}`}>
+              <Link key={o.id} href={`/discover/${o.symbol}`} className={`flex items-center gap-[11px] py-[11px] ${i < allOrders.length - 1 ? "border-b border-paper-2" : ""}`}>
                 <span className={`w-[34px] h-[34px] rounded-[11px] flex items-center justify-center text-[11px] font-black shrink-0 ${tileTone(o.symbol)}`}>{o.symbol}</span>
                 <div className="flex-1 min-w-0">
                   <div className="text-[13.5px] font-extrabold text-ink">
@@ -173,6 +181,16 @@ export function PracticePortfolio({ portfolio, orders = [], companies = [] }: { 
             </div>
           ))}
       </Card>
+
+      <Link href="/club/challenges" className="mt-3 flex items-center gap-3 rounded-card border border-green-line bg-green-tint px-4 py-[12px]">
+        <span className="text-[20px]" aria-hidden>🏆</span>
+        <span className="flex-1 min-w-0">
+          <span className="block text-[11px] font-extrabold text-green tracking-[0.3px]">CLUB CHALLENGE</span>
+          <span className="block text-[13px] font-black text-ink">Everyone builds a 5-stock portfolio</span>
+          <span className="block text-[11px] font-bold text-ink-3">Compare reasoning, not only return · Thursday</span>
+        </span>
+        <span className="rounded-[10px] bg-green-2 px-3 py-[6px] text-[11px] font-black text-cream-text">Join</span>
+      </Link>
 
       <Link
         href={p.insight.lessonHref}

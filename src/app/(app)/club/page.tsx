@@ -1,13 +1,8 @@
-import { getClubFeed } from "@/lib/data";
-import { ClubFeed } from "@/components/club/ClubFeed";
-import { KaiFab } from "@/components/shell/KaiFab";
+import { getClub, clubVisibleMembers, getPicks, getProposals, getResearch, getClubActivity, getClubPortfolio } from "@/lib/data";
+import { MyClub } from "@/components/club/MyClub";
 
-export default async function ClubPage() {
-  const feed = await getClubFeed();
-  return (
-    <>
-      <ClubFeed feed={feed} />
-      <KaiFab context="club" />
-    </>
-  );
+export default async function ClubPage(props: PageProps<"/club">) {
+  const sp = await props.searchParams;
+  const [club, picks, proposals, research, activity, portfolio] = await Promise.all([getClub(), getPicks(), getProposals(), getResearch(), getClubActivity(), getClubPortfolio()]);
+  return <MyClub club={club} visible={clubVisibleMembers} picks={picks} proposals={proposals} research={research} activity={activity} portfolio={portfolio} forceNew={sp.state === "new"} />;
 }

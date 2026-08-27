@@ -34,9 +34,9 @@ export function ResearchList({ items, learners }: { items: WatchItem[]; learners
           {all.map((r, i) => (
             <div key={r.symbol} className={cx("py-3", i < all.length - 1 && "border-b border-paper-2")}>
               <div className="flex items-center gap-3">
-                <Link href={`/markets/${r.symbol}`} className="w-10 h-10 rounded-[10px] bg-green-tint text-green text-[11px] font-black flex items-center justify-center">{r.symbol}</Link>
+                <Link href={`/discover/${r.symbol}`} className="w-10 h-10 rounded-[10px] bg-green-tint text-green text-[11px] font-black flex items-center justify-center">{r.symbol}</Link>
                 <div className="flex-1 min-w-0">
-                  <Link href={`/markets/${r.symbol}`} className="block text-[13.5px] font-black text-ink truncate">{r.name}</Link>
+                  <Link href={`/discover/${r.symbol}`} className="block text-[13.5px] font-black text-ink truncate">{r.name}</Link>
                   <div className="text-[11.5px] font-bold text-ink-3">{r.reason}</div>
                 </div>
               </div>

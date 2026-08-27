@@ -2,27 +2,30 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ChevronLeft } from "@/components/ui/icons";
-import { STEPS, prevStep, type Step } from "./steps";
+import { DOT_STEPS, prevStep, type Step } from "./steps";
 
 /** Header (back · 5 dots · Skip) + bottom-pinned CTA, per artboards 02–06. */
 export function StepShell({
   step,
   children,
   cta,
+  creating = true,
 }: {
   step: Step;
   children: ReactNode;
   cta: ReactNode;
+  /** false when the user is not creating a club — the `create` step is skipped on back navigation. */
+  creating?: boolean;
 }) {
-  const idx = STEPS.indexOf(step);
+  const idx = DOT_STEPS.indexOf(step === "create" ? "who" : step);
   return (
     <div className="flex-1 flex flex-col px-[22px] pt-[calc(18px+env(safe-area-inset-top))] sm:pt-[70px]">
       <div className="flex items-center gap-[14px]">
-        <Link href={prevStep(step)} aria-label="Back" className="text-ink-3 -ml-1">
+        <Link href={prevStep(step, creating)} aria-label="Back" className="text-ink-3 -ml-1">
           <ChevronLeft size={20} />
         </Link>
-        <div className="flex-1 flex gap-[6px] justify-center" aria-label={`Step ${idx + 1} of ${STEPS.length}`}>
-          {STEPS.map((s, i) => (
+        <div className="flex-1 flex gap-[6px] justify-center" aria-label={`Step ${idx + 1} of ${DOT_STEPS.length}`}>
+          {DOT_STEPS.map((s, i) => (
             <span
               key={s}
               className={`h-2 rounded-[4px] transition-all ${i === idx ? "w-[22px] bg-green-2" : i < idx ? "w-2 bg-green-2" : "w-2 bg-line-3"}`}

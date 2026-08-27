@@ -7,7 +7,10 @@ import { ChevronDown } from "@/components/ui/icons";
 import { KaiFab } from "@/components/shell/KaiFab";
 import { getPath, getUser, getLiveSessions } from "@/lib/data";
 
-export default async function LearnPage() {
+export default async function LearnPage(props: PageProps<"/learn">) {
+  const sp = await props.searchParams;
+  const bridge = typeof sp.bridge === "string" ? sp.bridge : null;
+  const back = typeof sp.return === "string" && sp.return.startsWith("/") ? sp.return : null;
   const [user, path, sessions] = await Promise.all([getUser(), getPath("investing-foundations"), getLiveSessions()]);
   const liveNow = sessions.find((s) => s.status === "live");
   if (!path?.lessonList) notFound();
@@ -26,6 +29,14 @@ export default async function LearnPage() {
         <span className="text-[13.5px] font-extrabold text-ink">Investing 101</span>
         <ChevronDown className="text-ink-3" />
       </Link>
+
+      {bridge && (
+        <Link href={back ?? "/learn/path/build-a-portfolio"} className="mt-3 flex items-center gap-3 rounded-[14px] border border-purple-line bg-purple-tint px-[14px] py-[11px]">
+          <span className="w-[26px] h-[26px] rounded-[9px] bg-purple text-white flex items-center justify-center text-[13px]">✦</span>
+          <span className="flex-1 text-[12.5px] font-bold text-ink-2">Refresher: <b className="text-purple-2">{bridge}</b> · 3 min{back ? " → then back to your vote" : ""}</span>
+          <span className="text-[12px] font-black text-purple-2">{back ? "Go →" : "Open →"}</span>
+        </Link>
+      )}
 
       <LearnHub liveNow={liveNow} />
 

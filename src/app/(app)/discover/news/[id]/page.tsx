@@ -22,10 +22,10 @@ export default async function NewsItemPage(props: PageProps<"/discover/news/[id]
         <h1 className="text-[22px] font-black text-ink leading-[1.25]">{n.headline}</h1>
         <div className="mt-2 text-[12px] font-bold text-ink-3">{n.source} · {n.ago}</div>
 
-        <Card tone="green" className="mt-4">
-          <div className="text-[11px] font-extrabold text-green tracking-[0.3px]">WHY THIS MATTERS</div>
-          <p className="mt-1 text-[14px] font-bold text-ink leading-[1.5]">{n.whyItMatters}</p>
-        </Card>
+        <div className="mt-4 rounded-[13px] border border-line bg-card px-[13px] py-[11px]">
+          <div className="text-[10.5px] font-black text-orange">WHY THIS MATTERS TO YOU</div>
+          <p className="mt-[5px] text-[13px] font-semibold text-[#4A4436] leading-[1.5]">{n.whyItMatters}</p>
+        </div>
 
         <p className="mt-4 text-[14px] font-bold text-ink-2 leading-[1.6]">{n.body}</p>
 
@@ -36,7 +36,10 @@ export default async function NewsItemPage(props: PageProps<"/discover/news/[id]
           })}
         </div>
 
-        <Link href={`/kai?context=${encodeURIComponent(`news:${n.id}`)}`} className="mt-4 flex items-center gap-[10px] bg-purple-tint border border-purple-line rounded-[14px] px-[14px] py-3">
+        <div className="mt-4 flex gap-[14px] text-[11.5px] font-extrabold text-ink-3">
+          <Link href="/club">💬 Discuss in Club</Link>
+        </div>
+        <Link href={`/kai?context=${encodeURIComponent(`news:${n.id}`)}`} className="mt-3 flex items-center gap-[10px] bg-purple-tint border border-purple-line rounded-[14px] px-[14px] py-3">
           <span className="w-7 h-7 rounded-[10px] bg-purple text-white flex items-center justify-center shrink-0"><KaiSpark size={14} /></span>
           <span className="flex-1 text-[13px] font-extrabold text-purple-2">Ask Kai to explain this story</span>
           <ChevronRight className="text-purple-2" />

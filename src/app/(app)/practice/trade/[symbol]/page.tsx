@@ -10,7 +10,7 @@ export default async function TradePage(props: PageProps<"/practice/trade/[symbo
   const [portfolio, orders] = await Promise.all([getPortfolio(), getOrders()]);
   return (
     <div className="-mx-[18px] pb-6">
-      <TopBar backHref={`/markets/${c.symbol}`} title={`Practice · ${c.symbol}`} />
+      <TopBar backHref={`/discover/${c.symbol}`} title={`Practice · ${c.symbol}`} />
       <div className="px-[18px]">
         <TradeFlow company={c} portfolio={portfolio} fixtureOrders={orders} />
       </div>

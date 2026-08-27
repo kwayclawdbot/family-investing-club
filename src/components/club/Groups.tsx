@@ -10,6 +10,9 @@ import { useStored, useLevel } from "./storage";
 
 const KIND_LABEL: Record<Group["kind"], string> = { family: "Family", class: "Class", topic: "Topic", org: "Organization" };
 const KIND_TONE: Record<Group["kind"], "orange" | "purple" | "green" | "muted"> = { family: "orange", class: "purple", topic: "green", org: "muted" };
+const TILE: Record<Group["kind"], string> = { family: "bg-green-tint", class: "bg-purple-tint", topic: "bg-orange-tint", org: "bg-paper-2" };
+const SUGGESTED = "dividend-club";
+const fmt = (n: number) => (n >= 1000 ? `${(n / 1000).toFixed(1).replace(/\.0$/, "")}k` : String(n));
 
 function useJoined() {
   const [over, setOver] = useStored<Record<string, boolean>>("fic.groups", {});
@@ -18,49 +21,78 @@ function useJoined() {
   return { joined, toggle };
 }
 
+/** Artboard 26 sub-line: "Private · 4 members · 🔥 23-week streak" / "Cohort · 28 members · 3 assignments due" / "Topic group · 1.2k members · moderated". */
+function subLine(g: Group) {
+  if (g.kind === "family") return `Private · ${g.members} members · 🔥 23-week streak`;
+  if (g.kind === "class") return `Cohort · ${g.members} members · ${g.pinned.length} assignment${g.pinned.length === 1 ? "" : "s"} due`;
+  return `Topic group · ${fmt(g.members)} members · moderated`;
+}
+
 function JoinButton({ g, joined, onToggle, youth }: { g: Group; joined: boolean; onToggle: () => void; youth: boolean }) {
   if (youth && g.kind !== "family") {
-    return <span className="text-[11px] font-extrabold text-ink-4 text-right leading-tight">Ask a parent<br />to join groups</span>;
+    return <span className="text-[11px] font-extrabold text-ink-4 text-right leading-tight">Ask a parent<br />to join</span>;
   }
   return (
-    <button
-      aria-pressed={joined}
-      onClick={(e) => { e.preventDefault(); onToggle(); }}
-      className={cx("h-[32px] px-[13px] rounded-[10px] text-[12px] font-black shrink-0", joined ? "bg-green-tint text-green" : "bg-green-2 text-cream-text")}
-    >
+    <button aria-pressed={joined} onClick={(e) => { e.preventDefault(); onToggle(); }}
+      className={cx("rounded-[10px] px-[13px] py-[7px] text-[11px] font-black shrink-0", joined ? "bg-green-tint text-green" : "bg-purple text-cream-text")}>
       {joined ? "✓ Joined" : "Join"}
     </button>
   );
 }
 
+/** Artboard 26 — Groups: family (→ My Club) / classroom / topic cards with a pinned line, then "Suggested for you". */
 export function GroupsList({ groups }: { groups: Group[] }) {
-  const [tab, setTab] = useState("Your groups");
   const { joined, toggle } = useJoined();
   const level = useLevel();
   const youth = level === "Explorer" || level === "Builder";
-  const list = groups.filter((g) => (tab === "Your groups" ? joined(g) : !joined(g)));
+  const visible = groups.filter((g) => !youth || g.kind === "family" || g.kind === "class");
+  const main = visible.filter((g) => g.id !== SUGGESTED || joined(g));
+  const suggested = visible.find((g) => g.id === SUGGESTED && !joined(g));
+
   return (
     <div className="pb-6">
-      <Segmented items={["Your groups", "Discover"]} value={tab} onChange={setTab} tone="purple" className="mt-1" />
-      {list.length === 0 ? (
-        <div className="mt-4"><EmptyState emoji="👥" title={tab === "Your groups" ? "No groups yet" : "You've joined them all"} body={tab === "Your groups" ? "Join a topic group or your class to learn alongside others." : "New groups appear here as the Club grows."} action={tab === "Your groups" ? "Discover groups" : undefined} href="#" /></div>
-      ) : (
-        list.map((g) => (
-          <Link key={g.id} href={`/club/groups/${g.id}`} className={cx(cardCls, "flex items-center gap-3")}>
-            <span className="w-11 h-11 rounded-[13px] bg-paper-2 flex items-center justify-center text-[22px] shrink-0">{g.emoji}</span>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="text-[14px] font-black text-ink truncate">{g.name}</span>
-                <Tag tone={KIND_TONE[g.kind]}>{KIND_LABEL[g.kind]}</Tag>
+      <div className="flex flex-col gap-[10px] mt-3">
+        {main.map((g) => {
+          const isFamily = g.kind === "family";
+          const href = isFamily ? "/club" : `/club/groups/${g.id}`;
+          return (
+            <Link key={g.id} href={href} className="rounded-[16px] border border-line bg-card px-4 py-[14px] block">
+              <div className="flex items-center gap-3">
+                <span className={cx("w-[42px] h-[42px] rounded-[13px] flex items-center justify-center text-[19px] shrink-0", TILE[g.kind])} aria-hidden>{g.emoji}</span>
+                <div className="flex-1 min-w-0">
+                  <div className="text-[14.5px] font-black text-ink leading-tight">{g.name}</div>
+                  <div className="flex items-center gap-[6px] mt-[2px]">
+                    {isFamily && <Tag tone="orange" className="whitespace-nowrap shrink-0">Your club</Tag>}
+                    <span className="text-[11px] font-bold text-ink-3 leading-tight">{subLine(g)}</span>
+                  </div>
+                </div>
+                <span className="rounded-[10px] border-[1.5px] border-green-2 px-3 py-[6px] text-[11px] font-black text-green shrink-0">{joined(g) ? "Open" : "View"}</span>
               </div>
-              <div className="text-[12px] font-semibold text-ink-3 truncate">{g.blurb}</div>
-              <div className="text-[11px] font-bold text-ink-4 mt-[2px]">{g.members.toLocaleString()} members</div>
-            </div>
-            <JoinButton g={g} joined={joined(g)} onToggle={() => toggle(g)} youth={youth} />
-          </Link>
-        ))
+              {g.pinned[0] && (
+                <div className="mt-[10px] rounded-[11px] border border-line bg-paper px-3 py-2 text-[11.5px] font-bold text-ink-2">📌 {g.kind === "class" && !/^assignment/i.test(g.pinned[0]) ? "Assignment: " : g.kind === "topic" && !/^pinned/i.test(g.pinned[0]) ? "Pinned: " : ""}{g.pinned[0]}</div>
+              )}
+            </Link>
+          );
+        })}
+      </div>
+
+      {suggested && (
+        <>
+          <h2 className="mt-[14px] mb-2 text-[15px] font-black text-ink">Suggested for you</h2>
+          <div className="flex items-center gap-3 rounded-[16px] border border-line bg-card px-4 py-[13px]">
+            <span className="w-[42px] h-[42px] rounded-[13px] bg-[#FFFDF4] flex items-center justify-center text-[19px]" aria-hidden>{suggested.emoji}</span>
+            <Link href={`/club/groups/${suggested.id}`} className="flex-1 min-w-0">
+              <div className="text-[13.5px] font-extrabold text-ink">{suggested.name}</div>
+              <div className="text-[11px] font-bold text-ink-3">Based on your KO research · {suggested.members} members</div>
+            </Link>
+            <JoinButton g={suggested} joined={false} onToggle={() => toggle(suggested)} youth={youth} />
+          </div>
+        </>
       )}
-      {youth && <p className="mt-3 text-[11px] font-bold text-ink-4 leading-[1.4]">Young learners can join family groups. A parent can approve other groups from Family → Members.</p>}
+
+      <p className="mt-3 rounded-[14px] border border-dashed border-[#D9CDB2] bg-paper px-4 py-3 text-[11.5px] font-bold text-ink-3 leading-[1.5]">
+        Youth members see only age-appropriate groups. Family &amp; class groups are always private.
+      </p>
     </div>
   );
 }
@@ -82,17 +114,18 @@ export function GroupDetail({ g, members, challenges, ideas }: { g: Group; membe
   return (
     <div className="pb-6">
       <div className="flex items-center gap-3 mt-1">
-        <span className="w-14 h-14 rounded-[16px] bg-paper-2 flex items-center justify-center text-[28px] shrink-0">{g.emoji}</span>
+        <span className={cx("w-14 h-14 rounded-[16px] flex items-center justify-center text-[28px] shrink-0", TILE[g.kind])}>{g.emoji}</span>
         <div className="flex-1 min-w-0">
           <h1 className="text-[19px] font-black text-ink leading-tight">{g.name}</h1>
           <div className="mt-1 flex items-center gap-2">
             <Tag tone={KIND_TONE[g.kind]}>{KIND_LABEL[g.kind]}</Tag>
-            <span className="text-[11.5px] font-bold text-ink-4">{g.members.toLocaleString()} members</span>
+            <span className="text-[11.5px] font-bold text-ink-4">{subLine(g)}</span>
           </div>
         </div>
         <JoinButton g={g} joined={joined(g)} onToggle={() => toggle(g)} youth={youth} />
       </div>
       <p className="mt-2 text-[12.5px] font-semibold text-ink-3">{g.blurb}</p>
+      {isFamily && <Link href="/club" className="mt-2 inline-block text-[12px] font-extrabold text-green">This is your investing club → open My Club</Link>}
 
       {g.pinned.length > 0 && (
         <div className="mt-3 bg-card border border-line rounded-card px-4 py-1">
@@ -158,7 +191,6 @@ export function GroupDetail({ g, members, challenges, ideas }: { g: Group; membe
           {!isFamily && g.id !== "beginners-circle" && ideas.length === 0 && (
             <div className="mt-3"><EmptyState emoji="💬" title="Quiet in here" body="Be the first to post an idea or a question." action="Post an idea" href="/club/new" /></div>
           )}
-          {g.id !== "beginners-circle" && !isFamily && ideas.length > 0 && null}
           {g.id === "beginners-circle" && <QuestionCard q={{ ...sampleQuestion, id: "q-2", author: "Luis P.", ago: "1d ago", question: "What's the difference between a stock and an ETF?", answers: 2, concept: "ETFs" }} href="/learn/path/build-a-portfolio" />}
         </div>
       )}

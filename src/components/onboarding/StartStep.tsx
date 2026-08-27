@@ -15,15 +15,18 @@ export function StartStep() {
   const [value, setValue] = useState<Start>("new");
   const [level, setLevel] = useState<ExplanationLevel>("Investor");
   const [isFamily, setIsFamily] = useState(false);
+  const [creating, setCreating] = useState(true);
 
   useEffect(() => {
     const a = readAnswers();
     // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate from localStorage after mount (no SSR mismatch)
     if (a.start) setValue(a.start);
      
+    setCreating(a.who !== "join" && a.who !== "explore");
+     
     if (a.level) setLevel(a.level);
      
-    setIsFamily(a.who === "family");
+    setIsFamily(a.who === "create" && a.clubKind !== "friends");
   }, []);
 
   function pick(id: Start) {
@@ -37,7 +40,7 @@ export function StartStep() {
   }
 
   return (
-    <StepShell step="start" cta={<Cta onClick={next}>Continue</Cta>}>
+    <StepShell step="start" creating={creating} cta={<Cta onClick={next}>Continue</Cta>}>
       <Title>Where are you starting from?</Title>
       <Subtitle>This sets how we explain things — change it anytime in Profile.</Subtitle>
       <div role="radiogroup" className="flex flex-col gap-[10px] mt-5">

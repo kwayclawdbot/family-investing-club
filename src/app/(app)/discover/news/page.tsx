@@ -1,16 +1,12 @@
-import { getNews, getWatchlist } from "@/lib/data";
-import { TopBar } from "@/components/shell/TopBar";
+import { getNews, getWatchlist, getPortfolio } from "@/lib/data";
 import { NewsList } from "@/components/markets/NewsList";
 
 export default async function NewsPage() {
-  const [news, watchlist] = await Promise.all([getNews(), getWatchlist()]);
+  const [news, watchlist, portfolio] = await Promise.all([getNews(), getWatchlist(), getPortfolio()]);
   return (
-    <div className="-mx-[18px] pb-6">
-      <TopBar backHref="/discover" title="News" />
-      <div className="px-[18px]">
-        <p className="text-[12.5px] font-bold text-ink-3">Fewer headlines, more “why this matters”.</p>
-        <NewsList news={news} baseWatchlist={watchlist} />
-      </div>
+    <div className="pt-[14px] pb-6">
+      <NewsList news={news} baseWatchlist={watchlist} holdings={portfolio.holdings} />
+      <p className="mt-4 text-[11px] font-bold text-ink-4 text-center">Fewer headlines, more “why this matters” · sample stories for learning</p>
     </div>
   );
 }

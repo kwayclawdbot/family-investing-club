@@ -19,7 +19,8 @@ export default async function SessionPage(props: PageProps<"/live/[id]">) {
       <div className="px-[18px] pb-6">
         {s.status === "live" && (
           <div className="rounded-[18px] bg-[#2E2A21] aspect-video flex flex-col items-center justify-center text-center px-6">
-            <span className="inline-flex items-center rounded-[6px] bg-green px-2 py-[3px] text-[10px] font-black text-cream-text">● LIVE · {s.watching} watching</span>
+            <span className="inline-flex items-center rounded-[8px] bg-red px-[10px] py-[3px] text-[10px] font-black text-cream-text">● LIVE</span>
+            <span className="mt-1 text-[11px] font-extrabold text-[#D9CDB2]">{s.watching} watching</span>
             <p className="mt-3 text-[12.5px] font-bold text-[#D9CDB2] leading-[1.5]">Live sessions stream here — join from the app when the FTA live engine is wired.</p>
           </div>
         )}
@@ -41,8 +42,8 @@ export default async function SessionPage(props: PageProps<"/live/[id]">) {
 
         <h1 className="mt-4 text-[22px] font-black text-ink leading-[1.25]">{s.title}</h1>
         <div className="flex items-center gap-3 mt-3">
-          <Avatar name={s.instructor.replace("Coach ", "")} color="bg-coral" size={36} />
-          <div className="flex-1"><div className="text-[13.5px] font-black text-ink">{s.instructor}</div><div className="text-[11.5px] font-bold text-ink-3">FIC coach</div></div>
+          <Avatar name={s.instructor.replace("Coach ", "").slice(0, 1)} color="bg-coral" size={36} />
+          <div className="flex-1"><div className="text-[13.5px] font-black text-ink">{s.instructor}</div><div className="text-[11.5px] font-bold text-ink-3">FIC coach{path ? ` · linked to ${path.title}` : ""}</div></div>
           <Tag tone={s.level === "Explorer" ? "orange" : "muted"}>{s.level === "All" ? "All levels" : s.level}</Tag>
         </div>
         <p className="mt-3 text-[14px] font-bold text-ink-2 leading-[1.55]">{s.blurb}</p>

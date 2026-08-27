@@ -31,7 +31,7 @@ export function CompanyList({ companies, tiles }: { companies: Company[]; tiles?
           return (
             <Link
               key={c.symbol}
-              href={`/markets/${c.symbol}`}
+              href={`/discover/${c.symbol}`}
               className={`flex items-center gap-[11px] py-[11px] ${i < list.length - 1 ? "border-b border-paper-2" : ""}`}
             >
               <span className={`w-[34px] h-[34px] rounded-[11px] flex items-center justify-center text-[11px] font-black shrink-0 ${tileTone(c.symbol)}`}>

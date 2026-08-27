@@ -61,7 +61,7 @@ export function SearchView({ initialQ, companies, paths, flashcards, ideas }: Pr
             className="flex-1 min-w-0 bg-transparent outline-none text-[13px] font-bold text-ink placeholder:text-ink-4"
           />
         </label>
-        <Link href="/markets" className="text-[13px] font-extrabold text-green">Cancel</Link>
+        <Link href="/discover" className="text-[13px] font-extrabold text-green">Cancel</Link>
       </form>
 
       {s && (
@@ -86,7 +86,7 @@ export function SearchView({ initialQ, companies, paths, flashcards, ideas }: Pr
           )}
           <H>Browse</H>
           <div className="grid grid-cols-2 gap-[8px]">
-            {[["🧭", "Discover companies", "/markets/discover"], ["📚", "Course library", "/learn/library"], ["💡", "Club ideas", "/club"], ["🃏", "Review concepts", "/learn/review"]].map(([e, t, h]) => (
+            {[["🧭", "Discover companies", "/discover"], ["📚", "Course library", "/learn/library"], ["💡", "Club ideas", "/club"], ["🃏", "Review concepts", "/learn/review"]].map(([e, t, h]) => (
               <Link key={h} href={h} className="rounded-[14px] border border-line bg-card px-3 py-3 flex items-center gap-2">
                 <span className="text-[18px]" aria-hidden>{e}</span>
                 <span className="text-[12.5px] font-extrabold text-ink">{t}</span>
@@ -109,7 +109,7 @@ export function SearchView({ initialQ, companies, paths, flashcards, ideas }: Pr
           <H>Companies</H>
           <Card className="!py-1 !px-4">
             {r.companies.map((c, i) => (
-              <Link key={c.symbol} href={`/markets/${c.symbol}`} className={`flex items-center gap-[11px] py-[10px] ${i < r.companies.length - 1 ? "border-b border-paper-2" : ""}`}>
+              <Link key={c.symbol} href={`/discover/${c.symbol}`} className={`flex items-center gap-[11px] py-[10px] ${i < r.companies.length - 1 ? "border-b border-paper-2" : ""}`}>
                 <SymbolTile symbol={c.symbol} size={32} />
                 <span className="flex-1 min-w-0">
                   <span className="block text-[13px] font-extrabold text-ink truncate">{c.name}</span>

@@ -5,15 +5,20 @@ import { onboardingOptions } from "@/lib/data";
 import { StepShell, Title, Subtitle, Cta } from "./StepShell";
 import { readAnswers, writeAnswers, nextStep } from "./store";
 
-const DEFAULTS = ["Understand money basics", "Invest with confidence", "Build a weekly family habit"];
+/** Club goals (Product Shift §6) lead; learning goals follow. */
+const CLUB_GOALS = ["Pick stocks together", "Research companies together", "Build a family portfolio", "Learn with my kids", "Meet other investors"];
+const DEFAULTS = ["Pick stocks together", "Research companies together", "Invest with confidence"];
 
 export function GoalsStep() {
   const router = useRouter();
   const [goals, setGoals] = useState<string[]>(DEFAULTS);
+  const [creating, setCreating] = useState(true);
   useEffect(() => {
-    const g = readAnswers().goals;
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate from localStorage after mount (no SSR mismatch)
-    if (g) setGoals(g);
+    const a = readAnswers();
+    /* eslint-disable react-hooks/set-state-in-effect -- hydrate from localStorage after mount */
+    if (a.goals) setGoals(a.goals);
+    setCreating(a.who !== "join" && a.who !== "explore");
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
 
   function toggle(g: string) {
@@ -23,13 +28,14 @@ export function GoalsStep() {
     writeAnswers({ goals });
     router.push(nextStep("goals"));
   }
+  const all = [...CLUB_GOALS, ...onboardingOptions.goals.filter((g) => !CLUB_GOALS.includes(g))];
 
   return (
-    <StepShell step="goals" cta={<Cta onClick={next}>Continue</Cta>}>
+    <StepShell step="goals" creating={creating} cta={<Cta onClick={next}>Continue</Cta>}>
       <Title>What do you want from FIC?</Title>
-      <Subtitle>Pick as many as you like — this shapes your path.</Subtitle>
+      <Subtitle>Pick as many as you like — this shapes your club prompts and your skill plan.</Subtitle>
       <div className="flex flex-wrap gap-[9px] mt-5">
-        {onboardingOptions.goals.map((g) => {
+        {all.map((g) => {
           const on = goals.includes(g);
           return (
             <button

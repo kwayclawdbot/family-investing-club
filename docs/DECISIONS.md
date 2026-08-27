@@ -19,3 +19,15 @@ Source of truth: `design/Family Investing Club.dc.html` (canvas), `docs/Family_I
 Stack: Next.js 16 (App Router) + React 19 + Tailwind 4 + TypeScript, per plan §14. Mobile-first PWA-style shell
 (402px column on desktop). Auth talks to the existing FTA Supabase project; all content is fixture-backed behind
 `src/lib/data.ts` until the FTA engines are mapped to the FIC domain model (plan §13).
+
+## Round 3 — Product Shift v3 (club-first), 2026-08-27
+| # | Decision |
+|---|---|
+| 11 | **Family ≠ Club.** Household = account relationship (guardian/child, permissions). Investing Club = the social object. `/family/**` is the parent view; `/club` is My Club. A household auto-creates its family club. |
+| 12 | Nav v2 shipped: Home · Discover · **Club (raised centre)** · Learn · Profile. Markets → Discover with permanent redirects. Child accounts get Home · Learn · Practice · Family · Me. |
+| 13 | Club tab is two layers: `🔒 My Club` (`/club`) and `🌍 Community` (`/community`). Old public feed objects live under Community → "Latest from the network". |
+| 14 | Object flow implemented: Pick → Idea → Club Proposal → Club Portfolio → Decision Journal. Every holding links to its proposal. |
+| 15 | Dad is a co-admin on Mom's seat: counted in tallies, not in the 4-avatar row (artboards say 4 members but show Dad proposing). |
+| 16 | Vote page never pre-votes for the user: tally starts at 2 of 4 and reaches the artboard's "3 of 4 · waiting on Arielle" when you tap For. |
+| 17 | Artboard 24's key numbers (P/E 34.8) win on the dossier; tap-to-learn definitions still come from the metrics fixture. |
+| 18 | Where two artboards show one screen (05/11 My Club, 07/12 Community) the lower-numbered v4/v5 board is canonical. |

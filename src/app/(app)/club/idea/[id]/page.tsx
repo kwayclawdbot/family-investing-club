@@ -68,7 +68,7 @@ export default async function IdeaPage(props: PageProps<"/club/idea/[id]">) {
           {idea.companies.map((c, i) => (
             <Link
               key={c.symbol}
-              href={`/markets/${c.symbol}`}
+              href={`/discover/${c.symbol}`}
               className={cx("flex items-center gap-[10px] py-[10px]", i < idea.companies.length - 1 && "border-b border-paper-2")}
             >
               <span className="w-8 h-8 rounded-[10px] bg-green-tint text-green flex items-center justify-center text-[10px] font-black">{c.symbol}</span>

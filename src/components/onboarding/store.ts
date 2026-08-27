@@ -2,12 +2,18 @@
 import { useEffect, useState } from "react";
 
 export type OnboardingAnswers = {
-  who?: "me" | "family" | "class";
+  /** Product Shift v3: club first. */
+  who?: "create" | "join" | "explore";
+  joinCode?: string;
+  clubName?: string;
+  clubKind?: "family" | "friends" | "mixed";
+  clubPrivacy?: "private" | "public";
   start?: "new" | "some" | "invest";
   level?: "Explorer" | "Builder" | "Investor" | "Trader";
   goals?: string[];
-  daily?: number;
+  daily?: number | null;
   reminder?: boolean;
+  weeklyHabit?: boolean;
 };
 
 const KEY = "fic.onboarding";
@@ -29,6 +35,15 @@ export function writeAnswers(patch: OnboardingAnswers) {
   }
 }
 
+/** The club created during onboarding (read by /club). */
+export function writeClub(club: { name: string; kind: string; privacy: string }) {
+  try {
+    localStorage.setItem("fic.club", JSON.stringify({ ...club, createdAt: new Date().toISOString(), members: 1 }));
+  } catch {
+    /* storage unavailable */
+  }
+}
+
 /** Hydration-safe read of the stored answers. */
 export function useAnswers() {
   const [answers, setAnswers] = useState<OnboardingAnswers>({});
@@ -42,4 +57,4 @@ export function useAnswers() {
   return { answers, ready };
 }
 
-export { STEPS, nextStep, prevStep, type Step } from "./steps";
+export { STEPS, DOT_STEPS, nextStep, prevStep, type Step } from "./steps";

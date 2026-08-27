@@ -52,3 +52,8 @@ export function useLevel() {
   }, []);
   return level;
 }
+
+/** Unique id for locally-created objects (kept out of render paths). */
+export function newId(prefix = "local") {
+  return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
+}

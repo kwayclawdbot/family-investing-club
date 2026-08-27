@@ -76,8 +76,9 @@ export function TradeFlow({ company, portfolio, fixtureOrders }: { company: Comp
           <p className="mt-1 text-[13.5px] font-bold text-ink leading-[1.5]">{placed.thesis}</p>
           <p className="mt-2 text-[11.5px] font-bold text-ink-4">Kai will bring this back when you review the trade.</p>
         </Card>
-        <Link href="/practice" className="mt-5 w-full h-[52px] rounded-[16px] bg-orange text-cream-text text-[16px] font-black flex items-center justify-center shadow-[0_3px_0_#C96D25]">View portfolio</Link>
-        <Link href={`/markets/${company.symbol}`} className="mt-3 text-[13px] font-extrabold text-green">Back to {company.symbol}</Link>
+        <Link href={`/club/pick/new?symbol=${company.symbol}&stance=${placed.side === "buy" ? "buy" : "pass"}`} className="mt-5 w-full h-[52px] rounded-[16px] bg-green-2 text-cream-text text-[16px] font-black flex items-center justify-center shadow-[0_3px_0_#3A6B3E]">▲ Share as a Pick with My Club</Link>
+        <Link href="/practice" className="mt-3 w-full h-[52px] rounded-[16px] bg-orange text-cream-text text-[16px] font-black flex items-center justify-center shadow-[0_3px_0_#C96D25]">View portfolio</Link>
+        <Link href={`/discover/${company.symbol}`} className="mt-3 text-[13px] font-extrabold text-green">Back to {company.symbol}</Link>
       </div>
     );
   }

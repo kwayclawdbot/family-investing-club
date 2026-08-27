@@ -72,7 +72,7 @@ export function DiscoverView({ categories, companies }: { categories: DiscoverCa
                     const c = byId[s];
                     if (!c) return null;
                     return (
-                      <Link key={s} href={`/markets/${s}`} className={`flex items-center gap-[11px] py-[10px] ${i < cat.symbols.length - 1 ? "border-b border-paper-2" : ""}`}>
+                      <Link key={s} href={`/discover/${s}`} className={`flex items-center gap-[11px] py-[10px] ${i < cat.symbols.length - 1 ? "border-b border-paper-2" : ""}`}>
                         <SymbolTile symbol={s} size={32} />
                         <span className="flex-1 min-w-0">
                           <span className="block text-[13px] font-extrabold text-ink truncate">{c.name}</span>
@@ -119,7 +119,7 @@ export function DiscoverView({ categories, companies }: { categories: DiscoverCa
               <div className="py-4 text-center text-[12.5px] font-bold text-ink-3">Nothing in the sample universe matches.</div>
             ) : (
               filtered.map((c, i) => (
-                <Link key={c.symbol} href={`/markets/${c.symbol}`} className={`flex items-center gap-[11px] py-[10px] ${i < filtered.length - 1 ? "border-b border-paper-2" : ""}`}>
+                <Link key={c.symbol} href={`/discover/${c.symbol}`} className={`flex items-center gap-[11px] py-[10px] ${i < filtered.length - 1 ? "border-b border-paper-2" : ""}`}>
                   <SymbolTile symbol={c.symbol} size={32} />
                   <span className="flex-1 min-w-0">
                     <span className="block text-[13px] font-extrabold text-ink truncate">{c.name}</span>

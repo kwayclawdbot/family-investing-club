@@ -78,7 +78,7 @@ export function MemberProfile({ m, ideas }: { m: Member; ideas: Idea[] }) {
           <div className="mt-4 text-[11px] font-extrabold text-ink-3 tracking-[0.3px] uppercase">Favourite companies</div>
           <div className="mt-2 flex gap-[7px] flex-wrap">
             {m.favorites.map((s) => (
-              <Link key={s} href={`/markets/${s}`} className="bg-green-tint text-green rounded-[9px] px-[11px] py-[5px] text-[12px] font-black">{s}</Link>
+              <Link key={s} href={`/discover/${s}`} className="bg-green-tint text-green rounded-[9px] px-[11px] py-[5px] text-[12px] font-black">{s}</Link>
             ))}
           </div>
         </>

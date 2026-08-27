@@ -58,7 +58,6 @@ const ROUTES = [
   ["watchlist", "/discover/watchlist"],
   ["news", "/discover/news"],
   ["news-item", "/discover/news/n1"],
-  ["discover", "/discover/discover"],
   ["search", "/search"],
   ["trade", "/practice/trade/AAPL"],
   ["club-new", "/club/new"],
