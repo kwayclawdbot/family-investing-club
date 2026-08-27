@@ -9,12 +9,14 @@ import { HomeIcon, LearnIcon, MarketsIcon, ClubIcon, ProfileIcon } from "@/compo
  * Profile lives behind the header avatar. Small actions are sheets via the universal ＋ (PlusFab).
  * Child accounts (Explorer / Builder): Home · Learn · Practice · Family · Me — public community hidden.
  */
+/** Nav v4 (canvas v12): Home · Discover · Learn · Practice · Me. Private clubs live inside Home's Main | Private
+ *  switch; club pages, circles and community are drill-ins from Home. Kai is embedded (@Kai), not a destination. */
 const ADULT = [
-  { href: "/home", label: "Home", Icon: HomeIcon, also: [] as string[] },
-  { href: "/club", label: "Club", Icon: ClubIcon, also: [] as string[] },
+  { href: "/home", label: "Home", Icon: HomeIcon, also: ["/club", "/community", "/circle"] },
   { href: "/discover", label: "Discover", Icon: MarketsIcon, also: ["/search"] },
-  { href: "/learn", label: "Learn", Icon: LearnIcon, also: ["/live", "/practice", "/lesson"] },
-  { href: "/community", label: "Community", Icon: CommunityIcon, also: [] as string[] },
+  { href: "/learn", label: "Learn", Icon: LearnIcon, also: ["/live", "/lesson"] },
+  { href: "/practice", label: "Practice", Icon: PracticeIcon, also: [] as string[] },
+  { href: "/profile", label: "Me", Icon: ProfileIcon, also: [] as string[] },
 ];
 const CHILD = [
   { href: "/home", label: "Home", Icon: HomeIcon, also: [] as string[] },
@@ -24,6 +26,13 @@ const CHILD = [
   { href: "/profile", label: "Me", Icon: ProfileIcon, also: [] as string[] },
 ];
 
+function PracticeIcon({ size = 22 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="5" /><circle cx="12" cy="12" r="1.5" />
+    </svg>
+  );
+}
 function CommunityIcon({ size = 22 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
