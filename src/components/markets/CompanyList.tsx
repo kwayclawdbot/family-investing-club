@@ -1,13 +1,13 @@
 "use client";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import type { Company } from "@/lib/types";
 import { Card } from "@/components/ui";
 import { SearchField } from "./SearchField";
 import { Sparkline } from "./LineChart";
 import { money, pct, tileTone } from "./format";
 
-export function CompanyList({ companies }: { companies: Company[] }) {
+export function CompanyList({ companies, tiles }: { companies: Company[]; tiles?: ReactNode }) {
   const [q, setQ] = useState("");
   const list = useMemo(() => {
     const s = q.trim().toLowerCase();
@@ -18,6 +18,7 @@ export function CompanyList({ companies }: { companies: Company[] }) {
   return (
     <>
       <SearchField value={q} onChange={setQ} />
+      {!q && tiles}
       <h2 className="mt-4 text-[15px] font-black text-ink">{q ? "Results" : "Companies you're learning about"}</h2>
       <Card className="mt-2 !py-1 !px-4">
         {list.length === 0 && (

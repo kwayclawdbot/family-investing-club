@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getUser, getFamily, getBadges, getMastery } from "@/lib/data";
 import { cx } from "@/components/ui";
 import { ProfileSettings } from "@/components/profile/ProfileSettings";
@@ -29,15 +30,15 @@ export default async function ProfilePage() {
         </div>
       </div>
 
-      <div className="mt-3 bg-card border border-line rounded-[14px] px-[15px] py-3">
+      <Link href="/profile/progress" className="mt-3 block bg-card border border-line rounded-[14px] px-[15px] py-3">
         <div className="flex justify-between text-[12px] font-extrabold text-ink-3">
-          <span>Level {user.level}</span>
+          <span>Level {user.level} · <span className="text-green">Progress ›</span></span>
           <span>{fmt(user.levelXp)} / {fmt(user.levelXpMax)} XP</span>
         </div>
         <div className="h-2 rounded-[4px] bg-line-2 mt-[7px] overflow-hidden" role="progressbar" aria-valuenow={levelPct} aria-valuemin={0} aria-valuemax={100}>
           <div className="h-full rounded-[4px] bg-gold" style={{ width: `${levelPct}%` }} />
         </div>
-      </div>
+      </Link>
 
       <div className="flex gap-[9px] mt-[11px]">
         {[
@@ -54,7 +55,7 @@ export default async function ProfilePage() {
 
       <div className="flex justify-between items-center mt-[14px] mb-2">
         <h2 className="text-[15px] font-black text-ink">Badges</h2>
-        <span className="text-[12px] font-extrabold text-green">All badges</span>
+        <Link href="/profile/badges" className="text-[12px] font-extrabold text-green">All badges</Link>
       </div>
       <div className="flex gap-3">
         {badges.map((b) => (
@@ -83,7 +84,7 @@ export default async function ProfilePage() {
         })}
       </div>
 
-      <ProfileSettings familyName={family.name} initialLevel={user.explanationLevel} />
+      <ProfileSettings familyName={family.name} level={user.explanationLevel} />
     </div>
   );
 }

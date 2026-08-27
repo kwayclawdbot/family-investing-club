@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { SearchIcon, BellIcon } from "@/components/ui/icons";
 
 export function SearchField({
@@ -7,15 +8,27 @@ export function SearchField({
   placeholder = "Search companies, ETFs, concepts…",
   bell = true,
   autoFocus,
+  onSubmit,
 }: {
   value?: string;
   onChange?: (v: string) => void;
   placeholder?: string;
   bell?: boolean;
   autoFocus?: boolean;
+  /** Called with the query on Enter. Default: navigate to /search?q= */
+  onSubmit?: (q: string) => void;
 }) {
+  const router = useRouter();
   return (
-    <div className="flex items-center gap-[10px]">
+    <form
+      className="flex items-center gap-[10px]"
+      onSubmit={(e) => {
+        e.preventDefault();
+        const q = (value ?? "").trim();
+        if (onSubmit) onSubmit(q);
+        else router.push(q ? `/search?q=${encodeURIComponent(q)}` : "/search");
+      }}
+    >
       <label className="flex-1 flex items-center gap-[9px] bg-card border border-line rounded-[14px] px-[14px] py-[10px]">
         <SearchIcon size={15} className="text-ink-4 shrink-0" />
         <input
@@ -24,6 +37,7 @@ export function SearchField({
           onChange={(e) => onChange?.(e.target.value)}
           placeholder={placeholder}
           autoFocus={autoFocus}
+          enterKeyHint="search"
           aria-label="Search markets"
           className="flex-1 min-w-0 bg-transparent outline-none text-[13px] font-bold text-ink placeholder:text-ink-4"
         />
@@ -33,6 +47,6 @@ export function SearchField({
           <BellIcon size={16} />
         </span>
       )}
-    </div>
+    </form>
   );
 }

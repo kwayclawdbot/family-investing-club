@@ -3,10 +3,16 @@ import { Avatar, ButtonLink, Card, ProgressBar, SectionHeader, ArtPlaceholder, R
 import { BellIcon, ClockIcon } from "@/components/ui/icons";
 import { KaiFab } from "@/components/shell/KaiFab";
 import { Greeting } from "@/components/home/Greeting";
-import { getContinueLesson, getFamily, getLeague, getUser } from "@/lib/data";
+import { HomeExtras, LeagueTitle, StreakCopy } from "@/components/home/HomeExtras";
+import { getContinueLesson, getFamily, getLeague, getUser, getLiveSessions, getIdea, getChallenges, getPortfolio, getNotifications } from "@/lib/data";
 
 export default async function HomePage() {
-  const [user, family, league, next] = await Promise.all([getUser(), getFamily(), getLeague(), getContinueLesson()]);
+  const [user, family, league, next, sessions, idea, challenges, portfolio, notifications] = await Promise.all([
+    getUser(), getFamily(), getLeague(), getContinueLesson(), getLiveSessions(), getIdea("nuclear-next-decade"), getChallenges(), getPortfolio(), getNotifications(),
+  ]);
+  const live = sessions.find((s) => s.status === "live");
+  const challenge = challenges.find((c) => c.kind === "family");
+  const hasReview = notifications.some((n) => n.kind === "lesson");
   const goalPct = (user.todayXp / user.dailyGoalXp) * 100;
 
   return (
@@ -14,7 +20,7 @@ export default async function HomePage() {
       <div className="flex items-center justify-between">
         <Greeting name={user.firstName} />
         <Link
-          href="/profile"
+          href="/profile/notifications"
           aria-label="Notifications"
           className="w-9 h-9 rounded-full bg-card border border-line flex items-center justify-center text-ink-2"
         >
@@ -27,7 +33,7 @@ export default async function HomePage() {
         <span className="text-[26px] leading-none">🔥</span>
         <div className="flex-1">
           <div className="text-[15px] font-black text-ink">{family.streakDays} Day Family Streak</div>
-          <div className="text-[12px] font-bold text-orange-2">Keep it up! You&apos;re on fire.</div>
+          <StreakCopy />
         </div>
         <span className="text-[20px] leading-none">🔥</span>
       </Card>
@@ -68,11 +74,11 @@ export default async function HomePage() {
         <ProgressBar value={goalPct} color="bg-purple" height={8} className="mt-[9px]" />
       </Card>
 
+      <HomeExtras live={live} idea={idea} challenge={challenge} portfolio={portfolio} hasReview={hasReview} />
+
       {/* Family league */}
       <div className="flex items-center justify-between mt-4 mb-2">
-        <h2 className="text-[15px] font-black text-ink">
-          Family League <span className="text-[11px] font-bold text-ink-4 ml-1">All-time</span>
-        </h2>
+        <LeagueTitle />
         <Link href="/family" className="text-[12px] font-extrabold text-green">
           View All
         </Link>

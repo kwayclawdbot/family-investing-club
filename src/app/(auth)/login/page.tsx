@@ -11,7 +11,7 @@ function LoginForm() {
   const params = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [err, setErr] = useState<string | null>(params.get("error") === "link" ? "That link didn't work — try signing in." : null);
+  const [err, setErr] = useState<string | null>(params.get("error") === "link" ? "That link didn't work — try signing in or request a new one below." : null);
   const [busy, setBusy] = useState(false);
 
   async function submit(e: React.FormEvent) {
@@ -35,11 +35,12 @@ function LoginForm() {
         <form onSubmit={submit} className="mt-6 flex flex-col gap-3">
           <input className={field} type="email" autoComplete="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
           <input className={field} type="password" autoComplete="current-password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <Link href="/forgot-password" className="self-end -mt-1 text-[12.5px] font-extrabold text-green">Forgot password?</Link>
           {err && <p className="text-[13px] font-bold text-red">{err}</p>}
           <Button type="submit" full disabled={busy} className="mt-2">{busy ? "Signing in…" : "Sign in"}</Button>
         </form>
         <p className="mt-auto pb-8 text-center text-[13px] font-bold text-ink-3">
-          New here? <Link href="/welcome" className="text-green font-extrabold">Get started</Link>
+          New here? <Link href="/signup" className="text-green font-extrabold">Create an account</Link>
         </p>
       </div>
     </>

@@ -1,7 +1,8 @@
 "use client";
+import Link from "next/link";
 import { useState } from "react";
 
-export function InviteRow({ code }: { code: string }) {
+export function InviteRow({ code, manageHref }: { code: string; manageHref?: string }) {
   const [copied, setCopied] = useState(false);
   async function share() {
     const text = `Join our family on Family Investing Club — code ${code}`;
@@ -19,6 +20,7 @@ export function InviteRow({ code }: { code: string }) {
         <div className="text-[13px] font-black text-ink">Invite your family</div>
         <div className="text-[12px] font-bold text-ink-3">
           Code: <span className="font-black text-green tracking-[0.5px]">{code}</span>
+          {manageHref && <> · <Link href={manageHref} className="font-extrabold text-green">Manage</Link></>}
         </div>
       </div>
       <button onClick={share} className="bg-green-2 text-cream-text rounded-[11px] px-[14px] py-[7px] text-[12px] font-black active:scale-95 transition">

@@ -56,8 +56,18 @@ export function LessonPlayer({ lessonId, questions }: { lessonId: string; questi
         </div>
       </div>
 
+      {/* EXPLAIN: lesson video block (first question only) */}
+      {lessonId === "if-7" && i === 0 && phase === "answer" && (
+        <div className="mt-[18px] rounded-[16px] bg-[#2E2A21] aspect-video flex flex-col items-center justify-center text-center">
+          <span className="w-12 h-12 rounded-full bg-cream-text/15 flex items-center justify-center" aria-hidden>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#FFFCF5"><path d="M8 5v14l11-7z" /></svg>
+          </span>
+          <span className="mt-2 text-[11.5px] font-extrabold text-[#D9CDB2]">Lesson video · 2:40</span>
+        </div>
+      )}
+
       {/* concept chip */}
-      <div className="mt-[22px] self-start inline-flex items-center gap-[6px] bg-purple-tint rounded-[20px] px-3 py-[5px]">
+      <div className={`${lessonId === "if-7" && i === 0 && phase === "answer" ? "mt-4" : "mt-[22px]"} self-start inline-flex items-center gap-[6px] bg-purple-tint rounded-[20px] px-3 py-[5px]`}>
         <span className="w-[7px] h-[7px] rounded-full bg-purple" />
         <span className="text-[11.5px] font-extrabold text-purple-2 uppercase">Concept · {q.concept}</span>
       </div>

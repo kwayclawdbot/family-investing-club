@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useState } from "react";
 import { cx } from "@/components/ui";
 
@@ -32,13 +33,13 @@ export function FollowButton() {
   );
 }
 
-export function IdeaBottomBar({ comments }: { comments: number }) {
+export function IdeaBottomBar({ comments, ideaId }: { comments: number; ideaId: string }) {
   const [saved, setSaved] = useState(false);
   return (
     <div className="sticky bottom-0 z-10 flex gap-[10px] bg-nav border-t border-line-2 px-[18px] pt-3 pb-[14px] shrink-0">
-      <button className="flex-1 border-2 border-green-2 text-green rounded-[14px] py-3 text-center text-[14px] font-black active:scale-[0.98] transition">
+      <Link href={`/club/idea/${ideaId}/discuss`} className="flex-1 border-2 border-green-2 text-green rounded-[14px] py-3 text-center text-[14px] font-black active:scale-[0.98] transition">
         💬 Discuss ({comments})
-      </button>
+      </Link>
       <button
         aria-pressed={saved}
         onClick={() => setSaved((s) => !s)}

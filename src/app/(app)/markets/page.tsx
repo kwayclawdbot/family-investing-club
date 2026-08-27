@@ -3,6 +3,7 @@ import { getCompanies, getPortfolio } from "@/lib/data";
 import { Card } from "@/components/ui";
 import { ChevronRight } from "@/components/ui/icons";
 import { CompanyList } from "@/components/markets/CompanyList";
+import { QuickTiles } from "@/components/markets/QuickTiles";
 import { Sparkline } from "@/components/markets/LineChart";
 import { money, signed, pct } from "@/components/markets/format";
 import { KaiFab } from "@/components/shell/KaiFab";
@@ -11,7 +12,7 @@ export default async function MarketsPage() {
   const [companies, portfolio] = await Promise.all([getCompanies(), getPortfolio()]);
   return (
     <div className="pt-[14px] pb-6">
-      <CompanyList companies={companies} />
+      <CompanyList companies={companies} tiles={<QuickTiles />} />
 
       <div className="flex items-center justify-between mt-4 mb-2">
         <h2 className="text-[15px] font-black text-ink">Practice Portfolio</h2>

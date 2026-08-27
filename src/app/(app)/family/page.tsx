@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { getFamily } from "@/lib/data";
+import { getFamily, getWatchlist } from "@/lib/data";
 import { Avatar, ArtPlaceholder, cx } from "@/components/ui";
 import { SettingsIcon } from "@/components/ui/icons";
 import { InviteRow } from "@/components/family/InviteRow";
 
 export default async function FamilyPage() {
-  const family = await getFamily();
+  const [family, watch] = await Promise.all([getFamily(), getWatchlist()]);
+  const research = watch.filter((w) => w.list === "family").slice(0, 2);
   const top = Math.max(...family.members.map((m) => m.xp), 1);
   const bar = (color: string) => color; // member colour doubles as the bar colour
 
@@ -16,7 +17,7 @@ export default async function FamilyPage() {
           <h1 className="text-[21px] font-black text-ink leading-tight">{family.name}</h1>
           <div className="text-[12.5px] font-bold text-ink-3">{family.members.length} members</div>
         </div>
-        <Link href="/profile" aria-label="Family settings" className="text-ink-3">
+        <Link href="/family/members" aria-label="Family members & settings" className="text-ink-3">
           <SettingsIcon size={20} />
         </Link>
       </div>
@@ -35,7 +36,7 @@ export default async function FamilyPage() {
         <div className="flex gap-3 mt-[7px] items-center">
           <div className="flex-1">
             <div className="text-[14px] font-extrabold text-ink leading-[1.35]">{family.weeklyChallenge.title}</div>
-            <Link href="/markets" className="mt-[9px] inline-block bg-green-2 text-cream-text rounded-[11px] px-[14px] py-[7px] text-[12px] font-black">
+            <Link href="/family/challenge" className="mt-[9px] inline-block bg-green-2 text-cream-text rounded-[11px] px-[14px] py-[7px] text-[12px] font-black">
               View Challenge
             </Link>
           </div>
@@ -77,7 +78,32 @@ export default async function FamilyPage() {
         </div>
       </Link>
 
-      <InviteRow code={family.inviteCode} />
+      <Link href="/live/family-investing-night" className="mt-3 bg-purple-tint border border-purple-line rounded-card px-4 py-[12px] flex items-center gap-3">
+        <span className="text-[22px]">🌙</span>
+        <div className="flex-1">
+          <div className="text-[13px] font-black text-ink">Family Investing Night</div>
+          <div className="text-[12px] font-bold text-purple-2">Thu · 7:00 PM · with Coach Marcus</div>
+        </div>
+        <span className="text-ink-4">›</span>
+      </Link>
+
+      <Link href="/family/research" className="mt-3 bg-card border border-line rounded-card px-4 py-[13px] block">
+        <div className="flex items-center justify-between">
+          <div className="text-[13px] font-black text-ink">Family research list</div>
+          <span className="text-[12px] font-extrabold text-green">See all ›</span>
+        </div>
+        {research.map((r, i) => (
+          <div key={r.symbol} className={cx("flex items-center gap-3 py-[9px]", i < research.length - 1 && "border-b border-paper-2")}>
+            <span className="w-9 h-9 rounded-[10px] bg-green-tint text-green text-[10.5px] font-black flex items-center justify-center">{r.symbol}</span>
+            <div className="flex-1 min-w-0">
+              <div className="text-[13px] font-extrabold text-ink truncate">{r.name}</div>
+              <div className="text-[11.5px] font-bold text-ink-3 truncate">{r.reason}</div>
+            </div>
+          </div>
+        ))}
+      </Link>
+
+      <InviteRow code={family.inviteCode} manageHref="/family/invite" />
     </div>
   );
 }

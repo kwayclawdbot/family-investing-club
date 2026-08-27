@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useLevel, isYouth } from "./useLevel";
 
 function partOfDay(h: number) {
   if (h < 12) return "morning";
@@ -7,11 +8,15 @@ function partOfDay(h: number) {
   return "evening";
 }
 
-/** Time-of-day greeting; renders "afternoon" on the server, corrects on the client. */
+/** Time-of-day greeting; renders "afternoon" on the server, corrects on the client. Youth levels get a warmer hello. */
 export function Greeting({ name }: { name: string }) {
   const [part, setPart] = useState("afternoon");
+  const level = useLevel();
   // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate from localStorage after mount (no SSR mismatch)
   useEffect(() => setPart(partOfDay(new Date().getHours())), []);
+  if (isYouth(level)) {
+    return <h1 className="text-[21px] font-black text-ink">Hi {name}! 🌟</h1>;
+  }
   return (
     <h1 className="text-[21px] font-black text-ink">
       Good {part}, {name}! 👋

@@ -33,7 +33,7 @@ export default async function IdeaPage(props: PageProps<"/club/idea/[id]">) {
         <div className="flex items-center gap-[9px] mt-[10px]">
           <Avatar name={idea.author} color="bg-coral" size={30} />
           <div className="flex-1 text-[12.5px] font-extrabold text-ink-2">
-            {idea.author} · Idea owner · {idea.ago}
+            <Link href="/club/members/sarah-j" className="text-ink hover:underline">{idea.author}</Link> · Idea owner · {idea.ago}
           </div>
           <FollowButton />
         </div>
@@ -96,7 +96,7 @@ export default async function IdeaPage(props: PageProps<"/club/idea/[id]">) {
           Community ideas are for learning and discussion — not personalized financial advice.
         </p>
       </div>
-      <IdeaBottomBar comments={idea.comments} />
+      <IdeaBottomBar comments={idea.comments} ideaId={idea.id} />
     </div>
   );
 }

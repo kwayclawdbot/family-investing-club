@@ -2,12 +2,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { XpPill } from "@/components/learn/XpPill";
 import { PathMap } from "@/components/learn/PathMap";
+import { LearnHub } from "@/components/learn/LearnHub";
 import { ChevronDown } from "@/components/ui/icons";
 import { KaiFab } from "@/components/shell/KaiFab";
-import { getPath, getUser } from "@/lib/data";
+import { getPath, getUser, getLiveSessions } from "@/lib/data";
 
 export default async function LearnPage() {
-  const [user, path] = await Promise.all([getUser(), getPath("investing-foundations")]);
+  const [user, path, sessions] = await Promise.all([getUser(), getPath("investing-foundations"), getLiveSessions()]);
+  const liveNow = sessions.find((s) => s.status === "live");
   if (!path?.lessonList) notFound();
 
   return (
@@ -25,6 +27,9 @@ export default async function LearnPage() {
         <ChevronDown className="text-ink-3" />
       </Link>
 
+      <LearnHub liveNow={liveNow} />
+
+      <h2 className="mt-5 text-[15px] font-black text-ink">Your path</h2>
       <PathMap lessons={path.lessonList} nextHref="/lesson/if-7" />
       <KaiFab context="learn" />
     </div>
