@@ -43,6 +43,15 @@ const ROUTES = [
   ["club-research", "/club/research"],
   ["club-members", "/club/members"],
   ["child-home", "/home?as=child"],
+  // round 6 — workspace / pulse / community
+  ["club-overview", "/club"],
+  ["club-portfolio-tab", "/club?tab=portfolio"],
+  ["club-members-tab", "/club?tab=members"],
+  ["community-feed", "/community"],
+  ["community-chats", "/community?tab=chats"],
+  ["community-clubs", "/community?tab=clubs"],
+  ["community-live", "/community?tab=live"],
+  ["plus-wheel", "/home?plus=1"],
   // round 5 — belts
   ["belt-promotion", "/profile/belt"],
   ["xp-leaderboard", "/club/xp"],

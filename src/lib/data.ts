@@ -8,6 +8,7 @@ import * as r2 from "@/lib/fixtures/round2";
 import * as c from "@/lib/fixtures/club";
 import * as v from "@/lib/fixtures/verified";
 import * as bl from "@/lib/fixtures/belts";
+import * as ws from "@/lib/fixtures/workspace";
 import type { Company, Idea, LearningPath } from "@/lib/types";
 
 export async function getUser() { return fx.user; }
@@ -103,3 +104,13 @@ export async function getClubXpGoal() { return bl.clubXpGoal; }
 export const activityXp = bl.activityXp;
 export async function getXpLeaderboard() { return bl.xpLeaderboard; }
 export async function getPromotion() { return bl.promotion; }
+
+/* ── Round 6: collective-performance workspace · Home pulse · Community ── */
+export async function getClubOverview() { return ws.clubOverview; }
+export async function getPortfolioTab() { return ws.portfolioTab; }
+export async function getMemberCards() { return ws.memberCards; }
+export async function getHomePulse() { return ws.homePulse; }
+export async function getCommunityPosts() { return ws.communityPosts; }
+export async function getCommunityChats() { return ws.communityChats; }
+export async function getCommunityClubs() { return ws.communityClubs; }
+export async function getCommunityLive() { return ws.communityLive; }

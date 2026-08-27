@@ -222,3 +222,45 @@ export type ClubXpGoal = { current: number; goal: number; window: string; milest
 export type XpBoardRow = { rank: number; memberId: string; name: string; initial: string; color: string; lifetimeXp: number; deltaXp: number; isYou?: boolean };
 export type XpLeaderboard = { windows: string[]; scopes: string[]; rows: XpBoardRow[]; callout: string; otherBoards: { emoji: string; label: string; href: string }[] };
 export type PromotionSummary = { belt: Belt; lessons: number; research: number; drills: number; clubActions: number };
+
+/* ── Round 6: collective-performance workspace + performance-first Home + Community destination (canvas v9/v10) ── */
+export type DecisionMarker = { idx: number; label: string; kind: "add" | "trim" | "reject" | "vote" | "pick" };
+export type PerfSeries = { range: string; club: number[]; benchmark: number[]; markers: DecisionMarker[] };
+export type ClubOverview = {
+  members: number; households: number; streakWeeks: number;
+  value: number; ytdPct: number; benchmarkPct: number; ranges: string[]; series: PerfSeries[];
+  metrics: { bestPick: { symbol: string; pct: number; by: string }; winRatePct: number; resolved: number; verified: { connected: number; adults: number; syncedAgo: string } };
+  topInvestors: { rank: number; memberId: string; name: string; picks: number; verified?: boolean; ytdPct: number }[];
+  boards: string[];
+  activeDecision: { proposalId: string; title: string; by: string; hoursLeft: number; voted: number; eligible: number; waitingOn?: string } | null;
+  research: { symbol: string; name: string; assigneeId: string; assignee: string; gated?: boolean; due: string; comments?: number; note?: string; status: "open" | "ready" }[];
+  happened: { id: string; actorId: string; actor: string; text: string; ago?: string; pct?: number }[];
+};
+export type PortfolioTab = {
+  allocation: { label: string; pct: number; color: string }[];
+  contributor: { symbol: string; pp: number }; detractor: { symbol: string; pp: number };
+  holdings: { symbol: string; name: string; weightPct: number; returnPct: number; link?: { label: string; href: string } }[];
+  concentration: { text: string; lessonLabel: string; minutes: number; href: string };
+  journal: { date: string; title: string; by?: string; vote?: string; believed?: string; wrongIf?: string; review?: string; learned?: string; since?: string; rightCall?: string }[];
+};
+export type MemberCard = {
+  memberId: string; name: string; role?: "OWNER" | "ADMIN" | "PRACTICE INVESTOR 🎓"; trust: "verified" | "self-reported" | "practice";
+  facts: string[]; xpWeek: number; picksYtdPct: number; extra?: string;
+};
+export type HomePulse = {
+  greeting: string; me: { value: number; ytdPct: number; note: string; series: number[]; markers: DecisionMarker[] };
+  club: { value: number; ytdPct: number; series: number[]; markers: DecisionMarker[] };
+  ranges: string[];
+  tiles: { bestPick: { symbol: string; pct: number }; clubRank: { rank: number; of: number }; xp: number };
+  clubSnapshot: { name: string; members: number; value: number; ytdPct: number; verified: string };
+  decision: { proposalId: string; text: string; voted: number; eligible: number; hoursLeft: number };
+  stream: { id: string; actorId?: string; actor: string; text: string; ago?: string; pct?: number; href: string }[];
+  continueCard: { title: string; sub: string; href: string };
+};
+export type CommunityPost =
+  | { kind: "pick"; id: string; author: string; authorId?: string; belt?: string; ago: string; symbol: string; name: string; stance: PickStance; reason: string; sincePct: number; verified?: boolean; likes: number; comments: number; views: number }
+  | { kind: "clubvote"; id: string; club: string; visibility: "PUBLIC"; ago: string; question: string; leading: { label: string; pct: number }; split: { add: number; watch: number; pass: number }; voted: number; eligible: number; closesIn: string }
+  | { kind: "promotion"; id: string; author: string; authorId?: string; belt: string; ago: string; toBelt: string; xp: number };
+export type CommunityChat = { id: string; name: string; emoji: string; members: number; last: string; ago: string; unread?: number };
+export type CommunityClub = { id: string; name: string; emoji: string; members: number; blurb: string; ytdPct?: number; joined?: boolean };
+export type CommunityLive = { id: string; title: string; host: string; status: "live" | "upcoming"; when?: string; inRoom?: number };

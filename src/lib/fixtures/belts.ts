@@ -20,11 +20,11 @@ export function nextBelt(xp: number): Belt | null {
   return BELTS.find((b) => b.level === cur.level + 1) ?? null;
 }
 
-/** Kway: 980 lifetime XP → Yellow Belt II, 420 XP to Blue. */
+/** Kway: 2,640 lifetime XP → Purple Belt, 560 XP to Black (canvas v9/v10). */
 export const identities: MemberIdentity[] = [
-  { memberId: "kway", name: "Kway", initial: "K", color: "bg-green-3", lifetimeXp: 980, weekXp: 185 },
+  { memberId: "kway", name: "Kway", initial: "K", color: "bg-green-3", lifetimeXp: 2640, weekXp: 430 },
   { memberId: "dad", name: "Dad", initial: "D", color: "bg-purple", lifetimeXp: 910, weekXp: 80 },
-  { memberId: "andwele", name: "Andwele", initial: "A", color: "bg-green-2", lifetimeXp: 520, weekXp: 150 },
+  { memberId: "andwele", name: "Andwele", initial: "A", color: "bg-green-2", lifetimeXp: 830, weekXp: 150 },
   { memberId: "mom", name: "Mom", initial: "M", color: "bg-coral", lifetimeXp: 260, weekXp: 95 },
   { memberId: "arielle", name: "Arielle", initial: "A", color: "bg-gold", lifetimeXp: 310, weekXp: 240 },
 ];
