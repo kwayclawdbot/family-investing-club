@@ -1,13 +1,7 @@
-import { getPortfolio, getOrders, getCompanies } from "@/lib/data-live";
-import { PracticePortfolio } from "@/components/markets/PracticePortfolio";
-import { KaiFab } from "@/components/shell/KaiFab";
-
+import { getPortfolio } from "@/lib/data-live";
+import { PracticeHub } from "@/components/practice/PracticeHub";
+/** Practice — "Can I actually do this?" (v12): Games · Charts · Scenarios · Portfolio + contextual entry from the last lesson. */
 export default async function PracticePage() {
-  const [portfolio, orders, companies] = await Promise.all([getPortfolio(), getOrders(), getCompanies()]);
-  return (
-    <div className="pt-[14px] pb-6">
-      <PracticePortfolio portfolio={portfolio} orders={orders} companies={companies} />
-      <KaiFab context="practice" />
-    </div>
-  );
+  const p = await getPortfolio();
+  return <PracticeHub portfolio={{ value: p.totalValue, changePct: p.dayChangePct, holdings: p.holdings.length, series: p.series }} />;
 }

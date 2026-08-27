@@ -4,9 +4,11 @@ import { TopBar } from "@/components/shell/TopBar";
 import { TermMatch } from "@/components/learn/TermMatch";
 import { Card, ButtonLink, Tag, Button } from "@/components/ui";
 import { getGame, termPairs } from "@/lib/data-live";
+import { ValuationDrill } from "@/components/practice/ValuationDrill";
 
 export default async function GamePage(props: PageProps<"/learn/games/[id]">) {
   const { id } = await props.params;
+  if (id === "valuation") return <div className="-mx-[18px]"><TopBar backHref="/practice" title="Cheap or expensive?" /><div className="px-[18px]"><ValuationDrill /></div></div>;
   const game = await getGame(id);
   if (!game) notFound();
 

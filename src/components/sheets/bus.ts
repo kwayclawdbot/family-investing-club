@@ -2,7 +2,7 @@
 import { useSyncExternalStore } from "react";
 
 /** Tiny client-side sheet bus: any client component can open a sheet without prop drilling. */
-export type SheetKind = "pick" | "ask" | "vote" | "invite" | "kai";
+export type SheetKind = "pick" | "ask" | "vote" | "invite" | "kai" | "compose";
 export type SheetState = { kind: SheetKind; payload?: Record<string, unknown> } | null;
 
 let state: SheetState = null;

@@ -1,13 +1,3 @@
-import { getNotifications } from "@/lib/data-live";
-import { TopBar } from "@/components/shell/TopBar";
-import { Inbox } from "@/components/profile/Inbox";
-
-export default async function NotificationsPage() {
-  const items = await getNotifications();
-  return (
-    <div className="-mx-[18px]">
-      <TopBar backHref="/profile" title="Notifications" />
-      <div className="px-[18px]"><Inbox items={items} /></div>
-    </div>
-  );
-}
+import { NotificationsV4 } from "@/components/home/NotificationsV4";
+/** Notifications — "needs you" first, deep links only (canvas v12, board 11). */
+export default function NotificationsPage() { return <NotificationsV4 />; }

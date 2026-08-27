@@ -1,44 +1,35 @@
 "use client";
-import { Suspense, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { PlusWheel } from "@/components/shell/PlusWheel";
+import { Suspense, useEffect } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 import { SheetHost } from "@/components/sheets/SheetHost";
 import { XpToastHost } from "@/components/sheets/XpToast";
+import { openSheet, useSheet } from "@/components/sheets/bus";
 
-/** The universal ＋ (canvas v9): one orange button; small actions open as sheets — never routes. */
+/** ✎ Share (canvas v11): one orange pill; opens the Compose modal. Small actions stay sheets. `?compose=1` opens it on load. */
 export function PlusFab() {
   return (
-    <Suspense fallback={<FabInner initialOpen={false} />}>
+    <Suspense fallback={<FabInner />}>
       <FabWithParams />
     </Suspense>
   );
 }
-
 function FabWithParams() {
   const sp = useSearchParams();
-  return <FabInner initialOpen={sp.get("plus") === "1"} />;
+  const open = sp.get("compose") === "1";
+  useEffect(() => { if (open) openSheet("compose", { audience: sp.get("to") ?? "main" }); }, [open, sp]);
+  return <FabInner />;
 }
-
-function FabInner({ initialOpen }: { initialOpen: boolean }) {
-  const [open, setOpen] = useState(false);
-  useEffect(() => {
-    if (initialOpen) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- proof/deep-link: open the wheel on load
-      setOpen(true);
-    }
-  }, [initialOpen]);
+function FabInner() {
+  const sheet = useSheet();
+  const path = usePathname();
+  const hidden = path.startsWith("/circle/"); // rooms have their own composer (board 14)
   return (
     <>
-      {open && <PlusWheel onClose={() => setOpen(false)} />}
-      <button
-        type="button"
-        aria-label={open ? "Close actions" : "What do you want to do?"}
-        aria-expanded={open}
-        onClick={() => setOpen((v) => !v)}
-        className={`absolute right-[18px] bottom-[118px] z-[48] w-14 h-14 rounded-full bg-orange text-cream-text flex items-center justify-center active:scale-95 transition ${open ? "shadow-[0_6px_16px_rgba(201,109,37,0.5),0_0_0_5px_rgba(255,253,247,0.9)]" : "shadow-[0_6px_16px_rgba(201,109,37,0.45)]"}`}
-      >
-        <span className={`text-[26px] font-black leading-none inline-block transition-transform duration-200 ${open ? "rotate-45" : ""}`}>＋</span>
-      </button>
+      {!sheet && !hidden && (
+        <button type="button" aria-label="Share something" onClick={() => openSheet("compose")} className="absolute right-[18px] bottom-[118px] z-[45] flex items-center gap-2 rounded-[28px] bg-orange text-cream-text px-[18px] py-[13px] shadow-[0_6px_16px_rgba(201,109,37,0.45)] active:scale-95 transition">
+          <span className="text-[16px] font-black leading-none">✎</span><span className="text-[13px] font-black">Share</span>
+        </button>
+      )}
       <SheetHost />
       <XpToastHost />
     </>

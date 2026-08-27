@@ -63,3 +63,12 @@ Stack: Next.js 16 (App Router) + React 19 + Tailwind 4 + TypeScript, per plan §
 | 36 | **Polygon on the free tier**: grouped-daily bars (1 call = every ticker) power quotes; freshness is "End of day". Upgrade to Starter + `POLYGON_RPM=300` for 15-min delayed intraday with no code change. |
 | 37 | Mutations go through `src/app/api/club/*` (session-gated, validated); sheets still write localStorage until switched to `src/lib/live/client.ts`. |
 | 38 | Placeholder Mensah members are `auth.users` rows with no login; they become real when invited. Their XP shows 0 under Kway's RLS until a club-mates policy is added. |
+
+## Round 7 — v11 conversation-first + v12 one page · one question · one action, 2026-08-27
+| # | Decision |
+|---|---|
+| 39 | Nav v4: Home · Discover · Learn · Practice · **Me**. Club and Community are no longer tabs — private clubs live inside Home's Main | Private switch; circles and club pages are drill-ins. `/community` redirects to `/home` (Clubs/Live tabs kept). |
+| 40 | Three social layers on one conversation engine: Main Feed (Home) · Circles (30-day rooms with countdown rings, archive to the company page) · Private Club (chat-default: Chat · Performance · Decisions · Members). |
+| 41 | The universal ＋ wheel is replaced by the ✎ **Share** FAB → Compose modal with an audience picker and artifact chips (Pick, Chart, Poll, Research, Ask Kai, $Ticker). Kai is embedded (`@Kai`), not a destination. |
+| 42 | Every page answers one question; modules that don't answer it were moved (Discover lost portfolio/lesson strips; Learn's games moved to Practice; the practice portfolio lives at `/practice/portfolio`). |
+| 43 | Company page = understand + sticky Make a Pick; chart/metrics/news sit behind "More". Key numbers other than market cap are dossier copy until live fundamentals are added to the seam. |

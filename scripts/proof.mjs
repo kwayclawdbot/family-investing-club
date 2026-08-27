@@ -43,6 +43,17 @@ const ROUTES = [
   ["club-research", "/club/research"],
   ["club-members", "/club/members"],
   ["child-home", "/home?as=child"],
+  // round 7 — v11/v12
+  ["home-v4-private", "/home?feed=private"],
+  ["home-compose", "/home?compose=1"],
+  ["circle", "/circle/nvda-earnings"],
+  ["club-chat", "/club"],
+  ["club-performance", "/club?tab=performance"],
+  ["club-decisions", "/club?tab=decisions"],
+  ["me-performance", "/profile/performance"],
+  ["lesson-valuation", "/lesson/valuation"],
+  ["practice-portfolio", "/practice/portfolio"],
+  ["game-valuation", "/learn/games/valuation"],
   // round 6 — workspace / pulse / community
   ["club-overview", "/club"],
   ["club-portfolio-tab", "/club?tab=portfolio"],
