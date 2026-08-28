@@ -44,13 +44,6 @@ export function DecisionsPane({ o }: { o: ClubOverview }) {
           {[[decisionRecord.votesCast, "VOTES CAST"], [`${decisionRecord.agedWellPct}%`, "AGED WELL"], [decisionRecord.avgOutcome, "AVG OUTCOME"]].map(([v, l]) => <div key={l as string}><div className="text-[16px] font-black text-ink">{v as string}</div><div className="text-[8.5px] font-black tracking-[0.4px] text-ink-4">{l as string}</div></div>)}
         </div>
           <DecisionRecordRows />
-        {decisionRecord.rows.map((r) => (
-          <div key={r.symbol} className="mt-2 flex items-center gap-2 border-t border-paper-2 pt-2">
-            <span className="w-7 h-7 rounded-[8px] bg-green-tint text-green text-[8px] font-black flex items-center justify-center">{r.symbol}</span>
-            <span className="flex-1 text-[10.5px] font-extrabold text-ink-2">{r.text}</span>
-            <span className="text-[10.5px] font-black text-[#3A8C4A]">{r.outcome}</span>
-          </div>
-        ))}
       </Panel>
       <SectionLabel className="mt-[13px] mb-[6px]">RESEARCHING</SectionLabel>
       <Panel className="px-[14px] py-[3px]">
