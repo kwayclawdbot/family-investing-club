@@ -1,4 +1,5 @@
 "use client";
+import { OfficialPicks } from "./OfficialPicks";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Club, ClubOverview, MemberCard, PortfolioTab, VerifiedExposure } from "@/lib/types";
@@ -43,7 +44,7 @@ export function ClubWorkspace({ club, overview, portfolio, members, initialTab =
         ))}
       </div>
       {tab === "chat" && <ChatPane proposal={overview.activeDecision ? { id: overview.activeDecision.proposalId, title: overview.activeDecision.title, hoursLeft: overview.activeDecision.hoursLeft, voted: overview.activeDecision.voted, eligible: overview.activeDecision.eligible } : null} />}
-      {tab === "performance" && <PerformancePane o={overview} p={portfolio} />}
+      {tab === "performance" && <><OfficialPicks /><details className="mt-4 rounded-[14px] border border-line bg-card px-3 py-2"><summary className="cursor-pointer text-[12px] font-black text-ink-2">Model portfolio ▾</summary><div className="pt-2"><PerformancePane o={overview} p={portfolio} /></div></details></>}
       {tab === "decisions" && <DecisionsPane o={overview} />}
       {tab === "members" && <MembersPane members={members} households={overview.households} onInvite={() => setInvite(true)} />}
       <InviteSheet open={invite} onClose={() => setInvite(false)} club={club} />

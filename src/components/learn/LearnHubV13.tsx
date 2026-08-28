@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LearnV12 } from "@/components/learn/v12/LearnV12";
 import { PracticeHub } from "@/components/practice/PracticeHub";
+import { CashText } from "@/components/markets/v13/bits";
 import { myPerf, liveNow, upcoming, recordings, continueCourse, liveThu, scenarioList, coreCourses, electives } from "@/lib/fixtures/v13-learn";
 import { Toggle } from "@/components/ui/extras";
 
@@ -54,6 +55,7 @@ export function LearnHubV13({ tab, streak, portfolio, flashcardsDue = 8 }: { tab
               <span className="w-9 h-9 rounded-[11px] bg-paper-2 flex items-center justify-center text-[16px]">{c.emoji}</span>
               <div className="flex-1"><div className="text-[13.5px] font-black text-ink">{c.title}</div><div className="text-[10.5px] font-bold text-ink-3">{c.sub}</div></div><span className="text-ink-4">›</span>
             </Link>))}</div>
+          <p className="mt-[9px] text-center text-[10px] font-bold text-ink-4">Finish a course → checkpoint badge + XP toward your next belt</p>
         </>
       )}
       {tab === "live" && (
@@ -89,7 +91,7 @@ export function LearnHubV13({ tab, streak, portfolio, flashcardsDue = 8 }: { tab
           <div className={`${card} px-[14px] py-[3px]`}>{scenarioList.map((s, i) => (
             <Link key={s.id} href={`/learn/scenarios/${s.id}`} className={`flex items-center gap-3 py-[10px] ${i < scenarioList.length - 1 ? "border-b border-paper-2" : ""}`}>
               <span className="w-9 h-9 rounded-[11px] bg-purple-tint flex items-center justify-center text-[16px]">{s.emoji}</span>
-              <div className="flex-1"><div className="text-[13px] font-black text-ink">{s.title}</div><div className="text-[10px] font-bold text-ink-3">{s.sub}</div></div><span className="text-ink-4">›</span>
+              <div className="flex-1"><div className="text-[13px] font-black text-ink">{s.title}</div><div className="text-[10px] font-bold text-ink-3"><CashText text={s.sub} /></div></div><span className="text-ink-4">›</span>
             </Link>))}</div>
         </>
       )}

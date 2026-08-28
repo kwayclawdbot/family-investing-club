@@ -34,7 +34,7 @@ export const liveThu = { title: "Reading Earnings w/ Coach D", sub: "7 PM · 214
 
 export const scenarioList = [
   { id: "market-crash", emoji: "📉", title: "Market crash — hold or sell?", sub: "with Simbot · 10 min" },
-  { id: "first-drawdown", emoji: "💰", title: "Earnings surprise — react in real time", sub: "under 5 min · with Simbot" },
+  { id: "earnings-surprise", emoji: "💰", title: "Earnings surprise — react in real time", sub: "uses $NVDA's real Wed report" },
   { id: "hot-tip", emoji: "📱", title: "The hot tip", sub: "a friend swears it'll triple · 5 min" },
 ];
 

@@ -1,3 +1,4 @@
+import { DecisionRecordRows } from "./OfficialPicks";
 import Link from "next/link";
 import type { ClubOverview } from "@/lib/types";
 import { cx } from "@/components/ui";
@@ -42,6 +43,7 @@ export function DecisionsPane({ o }: { o: ClubOverview }) {
         <div className="grid grid-cols-3 gap-2 text-center">
           {[[decisionRecord.votesCast, "VOTES CAST"], [`${decisionRecord.agedWellPct}%`, "AGED WELL"], [decisionRecord.avgOutcome, "AVG OUTCOME"]].map(([v, l]) => <div key={l as string}><div className="text-[16px] font-black text-ink">{v as string}</div><div className="text-[8.5px] font-black tracking-[0.4px] text-ink-4">{l as string}</div></div>)}
         </div>
+          <DecisionRecordRows />
         {decisionRecord.rows.map((r) => (
           <div key={r.symbol} className="mt-2 flex items-center gap-2 border-t border-paper-2 pt-2">
             <span className="w-7 h-7 rounded-[8px] bg-green-tint text-green text-[8px] font-black flex items-center justify-center">{r.symbol}</span>

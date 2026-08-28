@@ -1,5 +1,7 @@
 "use client";
 import Link from "next/link";
+import { Logo } from "@/components/markets/v13/bits";
+import { pickHistoryV3 } from "@/lib/fixtures/v14-explore";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { myPerf } from "@/lib/fixtures/v13-learn";
@@ -28,13 +30,13 @@ export function MyPerformanceV13({ tab, practice, connected, allocation }: { tab
         <div className="mt-1 flex h-[10px] rounded-[5px] overflow-hidden"><span className="bg-green-2" style={{ flex: m.stance.buy }} /><span className="bg-gold" style={{ flex: m.stance.watch }} /><span className="bg-[#C96A57]" style={{ flex: m.stance.pass }} /></div>
         <div className="flex gap-3 mt-1 text-[10px] font-extrabold text-ink-2"><span>▲ Buy {m.stance.buy}</span><span>👁 Watch {m.stance.watch}</span><span>✕ Pass {m.stance.pass}</span></div>
         <div className="mt-3 text-[10px] font-black text-ink-3">PICK HISTORY · TAP ANY FOR THE PICK CARD</div>
-        <div className="mt-1 bg-card border border-line rounded-[15px] px-[14px] py-[3px]">{m.history.map((h, i) => (
-          <Link key={h.id} href={`/club/pick/${h.id}`} className={`flex items-center gap-3 py-[10px] ${i < m.history.length - 1 ? "border-b border-paper-2" : ""}`}>
-            <span className="w-10 h-8 rounded-[8px] bg-paper-2 text-[10px] font-black text-ink-2 flex items-center justify-center">{h.symbol}</span>
+        <div className="mt-1 bg-card border border-line rounded-[15px] px-[14px] py-[3px]">{pickHistoryV3.map((h, i) => (
+          <Link key={h.id} href={`/club/pick/${h.id}`} className={`flex items-center gap-3 py-[10px] ${i < pickHistoryV3.length - 1 ? "border-b border-paper-2" : ""}`}>
+            <Logo symbol={h.symbol} size={28} radius={8} />
             <div className="flex-1"><div className="text-[12px] font-extrabold text-ink">{h.line}</div><div className="text-[9.5px] font-bold text-ink-3">{h.sub}</div></div>
             <span className={`text-[12px] font-black ${h.pct >= 0 ? "text-green" : "text-red"}`}>{h.pct >= 0 ? "+" : ""}{h.pct}%</span>
           </Link>))}</div>
-        <div className="mt-3 text-center text-[9.5px] font-bold text-ink-4">Every pick is timestamped · accuracy counts resolved picks only</div>
+        <div className="mt-3 text-center text-[9.5px] font-bold text-ink-4">Timestamped & immutable · accuracy counts resolved picks only · never account dollars</div>
       </>)}
       {tab === "practice" && (<>
         <div className="mt-3 bg-card border border-line rounded-[16px] px-4 py-3"><div className="text-[10px] font-black text-ink-3">PRACTICE PORTFOLIO · VIRTUAL</div><div className="text-[26px] font-black text-ink">${practice.value.toLocaleString(undefined, { maximumFractionDigits: 0 })} <span className={`text-[13px] ${practice.pct >= 0 ? "text-green" : "text-red"}`}>{practice.pct >= 0 ? "+" : ""}{practice.pct}%</span></div><div className="text-[10.5px] font-bold text-ink-3">{practice.holdings} holdings · results feed the Practice leaderboard · never mixed with real returns</div></div>

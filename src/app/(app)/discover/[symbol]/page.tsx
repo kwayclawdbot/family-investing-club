@@ -26,7 +26,7 @@ export default async function CompanyPage(props: PageProps<"/discover/[symbol]">
   const cap = metrics.find((m) => m.key === "mcap")?.value;
   const related = news.filter((n) => n.symbols.includes(sym))[0];
   const fx = newsItems.find((n) => n.symbol === sym);
-  const newsLine = fx ? fx.headline.replace(/^[A-Za-z]+ /, "") : related?.headline;
+  const newsLine = extra?.newsLine ?? (fx ? fx.headline.replace(/^[A-Za-z]+ /, "") : related?.headline);
   const ficData = fic ? { buy: fic.buyPct, watch: fic.watchPct, pass: fic.passPct, picks: fic.picks, verified: fic.verifiedOwners } : null;
   void club;
   return (

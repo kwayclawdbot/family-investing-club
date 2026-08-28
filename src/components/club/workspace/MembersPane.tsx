@@ -44,7 +44,7 @@ export function MembersPane({ members, households, onInvite }: { members: Member
       <div className="mt-[10px] bg-purple-tint border border-[#DDD4F0] rounded-[13px] px-[13px] py-[10px] text-[11px] font-bold text-[#584A93] leading-[1.5]">
         🎓 <b>Arielle&apos;s returns are practice-portfolio only</b> — clearly labeled, never mixed with verified adult performance. Guardian controls what she sees and joins.
       </div>
-      <div className="mt-[9px] text-center text-[10px] font-bold text-ink-4">Performance = timestamped picks · never account dollars · verified ✓ shows data trust, not skill</div>
+      <div className="mt-[9px] text-center text-[10px] font-bold text-ink-4">Ranked by timestamped picks · never account dollars · verified ✓ shows data trust, not skill</div>
 
       <div className="mt-3 mb-4 bg-card border border-line rounded-[14px] px-[14px]">
         <Link href="/club/leaderboards" className="flex items-center justify-between py-3 border-b border-paper-2 text-[13px] font-extrabold text-ink"><span>🏆 Leaderboards</span><span className="text-ink-4">›</span></Link>

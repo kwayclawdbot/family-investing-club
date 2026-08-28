@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { openSheet } from "@/components/sheets/bus";
 
 /** Prototype v2 `wheel`: quarter-wheel spun from the ＋ — MAKE A PICK · RESEARCH · ASK THE CLUB · PROPOSAL · ASK KAI (SVG verbatim). */
-const ROUTES: Record<string, string> = { clubdec: "/club?tab=decisions", clubchat: "/club", clubperf: "/club?tab=performance", propose: "/club/propose" };
+const ROUTES: Record<string, string> = { clubdec: "/club?tab=decisions", clubchat: "/home?feed=private", clubperf: "/club?tab=performance", propose: "/club/propose" };
 
 export function PlusWheel({ onClose, title = "Mensah Club" }: { onClose: () => void; title?: string }) {
   const router = useRouter();

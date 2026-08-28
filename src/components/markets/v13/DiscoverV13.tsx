@@ -1,78 +1,74 @@
+"use client";
 import Link from "next/link";
-import { Logo, Pct, Label } from "./bits";
-import { popularFamilies, mostOwned, mostDiscussed, topIdea, earningsWeek } from "@/lib/fixtures/v13-discover";
-import { SearchField } from "@/components/markets/SearchField";
+import { useState } from "react";
+import { discoverCards, trendingTheme, type DiscoverCard } from "@/lib/fixtures/v14-explore";
+import { brandOf } from "@/lib/fixtures/v13-discover";
 
-export type Quote = { price: number; changePct: number };
-const card = "bg-card border border-line rounded-[15px] px-[14px] py-[11px]";
+export type Quote = { price: number; changePct: number; ytdPct?: number };
+const TONE = { green: "bg-green-tint text-green", orange: "bg-orange-tint text-orange-2", gold: "bg-[#FFFDF4] text-[#BC9227]", purple: "bg-purple-tint text-purple-2" };
+const CHIPS = ["For You", "Trending", "Themes"] as const;
 
-/** Discover — prototype v2 `discover`: signals first, screener behind 🔬. */
+function Spark({ up }: { up: boolean }) {
+  const d = up ? "M2 22 L14 18 L24 20 L34 12 L44 14 L54 6" : "M2 8 L14 12 L24 10 L34 16 L44 15 L54 22";
+  return <svg width="56" height="26" viewBox="0 0 56 26" aria-hidden><path d={d} fill="none" stroke={up ? "#4C8C4A" : "#C96A57"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>;
+}
+
+function Card({ c, q }: { c: DiscoverCard; q?: Quote }) {
+  const pct = c.metric === "ytd" ? (q?.ytdPct ?? c.fallbackPct) : (q?.changePct ?? c.fallbackPct);
+  const up = pct >= 0;
+  return (
+    <Link href={c.href} className="flex-1 min-w-0 h-[158px] bg-card border border-line rounded-[18px] px-[13px] pt-[13px] pb-[11px] flex flex-col gap-[7px]">
+      <div className="flex items-start justify-between">
+        <span className="w-11 h-11 rounded-[13px] flex items-center justify-center text-[11px] font-black text-white tracking-[-0.3px] shadow-[0_3px_8px_rgba(46,42,33,0.28)] shrink-0" style={{ background: brandOf(c.symbol) }}>{c.symbol}</span>
+        <span className={`rounded-[7px] px-[7px] py-[2px] text-[7.5px] font-black text-right leading-[1.2] whitespace-pre-line ${TONE[c.tone]}`}>{c.tag}</span>
+      </div>
+      <div>
+        <div className="text-[14px] font-black text-ink">{c.name}</div>
+        <div className="text-[9.5px] font-bold text-ink-3 leading-[1.35] mt-[2px]">{c.story}</div>
+      </div>
+      <div className="mt-auto flex items-end justify-between">
+        <span className={`text-[12.5px] font-black ${up ? "text-green-2" : "text-red"}`}>{up ? "+" : "−"}{Math.abs(pct).toFixed(1)}% {c.metric === "ytd" ? "YTD" : "today"}</span>
+        <Spark up={up} />
+      </div>
+    </Link>
+  );
+}
+
+/** Discover — prototype v3 `discover`: one ticker per card · tap for the full company page. */
 export function DiscoverV13({ quotes }: { quotes: Record<string, Quote | undefined> }) {
+  const [chip, setChip] = useState<(typeof CHIPS)[number]>("For You");
+  const cards = chip === "Themes" ? discoverCards.filter((c) => c.kind === "theme") : chip === "Trending" ? [...discoverCards].sort((a, b) => Math.abs((quotes[b.symbol]?.changePct ?? b.fallbackPct)) - Math.abs((quotes[a.symbol]?.changePct ?? a.fallbackPct))) : discoverCards;
+  const rows: DiscoverCard[][] = [];
+  for (let i = 0; i < cards.length; i += 2) rows.push(cards.slice(i, i + 2));
   return (
     <div className="pt-[14px] pb-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-[21px] font-black text-ink">Discover</h1>
-        <Link href="/screener" className="inline-flex items-center gap-[6px] rounded-[12px] bg-ink text-cream-text px-[13px] py-[7px] text-[11px] font-black">🔬 Screener</Link>
-      </div>
-      <div className="mt-[9px]"><SearchField placeholder="Stocks, ETFs, ideas, people…" /></div>
-
-      <div className={`mt-[10px] ${card}`}>
-        <div className="text-[10px] font-black text-orange">👨‍👩‍👧‍👦 POPULAR WITH FAMILIES LIKE YOURS</div>
-        {popularFamilies.map((p, i) => {
-          const q = quotes[p.symbol];
-          return (
-            <Link key={p.symbol} href={`/discover/${p.symbol}`} className={`flex items-center gap-[10px] py-2 ${i < popularFamilies.length - 1 ? "border-b border-paper-2" : ""}`}>
-              <Logo symbol={p.symbol} />
-              <div className="flex-1 min-w-0"><div className="text-[12px] font-black text-ink">{p.name}</div><div className="text-[9px] font-bold text-ink-3 truncate">{p.line}</div></div>
-              {q && <span className="text-right"><div className="text-[11px] font-black text-ink">${q.price.toLocaleString(undefined, { maximumFractionDigits: 2 })}</div><Pct v={q.changePct} className="text-[9px]" /></span>}
-              <span className="text-ink-4 font-black">›</span>
-            </Link>
-          );
-        })}
-      </div>
-
-      <Link href="/theme/nuclear-energy" className="block mt-[9px] rounded-[15px] border border-orange-line px-[14px] py-[11px]" style={{ background: "linear-gradient(105deg,#FBEDD9,#FDF4E6)" }}>
-        <div className="flex justify-between"><span className="text-[9.5px] font-black text-orange-2">THEME · TRENDING ACROSS FIC</span><span className="text-[9px] font-extrabold text-ink-3">1.2K researching</span></div>
-        <div className="text-[14px] font-black text-ink mt-[2px]">Nuclear Energy <span className="text-[10px] font-extrabold text-ink-3">CEG · VST · CCJ</span></div>
+      <h1 className="text-[21px] font-black text-ink">Discover</h1>
+      <Link href="/screener" className="mt-[9px] flex items-center gap-[9px] bg-card border border-line rounded-[13px] px-[13px] py-[10px]">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#A89F8D" strokeWidth="2.5" strokeLinecap="round"><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" /></svg>
+        <span className="text-[12.5px] font-bold text-ink-4">Search stocks, ETFs, themes…</span>
       </Link>
-
-      <div className="flex gap-[9px] mt-[9px]">
-        <Link href="/profile/portfolio" className="flex-1 bg-card border border-line rounded-[14px] px-3 py-[10px]">
-          <div className="text-[9px] font-black text-purple-2">✓ MOST OWNED · VERIFIED</div>
-          <div className="flex items-center gap-[5px] mt-[6px]">{mostOwned.symbols.map((s) => <Logo key={s} symbol={s} size={26} radius={8} />)}<span className="text-[9px] font-extrabold text-ink-4 ml-[2px]">+{mostOwned.more}</span></div>
-        </Link>
-        <Link href="/home" className="flex-1 bg-card border border-line rounded-[14px] px-3 py-[10px]">
-          <div className="text-[9px] font-black text-orange-2">💬 MOST DISCUSSED</div>
-          <div className="flex items-center gap-[5px] mt-[6px]">{mostDiscussed.symbols.map((s) => <Logo key={s} symbol={s} size={26} radius={8} />)}<span className="text-[9px] font-extrabold text-ink-4 ml-[2px]">+{mostDiscussed.more}</span></div>
-        </Link>
+      <div className="flex items-center gap-[6px] mt-[9px]" role="tablist">
+        {CHIPS.map((c) => (
+          <button key={c} role="tab" aria-selected={chip === c} onClick={() => setChip(c)} className={`rounded-[15px] px-[13px] py-[5px] text-[10.5px] ${chip === c ? "bg-ink text-cream-text font-black" : "bg-card border border-line text-ink-3 font-extrabold"}`}>{c}</button>
+        ))}
+        <Link href="/screener" className="ml-auto rounded-[15px] bg-card border border-line text-ink-2 px-[11px] py-[5px] text-[10.5px] font-black">⚙︎ Screener</Link>
       </div>
-
-      <Link href={`/theme/${topIdea.id}`} className={`block mt-[9px] ${card}`}>
-        <div className="flex justify-between"><span className="text-[9.5px] font-black text-purple-2">💡 TOP INVESTMENT IDEA</span><span className="text-[9px] font-extrabold text-ink-3">{topIdea.following} following</span></div>
-        <div className="text-[13.5px] font-black text-ink mt-[3px]">{topIdea.title}</div>
-        <div className="flex items-center gap-[5px] mt-[6px]">{topIdea.symbols.map((s) => <Logo key={s} symbol={s} size={24} radius={7} />)}<span className="text-[9px] font-extrabold text-ink-3 ml-[3px]">{topIdea.line}</span></div>
-      </Link>
-
-      <div className={`mt-[9px] ${card}`}>
-        <div className="flex justify-between"><span className="text-[9.5px] font-black text-orange-2">📅 EARNINGS THIS WEEK</span><span className="text-[9px] font-extrabold text-ink-3">from your world</span></div>
-        <div className="flex gap-2 mt-2">
-          {earningsWeek.map((e) => (
-            <Link key={e.symbol} href={`/discover/${e.symbol}`} className="flex-1 bg-paper rounded-[11px] p-2 text-center flex flex-col items-center">
-              <Logo symbol={e.symbol} size={24} radius={7} />
-              <div className="text-[9px] font-black text-ink mt-1">{e.when}</div>
-              <div className="text-[7.5px] font-extrabold text-ink-3">{e.note}</div>
-            </Link>
-          ))}
+      {rows.map((r, i) => (
+        <div key={i} className={`flex gap-[9px] ${i === 0 ? "mt-[11px]" : "mt-[9px]"}`}>
+          {r.map((c) => <Card key={c.symbol} c={c} q={quotes[c.symbol]} />)}
+          {r.length === 1 && <div className="flex-1" />}
         </div>
-      </div>
-
-      <Link href="/discover/news" className={`mt-[9px] flex items-center gap-[10px] ${card}`}>
-        <span className="text-[15px]">📰</span>
-        <span className="flex-1 text-[11.5px] font-extrabold text-ink">Today&apos;s market news — with &quot;why this matters&quot;</span>
-        <span className="text-ink-4 font-black">›</span>
+      ))}
+      <Link href={`/theme/${trendingTheme.id}`} className="mt-[11px] rounded-[18px] px-4 py-[14px] flex items-center gap-[13px]" style={{ background: "linear-gradient(120deg,#E9C46A,#E58234)" }}>
+        <span className="w-[46px] h-[46px] rounded-[15px] bg-[rgba(255,253,247,0.25)] flex items-center justify-center text-[22px] shrink-0">{trendingTheme.emoji}</span>
+        <div className="flex-1">
+          <div className="text-[8.5px] font-black text-[rgba(255,253,247,0.85)]">THEME · TRENDING ACROSS FIC</div>
+          <div className="text-[15px] font-black text-cream-text">{trendingTheme.title}</div>
+          <div className="text-[9.5px] font-extrabold text-[rgba(255,253,247,0.9)]">{trendingTheme.sub}</div>
+        </div>
+        <span className="text-cream-text text-[16px] font-black">›</span>
       </Link>
-      <p className="mt-2 text-center text-[10px] font-bold text-ink-4">Signals from picks, research &amp; verified holdings · never advice</p>
-      <Label className="sr-only">Discover</Label>
+      <p className="mt-[9px] text-center text-[9.5px] font-bold text-ink-4">One ticker per card · tap for the full company page</p>
     </div>
   );
 }

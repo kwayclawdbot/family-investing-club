@@ -1,19 +1,22 @@
 import { HomeSwitch } from "@/components/home/HomeSwitch";
-import { PulseHome } from "@/components/home/PulseHome";
-import { HomeExtras } from "@/components/home/HomeExtras";
+import { HomeV4 } from "@/components/home/HomeV4";
 import { ChildHome } from "@/components/home/ChildHome";
-import { getChildHome, getHomePulse, identityOf, beltFor, nextBelt } from "@/lib/data-live";
+import { getChildHome, getClub, getProposals, identityOf, beltFor } from "@/lib/data-live";
 
-/** Prototype v2 `home`: performance pulse + MY PERFORMANCE CENTER + ACTIVE TRADE IDEAS + Your World. Child accounts keep the protected composition. */
+/** Prototype v3 `home` / `homeprivate`: conversation-first — circles rail · Main | Private feed · composer · rich artifacts.
+ *  Performance lives in My Performance and Club → Performance. Child accounts keep the protected composition. */
 export default async function HomePage(props: PageProps<"/home">) {
   const sp = await props.searchParams;
   const forceChild = sp.as === "child";
-  const [child, pulse] = await Promise.all([getChildHome(), getHomePulse()]);
-  const xp = identityOf("kway")?.lifetimeXp ?? pulse.tiles.xp;
-  const belt = beltFor(xp); const next = nextBelt(xp);
+  const [child, club, proposals] = await Promise.all([getChildHome(), getClub(), getProposals()]);
+  const belt = beltFor(identityOf("kway")?.lifetimeXp ?? 0);
+  const open = proposals.find((p) => p.status === "open");
+  const openProposal = open
+    ? { id: open.id, text: `Vote open: $${open.symbol} ${open.fromWeightPct}% → ${open.toWeightPct}%`, voted: open.votes.filter((v) => v.vote).length, eligible: open.votes.length, hoursLeft: parseInt(open.endsIn) * (open.endsIn.includes("day") ? 24 : 1) || 8 }
+    : null;
   return (
     <HomeSwitch forceChild={forceChild}
-      adult={<PulseHome p={pulse} belt={belt} nextBeltLabel={next?.label ?? null} xpToNext={next ? next.minXp - xp : null} extras={<HomeExtras />} />}
+      adult={<HomeV4 belt={belt.color} clubName={club.shortName} initialFeed={sp.feed === "private" ? "private" : "main"} openProposal={openProposal} />}
       child={<ChildHome data={child} />} />
   );
 }

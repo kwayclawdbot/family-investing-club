@@ -1,4 +1,5 @@
 "use client";
+import { KaiSummaryRow } from "./OfficialPicks";
 import Link from "next/link";
 import { useState } from "react";
 import { clubChat, type ClubChatMsg } from "@/lib/fixtures/v12-club";
@@ -109,6 +110,7 @@ export function ChatPane({ proposal }: { proposal: { id: string; title: string; 
       )}
       <form onSubmit={(e) => { e.preventDefault(); send(); }} className="mt-auto pt-3 pb-3">
         <div className="flex items-center gap-[9px] bg-card border-[1.5px] border-line rounded-[14px] px-[14px] py-[8px]">
+      <KaiSummaryRow />
           <input value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Message the club…" className="flex-1 bg-transparent text-[12px] font-bold text-ink placeholder:text-ink-4 outline-none" />
           <button type="button" onClick={() => setAttach(true)} aria-label="Attach" className="text-[15px] font-black text-ink-3">＋</button>
           <button type="button" onClick={() => openSheet("compose", { audience: "club" })} aria-label="Share something" className="text-[13px] text-ink-3">✎</button>

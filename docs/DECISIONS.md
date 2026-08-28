@@ -79,3 +79,10 @@ Stack: Next.js 16 (App Router) + React 19 + Tailwind 4 + TypeScript, per plan §
 | 44 | Nav v5 per the prototype: Home · Discover · Club · Learn · **More**. Home = performance pulse + My Performance Center + Active trade ideas; Club = chat with the circles rail inside; Discover = signals with 🔬 Screener and Theme pages behind it; Learn = LMS hub (Path · Courses · Live · Practice · Review; `/practice` redirects); More = Me. |
 | 45 | The ＋ wheel is back (Pick · Research · Ask the Club · Proposal · Ask Kai); ✎ compose lives in the Club composer. Pick and Kai are contextual sheets with live prices. |
 | 46 | Every `data-go` in the prototype maps to a real route or sheet (map in `docs/BUILD-BRIEF-round-8.md`). |
+
+## Prototype v3, 2026-08-28
+| # | Decision |
+|---|---|
+| 47 | Home is conversation-first again (circles rail · Main Feed | 🔒 Private · composer with attach); performance lives only in My Performance and Club → Performance. Private = the club chat inline. |
+| 48 | Club → Performance v1 tracks **official club picks** (voted in) — 12 picks · positive rate · vs benchmark · avg horizon — not holdings; the model portfolio collapses under "Model portfolio ▾". Individual member tracking comes later. |
+| 49 | Decision record rows show "aged well" (outcome moved with your vote 90+ days later) as a learning metric, never a score. Discover is one ticker per card. |

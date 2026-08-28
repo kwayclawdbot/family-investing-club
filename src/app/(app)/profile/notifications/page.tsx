@@ -1,3 +1,3 @@
-import { NotificationsV4 } from "@/components/home/NotificationsV4";
-/** Notifications — "needs you" first, deep links only (canvas v12, board 11). */
-export default function NotificationsPage() { return <NotificationsV4 />; }
+import { NotificationsV3 } from "@/components/profile/NotificationsV3";
+/** Notifications — prototype v3 `notifs`: Needs You first, deep links only. */
+export default function NotificationsPage() { return <NotificationsV3 />; }
