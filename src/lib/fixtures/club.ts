@@ -36,6 +36,7 @@ const nvdaReplies: Comment[] = [
 ];
 export const picks: Pick[] = [
   { id: "andwele-nvda", clubId: "mensah", authorId: "andwele", author: "Andwele", ago: "2h", symbol: "NVDA", name: "NVIDIA Corp.", stance: "buy", reason: "Their chips are in everything AI. Every data center being built needs them.", horizon: "3y", confidence: 3, priceAtPick: 1204, agree: 2, notSure: 1, replies: nvdaReplies, visibility: "club" },
+  { id: "ceg-nuclear", clubId: "mensah", authorId: "kway", author: "Kway", ago: "Jul 2", symbol: "CEG", name: "Constellation Energy", stance: "buy", reason: "From the ⚡ Nuclear idea — AI data centers need baseload power. Club holds 8%.", horizon: "5y+", confidence: 4, priceAtPick: 264.2, agree: 3, notSure: 0, replies: [], visibility: "club" },
   { id: "andwele-aapl", clubId: "mensah", authorId: "andwele", author: "Andwele", ago: "3d", symbol: "AAPL", name: "Apple Inc.", stance: "buy", reason: "Services money is the quiet giant.", horizon: "5y+", confidence: 4, priceAtPick: 224.1, agree: 1, notSure: 0, replies: [], visibility: "club" },
   { id: "mom-cost", clubId: "mensah", authorId: "mom", author: "Mom", ago: "1w", symbol: "COST", name: "Costco Wholesale", stance: "watch", reason: "Membership renewals at 93% — that's the moat.", horizon: "3y", confidence: 3, priceAtPick: 1071.5, agree: 3, notSure: 0, replies: [], visibility: "club" },
 ];

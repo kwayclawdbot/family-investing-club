@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { api } from "@/lib/live/client";
 import { SheetFrame } from "./SheetFrame";
 import { showXp } from "./bus";
@@ -12,6 +13,7 @@ const NAMES: Record<string, string> = { NVDA: "Nvidia", AAPL: "Apple", COST: "Co
 /** Prototype v2 `pick`: "$1,204.10 · NVDA · Your Pick on Nvidia · timestamped · tracked from today". Live price; api.pick when signed in, localStorage otherwise. */
 export function PickSheet({ onClose, symbol = "NVDA" }: { onClose: () => void; symbol?: string }) {
   const sym = symbol.toUpperCase();
+  const router = useRouter();
   const [price, setPrice] = useState<{ price: number; changePct: number } | null>(null);
   const [stance, setStance] = useState<Stance>("buy");
   const [why, setWhy] = useState("");
@@ -31,6 +33,7 @@ export function PickSheet({ onClose, symbol = "NVDA" }: { onClose: () => void; s
       try { const k = "fic.picks"; const cur = JSON.parse(localStorage.getItem(k) ?? "[]"); cur.unshift({ id: `local-${Date.now()}`, ...body, priceAtPick: price?.price ?? null, at: new Date().toISOString() }); localStorage.setItem(k, JSON.stringify(cur)); } catch { /* ignore */ }
     }
     setBusy(false); showXp(8); onClose();
+    router.push(to === "club" ? "/home?feed=private" : "/home");
   }
   return (
     <SheetFrame onClose={onClose} height="tall">

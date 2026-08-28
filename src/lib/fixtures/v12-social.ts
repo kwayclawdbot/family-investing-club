@@ -16,15 +16,30 @@ export type FeedAuthor = { name: string; initial: string; bg: string; belt: Belt
 export type FeedPost =
   | { kind: "text"; id: string; author: FeedAuthor; ago: string; text: string; pick?: { symbol: string; name: string; stance: "BUY" | "WATCH" | "PASS"; sincePct: number; spark: number[] }; replies: number; likes: number; reposts: number }
   | { kind: "poll"; id: string; author: FeedAuthor; ago: string; question: string; options: { label: string; pct: number }[]; votes: number; circleId: string; circleLabel: string }
-  | { kind: "kai"; id: string; ago: string; text: string; circleId: string };
+  | { kind: "kai"; id: string; ago: string; text: string; circleId: string }
+  | { kind: "clubvote"; id: string; club: string; initial: string; ago: string; pct: number; question: string; voted: number; eligible: number; closesIn: string; symbol: string }
+  | { kind: "circleref"; id: string; author: FeedAuthor; ago: string; text: string; circleId: string; circleLabel: string; people: number; daysLeft: number }
+  | { kind: "promotion"; id: string; author: FeedAuthor; ago: string; toBelt: string; xp: number; scope: string };
 
 export const SARAH: FeedAuthor = { name: "Sarah J.", initial: "S", bg: "bg-coral", belt: "blue", beltLabel: "Blue" };
 export const MARCUS: FeedAuthor = { name: "Marcus T.", initial: "T", bg: "bg-green-3", belt: "black", beltLabel: "Black" };
 
+const DAD: FeedAuthor = { name: "Dad", initial: "D", bg: "bg-[#B08968]", belt: "yellow", beltLabel: "Yellow II" };
 export const mainFeed: FeedPost[] = [
-  { kind: "text", id: "p1", author: SARAH, ago: "12m", text: "AMZN ad revenue grew 24% — the quiet business nobody prices in. Full thesis in my research note 👇", pick: { symbol: "AMZN", name: "Amazon", stance: "BUY", sincePct: 18.7, spark: [12, 10, 13, 7, 9, 3] }, replies: 34, likes: 87, reposts: 12 },
-  { kind: "poll", id: "p2", author: MARCUS, ago: "40m", question: "Poll: does the Fed cut this month?", options: [{ label: "Yes, 25bps", pct: 64 }, { label: "Hold", pct: 36 }], votes: 1204, circleId: "fed-decision", circleLabel: "🏛 Fed Decision" },
-  { kind: "kai", id: "p3", ago: "1h", text: "Today's NVDA debate in 3 lines: bulls cite data-center backlog, bears cite 60× P/E, and 4 clubs opened research.", circleId: "nvda-earnings" },
+  { kind: "text", id: "p1", author: SARAH, ago: "3h", text: "Cloud growth + ads momentum — $AMZN is still my highest-conviction long.", pick: { symbol: "AMZN", name: "Amazon", stance: "BUY", sincePct: 18.7, spark: [12, 10, 13, 7, 9, 3] }, replies: 12, likes: 24, reposts: 0 },
+  { kind: "clubvote", id: "p2", club: "Garcia Family Club", initial: "G", ago: "6h", pct: 73, question: "Add $COST to the portfolio?", voted: 3, eligible: 5, closesIn: "8h", symbol: "COST" },
+  { kind: "circleref", id: "p3", author: MARCUS, ago: "8h", text: "Everyone watching $NVDA into Wednesday — the whisper numbers are wild. Dropped my full breakdown in the earnings circle.", circleId: "nvda-earnings", circleLabel: "NVDA Earnings Circle", people: 842, daysLeft: 12 },
+  { kind: "promotion", id: "p4", author: DAD, ago: "1d", toBelt: "Yellow Belt II", xp: 800, scope: "🔒 CLUB" },
+  { kind: "kai", id: "p5", ago: "1h", text: "Today's NVDA debate in 3 lines: bulls cite data-center backlog, bears cite 60× P/E, and 4 clubs opened research.", circleId: "nvda-earnings" },
+];
+/** Prototype v3 `homeprivate`: the club chat inline, with times. */
+export type PrivateMsg = { id: string; who: "dad" | "mom" | "kway" | "arielle"; name: string; initial: string; bg: string; belt: BeltColor | null; time: string; text: string; mine?: boolean; grad?: boolean;
+  artifact?: { symbol: string; title: string; sub: string; href: string } };
+export const privateFeed: PrivateMsg[] = [
+  { id: "h1", who: "dad", name: "Dad", initial: "D", bg: "bg-[#B08968]", belt: "yellow", time: "9:12", text: "Everyone see the $CEG contract news? Thesis is playing out fast 👀" },
+  { id: "h2", who: "mom", name: "Mom", initial: "M", bg: "bg-coral", belt: "white", time: "9:31", text: "Finished the $COST write-up — renewals are the whole moat.", artifact: { symbol: "COST", title: "Costco research", sub: "4 sources · ready to propose", href: "/club?tab=decisions" } },
+  { id: "h3", who: "kway", name: "Kway", initial: "K", bg: "bg-green-2", belt: "purple", time: "9:40", text: "Reading it now — if margins held I'm a yes", mine: true },
+  { id: "h4", who: "arielle", name: "Arielle", initial: "A", bg: "bg-gold", belt: "white", time: "11:05", text: "Passed the energy quiz 10/10 — I can vote now! 🎓", grad: true },
 ];
 
 export type CircleMessage =

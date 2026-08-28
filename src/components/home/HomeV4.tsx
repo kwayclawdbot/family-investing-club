@@ -5,7 +5,8 @@ import { cx } from "@/components/ui";
 import { BellIcon, SearchIcon } from "@/components/ui/icons";
 import { BarChip, RingAvatar } from "@/components/community/BarChip";
 import { CirclesRail } from "@/components/circles/CircleRing";
-import { circles, mainFeed, clubChat, type FeedPost } from "@/lib/fixtures/v12-social";
+import { circles, mainFeed, type FeedPost } from "@/lib/fixtures/v12-social";
+import { privateFeed } from "@/lib/fixtures/v12-social";
 import { openSheet } from "@/components/sheets/bus";
 import type { BeltColor } from "@/lib/types";
 
@@ -72,6 +73,12 @@ export function HomeV4({ belt, clubName, initialFeed, openProposal }: { belt: Be
   );
 }
 
+/** $TICKER mentions tap to the company page. */
+function Cash({ t }: { t: string }) {
+  const parts = t.split(/(\$[A-Z]{1,5})/g);
+  return <>{parts.map((x, i) => /^\$[A-Z]{1,5}$/.test(x) ? <Link key={i} href={`/discover/${x.slice(1)}`} className="text-green font-black">{x}</Link> : <span key={i}>{x}</span>)}</>;
+}
+
 function Author({ a }: { a: FeedPost extends infer T ? (T extends { author: infer A } ? A : never) : never }) {
   const x = a as { name: string; initial: string; bg: string; belt: BeltColor | null; beltLabel?: string };
   return (
@@ -100,6 +107,37 @@ function Post({ p, last }: { p: FeedPost; last: boolean }) {
       </div>
     );
   }
+  if (p.kind === "clubvote") {
+    return (
+      <div className={row}>
+        <div className="flex items-center gap-2"><RingAvatar initial={p.initial} bg="bg-green-2" ring={null} size={30} /><span className="text-[12.5px] font-black text-ink">{p.club}</span><span className="rounded-[6px] border border-line px-[6px] py-[1px] text-[8.5px] font-black text-ink-3">PUBLIC</span><span className="text-[9.5px] font-extrabold text-ink-4">· {p.ago}</span></div>
+        <div className="mt-[7px] flex items-center gap-3 bg-[#FBF6EA] border border-[#EFE4CF] rounded-[12px] px-3 py-[9px]">
+          <span className="w-[46px] h-[46px] rounded-full border-[4px] border-green-2 flex items-center justify-center text-[12px] font-black text-green shrink-0">{p.pct}%</span>
+          <span className="flex-1"><span className="block text-[12.5px] font-black text-ink"><Cash t={p.question} /></span><span className="block text-[10px] font-extrabold text-ink-3">{p.voted} of {p.eligible} voted · closes in {p.closesIn}</span></span>
+          <Link href={`/discover/${p.symbol}`} className="rounded-[9px] bg-purple-2 text-cream-text px-3 py-[6px] text-[10px] font-black">Vote</Link>
+        </div>
+      </div>
+    );
+  }
+  if (p.kind === "circleref") {
+    return (
+      <div className={row}>
+        <div className="flex items-center gap-2"><Author a={p.author} /><span className="text-[9.5px] font-extrabold text-ink-4">· {p.ago}</span></div>
+        <p className="mt-[5px] text-[12.5px] font-semibold text-ink leading-[1.45]"><Cash t={p.text} /></p>
+        <Link href={`/circle/${p.circleId}`} className="mt-[6px] flex items-center gap-[9px] bg-[#FBF6EA] border border-[#EFE4CF] rounded-[11px] px-[11px] py-2">
+          <span className="text-[16px]">📊</span><span className="flex-1 text-[11px] font-black text-ink">{p.circleLabel} <span className="text-ink-3 font-extrabold">· {p.people} in · {p.daysLeft}d left</span></span><span className="text-[11px] font-black text-green">Join ›</span>
+        </Link>
+      </div>
+    );
+  }
+  if (p.kind === "promotion") {
+    return (
+      <div className={row}>
+        <div className="flex items-center gap-2"><Author a={p.author} /><span className="rounded-[6px] bg-paper-2 px-[6px] py-[1px] text-[8.5px] font-black text-ink-3">{p.scope}</span><span className="text-[9.5px] font-extrabold text-ink-4">· {p.ago}</span></div>
+        <div className="mt-[6px] flex items-center gap-[9px] bg-[#FBEFC9] rounded-[11px] px-[11px] py-2 text-[12px] font-bold text-ink"><span className="w-8 h-[10px] rounded-[3px] bg-[#E9B949]" />Promoted to <b className="font-black">{p.toBelt}</b> · {p.xp} XP <span className="ml-auto">🎉</span></div>
+      </div>
+    );
+  }
   if (p.kind === "poll") {
     return (
       <div className={row}>
@@ -120,11 +158,11 @@ function Post({ p, last }: { p: FeedPost; last: boolean }) {
   return (
     <div className={row}>
       <div className="flex items-center gap-2"><Author a={p.author} /><span className="text-[9.5px] font-extrabold text-ink-4">· {p.ago}</span></div>
-      <p className="mt-[5px] text-[12.5px] font-semibold text-ink leading-[1.45]">{p.text}</p>
+      <p className="mt-[5px] text-[12.5px] font-semibold text-ink leading-[1.45]"><Cash t={p.text} /></p>
       {p.pick && (
         <Link href={`/discover/${p.pick.symbol}`} className="mt-[6px] flex items-center gap-[9px] bg-[#FBF6EA] border border-[#EFE4CF] rounded-[11px] px-[11px] py-2">
           <span className="w-[30px] h-[30px] rounded-[9px] bg-line-2 flex items-center justify-center text-[8.5px] font-black text-ink-2">{p.pick.symbol}</span>
-          <span className="flex-1 text-[11px] font-black text-ink">{p.pick.name} · {p.pick.stance} <span className="text-[#3A8C4A]">+{p.pick.sincePct}% since pick</span></span>
+          <span className="flex-1 text-[11px] font-black text-ink">{p.pick.name} · {p.pick.stance} <span className="text-[#3A8C4A]">+{p.pick.sincePct}% since pick</span> <span className="text-ink-3 font-extrabold">· ✓ verified owner</span></span>
           <svg width="60" height="16" viewBox="0 0 60 16" preserveAspectRatio="none" className="shrink-0"><polyline fill="none" stroke="#4C8C4A" strokeWidth="2" points={p.pick.spark.map((y, i) => `${i * 12},${y}`).join(" ")} /></svg>
         </Link>
       )}
@@ -151,38 +189,67 @@ function MinePost({ p, belt }: { p: LocalPost; belt: BeltColor }) {
 }
 
 function PrivateFeed({ clubName, proposal, mine, belt }: { clubName: string; proposal: { id: string; text: string; voted: number; eligible: number; hoursLeft: number } | null; mine: LocalPost[]; belt: BeltColor }) {
+  const [attach, setAttach] = useState(false);
+  const [draft, setDraft] = useState("");
+  const [sent, setSent] = useState<string[]>([]);
   return (
-    <div className="mt-[6px]">
-      {proposal && (
-        <div className="flex items-center gap-[10px] bg-purple-tint border border-purple-line rounded-[13px] px-[13px] py-[9px]">
-          <span className="text-[15px]">🗳</span>
-          <span className="flex-1 text-[11.5px] font-black text-ink">{proposal.text} · {proposal.voted}/{proposal.eligible} in</span>
-          <Link href={`/club/vote/${proposal.id}`} className="rounded-[9px] bg-purple-2 text-cream-text px-3 py-[6px] text-[10px] font-black">Vote</Link>
+    <div className="mt-[6px] relative">
+      <div className="flex items-center gap-2 bg-card border border-line rounded-[13px] px-3 py-2">
+        <span className="flex -space-x-2">{[["K", "bg-green-2"], ["D", "bg-[#B08968]"], ["A", "bg-green-3"]].map(([i, c]) => <span key={i} className={cx("w-7 h-7 rounded-full text-white text-[10px] font-black flex items-center justify-center border-2 border-[#FFFDF7]", c)}>{i}</span>)}</span>
+        <span className="flex-1"><span className="block text-[12.5px] font-black text-ink">{clubName}</span><span className="block text-[10px] font-extrabold text-green">● 3 online</span></span>
+        <Link href="/club" className="text-[11px] font-black text-green">Club page ›</Link>
+      </div>
+      <div className="mt-2 flex flex-col gap-[9px]">
+        {privateFeed.slice(0, 3).map((m) => <PrivateBubble key={m.id} m={m} />)}
+        {proposal && (
+          <div className="flex items-center gap-[10px] bg-purple-tint border border-purple-line rounded-[13px] px-[13px] py-[9px]">
+            <span className="text-[15px]">🗳</span>
+            <span className="flex-1"><span className="block text-[11.5px] font-black text-ink"><Cash t={`Vote open: $CEG 4% → 8%`} /></span><span className="block text-[10px] font-extrabold text-ink-3">{proposal.voted}/{proposal.eligible} in · {proposal.hoursLeft}h left · waiting on you</span></span>
+            <Link href={`/club/vote/${proposal.id}`} className="rounded-[9px] bg-purple-2 text-cream-text px-3 py-[6px] text-[10px] font-black">Vote</Link>
+          </div>
+        )}
+        {privateFeed.slice(3).map((m) => <PrivateBubble key={m.id} m={m} />)}
+        {mine.map((p) => <MinePost key={p.id} p={p} belt={belt} />)}
+        {sent.map((t, i) => <div key={i} className="flex justify-end"><div className="max-w-[82%] bg-green-tint border border-green-line rounded-[13px_3px_13px_13px] px-3 py-2 text-[12px] font-semibold text-ink"><Cash t={t} /></div></div>)}
+      </div>
+      <div className="mt-3 flex items-center gap-2 bg-card border border-line rounded-[14px] px-3 py-2">
+        <button type="button" onClick={() => setAttach(true)} aria-label="Attach" className="text-[16px] font-black text-ink-3">＋</button>
+        <input value={draft} onChange={(e) => setDraft(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && draft.trim()) { setSent((x) => [...x, draft.trim()]); setDraft(""); } }} placeholder="Message the club…" className="flex-1 bg-transparent text-[12.5px] font-bold text-ink placeholder:text-ink-4 outline-none" />
+        <button type="button" onClick={() => { if (draft.trim()) { setSent((x) => [...x, draft.trim()]); setDraft(""); } }} aria-label="Send" className="w-7 h-7 rounded-full bg-green text-cream-text text-[12px] font-black">↑</button>
+      </div>
+      {attach && (
+        <div className="fixed inset-0 z-[60] flex flex-col justify-end" role="dialog" aria-label="Add to your message">
+          <button aria-label="Cancel" onClick={() => setAttach(false)} className="absolute inset-0 bg-[#2E2A21]/45" />
+          <div className="relative bg-card rounded-t-[24px] px-[18px] pt-3 pb-[calc(24px+env(safe-area-inset-bottom))] sm:max-w-[402px] sm:mx-auto sm:w-full">
+            <div className="mx-auto w-10 h-[5px] rounded-full bg-line-3" />
+            <div className="mt-3 text-[10px] font-black tracking-[0.5px] text-ink-3">{clubName.toUpperCase()}</div>
+            <div className="text-[16px] font-black text-ink">Add to your message</div>
+            {([["📷", "Photo or video", "camera roll or record now", () => setAttach(false)],
+              ["📈", "Trade idea", "structured pick card — ticker, stance, why", () => { setAttach(false); openSheet("pick", { symbol: "NVDA" }); }],
+              ["📊", "Poll", "let the club vote on anything", () => { setAttach(false); openSheet("compose", { audience: "club" }); }],
+              ["📎", "Research artifact", "attach a thesis, chart or Kai summary", () => { setAttach(false); openSheet("compose", { audience: "club" }); }]] as [string, string, string, () => void][]).map(([e, t, d, fn]) => (
+              <button key={t} type="button" onClick={fn} className="mt-2 w-full flex items-center gap-3 rounded-[13px] border border-line bg-paper px-3 py-[10px] text-left"><span className="text-[18px]">{e}</span><span className="flex-1"><span className="block text-[13px] font-black text-ink">{t}</span><span className="block text-[10.5px] font-extrabold text-ink-3">{d}</span></span><span className="text-ink-4">›</span></button>
+            ))}
+            <button onClick={() => setAttach(false)} className="mt-3 w-full h-11 rounded-[14px] bg-card border border-line text-[13px] font-black text-ink-2">Cancel</button>
+          </div>
         </div>
       )}
-      <div className="mt-2 text-center text-[9px] font-black tracking-[0.5px] text-ink-4">— TODAY —</div>
-      <div className="mt-1 flex flex-col gap-[9px]">
-        {mine.map((p) => <MinePost key={p.id} p={p} belt={belt} />)}
-        {clubChat.map((m) => (
-          <div key={m.id}>
-            <div className="flex gap-2">
-              <RingAvatar initial={m.author.initial} bg={m.author.bg} ring={m.author.belt} size={28} />
-              <div className="max-w-[82%]">
-                <div className="bg-card border border-line rounded-[3px_13px_13px_13px] px-3 py-2">
-                  <div className="text-[10px] font-black text-ink">{m.author.name}</div>
-                  <div className="text-[12px] font-semibold text-ink leading-[1.4] mt-[2px]">{m.text}</div>
-                  {m.artifact && <div className="mt-1 inline-flex items-center gap-[6px] bg-[#FBF6EA] rounded-[9px] px-[9px] py-[5px] text-[10px] font-black text-ink-2"><span className="rounded-[6px] bg-line-2 px-[6px] py-[1px] text-[8.5px]">{m.artifact.symbol}</span><span className="text-[#3A8C4A]">{m.artifact.line}</span></div>}
-                </div>
-                {m.readBy && <div className="text-[9px] font-extrabold text-ink-4 mt-[2px] text-right">read by {m.readBy}</div>}
-              </div>
-            </div>
-            {m.system && <div className="mt-[6px] text-center text-[9.5px] font-black text-[#7A5A00] bg-[#FBEFC9] rounded-[9px] px-3 py-[5px]">{m.system}</div>}
-          </div>
-        ))}
+    </div>
+  );
+}
+
+function PrivateBubble({ m }: { m: (typeof privateFeed)[number] }) {
+  if (m.mine) return <div className="flex justify-end"><div className="max-w-[82%] bg-green-tint border border-green-line rounded-[13px_3px_13px_13px] px-3 py-2"><div className="text-[12px] font-semibold text-ink"><Cash t={m.text} /></div></div></div>;
+  return (
+    <div className="flex gap-2">
+      <RingAvatar initial={m.initial} bg={m.bg} ring={m.belt} size={28} />
+      <div className="max-w-[82%]">
+        <div className="bg-card border border-line rounded-[3px_13px_13px_13px] px-3 py-2">
+          <div className="text-[10px] font-black text-ink">{m.name}{m.grad ? " 🎓" : ""} <span className="text-ink-4 font-extrabold">· {m.time}</span></div>
+          <div className="text-[12px] font-semibold text-ink leading-[1.4] mt-[2px]"><Cash t={m.text} /></div>
+          {m.artifact && <Link href={m.artifact.href} className="mt-[6px] flex items-center gap-2 bg-[#FBF6EA] rounded-[9px] px-[9px] py-[6px]"><span className="rounded-[6px] bg-line-2 px-[6px] py-[1px] text-[8.5px] font-black text-ink-2">{m.artifact.symbol}</span><span className="flex-1"><span className="block text-[11px] font-black text-ink">{m.artifact.title}</span><span className="block text-[9.5px] font-extrabold text-ink-3">{m.artifact.sub}</span></span><span className="text-[10.5px] font-black text-green">Open ›</span></Link>}
+        </div>
       </div>
-      <Link href="/club" className="mt-3 flex items-center justify-between rounded-[13px] bg-card border border-line px-[13px] py-[10px] text-[12px] font-black text-ink">
-        <span>🔒 {clubName}</span><span className="text-green">Open club ›</span>
-      </Link>
     </div>
   );
 }
