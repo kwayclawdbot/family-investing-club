@@ -2,22 +2,26 @@
 import type { ReactNode } from "react";
 import { cx } from "@/components/ui";
 import { RingedAvatar } from "@/components/belts/identity";
-import { useBeltOf } from "@/components/belts/identity-context";
+import { useBeltOf, useIdentities } from "@/components/belts/identity-context";
 import { BeltChip } from "@/components/ui/belt";
 
-/** Avatar colours as drawn on the v10 artboards (identity colours, not UI accents). */
+/** Identity colours for the signed-out demo ids only; real members come from the identity registry. */
 export const AVATAR_HEX: Record<string, string> = { kway: "#4C8C4A", dad: "#B08968", mom: "#D98E73", andwele: "#7BA05B", arielle: "#E9B949" };
 export const INITIAL: Record<string, string> = { kway: "K", dad: "D", mom: "M", andwele: "A", arielle: "A" };
 
+/** A member's avatar. Real members (uuids) resolve their initial and colour from the registry —
+ *  the hex/initial maps above only cover the five demo ids, so a real club used to render grey "?". */
 export function MemberDot({ memberId, size = 28, ring = true }: { memberId: string; size?: number; ring?: boolean }) {
   const beltOf = useBeltOf();
+  const me = useIdentities().find((i) => i.memberId === memberId);
+  const hex = AVATAR_HEX[memberId];
   const a = (
     <span
-      className="inline-flex items-center justify-center rounded-full text-white font-black shrink-0"
-      style={{ width: size, height: size, fontSize: Math.round(size * 0.4), background: AVATAR_HEX[memberId] ?? "#A89F8D" }}
+      className={cx("inline-flex items-center justify-center rounded-full text-white font-black shrink-0", !hex && (me?.color ?? "bg-ink-4"))}
+      style={{ width: size, height: size, fontSize: Math.round(size * 0.4), ...(hex ? { background: hex } : null) }}
       aria-hidden
     >
-      {INITIAL[memberId] ?? "?"}
+      {me?.initial ?? INITIAL[memberId] ?? "?"}
     </span>
   );
   return ring ? <RingedAvatar belt={beltOf(memberId)}>{a}</RingedAvatar> : a;

@@ -15,7 +15,7 @@ const LEVELS: { id: SharingLevel; title: string; sub: React.ReactNode }[] = [
 ];
 
 /** Artboard 05 — granular consent + a live preview of what a club member sees. */
-export function PrivacySharing({ clubName, previewMember, holdings, portfolioValue, connected, first }: { clubName: string; previewMember: string; holdings: RealHolding[]; portfolioValue: number; connected?: boolean; first?: boolean }) {
+export function PrivacySharing({ clubName, previewMember, you, holdings, portfolioValue, connected, first }: { clubName: string; previewMember: string; you: string; holdings: RealHolding[]; portfolioValue: number; connected?: boolean; first?: boolean }) {
   const router = useRouter();
   const { brokerage, setBrokerage } = useBrokerage(connected);
   const [sharing, setSharing] = useSharing(connected);
@@ -96,9 +96,9 @@ export function PrivacySharing({ clubName, previewMember, holdings, portfolioVal
             <div className="mt-[7px] flex items-center gap-[9px]">
               <span className="w-[26px] h-[26px] rounded-full bg-green-2 text-white flex items-center justify-center text-[10px] font-black border-2 border-[#FFFDF7]" aria-hidden>K</span>
               <span className="text-[12px] font-bold text-[#4A4436]">
-                {sharing.club === "positions" && <>Kway owns <b>{top}</b>{rest > 0 && <> + {rest} more</>}</>}
-                {sharing.club === "allocation" && <>Kway&apos;s allocation: {holdings.slice(0, 4).map((h) => `${h.symbol} ${h.weightPct}%`).join(" · ")}{holdings.length > 4 && " · …"}</>}
-                {sharing.club === "full" && <>Kway holds {holdings.slice(0, 3).map((h) => `${h.symbol} ≈ $${Math.round((portfolioValue * h.weightPct) / 100).toLocaleString()}`).join(" · ")}{rest > 0 && <> + {rest} more</>}</>}
+                {sharing.club === "positions" && <>{you} owns <b>{top}</b>{rest > 0 && <> + {rest} more</>}</>}
+                {sharing.club === "allocation" && <>{you}&rsquo;s allocation: {holdings.slice(0, 4).map((h) => `${h.symbol} ${h.weightPct}%`).join(" · ")}{holdings.length > 4 && " · …"}</>}
+                {sharing.club === "full" && <>{you} holds {holdings.slice(0, 3).map((h) => `${h.symbol} ≈ $${Math.round((portfolioValue * h.weightPct) / 100).toLocaleString()}`).join(" · ")}{rest > 0 && <> + {rest} more</>}</>}
               </span>
             </div>
             <div className="mt-1 text-[10.5px] font-bold text-ink-4">

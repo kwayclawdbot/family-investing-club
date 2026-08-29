@@ -48,7 +48,7 @@ export function ClubWorkspace({ club, overview, portfolio, members, initialTab =
       {tab === "chat" && <ChatPane live={chat} circles={circles} summary={kaiSummary(overview, official)} proposal={overview.activeDecision ? { id: overview.activeDecision.proposalId, title: overview.activeDecision.title, hoursLeft: overview.activeDecision.hoursLeft, voted: overview.activeDecision.voted, eligible: overview.activeDecision.eligible } : null} />}
       {tab === "performance" && <><OfficialPicks o={official ?? null} /><details className="mt-4 rounded-[14px] border border-line bg-card px-3 py-2"><summary className="cursor-pointer text-[12px] font-black text-ink-2">Model portfolio ▾</summary><div className="pt-2"><PerformancePane o={overview} p={portfolio} /></div></details></>}
       {tab === "decisions" && <DecisionsPane o={overview} p={portfolio} record={record ?? null} circles={circles ?? null} />}
-      {tab === "members" && <MembersPane members={members} households={overview.households} onInvite={() => setInvite(true)} />}
+      {tab === "members" && <MembersPane members={members} households={overview.households} clubName={name} onInvite={() => setInvite(true)} />}
       <InviteSheet open={invite} onClose={() => setInvite(false)} club={club} />
     </>
   );

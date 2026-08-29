@@ -25,6 +25,7 @@ export function PickComposer(props: Props) {
 }
 
 function PickComposerInner({ club, companies, costco, initialSymbol, embedded, onDone }: Props) {
+  const me = club.members.find((m) => m.isYou);
   const router = useRouter();
   const universe = useMemo<Quote[]>(() => [costco, ...companies.map((c) => ({ symbol: c.symbol, name: c.name, price: c.price, changePct: c.changePct }))], [companies, costco]);
   const [q, setQ] = useState<Quote>(() => universe.find((u) => u.symbol === initialSymbol?.toUpperCase()) ?? costco);
@@ -43,7 +44,7 @@ function PickComposerInner({ club, companies, costco, initialSymbol, embedded, o
 
   function share() {
     const pick: Pick = {
-      id: newId(), clubId: vis === "club" ? club.id : "public", authorId: "kway", author: "Kway", ago: "now", symbol: q.symbol, name: q.name, stance,
+      id: newId(), clubId: vis === "club" ? club.id : "public", authorId: me?.id ?? "kway", author: me?.name ?? "You", ago: "now", symbol: q.symbol, name: q.name, stance,
       reason: reason.trim(), horizon, confidence: conf, priceAtPick: q.price, agree: 0, notSure: 0, replies: [], visibility: vis,
     };
     write("fic.picks", [pick, ...read<Pick[]>("fic.picks", [])]);

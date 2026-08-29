@@ -19,15 +19,16 @@ export function EmptyState({ emoji = "🌱", title, body, action, href }: { emoj
 }
 
 /* ── Toggle (role=switch) ─────────────────────────────────────────── */
-export function Toggle({ checked, onChange, label }: { checked: boolean; onChange: (v: boolean) => void; label?: string }) {
+export function Toggle({ checked, onChange, label, disabled }: { checked: boolean; onChange: (v: boolean) => void; label?: string; disabled?: boolean }) {
   return (
     <button
       type="button"
       role="switch"
       aria-checked={checked}
       aria-label={label}
+      disabled={disabled}
       onClick={() => onChange(!checked)}
-      className={cx("relative w-[46px] h-[28px] rounded-full transition shrink-0", checked ? "bg-green-2" : "bg-line-3")}
+      className={cx("relative w-[46px] h-[28px] rounded-full transition shrink-0", checked ? "bg-green-2" : "bg-line-3", disabled && "opacity-40")}
     >
       <span className={cx("absolute top-[3px] w-[22px] h-[22px] rounded-full bg-white shadow transition-all", checked ? "left-[21px]" : "left-[3px]")} />
     </button>

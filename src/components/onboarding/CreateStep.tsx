@@ -20,7 +20,7 @@ const PRIVACY: { id: Privacy; icon: string; title: string; sub: string }[] = [
 /** Compact create-club step (artboard 01, inside onboarding). Decisions are preset; change anytime in My Club. */
 export function CreateStep() {
   const router = useRouter();
-  const [name, setName] = useState("The Mensah Family Investing Club");
+  const [name, setName] = useState("");
   const [kind, setKind] = useState<Kind>("family");
   const [privacy, setPrivacy] = useState<Privacy>("private");
   useEffect(() => {
@@ -59,6 +59,7 @@ export function CreateStep() {
         value={name}
         onChange={(e) => setName(e.target.value)}
         aria-label="Club name"
+        placeholder="e.g. The Coffie Family Investing Club"
         className="mt-[6px] w-full h-[48px] rounded-[12px] border border-line bg-card px-4 text-[14.5px] font-extrabold text-ink outline-none focus:border-green-2"
       />
 

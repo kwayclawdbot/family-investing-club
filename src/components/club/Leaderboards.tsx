@@ -72,7 +72,7 @@ export function Leaderboards({ club, lb }: { club: Club; lb: LB }) {
               <span className="text-[11px] font-extrabold text-ink-3">{otherLeader.leader}</span>
             </div>
           ) : (
-            <p className="mt-2 text-[12.5px] font-bold text-ink-2">{board === "practice" ? "Arielle leads on practice picks this season." : "Kway is the only connected member so far — a Verified ✓ board needs two or more consenting adults."}</p>
+            <p className="mt-2 text-[12.5px] font-bold text-ink-2">Nothing scored on this board yet — it fills in as the club plays, researches and picks.</p>
           )}
           <p className="mt-2 text-[11px] font-bold text-ink-4">Full board arrives with more data — window and rules will be stated here.</p>
         </div>

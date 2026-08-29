@@ -7,18 +7,18 @@ import { useSheet } from "@/components/sheets/bus";
 import { PlusWheel } from "./PlusWheel";
 
 /** Prototype v2: the ＋ is back — one orange button, the quarter-wheel spins out of it. `?plus=1` opens it on load. */
-export function PlusFab() {
+export function PlusFab({ clubName }: { clubName?: string }) {
   return (
-    <Suspense fallback={<FabInner initialOpen={false} />}>
-      <FabWithParams />
+    <Suspense fallback={<FabInner initialOpen={false} clubName={clubName} />}>
+      <FabWithParams clubName={clubName} />
     </Suspense>
   );
 }
-function FabWithParams() {
+function FabWithParams({ clubName }: { clubName?: string }) {
   const sp = useSearchParams();
-  return <FabInner initialOpen={sp.get("plus") === "1"} privateFeed={sp.get("feed") === "private"} />;
+  return <FabInner initialOpen={sp.get("plus") === "1"} privateFeed={sp.get("feed") === "private"} clubName={clubName} />;
 }
-function FabInner({ initialOpen, privateFeed = false }: { initialOpen: boolean; privateFeed?: boolean }) {
+function FabInner({ initialOpen, privateFeed = false, clubName }: { initialOpen: boolean; privateFeed?: boolean; clubName?: string }) {
   const [act, setAct] = useState(false);
   // eslint-disable-next-line react-hooks/set-state-in-effect -- label switches after mount to avoid an SSR mismatch
   useEffect(() => { setAct(privateFeed); }, [privateFeed]);
@@ -33,7 +33,7 @@ function FabInner({ initialOpen, privateFeed = false }: { initialOpen: boolean; 
   const hidden = path.startsWith("/circle/") || /^\/discover\/[^/]+$/.test(path);
   return (
     <>
-      {showWheel && <PlusWheel onClose={() => setOpen(false)} />}
+      {showWheel && <PlusWheel onClose={() => setOpen(false)} title={clubName} />}
       {!sheet && !hidden && (
         <button type="button" aria-label={open ? "Close" : "What do you want to do?"} aria-expanded={open} onClick={() => setOpen((v) => !v)}
           className={`absolute right-[18px] bottom-[118px] z-[48] w-14 h-14 rounded-full bg-orange text-cream-text flex items-center justify-center active:scale-95 transition ${open ? "shadow-[0_6px_16px_rgba(201,109,37,0.5),0_0_0_5px_rgba(255,253,247,0.9)]" : "shadow-[0_6px_16px_rgba(201,109,37,0.45)]"}`}>

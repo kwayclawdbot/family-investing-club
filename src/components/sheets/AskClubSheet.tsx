@@ -38,7 +38,8 @@ export function AskClubSheet({ onClose }: { onClose: () => void }) {
     setBusy(false);
     if (r.ok) { setDone(true); if (r.xp) showXp(r.xp); router.refresh(); return; }
     if (signedOut(r)) {
-      const ask: Ask = { id: newId(), text: text.trim(), symbol: symbol ?? undefined, at: new Date().toISOString(), author: "Kway" };
+      const me = club?.members.find((m) => m.isYou);
+      const ask: Ask = { id: newId(), text: text.trim(), symbol: symbol ?? undefined, at: new Date().toISOString(), author: me?.name ?? "You" };
       write("fic.asks", [ask, ...read<Ask[]>("fic.asks", [])]);
       setDone(true); showXp(5); return;
     }

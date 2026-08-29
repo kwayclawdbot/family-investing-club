@@ -1,5 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
+import { PushToggle } from "@/components/profile/PushToggle";
 import { useRouter } from "next/navigation";
 import { Button, cx } from "@/components/ui";
 import { Toggle, Sheet, LinkRow } from "@/components/ui/extras";
@@ -125,6 +126,7 @@ export function SettingsLive({ me }: { me: ProfileSettings }) {
       </Section>
 
       <Section title="Notifications">
+        <PushToggle userId={me.id} />
         {NOTIFS.map(([k, label], i) => (
           <Row key={k} title={label} last={i === NOTIFS.length - 1}><Toggle checked={prefs[k] !== false && prefs[k] !== undefined ? !!prefs[k] : prefs[k] === undefined ? k !== "weekly_digest" : false} onChange={(v) => togglePref(k, v)} label={label} /></Row>
         ))}

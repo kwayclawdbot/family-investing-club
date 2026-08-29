@@ -6,7 +6,8 @@ import { openSheet } from "@/components/sheets/bus";
 /** Prototype v2 `wheel`: quarter-wheel spun from the ＋ — MAKE A PICK · RESEARCH · ASK THE CLUB · PROPOSAL · ASK KAI (SVG verbatim). */
 const ROUTES: Record<string, string> = { clubdec: "/club?tab=decisions", clubchat: "/home?feed=private", clubperf: "/club?tab=performance", propose: "/club/propose" };
 
-export function PlusWheel({ onClose, title = "Mensah Club" }: { onClose: () => void; title?: string }) {
+export function PlusWheel({ onClose, title }: { onClose: () => void; title?: string }) {
+  const label = title || "Your club";
   const router = useRouter();
   useEffect(() => { const k = (e: KeyboardEvent) => e.key === "Escape" && onClose(); window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k); }, [onClose]);
   function act(go: string) {
@@ -19,7 +20,7 @@ export function PlusWheel({ onClose, title = "Mensah Club" }: { onClose: () => v
     <div className="absolute inset-0 z-[44]" role="dialog" aria-label="What do you want to do?">
       <button aria-label="Close" onClick={onClose} className="absolute inset-0" style={{ background: "radial-gradient(circle 300px at 356px 728px, rgba(46,42,33,0.45) 0%, rgba(46,42,33,0.3) 65%, rgba(46,42,33,0.1) 100%)", backdropFilter: "blur(1.5px)" }} />
       <div className="absolute right-5 bottom-[400px] text-right pointer-events-none">
-        <div className="text-[14px] font-black text-cream-text" style={{ textShadow: "0 1px 8px rgba(46,42,33,0.6)" }}>{title} · What do you want to do?</div>
+        <div className="text-[14px] font-black text-cream-text" style={{ textShadow: "0 1px 8px rgba(46,42,33,0.6)" }}>{label} · What do you want to do?</div>
         <div className="text-[10px] font-extrabold text-cream-text/75" style={{ textShadow: "0 1px 6px rgba(46,42,33,0.6)" }}>tap a compartment · tap ＋ to close</div>
       </div>
       <svg width="330" height="540" viewBox="0 0 330 540" className="absolute right-[46px] bottom-[-64px] z-[45] overflow-visible motion-safe:animate-[wheelSpin_.22s_ease-out]" style={{ filter: "drop-shadow(0 -4px 22px rgba(46,42,33,0.3))", transformOrigin: "330px 330px" }}>

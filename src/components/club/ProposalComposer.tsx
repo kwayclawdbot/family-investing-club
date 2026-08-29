@@ -14,6 +14,7 @@ export function ProposalComposer({ club, portfolio, companies, ideas, research, 
   club: Club; portfolio: ClubPortfolio; companies: Company[]; ideas: Idea[]; research: ResearchAssignment[]; initialSymbol?: string; template: ClubProposal;
 }) {
   const router = useRouter();
+  const me = club.members.find((m) => m.isYou);
   const names = useMemo(() => {
     const m: Record<string, string> = {};
     portfolio.holdings.forEach((h) => (m[h.symbol] = h.name));
@@ -43,7 +44,7 @@ export function ProposalComposer({ club, portfolio, companies, ideas, research, 
   function submit() {
     const id = newId();
     const p: ClubProposal = {
-      id, clubId: club.id, kind, symbol, name: names[symbol] ?? symbol, fromWeightPct: from, toWeightPct: target, practiceDollars: Math.abs(dollars), by: "Kway", byId: "kway", postedAgo: "just now",
+      id, clubId: club.id, kind, symbol, name: names[symbol] ?? symbol, fromWeightPct: from, toWeightPct: target, practiceDollars: Math.abs(dollars), by: me?.name ?? "You", byId: me?.id ?? "kway", postedAgo: "just now",
       endsIn: `${windowDays} days`, rationale: why.trim(), evidence, votes: club.members.filter((m) => m.id !== "dad").map((m) => ({ memberId: m.id, vote: null })), status: "open",
     };
     write("fic.proposals", [p, ...read<ClubProposal[]>("fic.proposals", [])]);

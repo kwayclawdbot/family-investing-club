@@ -47,7 +47,8 @@ export function GamesHub({ games }: { games: Game[] }) {
       <div className="grid grid-cols-2 gap-[10px]">
         {skill.map((g) => {
           const k = PORTFOLIO_GAMES.has(g.id) ? { label: "PORTFOLIO", cls: "bg-orange-tint text-orange-2" } : KIND[g.kind];
-          const b = best[g.id] ?? g.best;
+          // The saved score (game_scores) and any unsynced local round — whichever is actually higher.
+          const local = best[g.id]; const b = local !== undefined && g.best !== undefined ? Math.max(local, g.best) : local ?? g.best;
           return (
             <Link key={g.id} href={`/learn/games/${g.id}`} className="rounded-[16px] border border-line bg-card px-[14px] py-[13px] active:scale-[0.98] transition">
               <span className={cx("inline-block rounded-[8px] px-[9px] py-[3px] text-[10px] font-black", k.cls)}>{k.label}</span>
@@ -63,8 +64,8 @@ export function GamesHub({ games }: { games: Game[] }) {
         <Link href={`/learn/games/${family.id}`} className="mt-3 flex items-center gap-3 rounded-[16px] border border-line bg-card px-4 py-[13px]">
           <span className="text-[24px]" aria-hidden>🏆</span>
           <span className="flex-1 min-w-0">
-            <span className="block text-[14px] font-black text-ink">Family Showdown</span>
-            <span className="block text-[11.5px] font-bold text-ink-3">Weekend tournament · {family.title} · Mensah family vs. 3 others</span>
+            <span className="block text-[14px] font-black text-ink">{family.title} · play together</span>
+            <span className="block text-[11.5px] font-bold text-ink-3">{family.blurb}</span>
           </span>
           <span className="rounded-[11px] border-[1.5px] border-green-2 px-[13px] py-[7px] text-[11.5px] font-black text-green">Join</span>
         </Link>
