@@ -385,6 +385,15 @@ export async function provisionMembership(o: { email: string; program: "fic" | "
 
 /* ── formatting helpers shared by the admin pages ─────────────────────────── */
 
+/**
+ * Wall clock for the admin server pages. `Date.now()` inside a component body trips the React
+ * Compiler purity rule (it can't tell a server component renders once), so the pages read the clock
+ * through here and pass the number down — the client tables then render purely from a prop.
+ */
+export function serverNow(): number {
+  return Date.now();
+}
+
 export function relativeTime(iso: string | null | undefined): string {
   if (!iso) return "never";
   const ms = Date.now() - new Date(iso).getTime();

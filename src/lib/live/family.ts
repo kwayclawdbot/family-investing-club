@@ -250,21 +250,49 @@ export function guardrailSummary(g: Guardrails): string[] {
 /* ── parent view per learner ───────────────────────────────────────── */
 type RpcReport = { error?: string; foundations_total?: number; foundations_done?: number; behind_count?: number; cohort_week?: number | null; quiz_count?: number; quiz_avg?: number | null; quiz_low?: number; practice_count?: number; game_count?: number; game_best?: number; last_practice_at?: string | null; xp?: number; badges_count?: number };
 
-async function computeReport(childId: string, lessonsTotal: number, lessonsDone: number, xp: number, badges: number): Promise<ReportCard> {
+/**
+ * The learner's own curriculum denominator, the way `child_report_stats` counts it: published FIC
+ * lessons whose module is untracked or matches the learner's band. Falls back to every published
+ * lesson when the tracked query returns nothing.
+ */
+async function ficLessonTotal(band: string | null, fallback: number): Promise<number> {
   const supa = await userClient();
-  const [quiz, games] = await Promise.all([
+  const { data } = await supa
+    .from("lessons")
+    .select("id, retired, modules!inner(track, courses!inner(program, published))")
+    .eq("modules.courses.published", true)
+    .eq("modules.courses.program", "fic")
+    .limit(500);
+  type Row = { id: string; retired: boolean | null; modules: { track: string | null } | null };
+  const rows = ((data ?? []) as unknown as Row[]).filter((l) => !l.retired && (l.modules?.track == null || l.modules.track === (band ?? "adults")));
+  return rows.length || fallback;
+}
+
+/**
+ * The report the parent view falls back to when `child_report_stats` is unavailable — which happens
+ * for a household ADMIN, because FTA's function insists on `profiles.role = 'parent'` exactly and
+ * answers `{ error: 'forbidden' }` otherwise. Counts the same things from the same tables so the two
+ * paths agree: latest score per quiz, `sim_scenario_scores` for practice, `game_scores` for games.
+ */
+async function computeReport(childId: string, band: string | null, lessonsTotal: number, lessonsDone: number, xp: number, badges: number): Promise<ReportCard> {
+  const supa = await userClient();
+  const [quiz, games, practice, total] = await Promise.all([
     supa.from("quiz_attempts").select("quiz_id, score, created_at").eq("user_id", childId).order("created_at", { ascending: false }).limit(200),
     supa.from("game_scores").select("score, created_at").eq("user_id", childId).order("created_at", { ascending: false }).limit(100),
+    supa.from("sim_scenario_scores").select("total_score, created_at").eq("user_id", childId).order("created_at", { ascending: false }).limit(100),
+    ficLessonTotal(band, lessonsTotal),
   ]);
   const latest = new Map<string, number>();
   for (const q of ((quiz.data ?? []) as { quiz_id: string; score: number }[])) if (!latest.has(q.quiz_id)) latest.set(q.quiz_id, q.score);
   const scores = [...latest.values()];
   const g = (games.data ?? []) as { score: number; created_at: string }[];
+  const pr = (practice.data ?? []) as { total_score: number | null; created_at: string }[];
+  const lastAt = [pr[0]?.created_at, g[0]?.created_at].filter(Boolean).sort().pop() ?? null;
   return {
-    source: "computed", lessonsDone, lessonsTotal, behind: null, cohortWeek: null,
+    source: "computed", lessonsDone, lessonsTotal: total, behind: null, cohortWeek: null,
     quizCount: scores.length, quizAvg: scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : null, quizLow: scores.filter((s) => s < 70).length,
-    practiceCount: 0, gameCount: g.length, gameBest: g.length ? Math.max(...g.map((x) => x.score ?? 0)) : 0, lastPracticeAt: g[0]?.created_at ?? null,
-    practiceStale: isStale(g[0]?.created_at ?? null),
+    practiceCount: pr.length, gameCount: g.length, gameBest: g.length ? Math.max(...g.map((x) => x.score ?? 0)) : 0, lastPracticeAt: lastAt,
+    practiceStale: isStale(lastAt),
     xp, badges,
   };
 }
@@ -302,7 +330,7 @@ export async function getLearnerReport(memberId: string): Promise<LearnerReport 
     const r = (rpc.data ?? null) as RpcReport | null;
     const report: ReportCard = r && !r.error
       ? { source: "rpc", lessonsDone: r.foundations_done ?? completed, lessonsTotal: r.foundations_total ?? liveLessons.length, behind: r.behind_count ?? null, cohortWeek: r.cohort_week ?? null, quizCount: r.quiz_count ?? 0, quizAvg: r.quiz_avg ?? null, quizLow: r.quiz_low ?? 0, practiceCount: r.practice_count ?? 0, gameCount: r.game_count ?? 0, gameBest: r.game_best ?? 0, lastPracticeAt: r.last_practice_at ?? null, practiceStale: isStale(r.last_practice_at ?? null), xp: r.xp ?? member.lifetimeXp, badges: r.badges_count ?? badges.length }
-      : await computeReport(memberId, liveLessons.length, completed, member.lifetimeXp, badges.length);
+      : await computeReport(memberId, member.ageGroup, liveLessons.length, completed, member.lifetimeXp, badges.length);
 
     const actorIds = [...new Set(((events.data ?? []) as { actor_id: string | null }[]).map((e) => e.actor_id).filter(Boolean))] as string[];
     const actorName = (id: string | null) => (id ? firstName(ctx.profiles.get(id)?.display_name, ctx.profiles.get(id)?.email) : "A parent");

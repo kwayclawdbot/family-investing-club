@@ -34,7 +34,7 @@ export function MembersTable({ rows, nowMs }: { rows: ContactRow[]; nowMs: numbe
   const list = useMemo(() => {
     const s = q.trim().toLowerCase();
     return rows.filter((r) => (kind === "all" || r.contact_kind === kind) && (act === "all" || (act === "month" ? bucket(r.last_activity, nowMs) !== "dormant" && bucket(r.last_activity, nowMs) !== "never" : bucket(r.last_activity, nowMs) === act)) && (!s || (r.name ?? "").toLowerCase().includes(s) || (r.email ?? "").toLowerCase().includes(s) || (r.phone ?? "").includes(s)));
-  }, [rows, q, kind, act]);
+  }, [rows, q, kind, act, nowMs]);
   const download = () => {
     const blob = new Blob([csv(list)], { type: "text/csv;charset=utf-8;" });
     const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `contacts-${new Date().toISOString().slice(0, 10)}.csv`; a.click(); URL.revokeObjectURL(a.href);

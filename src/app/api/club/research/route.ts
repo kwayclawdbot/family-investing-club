@@ -18,8 +18,12 @@ export async function PATCH(req: Request) {
   if (b.notes !== undefined) patch.notes = String(b.notes).slice(0, 2000);
   if (b.assigneeId !== undefined) { if (b.assigneeId && !r.ctx.members.some((m) => m.user_id === b.assigneeId)) return bad("Assignee must be a club member"); patch.assignee_id = b.assigneeId; }
   if (!Object.keys(patch).length) return bad("Nothing to update");
-  const { error } = await r.supa.from("fic_club_research").update(patch).eq("id", b.id).eq("club_id", r.ctx.club.id);
+  // RLS (20260829010000 + 20260829020000) limits UPDATE to the assignee, the club founder/admin or a
+  // site admin, and only lets an ordinary member claim an UNASSIGNED row for themselves. A refusal
+  // matches zero rows rather than erroring, so say so instead of answering ok.
+  const { data, error } = await r.supa.from("fic_club_research").update(patch).eq("id", b.id).eq("club_id", r.ctx.club.id).select("id");
   if (error) return dbError(error);
+  if (!(data as unknown[])?.length) return bad("That assignment belongs to someone else — ask them, or a club organiser, to change it", 403);
   if (patch.status === "ready" || patch.status === "done") await awardXp(r.session.user.id, "research", xpFor("research")!, b.id);
   return ok();
 }

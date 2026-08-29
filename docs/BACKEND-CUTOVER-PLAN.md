@@ -76,7 +76,9 @@ Deliverables in `family-investing-club`:
 - **Entitlement helper.** `getEntitlement()` reads `family_tiers` + `enrollments` + `families.door`;
   a single place for "free / challenge / academy / club" gating.
 
-### Phase 2 — Club loop end-to-end
+### Phase 2 — Club loop end-to-end ✅ done 2026-08-28 (`npm run smoke:club` 10/10)
+Shipped: live readers for club/community/notifications/watchlist; `/api/community/{post,post/like,post/comment,chat,circle,circle/note,circle/join}`, `/api/notifications{,/ack}`, `/api/club/{chat,context}`; every sheet wired to its route (local path only on 401); `vote_gated` enforced; migration `20260829010000_fic_club_rls_gaps.sql` **applied** (author update/delete on replies + asks; research UPDATE limited to assignee/founder/admin).
+
 Wire the 12 existing `/api/club/*` routes to their sheets (only `PickSheet` calls the API today):
 `AskClubSheet → api.ask`, `VoteSheet → api.vote`, `ComposeSheet → feed_posts` (new
 `/api/club/post`, reusing FTA's `feed_posts` so the community feed is shared), `WatchlistView →
@@ -84,7 +86,9 @@ api.research`, notifications read/ack (`/api/notifications/ack` on FTA `notifica
 (`club_circles*`), chat send (`chat_messages` + realtime). Enforce `vote_gated` in `/api/club/vote`.
 Add the missing RLS UPDATE/DELETE policies flagged in the audit.
 
-### Phase 3 — Learn on real content
+### Phase 3 — Learn on real content ✅ done 2026-08-28 (`npm run smoke:learn` 17/17)
+Shipped: `src/lib/learn/{schema,types,server,legacy}.ts` (FTA step schema ported), `src/components/lesson/{steps,engine-ui}.tsx`, `/api/learn/{progress,step,quiz,flashcard,mastery,complete,rsvp,real-world}`, `/api/practice/order`, `src/lib/live/learning.ts` (403 lines) over the 12 published courses / 103 live lessons.
+
 - Lesson player reads `lessons.steps` (FTA `src/lib/learn/schema.ts` types copied into
   `src/lib/learn/`), legacy `video_provider` (youtube/html/bunny/mux) for the 90 non-stepped
   lessons, `quizzes` + `quiz_attempts`, `lesson_resources`.
@@ -95,18 +99,24 @@ Add the missing RLS UPDATE/DELETE policies flagged in the audit.
 - Practice: `/api/practice/order` writing `sim_portfolios/positions/trades` at Polygon price,
   respecting `family_writes_allowed()`; games → `game_scores`.
 
-### Phase 4 — Family & parent view
+### Phase 4 — Family & parent view ✅ done 2026-08-28 (`npm run smoke:family` 8/8)
+Shipped: `src/lib/live/family.ts` (482 lines), `/join/[code]` invite door, `/api/family/{invite,join,members,me,me/avatar,me/password,guardrail,activity,watchlist,watchlist/vote,mission,night,note}`, family + parent-view + profile-settings pages on real tables. Time-relative values (`activeToday`, `practiceStale`, `activityWeek`) are computed in the reader so pages stay render-pure.
+
 `/family/*` on `families`, `family_profiles`, `family_invites`, `child_report_stats`,
 `family_guardrails` (+ `set_family_guardrail`), `family_activity_days`, `family_watchlist(+votes)`,
 `family_night_sessions`. Parent view per learner = `child_report_stats` + `lesson_progress`.
 
-### Phase 5 — Membership & billing
+### Phase 5 — Membership & billing ✅ done 2026-08-28
+Shipped: both Stripe webhooks with `metadata.kind` filtering (hand-rolled HMAC, no SDK), `/api/club/checkout`, `/api/checkout/confirm`, `/api/billing/portal`, `src/lib/server/{membership,club-membership,challenge-vip,checkout-sessions,payment-element,pe-session,order-bumps}.ts`, and `/profile/billing` on `families.stripe_*` + `family_tiers`. Hosted Stripe only (no embedded checkout page yet). **0 of 23 families carry a `stripe_customer_id`** — a one-time backfill is still needed before the portal is useful.
+
 Port verbatim from FTA `src/lib/server/{membership,club-membership,challenge-vip,checkout-sessions,
 payment-element,order-bumps}.ts` and routes `stripe/webhook`, `shop/webhook`, `club/checkout`,
 `checkout/confirm`, `billing/portal`, `challenge/vip-checkout`. Both webhook endpoints keep their
 `metadata.kind` filtering. `/profile/billing` reads `families.stripe_*` + `family_tiers`.
 
-### Phase 6 — Platform services
+### Phase 6 — Platform services ✅ done 2026-08-28 (`npm run smoke:platform` 19/19)
+Shipped: `/api/push/{dispatch,email-fallback,resubscribe,health}` + `public/sw.js` + `src/lib/push-client.ts`; all 20 crons in `vercel.json` with `CRON_SECRET` gating (`/api/club/refresh` → `/api/cron/club-refresh`, since `/api/club/*` is cookie-protected); Kai/coach/help; marketing + drips + auth email. 36 routes + 56 server modules. `scripts/platform-smoke.mjs` 19/19 (Stripe HMAC accept/reject/tamper/stale, push payload validation, cron auth).
+
 - **Push:** `/api/push/dispatch` (+ `email-fallback`, `resubscribe`), `public/sw.js`, subscribe UI;
   same `PUSH_DISPATCH_SECRET` (must equal Vault `push_dispatch_secret`).
 - **Crons (20 in FTA `vercel.json`):** carry `refresh-screener`, `track-performance`,
@@ -119,7 +129,14 @@ payment-element,order-bumps}.ts` and routes `stripe/webhook`, `shop/webhook`, `c
   `unsubscribe`, drips. Admin pages stay on FTA at `legacy.` until Phase 7.
 - **Auth email:** `auth/reset`, `auth/password-status` (Resend).
 
-### Phase 7 — Admin
+### Phase 7 — Admin ✅ done 2026-08-28 (`npm run smoke:admin`)
+`src/lib/live/admin-crm.ts`, 20 `/api/admin/*` routes, 11 components and **17 pages** under `src/app/(admin)/admin/**`:
+overview · members (+detail, view-as) · families (+detail, tier, invite) · leads · pipeline · campaigns ·
+drips · support · announcements (+push broadcast) · courses (+editor, drafts) · live sessions · funnel ·
+challenge. Desktop shell (no phone chrome), every page gated on `isAdmin(getSession())` → `/home`.
+Smoke reads live: 853 contacts · 826 leads · 23 families · 103 lessons · 45 step lessons (36 with unpublished drafts).
+Not ported: shop orders/products admin (FTA's `/admin/shop`), coach-demos, community-watchlist, picks.
+
 Port `/admin/*` (CRM overview, contacts, marketing, funnels, help desk, families, challenge cohort,
 push broadcast, announcements, shop orders/products, view-as) against the ~30 `admin_*` RPCs.
 This is the last thing keeping FTA alive.
@@ -147,6 +164,27 @@ This is the last thing keeping FTA alive.
 - Brokerage aggregator, coordinated investing: unchanged (roadmap Phase 2+).
 
 ## 4. Env vars FIC needs by cutover
+
+**Vercel state (checked 2026-08-28):** `fta-dashboard` has 41 production vars; `family-investing-club`
+has 4 (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`,
+`POLYGON_API_KEY`). Copy these **20** from `fta-dashboard` → `family-investing-club` at cutover
+(values already merged into FIC's local `.env.local`, which is gitignored):
+
+`ANTHROPIC_API_KEY` `OPENAI_API_KEY` `RESEND_API_KEY` `MARKETING_FROM_EMAIL` `MARKETING_TOKEN_SECRET`
+`FB_LEADS_VERIFY_TOKEN` `TWILIO_ACCOUNT_SID` `TWILIO_AUTH_TOKEN` `TWILIO_PHONE_NUMBER`
+`STRIPE_SECRET_KEY` `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` `STRIPE_WEBHOOK_SECRET`
+`SHOP_STRIPE_WEBHOOK_SECRET` `PUSH_DISPATCH_SECRET` `VAPID_PRIVATE_KEY`
+`NEXT_PUBLIC_VAPID_PUBLIC_KEY` `CRON_SECRET` `LULU_API_BASE` `SHOPIFY_STORE_DOMAIN`
+`NEXT_PUBLIC_SITE_URL` (retarget to the FIC origin).
+
+**Deliberately NOT copied:** `NEXT_PUBLIC_API_URL` (dead FastAPI backend), `NEXT_PUBLIC_DESIGN_V2`
+(FTA-only design flag), `POSTGRES_*` / `SUPABASE_JWT_SECRET` / `SUPABASE_SECRET_KEY` /
+`SUPABASE_PUBLISHABLE_KEY` (Vercel–Supabase integration leftovers the code never reads),
+`NEXT_PUBLIC_CANONICAL_HOST` (set on **FTA** at cutover so it 308s to the new host, not on FIC).
+`PUSH_DISPATCH_SECRET` must keep matching Supabase Vault `push_dispatch_secret` — the DB trigger
+sends it, and a mismatch kills push silently.
+
+### Full reference
 `NEXT_PUBLIC_SUPABASE_URL` `NEXT_PUBLIC_SUPABASE_ANON_KEY` `SUPABASE_SERVICE_ROLE_KEY`
 `NEXT_PUBLIC_SITE_URL` `POLYGON_API_KEY` `POLYGON_RPM` · `CRON_SECRET` · `PUSH_DISPATCH_SECRET`
 `NEXT_PUBLIC_VAPID_PUBLIC_KEY` `VAPID_PRIVATE_KEY` · `STRIPE_SECRET_KEY`
@@ -154,7 +192,20 @@ This is the last thing keeping FTA alive.
 `ANTHROPIC_API_KEY` `OPENAI_API_KEY` · `RESEND_API_KEY` `MARKETING_FROM_EMAIL`
 `MARKETING_TOKEN_SECRET` `TWILIO_*` `FB_LEADS_VERIFY_TOKEN` · `LULU_*` `SHOPIFY_*` (shop only).
 
-## 5. Risk register
+## 5. Verification (all green, 2026-08-28) — `npm run smoke`
+| Suite | Checks | Covers |
+|---|---|---|
+| `smoke:identity` | session, RPC idempotency, service-role-only backfill | Phase 1 |
+| `smoke:platform` | 19 — Stripe HMAC accept/reject/tamper/stale, push payload, cron auth | Phases 5–6 |
+| `smoke:admin` | every admin RPC + signed-out denial | Phase 7 |
+| `smoke:learn` | 17 — curriculum reads, stepped + legacy lessons, 6 write paths, practice order buy→sell | Phase 3 |
+| `smoke:family` | 8 — household, learner report, guardrails, invites, profile writes | Phase 4 |
+| `smoke:club` | 10 — club objects, ask/reply/reaction, community post+like+comment, notifications, research RLS | Phase 2 |
+
+Every suite runs as a real magic-link session (RLS enforced), writes only rows it created, and restores
+them — the ground-truth counts in §0 are unchanged after a run.
+
+## 6. Risk register
 | Risk | Mitigation |
 |---|---|
 | Push dies silently after host move | Manual insert test in cutover step 5; add a `/api/push/health` that counts `notifications` vs `push_subscriptions` deliveries |
@@ -163,3 +214,15 @@ This is the last thing keeping FTA alive.
 | Fixture data shown to real users | Phase 1 live-or-empty; `scripts/live-smoke.mjs` run in CI against a magic-link session |
 | Two repos applying migrations | Only FIC applies from now; FTA repo is frozen at `b9f5b7e` |
 | Challenge cohort 9/1–9/9 | No host or schema change during the window |
+
+## 7. Known gaps carried into cutover
+- **`stripe_customer_id` is null on all 23 families** — the billing portal needs a one-time Stripe backfill.
+- **`child_report_stats` refuses `role='admin'`** (it demands exactly `parent`); FIC's computed fallback now
+  mirrors the RPC's denominator (`program='fic'` lessons on the learner's track, not all 103), but a real
+  parent account gets the richer report. Fixing it means altering an FTA function — deferred until FTA retires.
+- **Zero open circles** — every `club_circles` row has expired, so circle surfaces render empty. Data, not code.
+- **Not yet exercised by smoke:** `/api/club/{vote,propose,pick}`, chat sends, family-night XP fan-out — each
+  mutates a real club object; they need a throwaway club to test safely.
+- **Admin pages not ported:** shop orders/products, coach-demos, community-watchlist, picks (FTA keeps
+  serving those at `legacy.` until someone needs them in FIC).
+- **No embedded checkout page** — hosted Stripe only; VIP success still points at FTA while the cohort runs.

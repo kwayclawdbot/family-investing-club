@@ -10,7 +10,14 @@
     "proof": "node scripts/proof.mjs",
     "typecheck": "tsc --noEmit",
     "db:apply": "node scripts/db-apply.mjs",
-    "smoke:live": "FIC_STRICT_LIVE=1 node scripts/live-smoke.mjs"
+    "smoke:live": "FIC_STRICT_LIVE=1 node scripts/live-smoke.mjs",
+    "smoke": "for s in identity platform admin learn family club; do node scripts/$s-smoke.mjs || exit 1; done",
+    "smoke:identity": "node scripts/identity-smoke.mjs",
+    "smoke:platform": "node scripts/platform-smoke.mjs",
+    "smoke:admin": "node scripts/admin-smoke.mjs",
+    "smoke:learn": "node scripts/learn-smoke.mjs",
+    "smoke:family": "node scripts/family-smoke.mjs",
+    "smoke:club": "node scripts/club-smoke.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.5",
