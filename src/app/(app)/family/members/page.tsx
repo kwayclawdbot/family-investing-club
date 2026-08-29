@@ -1,20 +1,20 @@
 import Link from "next/link";
-import { getLearners } from "@/lib/data-live";
-import { Avatar } from "@/components/ui";
+import { redirect } from "next/navigation";
+import { cx } from "@/components/ui";
+import { EmptyState } from "@/components/ui/extras";
 import { ChevronLeft, ChevronRight } from "@/components/ui/icons";
-import { ParentControls } from "@/components/family/ParentControls";
-import { LearnerAction } from "@/components/family/LearnerAction";
+import { MemberAvatar } from "@/components/family/MemberAvatar";
+import { MemberActions } from "@/components/family/MemberActions";
+import { getGuardrailsForKids, getHousehold, guardrailSummary } from "@/lib/live/family";
 
-/** Parent view (artboard 28): progress per learner + guardian controls. Display facts come from the artboard. */
-const VIEW: Record<string, { age?: number; lv: number; tail?: string; action?: { text: string; kind: "assign" | "cheer"; task?: string } }> = {
-  andwele: { age: 15, lv: 6, action: { text: "Struggling with: DIVERSIFICATION", kind: "assign", task: "Review: Diversification" } },
-  arielle: { age: 11, lv: 3, action: { text: "Great streak — send a cheer", kind: "cheer" } },
-  mom: { lv: 5, tail: "joined family portfolio" },
-};
-const LEVEL: Record<string, string> = { andwele: "Builder", arielle: "Explorer", mom: "Investor" };
-
+/** Manage Family (parents): the roster on `profiles`, guardrail line per learner, edit / remove, invite. */
 export default async function FamilyMembersPage() {
-  const learners = (await getLearners()).filter((l) => l.id !== "kway");
+  const family = await getHousehold();
+  if (!family) redirect("/family");
+  if (!family.isParent) redirect("/family");
+  const guards = await getGuardrailsForKids();
+  const ROLE: Record<string, string> = { parent: "Parent", admin: "Parent · admin", coach: "Coach", child: "Child" };
+
   return (
     <div className="pt-[18px] pb-6">
       <div className="flex items-center justify-between">
@@ -25,20 +25,27 @@ export default async function FamilyMembersPage() {
       <p className="mt-[10px] text-[12px] font-extrabold text-ink-3">You see progress — you never log in as them.</p>
 
       <div className="mt-[10px] flex flex-col gap-[10px]">
-        {learners.map((l) => {
-          const v = VIEW[l.id] ?? { lv: 4 };
-          const meta = [`${LEVEL[l.id] ?? l.level} level`, `Lv ${v.lv}`, v.tail ?? `🔥 ${l.streak} days`, v.tail ? null : l.pathTitle].filter(Boolean).join(" · ");
+        {family.members.map((m) => {
+          const g = m.isKid ? guards.get(m.id) : null;
+          const meta = [m.isKid ? `${m.ageGroup === "kids" ? "Kid" : "Teen"} · ${m.level}` : ROLE[m.role] ?? m.role, `${m.lifetimeXp.toLocaleString()} XP`, m.lastActive].join(" · ");
           return (
-            <div key={l.id} className="bg-card border border-line rounded-[16px] px-4 py-[13px]">
-              <Link href={`/family/members/${l.id}`} className="flex items-center gap-3">
-                <Avatar name={l.name} color={l.color} size={40} />
-                <span className="flex-1 min-w-0">
-                  <span className="block text-[14px] font-black text-ink">{l.name}{v.age ? ` · ${v.age}` : ""}</span>
-                  <span className="block text-[11px] font-bold text-ink-3">{meta}</span>
-                </span>
-                <ChevronRight className="text-ink-4" />
-              </Link>
-              {v.action && <LearnerAction learnerId={l.id} text={v.action.text} action={v.action.kind} taskTitle={v.action.task} />}
+            <div key={m.id} className="bg-card border border-line rounded-[16px] px-4 py-[13px]">
+              <div className="flex items-center gap-3">
+                <Link href={m.isYou ? "/profile/progress" : `/family/members/${m.id}`} className="flex items-center gap-3 flex-1 min-w-0">
+                  <MemberAvatar name={m.name} color={m.color} avatarUrl={m.avatarUrl} size={40} />
+                  <span className="flex-1 min-w-0">
+                    <span className="block text-[14px] font-black text-ink truncate">{m.fullName}{m.isYou ? " (you)" : ""}</span>
+                    <span className="block text-[11px] font-bold text-ink-3 truncate">{meta}</span>
+                  </span>
+                  <ChevronRight className="text-ink-4" />
+                </Link>
+                {!m.isYou && <MemberActions member={m} />}
+              </div>
+              {g && (
+                <div className="mt-[9px] flex flex-wrap gap-[5px]">
+                  {guardrailSummary(g).map((t) => <span key={t} className={cx("rounded-[6px] px-2 py-[3px] text-[10px] font-extrabold", t.startsWith("No ") || t.startsWith("Chat not") ? "bg-paper-2 text-ink-3" : "bg-purple-tint text-purple-2")}>{t}</span>)}
+                </div>
+              )}
             </div>
           );
         })}
@@ -48,9 +55,8 @@ export default async function FamilyMembersPage() {
         ＋ Add a family member or child profile
       </Link>
 
-      <h2 className="mt-5 mb-2 text-[14px] font-black text-ink">Guardian controls</h2>
-      <ParentControls />
-      <p className="mt-2 text-[11px] font-bold text-ink-4">Children keep a protected account: stocks &amp; ETFs-only practice, public community off, family club participation per these settings.</p>
+      {family.kids.length === 0 && <div className="mt-4"><EmptyState emoji="🧒" title="No learners yet" body="Invite a child or teen — their account is protected from day one: practice money only, family chat only, guardian controls." action="Invite a learner" href="/family/invite" /></div>}
+      <p className="mt-4 text-[11px] font-bold text-ink-4">Children keep a protected account: practice money only, no public community, guardrails per learner. Tap a learner for their report and controls.</p>
     </div>
   );
 }

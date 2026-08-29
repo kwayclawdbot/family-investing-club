@@ -1,0 +1,25 @@
+{
+  "regions": ["pdx1"],
+  "crons": [
+    { "path": "/api/cron/track-performance", "schedule": "0 22 * * 1-5" },
+    { "path": "/api/cron/refresh-screener", "schedule": "0 23 * * 1-5" },
+    { "path": "/api/cron/news-market-wrap?slot=preopen", "schedule": "0 13 * * 1-5" },
+    { "path": "/api/cron/news-market-wrap?slot=postclose", "schedule": "30 21 * * 1-5" },
+    { "path": "/api/cron/news-ticker-events", "schedule": "35 21 * * 1-5" },
+    { "path": "/api/cron/kai-feed-seed", "schedule": "20 13 * * 1-5" },
+    { "path": "/api/cron/drip-welcome", "schedule": "0 15 * * *" },
+    { "path": "/api/cron/evaluate-alerts", "schedule": "5 22 * * 1-5" },
+    { "path": "/api/cron/evaluate-alerts-intraday", "schedule": "*/10 14-20 * * 1-5" },
+    { "path": "/api/cron/alerts-digest", "schedule": "0 21 * * 1-5" },
+    { "path": "/api/cron/expire-challenge-passes", "schedule": "0 16 * * *" },
+    { "path": "/api/cron/club-clock", "schedule": "30 16 * * *" },
+    { "path": "/api/cron/fic-week-rollover", "schedule": "0 12 * * *" },
+    { "path": "/api/cron/challenge-sequences", "schedule": "10 12 * * *" },
+    { "path": "/api/cron/challenge-sequences", "schedule": "10 15 * * *" },
+    { "path": "/api/cron/challenge-sequences", "schedule": "10 23 * * *" },
+    { "path": "/api/cron/challenge-day-push?kind=mission", "schedule": "0 13 * * *" },
+    { "path": "/api/cron/challenge-day-push?kind=session", "schedule": "30 22 * * *" },
+    { "path": "/api/cron/club-refresh", "schedule": "*/15 * * * *" },
+    { "path": "/api/cron/live-events", "schedule": "*/15 * * * *" }
+  ]
+}

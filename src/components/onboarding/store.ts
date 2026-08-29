@@ -14,6 +14,8 @@ export type OnboardingAnswers = {
   daily?: number | null;
   reminder?: boolean;
   weeklyHabit?: boolean;
+  /** Real club invite code once the server created the club (signed-in flow). */
+  inviteCode?: string;
 };
 
 const KEY = "fic.onboarding";

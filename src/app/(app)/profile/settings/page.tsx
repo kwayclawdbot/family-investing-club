@@ -1,17 +1,16 @@
-import { getUser } from "@/lib/data-live";
 import { TopBar } from "@/components/shell/TopBar";
-import { SettingsForm } from "@/components/profile/SettingsForm";
+import { EmptyState } from "@/components/ui/extras";
+import { getProfileSettings } from "@/lib/live/family";
+import { SettingsLive } from "./SettingsLive";
 
+/** Settings on the real `profiles` row: display name, username, avatar (community-media), explanation level, notification prefs, password. */
 export default async function SettingsPage() {
-  const user = await getUser();
+  const me = await getProfileSettings();
   return (
     <div className="-mx-[18px]">
       <TopBar backHref="/profile" title="Settings" />
       <div className="px-[18px]">
-        <SettingsForm
-          initial={{ firstName: user.firstName, lastName: user.lastName, username: user.firstName.toLowerCase(), level: user.explanationLevel }}
-          email="Signed-in email"
-        />
+        {me ? <SettingsLive me={me} /> : <EmptyState emoji="⚙️" title="Sign in to edit your settings" body="Your name, avatar, notifications and password live here." action="Sign in" href="/login?next=/profile/settings" />}
       </div>
     </div>
   );

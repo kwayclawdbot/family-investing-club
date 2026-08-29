@@ -1,7 +1,7 @@
 import "server-only";
 import type {
-  ChildHome, Club, ClubActivity, ClubHolding, ClubMember, ClubOverview, ClubPortfolio, ClubProposal, Comment, JournalEntry,
-  MemberCard, MemberIdentity, Pick, PortfolioTab, ResearchAssignment,
+  BeltColor, ChildHome, Club, ClubActivity, ClubHolding, ClubMember, ClubOverview, ClubPortfolio, ClubProposal, Comment, JournalEntry,
+  Member, MemberCard, MemberIdentity, Pick, PortfolioTab, ResearchAssignment,
 } from "@/lib/types";
 import * as fx from "@/lib/fixtures/club";
 import * as ws from "@/lib/fixtures/workspace";
@@ -350,3 +350,91 @@ export async function getIdentities(): Promise<MemberIdentity[] | null> {
 }
 
 export function beltLabelFor(xp: number) { return beltFor(xp).short; }
+
+/* ── vote gate (Phase 2): one predicate, used by /api/club/vote and the smoke ── */
+/** Why this member may not vote right now, or null when they can. `vote_gated` is set on fic_club_members (mini-lesson gate); `rules.kidsCanVote=false` blocks the child role. */
+export function voteRefusal(ctx: ClubContext, userId: string): string | null {
+  const me = ctx.members.find((m) => m.user_id === userId);
+  if (!me) return "You're not a member of this club";
+  if (me.vote_gated) return me.gate_reason ? `Finish the mini-lesson first — ${me.gate_reason}` : "Your vote is gated until you finish the mini-lesson";
+  if (me.role === "child" && ctx.club.rules?.kidsCanVote === false) return "Kids can't vote in this club yet — a grown-up can change that in club settings";
+  return null;
+}
+
+/* ── asks (questions to the club) ──────────────────────────────────── */
+type AskRow = { id: string; author_id: string; question: string; symbol: string | null; created_at: string };
+export type ClubAsk = { id: string; authorId: string; author: string; ago: string; at: string; question: string; symbol?: string; mine: boolean };
+export async function getAsks(limit = 30): Promise<ClubAsk[] | null> {
+  const ctx = await clubContext();
+  if (!ctx) return null;
+  return safe("club.getAsks", async () => {
+    const supa = await userClient();
+    const rows = must(await supa.from("fic_club_asks").select("id, author_id, question, symbol, created_at").eq("club_id", ctx.club.id).order("created_at", { ascending: false }).limit(limit)) as AskRow[];
+    return rows.map((r) => ({ id: r.id, authorId: r.author_id, author: nameOf(ctx, r.author_id), ago: ago(r.created_at), at: r.created_at, question: r.question, symbol: r.symbol ?? undefined, mine: r.author_id === ctx.me }));
+  });
+}
+
+/* ── private club chat ──────────────────────────────────────────────
+ * One club = one family (Decision #51), so the private club thread is FTA's household thread
+ * `family_circle_messages` (migration 192): family-scoped RLS, kids may write, guardrails apply.
+ * `chat_messages` cannot host it — its SELECT policy only exposes the six global community rooms.
+ * Friends/mixed clubs (no family_id) get null → the UI says chat lives with the family club. */
+type FamilyMsgRow = { id: string; author_id: string | null; kind: "message" | "system"; body: string; created_at: string };
+export type ClubChatMessage = { id: string; kind: "message" | "system"; authorId: string | null; author: string; initial: string; color: string; belt: BeltColor | null; beltLabel?: string; child: boolean; text: string; at: string; time: string; mine: boolean };
+function clock(iso: string) { return new Date(iso).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }); }
+export async function chatFamilyId(): Promise<string | null> {
+  const ctx = await clubContext();
+  if (!ctx) return null;
+  if (ctx.club.family_id) return ctx.club.family_id;
+  const s = await getSession();
+  return s?.profile?.family_id ?? null;
+}
+export async function getClubChat(limit = 60): Promise<ClubChatMessage[] | null> {
+  const ctx = await clubContext();
+  const familyId = await chatFamilyId();
+  if (!ctx || !familyId) return null;
+  return safe("club.getClubChat", async () => {
+    const supa = await userClient();
+    const [rows, ids] = await Promise.all([
+      supa.from("family_circle_messages").select("id, author_id, kind, body, created_at").eq("family_id", familyId).order("created_at", { ascending: false }).limit(limit),
+      memberIdentities(ctx),
+    ]);
+    const ms = (must(rows) as FamilyMsgRow[]).slice().reverse();
+    return ms.map((m) => {
+      const name = m.author_id ? nameOf(ctx, m.author_id) : "Club";
+      const xp = ids.find((i) => i.memberId === m.author_id)?.lifetimeXp ?? 0;
+      const belt = m.author_id ? beltFor(xp) : null;
+      const member = ctx.members.find((x) => x.user_id === m.author_id);
+      return { id: m.id, kind: m.kind, authorId: m.author_id, author: name, initial: initialOf(name), color: m.author_id ? colorFor(m.author_id) : "bg-ink-4", belt: belt?.color ?? null, beltLabel: belt?.short, child: member?.role === "child", text: m.body, at: m.created_at, time: clock(m.created_at), mine: m.author_id === ctx.me };
+    });
+  });
+}
+
+/* ── a member's public card (replaces the fixture Member for real ids) ── */
+export async function getClubMemberProfile(userId: string): Promise<Member | null> {
+  if (!/^[0-9a-f-]{36}$/i.test(userId)) return null;
+  const ctx = await clubContext();
+  if (!ctx) return null;
+  const m = ctx.members.find((x) => x.user_id === userId);
+  if (!m) return null;
+  return safe("club.getClubMemberProfile", async () => {
+    const supa = await userClient();
+    const [picks, replies] = await Promise.all([
+      supa.from("fic_club_picks").select("symbol").eq("author_id", userId).order("created_at", { ascending: false }).limit(50),
+      supa.from("fic_club_pick_replies").select("id", { count: "exact", head: true }).eq("author_id", userId),
+    ]);
+    const p = ctx.profiles.get(userId);
+    const name = nameOf(ctx, userId);
+    const child = m.role === "child";
+    const symbols = [...new Set(((picks.data ?? []) as { symbol: string }[]).map((x) => x.symbol))];
+    return {
+      id: userId, name,
+      role: m.role === "founder" ? "Club owner" : m.role === "admin" ? "Club admin" : child ? "Practice investor" : "Member",
+      level: levelOf(p),
+      bio: child ? "" : `${name} is a member of ${ctx.club.short_name ?? ctx.club.name}.`,
+      badges: [], favorites: symbols.slice(0, 6), ideas: symbols.length ? ((picks.data ?? []) as unknown[]).length : 0, comments: replies.count ?? 0,
+      joined: new Date(m.joined_at).toLocaleDateString("en-US", { month: "short", year: "numeric" }),
+      ageBadge: child ? "Young learner" : undefined,
+    };
+  });
+}

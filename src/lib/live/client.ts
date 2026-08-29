@@ -4,7 +4,8 @@ type Res<T = { id?: string }> = ({ ok: true } & T) | { ok: false; error: string 
 
 async function post<T = { id?: string }>(path: string, body?: unknown, method: "POST" | "PATCH" | "DELETE" = "POST"): Promise<Res<T>> {
   try {
-    const r = await fetch(`/api/club/${path}`, { method, headers: { "Content-Type": "application/json" }, body: body ? JSON.stringify(body) : undefined });
+    const url = path.startsWith("/") ? `/api${path}` : `/api/club/${path}`;
+    const r = await fetch(url, { method, headers: { "Content-Type": "application/json" }, body: body ? JSON.stringify(body) : undefined });
     const j = await r.json().catch(() => ({}));
     if (!r.ok) return { ok: false, error: j.error ?? `HTTP ${r.status}` };
     return { ok: true, ...j };
@@ -27,4 +28,9 @@ export const api = {
   brokerage: (b: { provider: string; accountLabel?: string; sharing?: "private" | "positions" | "allocation" | "full"; publicBadge?: boolean }) => post("brokerage", b),
   disconnectBrokerage: () => post("brokerage", undefined, "DELETE"),
   xp: (kind: string, amount: number, refId?: string) => post<{ xp: number }>("xp", { kind, amount, refId }),
+  /* identity / tenant (Phase 1) */
+  ensureFamily: (b: { name?: string; kind?: "family" | "friends" | "mixed"; privacy?: "private" | "public"; displayName?: string }) => post<{ id: string; name: string; inviteCode: string; familyId: string | null }>("/onboarding/family", b),
+  completeOnboarding: (b: { level?: string; goals?: string[]; daily?: number | null; reminder?: boolean; weeklyHabit?: boolean; start?: string; who?: string }) => post<{ inviteCode: string | null }>("/onboarding/complete", b),
+  invite: (b: { role: "child" | "parent"; ageGroup?: "kids" | "teens"; email?: string }) => post<{ id: string; code: string; expiresAt: string }>("/family/invite", b),
+  join: (code: string, displayName?: string) => post<{ kind: "family" | "club"; club: { id: string; name: string } }>("/family/join", { code, displayName }),
 };

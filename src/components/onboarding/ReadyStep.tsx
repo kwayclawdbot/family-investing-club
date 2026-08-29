@@ -1,31 +1,45 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { StepShell, Cta } from "./StepShell";
 import { useAnswers } from "./store";
+import { api } from "@/lib/live/client";
 
 type PathRow = { slug: string; title: string; lessons: number };
-const INVITE_CODE = "MENSAH-23";
-const INVITE_LINK = `fic.club/join/${INVITE_CODE}`;
+const DEMO_CODE = "MENSAH-23";
 
-/** Onboarding v2 · final (artboard 15): club ready, invite first; skill plan below. Explorers get the path version. */
-export function ReadyStep({ paths }: { paths: PathRow[] }) {
+/**
+ * Onboarding v2 · final (artboard 15): club ready, invite first; skill plan below. Explorers get the path version.
+ * `live` = the signed-in member's real club (server); the answers are persisted to `profiles` on mount.
+ */
+export function ReadyStep({ paths, live, firstName }: { paths: PathRow[]; live?: { name: string; inviteCode: string } | null; firstName?: string }) {
   const { answers, ready } = useAnswers();
   const [copied, setCopied] = useState(false);
+  const saved = useRef(false);
+  useEffect(() => {
+    if (!ready || saved.current) return;
+    saved.current = true;
+    // Persist the wizard (level/goals/daily/reminder) and stamp onboarding_complete. Demo visitors get a 401 and keep the prototype.
+    void api.completeOnboarding({ level: answers.level, goals: answers.goals, daily: answers.daily, reminder: answers.reminder, weeklyHabit: answers.weeklyHabit, start: answers.start, who: answers.who });
+  }, [ready, answers]);
+
   const exploring = ready && (answers.who === "explore" || answers.who === "join");
-  const clubName = answers.clubName?.replace(/ Family Investing Club$/i, " Club").replace(/ Investing Club$/i, " Club") || "The Mensah Club";
+  const clubName = (live?.name ?? answers.clubName)?.replace(/ Family Investing Club$/i, " Club").replace(/ Investing Club$/i, " Club") || "The Mensah Club";
+  const inviteCode = live?.inviteCode ?? answers.inviteCode ?? DEMO_CODE;
+  const inviteLink = `${typeof window !== "undefined" ? window.location.host : "fic.club"}/join/${inviteCode}`;
   const initial = clubName.replace(/^The /, "").slice(0, 1).toUpperCase();
+  const youInitial = (firstName ?? "K").slice(0, 1).toUpperCase();
   const minutes = answers.daily ?? 10;
   const plan = `${paths[0]?.title ?? "Money Basics"} → ${paths[1]?.title ?? "Investing Foundations"}`;
 
   async function share() {
-    const text = `Join ${clubName} on Family Investing Club — ${INVITE_LINK}`;
+    const text = `Join ${clubName} on Family Investing Club — ${inviteLink}`;
     try {
       if (navigator.share) {
         await navigator.share({ title: clubName, text });
         return;
       }
-      await navigator.clipboard.writeText(`https://${INVITE_LINK}`);
+      await navigator.clipboard.writeText(`https://${inviteLink}`);
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
     } catch {
@@ -38,7 +52,7 @@ export function ReadyStep({ paths }: { paths: PathRow[] }) {
       <StepShell step="ready" creating={false} cta={<Cta tone="orange" href="/lesson/if-7">Start Lesson 1 →</Cta>}>
         <div className="flex flex-col items-center text-center mt-[14px]">
           <span className="text-[40px] leading-none" aria-hidden>🎉</span>
-          <h1 className="mt-2 text-[24px] font-black text-ink">Your path is ready, Kway!</h1>
+          <h1 className="mt-2 text-[24px] font-black text-ink">Your path is ready{firstName ? `, ${firstName}` : ""}!</h1>
           <p className="mt-[5px] text-[13.5px] font-semibold text-ink-3">{answers.who === "join" ? `We'll add you to the club for code ${answers.joinCode || "—"} once the founder approves.` : "Explore ideas, lessons and practice — create a club whenever you're ready."}</p>
         </div>
         <ol className="mt-5 bg-card border border-line rounded-[16px] px-4 py-2">
@@ -73,7 +87,7 @@ export function ReadyStep({ paths }: { paths: PathRow[] }) {
         <div className="mt-[9px] text-[18px] font-black text-ink">{clubName}</div>
         <div className="text-[11.5px] font-extrabold text-ink-3">🔒 Private · 1 member (you) · founder</div>
         <div className="flex justify-center mt-3">
-          <span className="w-[38px] h-[38px] rounded-full bg-green-2 text-white font-black text-[15px] flex items-center justify-center border-2 border-[#FFFDF7]">K</span>
+          <span className="w-[38px] h-[38px] rounded-full bg-green-2 text-white font-black text-[15px] flex items-center justify-center border-2 border-[#FFFDF7]">{youInitial}</span>
           {[0, 1, 2].map((i) => (
             <span key={i} className="w-[38px] h-[38px] rounded-full bg-paper border-2 border-dashed border-[#D9CDB2] text-ink-4 font-black flex items-center justify-center -ml-2">+</span>
           ))}
@@ -83,7 +97,7 @@ export function ReadyStep({ paths }: { paths: PathRow[] }) {
           onClick={share}
           className="mt-3 w-full bg-paper border border-dashed border-[#D9CDB2] rounded-[12px] py-[10px] font-mono text-[14px] font-bold text-ink"
         >
-          fic.club/join/<b className="text-orange">{INVITE_CODE}</b>
+          {inviteLink.replace(`/join/${inviteCode}`, "")}/join/<b className="text-orange">{inviteCode}</b>
         </button>
         <button
           type="button"

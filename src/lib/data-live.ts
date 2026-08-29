@@ -16,17 +16,27 @@ import * as r2 from "@/lib/fixtures/round2";
 import * as live from "@/lib/live";
 import { clubConsensus, ficConsensus } from "@/lib/live/admin";
 import { clubContext } from "@/lib/live/club";
-import { dataMode } from "@/lib/live/mode";
+import { dataMode, strictLive } from "@/lib/live/mode";
 import { getSession } from "@/lib/live/session";
 import type { Family, HomePulse, LeaderRow, Leaderboards, MyPortfolio, XpLeaderboard } from "@/lib/types";
 
+/**
+ * Live-first read. Signed in → the live reader; a `null` there is a LIVE MISS (empty table, RLS,
+ * or an unported domain) and is logged in every environment so an outage is never invisible.
+ * With FIC_STRICT_LIVE=1 a miss throws (used by `npm run smoke:live`); otherwise the fixture
+ * still renders until that domain is ported (see docs/BACKEND-CUTOVER-PLAN.md).
+ */
 async function pick<T>(liveFn: () => Promise<T | null | undefined>, fallback: () => T | Promise<T>): Promise<T> {
   if ((await dataMode()) === "live") {
     const v = await liveFn();
     if (v !== null && v !== undefined) return v;
+    const label = fallback.name || liveFn.name || "anonymous";
+    if (strictLive()) throw new Error(`[live-miss] ${label}`);
+    if (!missed.has(label)) { missed.add(label); console.warn(`[live-miss] ${label}: live reader returned null — fixture shown`); }
   }
   return fallback();
 }
+const missed = new Set<string>();
 
 /* identity */
 export const getUser = () => pick(live.getUser, () => fx.user);

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { api } from "@/lib/live/client";
+import { clubApi, signedOut } from "@/lib/live/client-club";
 import { SheetFrame } from "./SheetFrame";
 import { showXp } from "./bus";
 import { cx } from "@/components/ui";
@@ -10,7 +10,8 @@ type Stance = "buy" | "watch" | "pass";
 const Lbl = ({ c }: { c: string }) => <div className="mt-[14px] text-[9.5px] font-black tracking-[0.5px] text-ink-3">{c}</div>;
 const NAMES: Record<string, string> = { NVDA: "Nvidia", AAPL: "Apple", COST: "Costco", CEG: "Constellation Energy", VOO: "S&P 500 ETF", KO: "Coca-Cola", AMZN: "Amazon", DIS: "Disney" };
 
-/** Prototype v2 `pick`: "$1,204.10 · NVDA · Your Pick on Nvidia · timestamped · tracked from today". Live price; api.pick when signed in, localStorage otherwise. */
+/** Prototype v2 `pick`: "$1,204.10 · NVDA · Your Pick on Nvidia · timestamped · tracked from today".
+ *  Live price; POST /api/club/pick when signed in. Only a 401 (signed out) falls back to localStorage — every other refusal is shown. */
 export function PickSheet({ onClose, symbol = "NVDA" }: { onClose: () => void; symbol?: string }) {
   const sym = symbol.toUpperCase();
   const router = useRouter();
@@ -21,19 +22,22 @@ export function PickSheet({ onClose, symbol = "NVDA" }: { onClose: () => void; s
   const [conf, setConf] = useState(3);
   const [to, setTo] = useState<"club" | "public">("club");
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     fetch(`/api/market/quote?symbols=${sym}`).then((r) => r.json()).then((j) => { const q = j?.quotes?.[sym]; if (q) setPrice({ price: q.price, changePct: q.changePct }); }).catch(() => {});
   }, [sym]);
   async function share() {
-    if (why.trim().length < 3) return;
-    setBusy(true);
+    if (why.trim().length < 3 || busy) return;
+    setBusy(true); setError(null);
     const body = { symbol: sym, companyName: NAMES[sym] ?? sym, stance, reason: why.trim(), horizon, confidence: conf, visibility: to };
-    try { const r = await api.pick(body); if (!r || (r as { error?: string }).error) throw new Error("offline"); }
-    catch {
+    const r = await clubApi.pick(body);
+    setBusy(false);
+    if (r.ok) { showXp(r.xp || 8); onClose(); router.refresh(); router.push(to === "club" ? "/home?feed=private" : "/home"); return; }
+    if (signedOut(r)) {
       try { const k = "fic.picks"; const cur = JSON.parse(localStorage.getItem(k) ?? "[]"); cur.unshift({ id: `local-${Date.now()}`, ...body, priceAtPick: price?.price ?? null, at: new Date().toISOString() }); localStorage.setItem(k, JSON.stringify(cur)); } catch { /* ignore */ }
+      showXp(8); onClose(); router.push(to === "club" ? "/home?feed=private" : "/home"); return;
     }
-    setBusy(false); showXp(8); onClose();
-    router.push(to === "club" ? "/home?feed=private" : "/home");
+    setError(r.error);
   }
   return (
     <SheetFrame onClose={onClose} height="tall">
@@ -62,8 +66,9 @@ export function PickSheet({ onClose, symbol = "NVDA" }: { onClose: () => void; s
           <button key={v} onClick={() => setTo(v)} className={cx("h-10 rounded-[10px] text-[12px] font-black border", to === v ? "bg-green-tint border-green-2 text-green" : "bg-card border-line text-ink-2")}>{l}</button>
         ))}
       </div>
+      {error && <p role="alert" className="mt-3 rounded-[12px] bg-orange-tint border border-orange-line px-3 py-2 text-[12px] font-bold text-orange-2">{error}</p>}
       <div className="mt-auto pt-4 pb-2">
-        <button disabled={busy || why.trim().length < 3} onClick={share} className="w-full h-[52px] rounded-[16px] bg-green text-cream-text text-[15px] font-black disabled:opacity-50">Share Pick with the {to === "club" ? "Club" : "Feed"}</button>
+        <button disabled={busy || why.trim().length < 3} onClick={share} className="w-full h-[52px] rounded-[16px] bg-green text-cream-text text-[15px] font-black disabled:opacity-50">{busy ? "Sharing…" : `Share Pick with the ${to === "club" ? "Club" : "Feed"}`}</button>
       </div>
     </SheetFrame>
   );

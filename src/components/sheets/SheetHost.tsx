@@ -19,6 +19,6 @@ export function SheetHost() {
     case "vote": return p.proposalId ? <VoteSheet proposalId={p.proposalId} onClose={closeSheet} /> : null;
     case "invite": return <InviteSheetHost onClose={closeSheet} />;
     case "kai": return <AskKaiSheet onClose={closeSheet} context={p.context} />;
-    case "compose": return <ComposeSheet onClose={closeSheet} audience={p.audience} reply={p.reply} />;
+    case "compose": return <ComposeSheet onClose={closeSheet} audience={p.audience} reply={p.reply} replyTo={p.replyTo} />;
   }
 }

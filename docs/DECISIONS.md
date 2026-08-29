@@ -86,3 +86,13 @@ Stack: Next.js 16 (App Router) + React 19 + Tailwind 4 + TypeScript, per plan §
 | 47 | Home is conversation-first again (circles rail · Main Feed | 🔒 Private · composer with attach); performance lives only in My Performance and Club → Performance. Private = the club chat inline. |
 | 48 | Club → Performance v1 tracks **official club picks** (voted in) — 12 picks · positive rate · vs benchmark · avg horizon — not holdings; the model portfolio collapses under "Model portfolio ▾". Individual member tracking comes later. |
 | 49 | Decision record rows show "aged well" (outcome moved with your vote 90+ days later) as a learning metric, never a score. Discover is one ticker per card. |
+
+## Backend cutover — Phase 1 identity foundation, 2026-08-28
+| # | Decision |
+|---|---|
+| 50 | **FIC replaces fta-dashboard on the same Supabase project.** No second project, no table copies, no auth re-import. Cutover = FIC owns every FTA domain + the platform services + a DNS move (`docs/BACKEND-CUTOVER-PLAN.md`). FTA source is frozen at `~/projects/fta-dashboard-v3` commit `b9f5b7e`. |
+| 51 | **Family is the tenant; one club per family.** `fic_ensure_family_club()` creates the family via FTA's `onboard_create_family` when missing, the club when missing, and syncs every family profile into `fic_club_members` (kids → role `child`). `fic_backfill_family_clubs()` ran once on 2026-08-28: Mensah club linked to The Coffie Family, 11 clubs created. Friends/mixed clubs remain `fic_create_club` + invite code. |
+| 52 | **`src/proxy.ts` (Next 16) guards member routes.** Local JWKS verification (port of FTA's middleware); signed-out → `/login?next=` in production, fixture demo only where `FIC_DEMO`/preview/local allows. `?ref=` → `fic_ref` cookie (90 days). |
+| 53 | **Role comes from the profile, never localStorage.** `(app)/layout` reads `getSession()` (profile + family + `family_tiers`): child shell via `isChild()`, unfinished parents redirected to `/onboarding/who`. `useIsChild()` only serves the signed-out demo. |
+| 54 | **Live misses are loud.** `pick()` logs `[live-miss] <getter>` in every environment when a live reader returns null; `FIC_STRICT_LIVE=1` (`npm run smoke:live`) makes it throw. Fixtures keep rendering for unported domains until their phase lands. |
+| 55 | Onboarding persists: `create` → `POST /api/onboarding/family`; `ready` → `POST /api/onboarding/complete` (comprehension_level, notification_prefs, onboarding_complete) and gives solo members a one-person family. Household invites: `POST /api/family/invite` (FTA `family_invites`) and `POST /api/family/join` (FTA `redeem_invite`, falls back to a club code). |

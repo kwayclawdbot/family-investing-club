@@ -55,9 +55,11 @@ export function useIsChild() {
   return child;
 }
 
-export function BottomNav() {
+/** `child` is decided server-side from the profile (see (app)/layout); the localStorage hook only serves the signed-out demo. */
+export function BottomNav({ child: childProp }: { child?: boolean } = {}) {
   const path = usePathname();
-  const child = useIsChild();
+  const childLocal = useIsChild();
+  const child = childProp ?? childLocal;
   const tabs = child ? CHILD : ADULT;
   return (
     <nav className="flex items-end bg-nav border-t border-line-2 px-[10px] pt-[10px] pb-[calc(30px+env(safe-area-inset-bottom))] sm:pb-[30px] shrink-0" aria-label="Primary">

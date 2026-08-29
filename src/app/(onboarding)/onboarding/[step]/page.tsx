@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
-import { getPaths } from "@/lib/data-live";
+import { getClub, getPaths } from "@/lib/data-live";
+import { getSession } from "@/lib/live/session";
+import { firstName } from "@/lib/live/supa";
 import { STEPS, type Step } from "@/components/onboarding/steps";
 import { WhoStep } from "@/components/onboarding/WhoStep";
 import { CreateStep } from "@/components/onboarding/CreateStep";
@@ -27,8 +29,12 @@ export default async function OnboardingStep(props: PageProps<"/onboarding/[step
     case "daily":
       return <DailyStep />;
     case "ready": {
-      const paths = (await getPaths()).filter((p) => !p.elective).slice(0, 3);
-      return <ReadyStep paths={paths.map((p) => ({ slug: p.slug, title: p.title, lessons: p.lessons }))} />;
+      const [paths, s] = await Promise.all([getPaths(), getSession()]);
+      // Signed in: the club created on the `create` step (or the family's existing one) → real invite code.
+      const club = s ? await getClub() : null;
+      const live = s && club ? { name: club.name, inviteCode: club.inviteCode } : null;
+      const top = paths.filter((p) => !p.elective).slice(0, 3);
+      return <ReadyStep paths={top.map((p) => ({ slug: p.slug, title: p.title, lessons: p.lessons }))} live={live} firstName={s ? firstName(s.profile?.display_name, s.user.email) : undefined} />;
     }
   }
 }

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { StepShell, Title, Subtitle, Cta, Check } from "./StepShell";
 import { readAnswers, writeAnswers, writeClub, nextStep, type OnboardingAnswers } from "./store";
+import { api } from "@/lib/live/client";
 
 type Kind = NonNullable<OnboardingAnswers["clubKind"]>;
 type Privacy = NonNullable<OnboardingAnswers["clubPrivacy"]>;
@@ -31,15 +32,25 @@ export function CreateStep() {
     /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
 
-  function next() {
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  async function next() {
+    if (busy) return;
     const clubName = name.trim() || "My Investing Club";
     writeAnswers({ clubName, clubKind: kind, clubPrivacy: privacy });
-    writeClub({ name: clubName, kind, privacy });
+    setBusy(true); setErr(null);
+    // Signed in → the family (tenant) + club are created server-side, idempotently. 401 = demo visitor: keep the local prototype path.
+    const res = await api.ensureFamily({ name: clubName, kind, privacy });
+    setBusy(false);
+    if (!res.ok && !/sign in/i.test(res.error)) { setErr(res.error); return; }
+    if (res.ok) writeAnswers({ inviteCode: res.inviteCode });
+    else writeClub({ name: clubName, kind, privacy });
     router.push(nextStep("create"));
   }
 
   return (
-    <StepShell step="create" cta={<Cta onClick={next}>Create Club → Continue</Cta>}>
+    <StepShell step="create" cta={<Cta onClick={next}>{busy ? "Creating…" : "Create Club → Continue"}</Cta>}>
+      {err && <p role="alert" className="mt-3 text-[12.5px] font-bold text-coral">{err}</p>}
       <Title>Create your club</Title>
       <Subtitle>Name it, say who it&apos;s for, keep it private. Everything else is preset — change it anytime.</Subtitle>
 

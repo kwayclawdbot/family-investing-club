@@ -1,34 +1,63 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import type { Club, ClubProposal } from "@/lib/types";
+import { useRouter } from "next/navigation";
+import type { Club, ClubMember, ClubProposal } from "@/lib/types";
 import { cx } from "@/components/ui";
 import { proposalTitle } from "./MyClub";
 import { Chip, MemberAvatar, ScreenHeader } from "./club-shared";
 import { read, useStored } from "./storage";
+import { clubApi, isUuid, signedOut } from "@/lib/live/client-club";
 
-/** Artboard 04 — the case, learn-before-voting bridge, your vote, the tally. */
-export function VoteScreen({ proposal: initial, club, id, compact, onDone }: { proposal?: ClubProposal; club: Club; id: string; /** sheet mode: no screen header, a Done action */ compact?: boolean; onDone?: () => void }) {
+/** Eligible = a member whose vote counts (not mini-lesson gated). The fixture's "dad" is an observer, not a voter. */
+const eligibleMember = (m: ClubMember | undefined) => !!m && m.id !== "dad" && !m.voteGated;
+
+/** Artboard 04 — the case, learn-before-voting bridge, your vote, the tally.
+ *  Signed in → POST /api/club/vote (vote_gated + kids-can-vote enforced server-side, refusal shown). Signed out → localStorage. */
+export function VoteScreen({ proposal: initial, club, id, compact, onDone, live }: { proposal?: ClubProposal; club: Club; id: string; /** sheet mode: no screen header, a Done action */ compact?: boolean; onDone?: () => void; /** signed-in, real ids */ live?: boolean }) {
+  const router = useRouter();
   const [p, setP] = useState<ClubProposal | undefined>(initial);
   useEffect(() => {
     if (initial) return;
     // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate a locally-made proposal after mount
     setP(read<ClubProposal[]>("fic.proposals", []).find((x) => x.id === id));
   }, [id, initial]);
-  const [mine, setMine] = useStored<"for" | "against" | null>(`fic.votes.${id}`, null);
-  if (!p) return <div className="pt-16 text-center text-[13px] font-bold text-ink-3">This proposal isn&apos;t on this device.</div>;
+  const meId = club.members.find((m) => m.isYou)?.id ?? "kway";
+  const isLive = live ?? isUuid(id);
+  const [localMine, setLocalMine] = useStored<"for" | "against" | null>(`fic.votes.${id}`, null);
+  const [serverMine, setServerMine] = useState<"for" | "against" | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  if (!p) return <div className="pt-16 text-center text-[13px] font-bold text-ink-3">{isLive ? "This proposal isn't in your club." : "This proposal isn't on this device."}</div>;
 
+  const recorded = p.votes.find((v) => v.memberId === meId)?.vote ?? null;
+  const mine = isLive ? (serverMine ?? recorded) : localMine;
   const proposer = club.members.find((m) => m.id === p.byId) ?? { initial: p.by.charAt(0), color: "bg-[#B08968]" };
-  const votes = p.votes.map((v) => (v.memberId === "kway" && mine ? { ...v, vote: mine } : v));
-  const eligible = votes.filter((v) => v.memberId !== "dad");
+  const votes = p.votes.map((v) => (v.memberId === meId && mine ? { ...v, vote: mine } : v));
+  const eligible = votes.filter((v) => eligibleMember(club.members.find((m) => m.id === v.memberId)) || (!club.members.some((m) => m.id === v.memberId) && v.memberId !== "dad"));
   const forN = votes.filter((v) => v.vote === "for").length;
   const againstN = votes.filter((v) => v.vote === "against").length;
   const cast = eligible.filter((v) => v.vote).length;
   const waiting = eligible.filter((v) => !v.vote).map((v) => club.members.find((m) => m.id === v.memberId)).filter(Boolean);
+  const gatedNames = club.members.filter((m) => m.voteGated).map((m) => m.name);
   const closed = p.status !== "open";
   const passing = forN > againstN && forN * 2 > eligible.length;
   const forPct = forN + againstN ? Math.round((forN / (forN + againstN)) * 100) : 0;
   const delta = p.toWeightPct - p.fromWeightPct;
+  const me = club.members.find((m) => m.id === meId);
+  const gatedMe = !!me?.voteGated;
+
+  async function choose(v: "for" | "against") {
+    if (closed || busy) return;
+    if (!isLive) { setLocalMine(localMine === v ? null : v); return; }
+    if (mine === v) return;
+    setBusy(true); setError(null);
+    const r = await clubApi.vote(id, v);
+    setBusy(false);
+    if (r.ok) { setServerMine(v); router.refresh(); return; }
+    if (signedOut(r)) { setLocalMine(v); return; }
+    setError(r.error);
+  }
 
   return (
     <div className="flex flex-col min-h-full">
@@ -64,19 +93,26 @@ export function VoteScreen({ proposal: initial, club, id, compact, onDone }: { p
         </div>
       )}
 
+      {gatedMe && !closed && (
+        <div className="mt-[10px] bg-purple-tint border border-[#DDD4F0] rounded-[14px] px-[14px] py-[11px] text-[11.5px] font-bold text-[#584A93]">
+          🎓 {me?.gateReason ? `Your vote counts once you ${me.gateReason.replace(/^needs /, "finish ")}` : "Finish the mini-lesson and your vote counts"}. <Link href="/learn" className="font-black text-purple-2">Go learn →</Link>
+        </div>
+      )}
+
       {!closed ? (
         <>
-          <div className="mt-[14px] text-center text-[12px] font-black text-ink-3">{mine ? "YOUR VOTE — LOCKED IN WHEN THE WINDOW CLOSES" : "YOUR VOTE — LOCKED IN WHEN THE WINDOW CLOSES"}</div>
+          <div className="mt-[14px] text-center text-[12px] font-black text-ink-3">YOUR VOTE — LOCKED IN WHEN THE WINDOW CLOSES</div>
           <div className="flex gap-[10px] mt-[10px]" role="radiogroup" aria-label="Your vote">
-            <button role="radio" aria-checked={mine === "for"} onClick={() => setMine(mine === "for" ? null : "for")} className={cx("flex-1 rounded-[16px] py-[17px] text-center transition", mine === "against" ? "bg-card border-2 border-green-line text-green" : "bg-green-2 text-cream-text shadow-[0_3px_0_#3A6B3E]", mine === "for" && "ring-2 ring-offset-2 ring-green-2 ring-offset-paper")}>
+            <button role="radio" aria-checked={mine === "for"} disabled={busy || gatedMe} onClick={() => choose("for")} className={cx("flex-1 rounded-[16px] py-[17px] text-center transition disabled:opacity-60", mine === "against" ? "bg-card border-2 border-green-line text-green" : "bg-green-2 text-cream-text shadow-[0_3px_0_#3A6B3E]", mine === "for" && "ring-2 ring-offset-2 ring-green-2 ring-offset-paper")}>
               <div className="text-[16px] font-black">👍 For</div>
               <div className="text-[10.5px] font-extrabold opacity-85">{p.kind === "remove" ? "sell it" : delta >= 0 ? "grow the position" : "trim it"}</div>
             </button>
-            <button role="radio" aria-checked={mine === "against"} onClick={() => setMine(mine === "against" ? null : "against")} className={cx("flex-1 rounded-[16px] py-[17px] text-center transition", mine === "against" ? "bg-red text-cream-text shadow-[0_3px_0_#A8503F] ring-2 ring-offset-2 ring-red ring-offset-paper" : "bg-card border-2 border-[#E5B8AE] text-red")}>
+            <button role="radio" aria-checked={mine === "against"} disabled={busy || gatedMe} onClick={() => choose("against")} className={cx("flex-1 rounded-[16px] py-[17px] text-center transition disabled:opacity-60", mine === "against" ? "bg-red text-cream-text shadow-[0_3px_0_#A8503F] ring-2 ring-offset-2 ring-red ring-offset-paper" : "bg-card border-2 border-[#E5B8AE] text-red")}>
               <div className="text-[16px] font-black">👎 Against</div>
               <div className="text-[10.5px] font-extrabold opacity-85">keep it at {p.fromWeightPct}%</div>
             </button>
           </div>
+          {error && <p role="alert" className="mt-[10px] rounded-[12px] bg-orange-tint border border-orange-line px-3 py-2 text-[12px] font-bold text-orange-2">{error}</p>}
         </>
       ) : (
         <div className={cx("mt-[14px] rounded-[16px] px-4 py-[14px] text-center", p.status === "passed" ? "bg-green-tint border border-green-line" : "bg-orange-tint border border-orange-line")}>
@@ -92,11 +128,11 @@ export function VoteScreen({ proposal: initial, club, id, compact, onDone }: { p
         </div>
         <div className="flex justify-between mt-[6px] text-[11px] font-extrabold">
           <span className="text-green">For · {forN}</span>
-          <span className="text-red">Against · {againstN}{waiting.length > 0 && !closed ? ` · waiting on ${waiting.map((m) => (m!.isYou ? "you" : m!.name)).join(", ")} ${waiting.some((m) => m!.voteGated) ? "🎓" : ""}` : ""}</span>
+          <span className="text-red">Against · {againstN}{waiting.length > 0 && !closed ? ` · waiting on ${waiting.map((m) => (m!.isYou ? "you" : m!.name)).join(", ")}` : ""}{gatedNames.length && !closed ? ` · ${gatedNames.join(", ")} 🎓` : ""}</span>
         </div>
         <div className="flex gap-[6px] mt-[9px]">
           {eligible.map((v) => {
-            const m = club.members.find((x) => x.id === v.memberId)!;
+            const m = club.members.find((x) => x.id === v.memberId) ?? { initial: "?", color: "bg-ink-4" };
             return <MemberAvatar key={v.memberId} m={m} size={24} dashed={!v.vote} className={cx(v.vote === "against" && "ring-2 ring-red")} />;
           })}
         </div>

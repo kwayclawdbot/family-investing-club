@@ -1,18 +1,22 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { getClub, getCompanies } from "@/lib/data";
 import type { Club, Company } from "@/lib/types";
 import { cx } from "@/components/ui";
 import { SearchIcon } from "@/components/ui/icons";
 import { Eyebrow, Raised, TickerTile } from "@/components/club/club-shared";
 import { read, write, newId } from "@/components/club/storage";
+import { clubApi, signedOut } from "@/lib/live/client-club";
 import { SheetFrame } from "./SheetFrame";
 import { showXp } from "./bus";
 
 type Ask = { id: string; text: string; symbol?: string; at: string; author: string };
 
-/** "Ask the club" — a question to your private circle, optionally pinned to a company. */
+/** "Ask the club" — a question to your private circle, optionally pinned to a company.
+ *  Signed in → POST /api/club/ask (fic_club_asks). Signed out (401) → the local demo path. */
 export function AskClubSheet({ onClose }: { onClose: () => void }) {
+  const router = useRouter();
   const [club, setClub] = useState<Club | null>(null);
   const [companies, setCompanies] = useState<Company[]>([]);
   const [text, setText] = useState("");
@@ -20,14 +24,25 @@ export function AskClubSheet({ onClose }: { onClose: () => void }) {
   const [query, setQuery] = useState("");
   const [picking, setPicking] = useState(false);
   const [done, setDone] = useState(false);
-  useEffect(() => { Promise.all([getClub(), getCompanies()]).then(([c, cs]) => { setClub(c); setCompanies(cs); }); }, []);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    Promise.all([clubApi.context(), getCompanies(), getClub()]).then(([ctx, cs, fx]) => { setClub(ctx.ok && ctx.club ? ctx.club : fx); setCompanies(cs); });
+  }, []);
   const results = companies.filter((c) => !query || c.symbol.toLowerCase().includes(query.toLowerCase()) || c.name.toLowerCase().includes(query.toLowerCase())).slice(0, 6);
 
-  function post() {
-    const ask: Ask = { id: newId(), text: text.trim(), symbol: symbol ?? undefined, at: new Date().toISOString(), author: "Kway" };
-    write("fic.asks", [ask, ...read<Ask[]>("fic.asks", [])]);
-    setDone(true);
-    showXp(5);
+  async function post() {
+    if (busy) return;
+    setBusy(true); setError(null);
+    const r = await clubApi.ask(text.trim(), symbol ?? undefined);
+    setBusy(false);
+    if (r.ok) { setDone(true); if (r.xp) showXp(r.xp); router.refresh(); return; }
+    if (signedOut(r)) {
+      const ask: Ask = { id: newId(), text: text.trim(), symbol: symbol ?? undefined, at: new Date().toISOString(), author: "Kway" };
+      write("fic.asks", [ask, ...read<Ask[]>("fic.asks", [])]);
+      setDone(true); showXp(5); return;
+    }
+    setError(r.error);
   }
 
   return (
@@ -36,7 +51,7 @@ export function AskClubSheet({ onClose }: { onClose: () => void }) {
         <div className="py-8 text-center">
           <div className="text-[34px]" aria-hidden>💬</div>
           <div className="mt-2 text-[16px] font-black text-ink">Posted to {club?.shortName ?? "your club"}</div>
-          <p className="mt-1 text-[12.5px] font-bold text-ink-3">Your circle sees it in the club feed. Replies land in Chats.</p>
+          <p className="mt-1 text-[12.5px] font-bold text-ink-3">Your club sees it in the private chat. Replies land there too.</p>
           <Raised tone="green" className="mt-5" onClick={onClose}>Done</Raised>
         </div>
       ) : (
@@ -69,8 +84,9 @@ export function AskClubSheet({ onClose }: { onClose: () => void }) {
               )}
             </div>
           )}
+          {error && <p role="alert" className="mt-3 rounded-[12px] bg-orange-tint border border-orange-line px-3 py-2 text-[12px] font-bold text-orange-2">{error}</p>}
           <div className="pt-4 pb-[calc(8px+env(safe-area-inset-bottom))]">
-            <Raised tone="purple" onClick={post} disabled={text.trim().length < 6} className={cx(text.trim().length < 6 && "opacity-60")}>Post to the club</Raised>
+            <Raised tone="purple" onClick={post} disabled={busy || text.trim().length < 6} className={cx(text.trim().length < 6 && "opacity-60")}>{busy ? "Posting…" : "Post to the club"}</Raised>
           </div>
         </>
       )}

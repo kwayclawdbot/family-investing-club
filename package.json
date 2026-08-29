@@ -8,20 +8,24 @@
     "start": "next start",
     "lint": "eslint",
     "proof": "node scripts/proof.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:apply": "node scripts/db-apply.mjs",
+    "smoke:live": "FIC_STRICT_LIVE=1 node scripts/live-smoke.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.5",
     "@supabase/supabase-js": "^2.112.4",
     "next": "16.3.3",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "web-push": "^3.6.7"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/web-push": "^3.6.4",
     "eslint": "^9",
     "eslint-config-next": "16.3.3",
     "playwright": "1.58",
