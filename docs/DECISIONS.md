@@ -109,3 +109,10 @@ Stack: Next.js 16 (App Router) + React 19 + Tailwind 4 + TypeScript, per plan §
 | 62 | **Kai answers for real.** `KaiSheet` streams `/api/kai/chat` (Phase 6) instead of seeding a scripted exchange and replying with a placeholder; markdown is rendered, not printed. |
 | 63 | **"Why this matters" states a position, never an opinion.** News decorates a story with the reader's own holding or watchlist entry; where there is none it uses the market layer's honest framing template. |
 | 64 | **The club's case for a company is its members' picks.** The company page renders bull/bear from real `fic_club_picks` reasons with attribution, and an empty state when nobody has argued a side. |
+
+## LMS integration, 2026-08-29
+| # | Decision |
+|---|---|
+| 65 | **One player, two paths.** `/lesson/[id]` runs the stepped engine when `lessons.steps` parses, else the legacy `video_provider` viewer; both end in the lesson's real quiz and a single `/api/learn/complete` that banks XP once. A lesson the member may not open renders its entitlement reason, not a 404. |
+| 66 | **Recordings play from their real source.** YouTube recordings embed; uploaded classes stream from the private `class-recordings` bucket through a per-request signed URL (1h). No recording → say so; never a decorative play button. |
+| 67 | **FTA's html lesson bundles stay where they are** for now (113 MB in FTA's `public/lessons`), loaded over the legacy origin and talking back through FTA's postMessage bridge (`isBridgeMessage`). They move with the host at cutover via `NEXT_PUBLIC_LEGACY_LESSON_ORIGIN`. |

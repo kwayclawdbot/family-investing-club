@@ -91,7 +91,9 @@ Shipped: `src/lib/learn/{schema,types,server,legacy}.ts` (FTA step schema ported
 
 - Lesson player reads `lessons.steps` (FTA `src/lib/learn/schema.ts` types copied into
   `src/lib/learn/`), legacy `video_provider` (youtube/html/bunny/mux) for the 90 non-stepped
-  lessons, `quizzes` + `quiz_attempts`, `lesson_resources`.
+  lessons, `quizzes` + `quiz_attempts`, `lesson_resources`. **The readers and routes landed in
+  Phase 3; the lesson *page* was only mounted on 2026-08-29 (Phase 7.6) — until then every lesson
+  opened a fixture quiz.**
 - Writes: `lesson_progress`, `lesson_step_progress` (`touch_lesson_step_progress`), `quiz_attempts`,
   `flashcard_reviews`, `skill_mastery` (`bump_skill_mastery`), `xp_events` via `awardXp`.
 - Live: `live_sessions` + `live_events` + RSVP (`session_rsvps`), recordings via signed URLs from
@@ -156,6 +158,25 @@ curriculum, live sessions, review deck, weakest skills) · circles end-to-end (`
 Search over real circles, club-mates and courses. Deleted five dead prototype components.
 Decisions #56–64. Known data gaps surfaced honestly rather than filled: `screener_metrics.mcap`/`sector`
 are populated for only ~20 of 11.7k rows until the nightly round-robin catches up.
+
+### Phase 7.6 — The LMS actually plays ✅ done 2026-08-29
+Phase 3 built the whole learning layer — `getLessonData()`, the ported step engine
+(`components/lesson/{steps,engine-ui}.tsx`), `/api/learn/*` — but nothing imported it: `/lesson/[id]`
+rendered a fixture quiz for all 103 lessons, and `/live/[id]` showed a placeholder saying the live
+engine wasn't wired. Both are now mounted:
+- `components/lesson/LessonView.tsx` runs the step engine for the 13 stepped lessons (resuming from
+  `lesson_step_progress`, mastery per graded step), the legacy viewer for the ~90 video lessons
+  (including the FTA html bundles over the postMessage bridge), then the lesson's real quiz, then
+  `/api/learn/complete` to bank XP once. Resources and prev/next come from the same reader.
+- `components/live/SessionView.tsx` plays recordings for real: YouTube embeds, and uploaded classes
+  through a signed URL from the private `class-recordings` bucket (verified: 206 `video/mp4`).
+  RSVP writes `session_rsvps`; worksheet, assignment and tickers render from the row.
+Verified: a stepped lesson (Kids Corner, step 3/12, real authored question), a video lesson
+(Introduction to Financial Markets → the real FTA bundle iframe), a recording streaming from
+storage, and `smoke:learn` 17/17.
+**Still not ported:** FTA's two games — Candle Battle and Trend or Trap (`~/projects/fta-dashboard-v3`,
+`src/components/games/`, ~2.4k lines) — which are the only games with real `game_scores` history.
+FIC's arcade still lists a different, mostly unplayable catalogue.
 
 ### Phase 8 — Cutover (after 2026-09-09)
 1. Vercel env parity on `family-investing-club` (full list in §4); `CRON_SECRET`, VAPID, Stripe,
