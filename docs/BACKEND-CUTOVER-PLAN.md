@@ -201,9 +201,16 @@ sends it, and a mismatch kills push silently.
 | `smoke:learn` | 17 — curriculum reads, stepped + legacy lessons, 6 write paths, practice order buy→sell | Phase 3 |
 | `smoke:family` | 8 — household, learner report, guardrails, invites, profile writes | Phase 4 |
 | `smoke:club` | 10 — club objects, ask/reply/reaction, community post+like+comment, notifications, research RLS | Phase 2 |
+| `smoke:render` | 28 — every member + admin screen loaded in Chromium under a real magic-link session | all |
 
 Every suite runs as a real magic-link session (RLS enforced), writes only rows it created, and restores
-them — the ground-truth counts in §0 are unchanged after a run.
+them — the ground-truth counts in §0 are unchanged after a run. `smoke:render` needs a built server
+(`npm run build && npx next start -p 3103`) and writes `proof/live/*.png`.
+
+Runtime checks on the built server: signed-out `/home` → `/login`, `/admin` → `/login?next=/admin`,
+`/join/CODE` → `/signup?next=…`; every member/admin API answers 401; `/api/stripe/webhook` rejects a
+bad signature; `/api/cron/*` refuses without `CRON_SECRET`; `/api/push/dispatch` refuses without the
+secret and, with it, delivered a real push (`{ok:true,sent:1}`).
 
 ## 6. Risk register
 | Risk | Mitigation |
