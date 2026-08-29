@@ -6,7 +6,8 @@ import { Sheet } from "@/components/ui/extras";
 import Link from "next/link";
 import { MemberAvatar, ScreenHeader } from "@/components/club/club-shared";
 import { BeltChip } from "@/components/ui/belt";
-import { RingedAvatar, beltOf } from "@/components/belts/identity";
+import { RingedAvatar } from "@/components/belts/identity";
+import { useBeltOf } from "@/components/belts/identity-context";
 
 /**
  * Leaderboards — many ways to win, methodology labelled (canvas v7, artboard 07).
@@ -20,6 +21,7 @@ const BASIS: Record<LeaderRow["basis"], { cls: string; how: string }> = {
 const MEDAL = ["🥇", "🥈", "🥉"];
 
 export function Leaderboards({ club, lb }: { club: Club; lb: LB }) {
+  const beltOf = useBeltOf();
   const [board, setBoard] = useState(lb.boards[0].id);
   const [method, setMethod] = useState(false);
   const active = lb.boards.find((b) => b.id === board) ?? lb.boards[0];

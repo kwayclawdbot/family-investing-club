@@ -1,24 +1,5 @@
-import type { Belt, XpEvent, Reputation, MemberIdentity, ClubXpGoal, XpLeaderboard, PromotionSummary } from "@/lib/types";
-
-/** The belt ladder — 7 levels, 5 colours, no rank names. The belt IS the rank. */
-export const BELTS: Belt[] = [
-  { level: 1, color: "white", label: "White Belt I", short: "White I", minXp: 0 },
-  { level: 2, color: "white", label: "White Belt II", short: "White II", minXp: 150 },
-  { level: 3, color: "yellow", label: "Yellow Belt I", short: "Yellow I", minXp: 400 },
-  { level: 4, color: "yellow", label: "Yellow Belt II", short: "Yellow II", minXp: 800 },
-  { level: 5, color: "blue", label: "Blue Belt", short: "Blue", minXp: 1400 },
-  { level: 6, color: "purple", label: "Purple Belt", short: "Purple", minXp: 2200 },
-  { level: 7, color: "black", label: "Black Belt", short: "Black", minXp: 3200 },
-];
-export function beltFor(xp: number): Belt {
-  let b = BELTS[0];
-  for (const belt of BELTS) if (xp >= belt.minXp) b = belt;
-  return b;
-}
-export function nextBelt(xp: number): Belt | null {
-  const cur = beltFor(xp);
-  return BELTS.find((b) => b.level === cur.level + 1) ?? null;
-}
+import type { XpEvent, Reputation, MemberIdentity, ClubXpGoal, XpLeaderboard, PromotionSummary } from "@/lib/types";
+import { BELTS } from "@/lib/belts";
 
 /** Kway: 2,640 lifetime XP → Purple Belt, 560 XP to Black (canvas v9/v10). */
 export const identities: MemberIdentity[] = [

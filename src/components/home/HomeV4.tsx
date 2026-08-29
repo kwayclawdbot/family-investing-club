@@ -5,8 +5,10 @@ import { cx } from "@/components/ui";
 import { BellIcon, SearchIcon } from "@/components/ui/icons";
 import { BarChip, RingAvatar } from "@/components/community/BarChip";
 import { CirclesRail } from "@/components/circles/CircleRing";
-import { circles, mainFeed, type FeedPost } from "@/lib/fixtures/v12-social";
-import { privateFeed } from "@/lib/fixtures/v12-social";
+import { mainFeed, privateFeed, type FeedPost } from "@/lib/fixtures/v12-social";
+import type { CircleView } from "@/lib/live/community";
+import type { ClubChatMessage } from "@/lib/live/club";
+import type { ClubMember } from "@/lib/types";
 import { openSheet } from "@/components/sheets/bus";
 import { Composer } from "./Composer";
 import { clubApi } from "@/lib/live/client-club";
@@ -17,7 +19,8 @@ type LocalPost = { id: string; text: string; audience: string; at: number; artif
 function readPosts(): LocalPost[] { try { return JSON.parse(localStorage.getItem("fic.posts") || "[]"); } catch { return []; } }
 
 /** Home v4 (canvas v11, board 12): one job — what is FIC talking about right now. */
-export function HomeV4({ belt, clubName, initialFeed, openProposal, livePosts }: { belt: BeltColor; clubName: string; initialFeed: "main" | "private"; openProposal: { id: string; text: string; voted: number; eligible: number; hoursLeft: number } | null; livePosts?: LiveFeedItem[] | null }) {
+type Proposal = { id: string; text: string; voted: number; eligible: number; hoursLeft: number };
+export function HomeV4({ belt, you, clubName, initialFeed, openProposal, livePosts, circles, chat, members }: { belt: BeltColor; you: string; clubName: string; initialFeed: "main" | "private"; openProposal: Proposal | null; livePosts?: LiveFeedItem[] | null; circles?: CircleView[] | null; chat?: ClubChatMessage[] | null; members?: ClubMember[] }) {
   const [feed, setFeed] = useState<"main" | "private">(initialFeed);
   const [mine, setMine] = useState<LocalPost[]>([]);
   const [proposeOpen, setProposeOpen] = useState(false);
@@ -40,11 +43,11 @@ export function HomeV4({ belt, clubName, initialFeed, openProposal, livePosts }:
         <Link href="/profile/notifications" aria-label="Notifications" className="relative w-[33px] h-[33px] rounded-full bg-card border border-line flex items-center justify-center text-ink-2">
           <BellIcon size={15} /><span className="absolute top-[5px] right-[6px] w-[7px] h-[7px] rounded-full bg-orange border-[1.5px] border-white" />
         </Link>
-        <Link href="/profile" aria-label="Me"><RingAvatar initial="K" bg="bg-green-2" ring={belt} size={33} /></Link>
+        <Link href="/profile" aria-label="Me"><RingAvatar initial={you.slice(0, 1).toUpperCase()} bg="bg-green-2" ring={belt} size={33} /></Link>
       </div>
 
-      {/* circles rail */}
-      <CirclesRail items={circles} onPropose={
+      {/* circles rail — real club_circles rows; an empty rail is just the ＋ tile */}
+      <CirclesRail items={circles ?? []} onPropose={
         <button type="button" onClick={() => setProposeOpen(true)} className="flex flex-col items-center gap-[3px] w-14 shrink-0">
           <span className="w-14 h-14 rounded-full border-2 border-dashed border-[#D9CDB2] flex items-center justify-center text-ink-4 text-[20px] font-extrabold">＋</span>
           <span className="text-[9px] font-extrabold text-ink-4">Propose</span>
@@ -69,19 +72,19 @@ export function HomeV4({ belt, clubName, initialFeed, openProposal, livePosts }:
               where it is always reachable — not buried under thirty posts. */}
           <Composer audience="main" clubName={clubName} onLocalEcho={(t) => setSentMain((x) => [{ text: t, at: Date.now() }, ...x])} />
           <div className="mt-2">
-            {sentMain.map((m, i) => <MinePost key={`sent-${i}`} p={{ id: `sent-${i}`, text: m.text, audience: "main", at: m.at }} belt={belt} />)}
+            {sentMain.map((m, i) => <MinePost key={`sent-${i}`} p={{ id: `sent-${i}`, text: m.text, audience: "main", at: m.at }} belt={belt} you={you} />)}
             {livePosts
               ? (livePosts.length
                   ? livePosts.map((p, i) => <LivePost key={p.id} p={p} last={i === livePosts.length - 1} />)
                   : <p className="py-8 text-center text-[12.5px] font-bold text-ink-3">Nothing here yet — say the first thing.</p>)
               : <>
-                  {mine.filter((p) => p.audience === "main").map((p) => <MinePost key={p.id} p={p} belt={belt} />)}
+                  {mine.filter((p) => p.audience === "main").map((p) => <MinePost key={p.id} p={p} belt={belt} you={you} />)}
                   {mainFeed.map((p, i) => <Post key={p.id} p={p} last={i === mainFeed.length - 1} />)}
                 </>}
           </div>
         </div>
       ) : (
-        <PrivateFeed clubName={clubName} proposal={openProposal} mine={mine.filter((p) => p.audience === "private")} belt={belt} />
+        <PrivateFeed clubName={clubName} proposal={openProposal} mine={mine.filter((p) => p.audience === "private")} belt={belt} you={you} chat={chat} members={members} />
       )}
 
       {proposeOpen && <ProposeCircleSheet onClose={() => setProposeOpen(false)} />}
@@ -192,10 +195,10 @@ function Post({ p, last }: { p: FeedPost; last: boolean }) {
   );
 }
 
-function MinePost({ p, belt }: { p: LocalPost; belt: BeltColor }) {
+function MinePost({ p, belt, you }: { p: LocalPost; belt: BeltColor; you: string }) {
   return (
     <div className="py-[10px] border-b border-[#F1E8D4]">
-      <div className="flex items-center gap-2"><RingAvatar initial="K" bg="bg-green-2" ring={belt} size={30} /><span className="text-[12.5px] font-black text-ink">Kway</span><BarChip color={belt} label={belt[0].toUpperCase() + belt.slice(1)} /><span className="text-[9.5px] font-extrabold text-ink-4">· just now</span></div>
+      <div className="flex items-center gap-2"><RingAvatar initial={you.slice(0, 1).toUpperCase()} bg="bg-green-2" ring={belt} size={30} /><span className="text-[12.5px] font-black text-ink">{you}</span><BarChip color={belt} label={belt[0].toUpperCase() + belt.slice(1)} /><span className="text-[9.5px] font-extrabold text-ink-4">· just now</span></div>
       <p className="mt-[5px] text-[12.5px] font-semibold text-ink leading-[1.45]">{p.text}</p>
       {p.artifact && <span className="mt-[6px] inline-flex rounded-[9px] bg-[#FBF6EA] border border-[#EFE4CF] px-[10px] py-[5px] text-[10.5px] font-black text-ink-2">{p.artifact}</span>}
       {p.poll && <div className="mt-[6px] flex flex-col gap-1">{p.poll.map((o) => <span key={o} className="bg-paper-2 rounded-[9px] px-[11px] py-[6px] text-[11px] font-extrabold text-ink">{o}</span>)}</div>}
@@ -204,30 +207,59 @@ function MinePost({ p, belt }: { p: LocalPost; belt: BeltColor }) {
   );
 }
 
-function PrivateFeed({ clubName, proposal, mine, belt }: { clubName: string; proposal: { id: string; text: string; voted: number; eligible: number; hoursLeft: number } | null; mine: LocalPost[]; belt: BeltColor }) {
+function PrivateFeed({ clubName, proposal, mine, belt, you, chat, members }: { clubName: string; proposal: Proposal | null; mine: LocalPost[]; belt: BeltColor; you: string; chat?: ClubChatMessage[] | null; members?: ClubMember[] }) {
   const [sent, setSent] = useState<string[]>([]);
+  const heads = (members ?? []).slice(0, 3);
   return (
     <div className="mt-[6px] relative">
       <div className="flex items-center gap-2 bg-card border border-line rounded-[13px] px-3 py-2">
-        <span className="flex -space-x-2">{[["K", "bg-green-2"], ["D", "bg-[#B08968]"], ["A", "bg-green-3"]].map(([i, c]) => <span key={i} className={cx("w-7 h-7 rounded-full text-white text-[10px] font-black flex items-center justify-center border-2 border-[#FFFDF7]", c)}>{i}</span>)}</span>
-        <span className="flex-1"><span className="block text-[12.5px] font-black text-ink">{clubName}</span><span className="block text-[10px] font-extrabold text-green">● 3 online</span></span>
+        {!!heads.length && (
+          <span className="flex -space-x-2">
+            {heads.map((m) => <span key={m.id} className={cx("w-7 h-7 rounded-full text-white text-[10px] font-black flex items-center justify-center border-2 border-[#FFFDF7]", m.color)}>{m.name.slice(0, 1).toUpperCase()}</span>)}
+          </span>
+        )}
+        <span className="flex-1">
+          <span className="block text-[12.5px] font-black text-ink">{clubName}</span>
+          {!!members?.length && <span className="block text-[10px] font-extrabold text-ink-3">{members.length} {members.length === 1 ? "member" : "members"}</span>}
+        </span>
         <Link href="/club" className="text-[11px] font-black text-green">Club page ›</Link>
       </div>
       <div className="mt-2 flex flex-col gap-[9px]">
-        {privateFeed.slice(0, 3).map((m) => <PrivateBubble key={m.id} m={m} />)}
+        {/* Signed in → the club's real thread; signed out (demo) → the fixture conversation. */}
+        {chat
+          ? chat.map((m) => <LiveBubble key={m.id} m={m} />)
+          : privateFeed.slice(0, 3).map((m) => <PrivateBubble key={m.id} m={m} />)}
         {proposal && (
           <div className="flex items-center gap-[10px] bg-purple-tint border border-purple-line rounded-[13px] px-[13px] py-[9px]">
             <span className="text-[15px]">🗳</span>
-            <span className="flex-1"><span className="block text-[11.5px] font-black text-ink"><Cash t={`Vote open: $CEG 4% → 8%`} /></span><span className="block text-[10px] font-extrabold text-ink-3">{proposal.voted}/{proposal.eligible} in · {proposal.hoursLeft}h left · waiting on you</span></span>
+            <span className="flex-1"><span className="block text-[11.5px] font-black text-ink"><Cash t={proposal.text} /></span><span className="block text-[10px] font-extrabold text-ink-3">{proposal.voted}/{proposal.eligible} in · {proposal.hoursLeft}h left</span></span>
             <Link href={`/club/vote/${proposal.id}`} className="rounded-[9px] bg-purple-2 text-cream-text px-3 py-[6px] text-[10px] font-black">Vote</Link>
           </div>
         )}
-        {privateFeed.slice(3).map((m) => <PrivateBubble key={m.id} m={m} />)}
-        {mine.map((p) => <MinePost key={p.id} p={p} belt={belt} />)}
+        {!chat && privateFeed.slice(3).map((m) => <PrivateBubble key={m.id} m={m} />)}
+        {chat && !chat.length && <p className="py-8 text-center text-[12.5px] font-bold text-ink-3">No messages yet — say the first thing to your club.</p>}
+        {mine.map((p) => <MinePost key={p.id} p={p} belt={belt} you={you} />)}
         {sent.map((t, i) => <div key={i} className="flex justify-end"><div className="max-w-[82%] bg-green-tint border border-green-line rounded-[13px_3px_13px_13px] px-3 py-2 text-[12px] font-semibold text-ink"><Cash t={t} /></div></div>)}
       </div>
-      {/* Real club chat: /api/club/chat writes a chat_messages row (was a local-only echo). */}
+      {/* Real club chat: /api/club/chat writes a family_circle_messages row (was a local-only echo). */}
       <Composer audience="private" clubName={clubName} onLocalEcho={(t) => setSent((x) => [...x, t])} />
+    </div>
+  );
+}
+
+/** One real message from the club thread. */
+function LiveBubble({ m }: { m: ClubChatMessage }) {
+  if (m.kind === "system") return <div className="flex justify-center"><span className="bg-[#FFFDF4] border border-[#F0E0AE] rounded-[16px] px-[13px] py-[5px] text-[10px] font-extrabold text-[#8A6F3C]">{m.text}</span></div>;
+  if (m.mine) return <div className="flex justify-end"><div className="max-w-[82%] bg-green-tint border border-green-line rounded-[13px_3px_13px_13px] px-3 py-2"><div className="text-[12px] font-semibold text-ink"><Cash t={m.text} /></div></div></div>;
+  return (
+    <div className="flex gap-2">
+      <RingAvatar initial={m.initial} bg={m.color} ring={m.belt} size={28} />
+      <div className="max-w-[82%]">
+        <div className="bg-card border border-line rounded-[3px_13px_13px_13px] px-3 py-2">
+          <div className="text-[10px] font-black text-ink">{m.author}{m.child ? " 🎓" : ""} <span className="text-ink-4 font-extrabold">· {m.time}</span></div>
+          <div className="text-[12px] font-semibold text-ink leading-[1.4] mt-[2px]"><Cash t={m.text} /></div>
+        </div>
+      </div>
     </div>
   );
 }

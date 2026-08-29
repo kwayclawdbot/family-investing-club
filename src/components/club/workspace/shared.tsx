@@ -1,7 +1,8 @@
 "use client";
 import type { ReactNode } from "react";
 import { cx } from "@/components/ui";
-import { RingedAvatar, beltOf } from "@/components/belts/identity";
+import { RingedAvatar } from "@/components/belts/identity";
+import { useBeltOf } from "@/components/belts/identity-context";
 import { BeltChip } from "@/components/ui/belt";
 
 /** Avatar colours as drawn on the v10 artboards (identity colours, not UI accents). */
@@ -9,6 +10,7 @@ export const AVATAR_HEX: Record<string, string> = { kway: "#4C8C4A", dad: "#B089
 export const INITIAL: Record<string, string> = { kway: "K", dad: "D", mom: "M", andwele: "A", arielle: "A" };
 
 export function MemberDot({ memberId, size = 28, ring = true }: { memberId: string; size?: number; ring?: boolean }) {
+  const beltOf = useBeltOf();
   const a = (
     <span
       className="inline-flex items-center justify-center rounded-full text-white font-black shrink-0"
@@ -22,6 +24,7 @@ export function MemberDot({ memberId, size = 28, ring = true }: { memberId: stri
 }
 
 export function Belt({ memberId }: { memberId: string }) {
+  const beltOf = useBeltOf();
   const b = beltOf(memberId);
   return b ? <BeltChip belt={b} /> : null;
 }

@@ -3,7 +3,8 @@ import type { ReactNode } from "react";
 import type { Belt } from "@/lib/types";
 import { BeltChip, BeltRing } from "@/components/ui/belt";
 import { cx } from "@/components/ui";
-export { beltOf, summariseBelts } from "./belt-of";
+export { summariseBelts } from "@/lib/belts";
+export { IdentityProvider, useIdentities, useBeltOf } from "./identity-context";
 
 /** Avatar wrapped in the belt ring (2.5px belt colour + 2px cream offset, per canvas v8). */
 export function RingedAvatar({ belt, children, className }: { belt: Belt | null; children: ReactNode; className?: string }) {

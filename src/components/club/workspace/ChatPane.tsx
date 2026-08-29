@@ -8,14 +8,12 @@ import type { ClubChatMessage } from "@/lib/live/club";
 import { clubChat, type ClubChatMsg } from "@/lib/fixtures/v12-club";
 import { useStored } from "../storage";
 import { MemberDot, MiniSpark } from "./shared";
-import { circles, fmtPeople } from "@/lib/fixtures/v12-social";
-import { sarahAmznMsg } from "@/lib/fixtures/v13-club";
+import { fmtPeople } from "@/lib/format";
+import type { CircleView } from "@/lib/live/community";
 import { openSheet } from "@/components/sheets/bus";
-import { BeltChip } from "@/components/ui/belt";
-import { BELTS } from "@/lib/fixtures/belts";
 
 /** v11 — the private club is chat-default: my people, one conversation engine, rich artifacts. */
-export function ChatPane({ proposal, live }: { proposal: { id: string; title: string; hoursLeft: number; voted: number; eligible: number } | null; live?: ClubChatMessage[] | null }) {
+export function ChatPane({ proposal, live, circles }: { proposal: { id: string; title: string; hoursLeft: number; voted: number; eligible: number } | null; live?: ClubChatMessage[] | null; circles?: CircleView[] | null }) {
   const router = useRouter();
   const [local, setLocal] = useStored<ClubChatMsg[]>("fic.club.chat", []);
   const [draft, setDraft] = useState("");
@@ -38,15 +36,17 @@ export function ChatPane({ proposal, live }: { proposal: { id: string; title: st
   }
   return (
     <div className="flex flex-col min-h-[calc(100dvh-230px)] sm:min-h-[610px]">
-      <div className="flex gap-[10px] mt-[10px] overflow-x-auto no-scrollbar -mx-[18px] px-[18px]" aria-label="Circles">
-        {circles.map((c) => (
-          <Link key={c.id} href={`/circle/${c.id}`} className="flex flex-col items-center w-[58px] shrink-0">
-            <span className="w-[46px] h-[46px] rounded-full flex items-center justify-center text-[18px] border-[2.5px]" style={{ background: c.tint, borderColor: c.color }}>{c.emoji}</span>
-            <span className="mt-1 text-[8.5px] font-black text-ink text-center leading-tight truncate w-full">{c.name}</span>
-            <span className="text-[8px] font-extrabold text-ink-4">{c.daysLeft}d · {fmtPeople(c.people)}</span>
-          </Link>
-        ))}
-      </div>
+      {!!circles?.length && (
+        <div className="flex gap-[10px] mt-[10px] overflow-x-auto no-scrollbar -mx-[18px] px-[18px]" aria-label="Circles">
+          {circles.map((c) => (
+            <Link key={c.id} href={`/circle/${c.slug}`} className="flex flex-col items-center w-[58px] shrink-0">
+              <span className="w-[46px] h-[46px] rounded-full flex items-center justify-center text-[18px] border-[2.5px]" style={{ background: c.tint, borderColor: c.color }}>{c.emoji}</span>
+              <span className="mt-1 text-[8.5px] font-black text-ink text-center leading-tight truncate w-full">{c.name}</span>
+              <span className="text-[8px] font-extrabold text-ink-4">{c.daysLeft}d · {fmtPeople(c.people)}</span>
+            </Link>
+          ))}
+        </div>
+      )}
       {proposal && (
         <div className="mt-[9px] bg-purple-tint border border-[#DDD4F0] rounded-[12px] px-3 py-2 flex items-center gap-[9px]">
           <span className="text-[13px]">🗳</span>
@@ -84,22 +84,6 @@ export function ChatPane({ proposal, live }: { proposal: { id: string; title: st
               </div>
             </div>
           )
-        )}
-        {!live && (
-        <div className="flex gap-2">
-          <span className="w-7 h-7 rounded-full bg-coral text-white text-[11px] font-black flex items-center justify-center shrink-0 ring-2 ring-[#3E7BC7] ring-offset-2 ring-offset-paper">S</span>
-          <div className="max-w-[82%]">
-            <div className="bg-card border border-line rounded-[3px_13px_13px_13px] px-3 py-2">
-              <div className="flex items-center gap-[6px] text-[10px] font-black text-ink">{sarahAmznMsg.name} <BeltChip belt={BELTS[4]} /></div>
-              <div className="text-[12px] font-semibold text-ink leading-[1.4] mt-[2px]">{sarahAmznMsg.text.split("$AMZN")[0]}<Link href="/discover/AMZN" className="text-green font-black">$AMZN</Link>{sarahAmznMsg.text.split("$AMZN")[1]}</div>
-              <Link href={sarahAmznMsg.artifact.href} className="mt-1 flex items-center gap-2 bg-[#FBF6EA] border border-[#EFE4CF] rounded-[9px] px-[9px] py-[6px]">
-                <span className="w-6 h-6 rounded-[7px] bg-green-tint text-green text-[7px] font-black flex items-center justify-center">{sarahAmznMsg.artifact.symbol}</span>
-                <span className="text-[10px] font-black text-ink">{sarahAmznMsg.artifact.line}</span>
-                <MiniSpark up width={30} height={12} />
-              </Link>
-            </div>
-          </div>
-        </div>
         )}
         {live && msgs.length === 0 && (
           <p className="py-10 text-center text-[12.5px] font-bold text-ink-3">No messages yet — say the first thing to your club.</p>

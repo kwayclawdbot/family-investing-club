@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { CommunityPost } from "@/lib/types";
 import { cx } from "@/components/ui";
 import { BarChip, RingAvatar } from "./BarChip";
-import { beltOf } from "@/components/belts/belt-of";
+import { useBeltOf } from "@/components/belts/identity-context";
 
 const GUEST_RING: Record<string, "blue" | "purple" | "yellow" | "white" | null> = { "Sarah J.": "blue", "Jordan P.": "yellow", "Coach Tia": "purple" };
 const GUEST_BG: Record<string, string> = { "Sarah J.": "bg-coral", "Jordan P.": "bg-purple", "Coach Tia": "bg-green-3" };
@@ -14,6 +14,7 @@ const beltColorFromLabel = (l?: string): "blue" | "purple" | "yellow" | "white" 
 };
 
 function Head({ author, authorId, belt, ago, square, chip: chipOverride }: { author: string; authorId?: string; belt?: string; ago: string; square?: boolean; chip?: { color: "public" | "verified"; label: string } }) {
+  const beltOf = useBeltOf();
   const member = authorId ? beltOf(authorId) : null;
   const ring = member?.color ?? GUEST_RING[author] ?? null;
   const bg = authorId ? (authorId === "andwele" ? "bg-green-3" : authorId === "kway" ? "bg-green-2" : authorId === "mom" ? "bg-coral" : "bg-[#B08968]") : GUEST_BG[author] ?? "bg-ink-4";
@@ -94,6 +95,7 @@ export function ClubVotePost({ p }: { p: Extract<CommunityPost, { kind: "clubvot
 }
 
 export function PromotionPost({ p }: { p: Extract<CommunityPost, { kind: "promotion" }> }) {
+  const beltOf = useBeltOf();
   const color = beltOf(p.authorId)?.color ?? beltColorFromLabel(p.belt);
   const bar: Record<string, string> = { white: "bg-[#F5F0E4] border border-[#C9BC9E]", yellow: "bg-[#E9C46A]", blue: "bg-[#4E7DA6]", purple: "bg-[#8B7BC7]", black: "bg-[#2E2A21]" };
   return (

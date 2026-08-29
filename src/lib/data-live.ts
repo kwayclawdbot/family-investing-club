@@ -18,7 +18,9 @@ import { clubConsensus, ficConsensus } from "@/lib/live/admin";
 import { clubContext } from "@/lib/live/club";
 import { dataMode, strictLive } from "@/lib/live/mode";
 import { getSession } from "@/lib/live/session";
-import type { Family, HomePulse, LeaderRow, Leaderboards, MyPortfolio, XpLeaderboard } from "@/lib/types";
+import type { Family, HomePulse, LeaderRow, Leaderboards, MyPortfolio, PromotionSummary, XpLeaderboard } from "@/lib/types";
+
+type Promotion = PromotionSummary & { lifetimeXp?: number };
 
 /**
  * Live-first read. Signed in → the live reader; a `null` there is a LIVE MISS (empty table, RLS,
@@ -52,6 +54,14 @@ export async function getFamily(): Promise<Family> {
     return { name: club.name, inviteCode: club.inviteCode, streakDays: 0, streakWeeks: club.streakWeeks, members: club.members.map((m) => ({ id: m.id, name: m.name, xp: ids.find((i) => i.memberId === m.id)?.weekXp ?? 0, color: m.color, isYou: m.isYou })), weeklyChallenge: fx.family.weeklyChallenge, portfolio: { value: (await live.getClubPortfolio())?.value ?? fx.family.portfolio.value, ytdPct: (await live.getClubPortfolio())?.ytdPct ?? fx.family.portfolio.ytdPct } };
   }, () => fx.family);
 }
+
+/* my record — pick accuracy, belt evidence, badge counts (was all fixture) */
+export const getReputation = () => pick(live.getReputation, () => fxData.getReputation());
+export const getPromotion = () => pick<Promotion>(live.getPromotion, () => fxData.getPromotion());
+export const getSpecialistBadges = () => pick(live.specialistBadges, () => fb.specialistBadges);
+export const getAchievementsCount = () => pick(live.achievementsCount, () => fb.achievementsCount);
+export const getResearchCount = () => pick(live.researchCount, () => fb.reputation.resolvedPicks);
+export const getMyPicksSummary = () => pick(live.getMyPicksSummary, () => ({ ytdPct: fv.myPortfolio.ytdPct ?? null, count: 0 }));
 
 /* club */
 export const getClub = () => pick(live.getClub, () => fc.club);

@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { getUser, getReputation, identityOf, beltFor, nextBelt, specialistBadges, achievementsCount } from "@/lib/data-live";
-import { myPerformance } from "@/lib/fixtures/v12-club";
+import { getUser, getReputation, beltFor, nextBelt, getSpecialistBadges, getAchievementsCount, getResearchCount, getMyPicksSummary } from "@/lib/data-live";
 import { BeltRing } from "@/components/ui/belt";
 import { VerificationRow } from "@/components/belts/VerificationRow";
 
@@ -8,8 +7,10 @@ const SWATCH: Record<string, string> = { white: "bg-white border border-[#E6DFCF
 
 /** v12 — Me answers one question: my record. Performance detail lives in /profile/performance. */
 export default async function ProfilePage() {
-  const [user, rep] = await Promise.all([getUser(), getReputation()]);
-  const xp = identityOf("kway")?.lifetimeXp ?? 0;
+  const [user, rep, specialties, achievements, research, picks] = await Promise.all([
+    getUser(), getReputation(), getSpecialistBadges(), getAchievementsCount(), getResearchCount(), getMyPicksSummary(),
+  ]);
+  const xp = user.levelXp;
   const belt = beltFor(xp); const next = nextBelt(xp);
   const toNext = next ? next.minXp - xp : 0;
     const row = "flex justify-between items-center py-[11px] border-b border-paper-2 text-[13px] font-extrabold text-ink";
@@ -24,14 +25,14 @@ export default async function ProfilePage() {
       </div>
       <div className="mt-[14px] mb-[6px] text-[11px] font-black text-ink-3">MY RECORD</div>
       <div className="flex gap-2">
-        {[[`${rep.pickPositivePct}%`, "PICK ACCURACY", "text-green"], [`+${myPerformance.ytdPct}%`, "PICKS YTD", "text-[#3A8C4A]"], ["12", "RESEARCH", "text-ink"]].map(([v, l, c]) => (
+        {[[rep.resolvedPicks ? `${rep.pickPositivePct}%` : "—", "PICK ACCURACY", "text-green"], [picks.ytdPct === null ? "—" : `${picks.ytdPct >= 0 ? "+" : ""}${picks.ytdPct}%`, "PICKS YTD", picks.ytdPct !== null && picks.ytdPct < 0 ? "text-coral-2" : "text-[#3A8C4A]"], [String(research), "RESEARCH", "text-ink"]].map(([v, l, c]) => (
           <div key={l} className="flex-1 bg-card border border-line rounded-[13px] p-[10px] text-center"><div className={`text-[16px] font-black ${c}`}>{v}</div><div className="text-[8.5px] font-extrabold text-ink-3">{l}</div></div>
         ))}
       </div>
       <div className="mt-[10px] bg-card border border-line rounded-[15px] px-[15px] py-[3px]">
         <VerificationRow />
-        <div className="flex justify-between items-center py-[10px] border-b border-paper-2"><span className="text-[12.5px] font-extrabold text-ink">Specialist badges</span><span className="text-[11px] font-extrabold text-purple-2">{specialistBadges.join(" · ")}</span></div>
-        <Link href="/profile/badges" className="flex justify-between items-center py-[10px]"><span className="text-[12.5px] font-extrabold text-ink">Achievements</span><span className="text-[11.5px] font-extrabold text-ink-3">{achievementsCount} ›</span></Link>
+        <div className="flex justify-between items-center py-[10px] border-b border-paper-2"><span className="text-[12.5px] font-extrabold text-ink">Specialist badges</span><span className="text-[11px] font-extrabold text-purple-2">{specialties.length ? specialties.join(" · ") : "None yet"}</span></div>
+        <Link href="/profile/badges" className="flex justify-between items-center py-[10px]"><span className="text-[12.5px] font-extrabold text-ink">Achievements</span><span className="text-[11.5px] font-extrabold text-ink-3">{achievements} ›</span></Link>
       </div>
       <div className="mt-[10px] bg-card border border-line rounded-[15px] px-[15px] py-[3px]">
         <Link href="/profile/performance" className={row}><span>📈 My Performance</span><span className="text-ink-4">›</span></Link>

@@ -5,7 +5,7 @@ import type {
 } from "@/lib/types";
 import * as fx from "@/lib/fixtures/club";
 import * as ws from "@/lib/fixtures/workspace";
-import { beltFor } from "@/lib/fixtures/belts";
+import { beltFor } from "@/lib/belts";
 import { cache } from "react";
 import { getSession, levelOf, type ProfileRow } from "./session";
 import { identitiesFor } from "./identity";

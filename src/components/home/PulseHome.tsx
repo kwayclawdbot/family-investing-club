@@ -6,7 +6,7 @@ import { cx } from "@/components/ui";
 import { BellIcon } from "@/components/ui/icons";
 import { BarChip, RingAvatar } from "@/components/community/BarChip";
 import { PulseChart, markerColor } from "./PulseChart";
-import { beltOf } from "@/components/belts/belt-of";
+import { useBeltOf } from "@/components/belts/identity-context";
 
 const AV: Record<string, { bg: string; initial: string }> = {
   kway: { bg: "bg-green-2", initial: "K" }, andwele: { bg: "bg-green-3", initial: "A" }, mom: { bg: "bg-coral", initial: "M" }, dad: { bg: "bg-[#B08968]", initial: "D" }, arielle: { bg: "bg-gold", initial: "A" },
@@ -18,6 +18,7 @@ const money = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
 
 /** Home v3 — performance pulse (canvas v9, artboard 04). One hero, borderless stream, one continue card. */
 export function PulseHome({ p, belt, nextBeltLabel, xpToNext, extras }: { p: HomePulse; belt: Belt; nextBeltLabel: string | null; xpToNext: number | null; extras?: React.ReactNode }) {
+  const beltOf = useBeltOf();
   const [scope, setScope] = useState<"me" | "club">("me");
   const [range, setRange] = useState(p.ranges[0]);
   const [hour] = useState(() => new Date().getHours());

@@ -4,7 +4,8 @@ import { useState } from "react";
 import type { Member, Idea } from "@/lib/types";
 import { Avatar, Tag, cx } from "@/components/ui";
 import { BeltChip } from "@/components/ui/belt";
-import { RingedAvatar, beltOf } from "@/components/belts/identity";
+import { RingedAvatar } from "@/components/belts/identity";
+import { useBeltOf } from "@/components/belts/identity-context";
 import { EmptyState, Sheet, StatTile } from "@/components/ui/extras";
 import { IdeaCard } from "./cards";
 import { useStored } from "./storage";
@@ -12,6 +13,7 @@ import { useStored } from "./storage";
 const REASONS = ["Personalized financial advice", "Spam or promotion", "Harassment or bullying", "Misleading claims", "Something else"];
 
 export function MemberProfile({ m, ideas }: { m: Member; ideas: Idea[] }) {
+  const beltOf = useBeltOf();
   const [follows, setFollows] = useStored<Record<string, boolean>>("fic.follows", {});
   const [muted, setMuted] = useStored<Record<string, boolean>>("fic.muted", {});
   const [report, setReport] = useState(false);

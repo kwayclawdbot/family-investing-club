@@ -1,10 +1,12 @@
 import Link from "next/link";
-import type { Circle } from "@/lib/fixtures/v12-social";
-import { fmtPeople } from "@/lib/fixtures/v12-social";
+import { fmtPeople } from "@/lib/format";
 
-/** 56px countdown ring: arc = days left / 30 (v11 circles are 30-day rooms). */
-export function CircleRing({ c, size = 56 }: { c: Circle; size?: number }) {
-  const r = (size / 56) * 24; const circ = 2 * Math.PI * r; const on = (c.daysLeft / 30) * circ;
+/** What the rail needs from a circle — satisfied by a live `CircleView` (lib/live/community). */
+export type RingCircle = { id: string; slug?: string; name: string; emoji: string; color: string; tint: string; daysLeft: number; people: number };
+
+/** 56px countdown ring: arc = days left / 30 (circles are 30-day rooms). */
+export function CircleRing({ c, size = 56 }: { c: RingCircle; size?: number }) {
+  const r = (size / 56) * 24; const circ = 2 * Math.PI * r; const on = (Math.min(c.daysLeft, 30) / 30) * circ;
   const inner = (size / 56) * 42;
   return (
     <span className="relative inline-flex items-center justify-center shrink-0" style={{ width: size, height: size }}>
@@ -17,12 +19,12 @@ export function CircleRing({ c, size = 56 }: { c: Circle; size?: number }) {
   );
 }
 
-/** Horizontal circles rail (Home v4). `onPropose` renders the dashed ＋ tile. */
-export function CirclesRail({ items, onPropose }: { items: Circle[]; onPropose?: React.ReactNode }) {
+/** Horizontal circles rail. `onPropose` renders the dashed ＋ tile; an empty rail is just that tile. */
+export function CirclesRail({ items, onPropose }: { items: RingCircle[]; onPropose?: React.ReactNode }) {
   return (
     <div className="flex gap-2 mt-[11px] overflow-x-auto no-scrollbar -mx-[18px] px-[18px]">
       {items.map((c) => (
-        <Link key={c.id} href={`/circle/${c.id}`} className="flex flex-col items-center gap-[3px] w-[66px] shrink-0" aria-label={`${c.name} circle, ${c.daysLeft} days left`}>
+        <Link key={c.id} href={`/circle/${c.slug ?? c.id}`} className="flex flex-col items-center gap-[3px] w-[66px] shrink-0" aria-label={`${c.name} circle, ${c.daysLeft} days left`}>
           <CircleRing c={c} />
           <span className="text-[9px] font-black text-ink whitespace-nowrap">{c.name}</span>
           <span className="text-[8px] font-extrabold text-orange-2 whitespace-nowrap">{c.daysLeft}d · {fmtPeople(c.people)}</span>

@@ -1,6 +1,6 @@
 import "server-only";
 import type { BeltColor, CommunityChat, CommunityClub, CommunityPost, PickStance } from "@/lib/types";
-import { beltFor } from "@/lib/fixtures/belts";
+import { beltFor } from "@/lib/belts";
 import { getSession } from "./session";
 import { identitiesFor } from "./identity";
 import { quoteSafe } from "./market-bridge";
@@ -209,7 +209,7 @@ export async function getCircles(includeClosed = false): Promise<CircleView[] | 
 }
 
 export type CircleNoteView = { id: string; author: Person; text: string; stance: "bear" | "neutral" | "bull" | null; ago: string; mine: boolean };
-export type CircleRoomView = { circle: CircleView; notes: CircleNoteView[]; split: { bear: number; neutral: number; bull: number }; canPost: boolean };
+export type CircleRoomView = { circle: CircleView; notes: CircleNoteView[]; split: { bear: number; neutral: number; bull: number }; canPost: boolean; kidBlocked: boolean };
 export async function getCircleRoom(idOrSlug: string): Promise<CircleRoomView | null> {
   const s = await getSession();
   if (!s) return null;
@@ -231,6 +231,6 @@ export async function getCircleRoom(idOrSlug: string): Promise<CircleRoomView | 
     for (const st of latest.values()) split[st]++;
     const circle = toCircle(row, counts, joined);
     const kid = s.profile?.age_group === "kids" || (s.profile?.role === "child" && !s.profile?.age_group);
-    return { circle, notes: ns.map((n) => ({ id: n.id, author: ppl.get(n.author_id) ?? anon, text: n.body, stance: n.stance, ago: ago(n.created_at), mine: n.author_id === s.user.id })), split, canPost: circle.open && circle.joined && !kid };
+    return { circle, notes: ns.map((n) => ({ id: n.id, author: ppl.get(n.author_id) ?? anon, text: n.body, stance: n.stance, ago: ago(n.created_at), mine: n.author_id === s.user.id })), split, canPost: circle.open && circle.joined && !kid, kidBlocked: kid };
   });
 }

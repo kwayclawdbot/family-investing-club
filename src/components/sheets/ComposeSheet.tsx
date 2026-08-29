@@ -4,16 +4,12 @@ import { useRouter } from "next/navigation";
 import { cx } from "@/components/ui";
 import { CloseIcon, ChevronDown } from "@/components/ui/icons";
 import { RingAvatar } from "@/components/community/BarChip";
-import { circles as fixtureCircles } from "@/lib/fixtures/v12-social";
 import { clubApi, signedOut, type Me } from "@/lib/live/client-club";
 import { openSheet, showXp } from "./bus";
 
 type Audience = { id: string; label: string; short: string };
-const FIXTURE_AUD: Audience[] = [
-  { id: "main", label: "Main Feed 🌍", short: "MAIN FEED 🌍" },
-  { id: "private", label: "The Mensah Club 🔒", short: "MENSAH CLUB 🔒" },
-  ...fixtureCircles.map((c) => ({ id: `circle:${c.id}`, label: `${c.emoji} ${c.name} circle`, short: `${c.emoji} ${c.name.toUpperCase()}` })),
-];
+/** Shown for the instant before /api/club/context answers with the member's real club + open circles. */
+const BASE_AUD: Audience[] = [{ id: "main", label: "Main Feed 🌍", short: "MAIN FEED 🌍" }];
 const ARTIFACTS = [
   { id: "pick", label: "▲ Pick", cls: "bg-green-tint text-green" },
   { id: "chart", label: "📈 Chart", cls: "bg-orange-tint text-orange-2" },
@@ -30,7 +26,7 @@ const DEMO_ME: Me = { id: "kway", name: "Kway", initial: "K", color: "bg-green-2
 export function ComposeSheet({ onClose, audience: initial = "main", reply, replyTo }: { onClose: () => void; audience?: string; reply?: string; replyTo?: string }) {
   const router = useRouter();
   const [aud, setAud] = useState(initial === "club" ? "private" : initial);
-  const [auds, setAuds] = useState<Audience[]>(FIXTURE_AUD);
+  const [auds, setAuds] = useState<Audience[]>(BASE_AUD);
   const [me, setMe] = useState<Me>(DEMO_ME);
   const [live, setLive] = useState(false);
   const [pickAud, setPickAud] = useState(false);

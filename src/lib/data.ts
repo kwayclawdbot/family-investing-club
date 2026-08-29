@@ -166,9 +166,7 @@ export async function getVerifiedExposure() { return v.verifiedExposure; }
 export async function getLeaderboards() { return v.leaderboards; }
 
 /* ── Round 5: XP + Belt rank system ─────────────────────────────────── */
-export const BELTS = bl.BELTS;
-export const beltFor = bl.beltFor;
-export const nextBelt = bl.nextBelt;
+export { BELTS, beltFor, nextBelt } from "@/lib/belts";
 export const identityOf = bl.identityOf;
 export async function getIdentities() { return bl.identities; }
 export async function getRecentXp() { return bl.recentXp; }

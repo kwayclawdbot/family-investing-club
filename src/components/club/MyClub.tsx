@@ -10,7 +10,8 @@ import { AvatarStack, ClubToggle, InviteSheet, MemberAvatar, StanceTag, TickerTi
 import { activityXp } from "@/lib/data";
 import { clubXpGoal } from "@/lib/fixtures/belts";
 import { BeltChip } from "@/components/ui/belt";
-import { RingedAvatar, beltOf, summariseBelts } from "@/components/belts/identity";
+import { RingedAvatar, summariseBelts } from "@/components/belts/identity";
+import { useBeltOf } from "@/components/belts/identity-context";
 import { NewClubEmpty, splitName } from "./NewClubEmpty";
 import { useStored } from "./storage";
 
@@ -26,6 +27,7 @@ type Props = {
 
 /** Artboard 05 (canonical) + 11 — My Club: identity, toggle, 4 tabs, picks in feed, pick FAB. */
 export function MyClub({ club, visible, picks, proposals, research, activity, portfolio, initialTab = "Feed", forceNew }: Props) {
+  const beltOf = useBeltOf();
   const router = useRouter();
   const [stored] = useStoredClub();
   const [isNew] = useStored<string>("fic.club.new", "");
@@ -267,6 +269,7 @@ const roleLabel: Record<ClubMember["role"], { text: string; cls: string }> = {
   child: { text: "Child", cls: "bg-purple-tint text-purple-2" },
 };
 export function MembersList({ club, onInvite }: { club: Club; onInvite: () => void }) {
+  const beltOf = useBeltOf();
   const members = club.members.filter((m) => m.id !== "dad");
   return (
     <div className="mb-24">

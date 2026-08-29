@@ -9,14 +9,16 @@ import { SendIcon } from "@/components/ui/icons";
 import { avatarFor } from "./MyClub";
 import { Chip, MemberAvatar, ScreenHeader, StanceTag, dots } from "./club-shared";
 import { BeltChip } from "@/components/ui/belt";
-import { RingedAvatar, beltOf } from "@/components/belts/identity";
-import { beltFor } from "@/lib/fixtures/belts";
+import { RingedAvatar } from "@/components/belts/identity";
+import { useBeltOf } from "@/components/belts/identity-context";
+import { beltFor } from "@/lib/belts";
 import { newId, read, useStored } from "./storage";
 import { clubApi, isUuid, signedOut } from "@/lib/live/client-club";
 
 /** Artboard 02 — a Pick's discussion thread with the Kai summarize bridge.
  *  Signed in: 👍/🤔 → POST /api/club/pick/react · replies → /api/club/pick/reply (fic_club_pick_replies). Signed out → localStorage. */
 export function PickThread({ pick: initial, club, id, identities }: { pick?: Pick; club: Club; id: string; identities?: MemberIdentity[] }) {
+  const beltOf = useBeltOf();
   const router = useRouter();
   const [pick, setPick] = useState<Pick | undefined>(initial);
   useEffect(() => {

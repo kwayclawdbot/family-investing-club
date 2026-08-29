@@ -3,7 +3,7 @@ import { requireSession } from "@/lib/live/route-utils";
 import { chatFamilyId, getClub, getProposal } from "@/lib/live/club";
 import { getCircles } from "@/lib/live/community";
 import { getIdentity } from "@/lib/live/identity";
-import { beltFor } from "@/lib/fixtures/belts";
+import { beltFor } from "@/lib/belts";
 
 /** What a sheet needs to open without server props: the member's club, open circles, and their own identity.
  *  Signed-out → 401 so sheets keep the fixture/demo path. `?proposalId=` adds that proposal for the vote sheet. */

@@ -1,7 +1,8 @@
 import "server-only";
-import type { Badge, Mastery, MemberIdentity, User, XpEvent } from "@/lib/types";
-import { beltFor } from "@/lib/fixtures/belts";
+import type { Badge, Mastery, MemberIdentity, PromotionSummary, Reputation, User, XpEvent } from "@/lib/types";
+import { beltFor } from "@/lib/belts";
 import { getSession, levelOf } from "./session";
+import { quotesSafe } from "./market-bridge";
 import { colorFor, firstName, initialOf, must, safe, userClient } from "./supa";
 
 type XpRow = { id: string; user_id: string; amount: number; kind: string | null; ref_id: string | null; created_at: string };
@@ -146,4 +147,106 @@ export async function getMastery(): Promise<Mastery[] | null> {
     }
     return [...byPath.entries()].map(([path, arr]) => ({ path: path.replace(/[-_]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()), pct: Math.round(arr.reduce((a, b) => a + b, 0) / arr.length) }));
   });
+}
+
+/* ── my record ────────────────────────────────────────────────────────
+ * Everything below was a fixture ("71% accuracy · 12 research · 12 achievements"). Each is now counted
+ * from the member's own rows; a member with no history gets zeros, which is the honest answer. */
+
+/** Every pick this member has made, with a % return where one can be known (resolved row, else a live quote). */
+type PickReturn = { stance: "buy" | "watch" | "pass"; ret: number | null; at: string };
+async function myPickReturns(userId: string): Promise<PickReturn[]> {
+  const supa = await userClient();
+  const picks = must(await supa.from("fic_club_picks").select("symbol, stance, price_at_pick, resolved_return_pct, created_at").eq("author_id", userId)) as
+    { symbol: string; stance: "buy" | "watch" | "pass"; price_at_pick: number | null; resolved_return_pct: number | null; created_at: string }[];
+  const open = picks.filter((p) => p.resolved_return_pct === null && p.price_at_pick);
+  const quotes = open.length ? await quotesSafe([...new Set(open.map((p) => p.symbol))]) : {};
+  return picks.map((p) => {
+    let ret: number | null = p.resolved_return_pct !== null ? Number(p.resolved_return_pct) : null;
+    if (ret === null && p.price_at_pick) {
+      const q = quotes[p.symbol.toUpperCase()];
+      if (q) ret = ((q.price - Number(p.price_at_pick)) / Number(p.price_at_pick)) * 100;
+    }
+    return { stance: p.stance, ret, at: p.created_at };
+  });
+}
+
+/** Pick accuracy: a buy/watch is "right" when the symbol is up since the pick, a pass when it's down. */
+export async function getReputation(): Promise<Reputation | null> {
+  const s = await getSession();
+  if (!s) return null;
+  return safe("identity.getReputation", async () => {
+    const rows = (await myPickReturns(s.user.id)).filter((r) => r.ret !== null);
+    if (!rows.length) return { pickPositivePct: 0, resolvedPicks: 0 };
+    const right = rows.filter((r) => (r.stance === "pass" ? r.ret! < 0 : r.ret! > 0)).length;
+    return { pickPositivePct: Math.round((right / rows.length) * 100), resolvedPicks: rows.length };
+  });
+}
+
+/** "PICKS YTD" on Me: the average return of the picks this member opened this calendar year.
+ *  `null` (rendered "—") when nothing is priceable — never a stand-in number. */
+export async function getMyPicksSummary(): Promise<{ ytdPct: number | null; count: number } | null> {
+  const s = await getSession();
+  if (!s) return null;
+  return safe("identity.getMyPicksSummary", async () => {
+    const jan1 = new Date(new Date().getFullYear(), 0, 1).getTime();
+    const ytd = (await myPickReturns(s.user.id)).filter((r) => new Date(r.at).getTime() >= jan1);
+    const priced = ytd.filter((r) => r.ret !== null);
+    return { ytdPct: priced.length ? +(priced.reduce((a, r) => a + r.ret!, 0) / priced.length).toFixed(1) : null, count: ytd.length };
+  });
+}
+
+/** What earned the current belt: lessons, research notes, practice drills, club proposals + votes. */
+export async function getPromotion(): Promise<PromotionSummary & { lifetimeXp: number } | null> {
+  const s = await getSession();
+  if (!s) return null;
+  return safe("identity.getPromotion", async () => {
+    const supa = await userClient();
+    const head = { count: "exact" as const, head: true };
+    const [xp, lessons, research, games, proposals, votes] = await Promise.all([
+      xpTotals(s.user.id),
+      supa.from("lesson_progress").select("id", head).eq("user_id", s.user.id).eq("status", "completed"),
+      supa.from("fic_club_research").select("id", head).eq("assignee_id", s.user.id).eq("status", "done"),
+      supa.from("game_scores").select("id", head).eq("user_id", s.user.id),
+      supa.from("fic_club_proposals").select("id", head).eq("author_id", s.user.id),
+      supa.from("fic_club_votes").select("proposal_id", head).eq("user_id", s.user.id),
+    ]);
+    const lifetime = xp?.lifetime ?? 0;
+    return {
+      belt: beltFor(lifetime), lifetimeXp: lifetime,
+      lessons: lessons.count ?? 0,
+      research: research.count ?? 0,
+      drills: games.count ?? 0,
+      clubActions: (proposals.count ?? 0) + (votes.count ?? 0),
+    };
+  });
+}
+
+/** Research notes this member has finished — the number beside "RESEARCH" on Me. */
+export async function researchCount(): Promise<number | null> {
+  const s = await getSession();
+  if (!s) return null;
+  return safe("identity.researchCount", async () => {
+    const supa = await userClient();
+    const { count } = await supa.from("fic_club_research").select("id", { count: "exact", head: true }).eq("assignee_id", s.user.id).eq("status", "done");
+    return count ?? 0;
+  });
+}
+
+/** Achievements = badges actually earned. */
+export async function achievementsCount(): Promise<number | null> {
+  const s = await getSession();
+  if (!s) return null;
+  return safe("identity.achievementsCount", async () => {
+    const supa = await userClient();
+    const { count } = await supa.from("user_badges").select("badge_id", { count: "exact", head: true }).eq("user_id", s.user.id);
+    return count ?? 0;
+  });
+}
+
+/** Specialist badges = the tracks this member has actually mastered most (skill_mastery), top 2. */
+export async function specialistBadges(): Promise<string[] | null> {
+  const m = await getMastery();
+  if (!m) return null;
+  return m.filter((x) => x.pct >= 50).sort((a, b) => b.pct - a.pct).slice(0, 2).map((x) => x.path);
 }
