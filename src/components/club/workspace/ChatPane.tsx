@@ -85,6 +85,7 @@ export function ChatPane({ proposal, live }: { proposal: { id: string; title: st
             </div>
           )
         )}
+        {!live && (
         <div className="flex gap-2">
           <span className="w-7 h-7 rounded-full bg-coral text-white text-[11px] font-black flex items-center justify-center shrink-0 ring-2 ring-[#3E7BC7] ring-offset-2 ring-offset-paper">S</span>
           <div className="max-w-[82%]">
@@ -99,6 +100,10 @@ export function ChatPane({ proposal, live }: { proposal: { id: string; title: st
             </div>
           </div>
         </div>
+        )}
+        {live && msgs.length === 0 && (
+          <p className="py-10 text-center text-[12.5px] font-bold text-ink-3">No messages yet — say the first thing to your club.</p>
+        )}
       </div>
       {attach && (
         <div className="absolute inset-0 z-50 flex flex-col justify-end" role="dialog" aria-label="Add to your message">
