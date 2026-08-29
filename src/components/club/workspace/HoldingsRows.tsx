@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { Logo } from "@/components/markets/Logo";
 import { useEffect, useState } from "react";
 import type { PortfolioTab } from "@/lib/types";
 import { Panel } from "./shared";
@@ -18,7 +19,7 @@ export function HoldingsRows({ holdings }: { holdings: PortfolioTab["holdings"] 
         const since = h.sinceAddPct;
         return (
           <Link key={h.symbol} href={`/discover/${h.symbol}`} className={`flex items-center gap-[10px] py-[9px] ${i < holdings.length - 1 ? "border-b border-paper-2" : ""}`}>
-            <span className="w-9 h-9 rounded-[10px] bg-green-tint text-green text-[9px] font-black flex items-center justify-center shrink-0">{h.symbol}</span>
+            <Logo symbol={h.symbol} size={36} radius={10} />
             <span className="flex-1 min-w-0">
               <span className="block text-[12.5px] font-black text-ink truncate">{h.name} <span className="text-[9.5px] font-extrabold text-ink-4">{h.symbol}</span></span>
               <span className="block text-[9.5px] font-extrabold text-ink-3 truncate">{h.origin || "club holding"}</span>

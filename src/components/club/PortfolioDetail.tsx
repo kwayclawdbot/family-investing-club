@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { Logo } from "@/components/markets/Logo";
 import { useState } from "react";
 import type { ModelPortfolio, Proposal } from "@/lib/types";
 import { Button, Tag, cx } from "@/components/ui";
@@ -62,7 +63,7 @@ export function PortfolioDetail({ p }: { p: ModelPortfolio }) {
         </div>
         {holdings.map((h, i) => (
           <Link key={h.symbol} href={`/discover/${h.symbol}`} className={cx("flex items-center gap-[11px] py-[10px]", i < holdings.length - 1 && "border-b border-paper-2")}>
-            <span className={cx("w-[34px] h-[34px] rounded-[10px] flex items-center justify-center text-[10px] font-black shrink-0", h.symbol === "VOO" ? "bg-orange-tint text-orange-2" : "bg-green-tint text-green")}>{h.symbol}</span>
+            <Logo symbol={h.symbol} size={34} radius={10} />
             <div className="flex-1 min-w-0">
               <div className="text-[13px] font-extrabold text-ink truncate">{h.name}</div>
               <div className="text-[10.5px] font-bold text-purple-2" title={h.thesis}>View thesis →</div>

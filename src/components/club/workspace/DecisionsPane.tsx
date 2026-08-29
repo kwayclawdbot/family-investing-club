@@ -1,4 +1,5 @@
 import { DecisionRecordRows } from "./OfficialPicks";
+import { Logo } from "@/components/markets/Logo";
 import Link from "next/link";
 import type { ClubOverview, PortfolioTab } from "@/lib/types";
 import type { DecisionRecord } from "@/lib/live/club";
@@ -64,7 +65,7 @@ export function DecisionsPane({ o, p, record, circles }: { o: ClubOverview; p: P
         {!o.research.length && <p className="py-4 text-center text-[11.5px] font-bold text-ink-3">Nothing being researched — assign a company from a pick or the watchlist.</p>}
         {o.research.map((r, i) => (
           <div key={r.symbol + r.assigneeId} className={cx("flex items-center gap-[10px] py-[9px]", i < o.research.length - 1 && "border-b border-paper-2")}>
-            <span className={cx("w-[30px] h-[30px] rounded-[9px] flex items-center justify-center text-[8.5px] font-black", r.status === "ready" ? "bg-[#FFFDF4] text-[#BC9227]" : "bg-line-2 text-ink-2")}>{r.symbol}</span>
+            <Logo symbol={r.symbol} size={30} radius={9} />
             <div className="flex-1">
               <div className="text-[12.5px] font-extrabold text-ink">{r.name} — {r.assignee}{r.gated ? " 🎓" : ""}{r.status === "ready" ? " · ready ✓" : ""}</div>
               {r.status === "ready" ? <div className="text-[10px] font-bold text-ink-3">&ldquo;{r.note}&rdquo;{r.comments ? ` · 💬 ${r.comments}` : ""}</div> : r.note ? <div className="text-[10px] font-bold text-ink-3 truncate">{r.note}</div> : null}

@@ -1,6 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import type { DecisionMarker, PerfSeries } from "@/lib/types";
+import { after } from "next/server";
 import * as pg from "@/lib/market/polygon";
 import { safe } from "./supa";
 
@@ -41,11 +42,23 @@ export async function barsFor(symbols: string[], opts: { spend?: number } = {}):
   // blocks for twenty seconds on a cold cache is worse than one that says "3 of 6 priced" and fills
   // in on the next visit. `spend: 0` means cache-only, for widgets that must not starve the page.
   let spend = Math.min(MAX_LIVE_FETCHES, opts.spend ?? Math.max(0, pg.budgetLeft() - 1));
+  const deferred: string[] = [];
   for (const s of missing) {
-    if (spend <= 0) break;
+    if (spend <= 0) { deferred.push(s); continue; }
     spend--;
     const a = await pg.aggregates(s, "1Y", { maxWait: 1_500 });
-    if (a?.bars.length) out.set(s, a.bars.map((b) => ({ t: b.t, c: b.c })));
+    if (a?.bars.length) out.set(s, a.bars.map((b) => ({ t: b.t, c: b.c }))); else deferred.push(s);
+  }
+  // Everything we didn't wait for is fetched AFTER the response goes out, so the member never waits
+  // on it and the next render finds it cached. Without this a one-fetch budget would leave a six-
+  // holding club reading "1 of 6 priced" forever on serverless, where each instance starts cold.
+  if (deferred.length && opts.spend !== 0) {
+    after(async () => {
+      for (const s of deferred) {
+        if (pg.budgetLeft() <= 0) break;
+        await pg.aggregates(s, "1Y", { maxWait: 8_000 }).catch(() => null);
+      }
+    });
   }
   return out;
 }

@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { Logo } from "@/components/markets/Logo";
 import { cx } from "@/components/ui";
 import type { DecisionRecord, OfficialPicks as Picks } from "@/lib/live/club";
 import { openSheet } from "@/components/sheets/bus";
@@ -37,7 +38,7 @@ export function OfficialPicks({ o }: { o: Picks | null }) {
       <div className="rounded-[14px] border border-line bg-card px-3">
         {o.rows.map((r, i) => (
           <Link key={r.symbol} href={`/discover/${r.symbol}`} className={cx("flex items-center gap-[10px] py-[9px]", i < o.rows.length - 1 && "border-b border-paper-2")}>
-            <span className="w-9 h-9 rounded-[9px] bg-paper-2 flex items-center justify-center text-[9px] font-black text-ink-2">{r.symbol}</span>
+            <Logo symbol={r.symbol} size={36} radius={9} />
             <span className="flex-1 min-w-0"><span className="flex items-center gap-[6px]"><span className="text-[13px] font-black text-ink">{r.name}</span><span className={cx("rounded-[5px] px-[5px] py-[1px] text-[8.5px] font-black", TONE[r.stance])}>{r.stance}</span></span><span className="block text-[10px] font-bold text-ink-3 truncate">{r.line}</span></span>
             <span className={cx("text-[13px] font-black", (r.pct ?? 0) >= 0 ? "text-green-2" : "text-red")}>{pct(r.pct)}</span>
           </Link>
@@ -55,7 +56,7 @@ export function DecisionRecordRows({ record }: { record: DecisionRecord | null }
     <div className="mt-2">
       {record.rows.map((r, i) => (
         <div key={`${r.symbol}-${r.date}-${i}`} className={cx("flex items-center gap-[9px] py-[8px]", i < record.rows.length - 1 && "border-b border-paper-2")}>
-          <span className="w-8 h-8 rounded-[8px] bg-paper-2 flex items-center justify-center text-[8.5px] font-black text-ink-2">{r.symbol}</span>
+          <Logo symbol={r.symbol} size={32} radius={8} />
           <span className="flex-1 min-w-0 text-[11px] font-bold text-ink-2"><span className="block"><span className="text-ink">You voted </span><b className="text-green">{r.vote}</b> · {r.what} <span className="text-ink-4">· {r.date}</span></span><span className="block text-[10px] text-ink-3">{r.result}</span></span>
           <span className="text-right"><span className={cx("block text-[12px] font-black", r.pct.startsWith("−") ? "text-red" : "text-green-2")}>{r.pct}</span><span className="block text-[9px] font-extrabold text-ink-4">{r.verdict}</span></span>
         </div>

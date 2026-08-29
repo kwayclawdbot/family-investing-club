@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { Logo } from "@/components/markets/Logo";
 import type { VerifiedExposure as Exposure } from "@/lib/types";
 import { cx } from "@/components/ui";
 import { useBrokerage } from "./storage";
@@ -32,7 +33,7 @@ export function VerifiedExposureView({ e, connected }: { e: Exposure; connected?
       <div className="mt-[7px] bg-card border border-line rounded-[16px] px-[15px] py-[2px]">
         {e.rows.map((r, i) => (
           <div key={r.symbol} className={cx("flex items-center gap-[10px] py-[10px]", i < e.rows.length - 1 && "border-b border-paper-2")}>
-            <span className={cx("w-8 h-8 rounded-[10px] flex items-center justify-center text-[9.5px] font-black shrink-0", TILE[r.symbol] ?? "bg-line-2 text-ink-2")}>{r.symbol}</span>
+            <Logo symbol={r.symbol} size={32} radius={10} />
             <div className="flex-1 min-w-0">
               <div className="text-[12.5px] font-extrabold text-ink">{r.name}</div>
               <div className="text-[10px] font-bold text-ink-3">{r.ownersOf}</div>

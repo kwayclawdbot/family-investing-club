@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { brandOf } from "@/lib/content/brands";
+import { Logo } from "@/components/markets/Logo";
 import type { DiscoverCard } from "@/lib/live/discover";
 
 export type Quote = { price: number; changePct: number; ytdPct?: number };
@@ -19,7 +19,7 @@ function Card({ c, q }: { c: DiscoverCard; q?: Quote }) {
   return (
     <Link href={c.href} className="flex-1 min-w-0 h-[158px] bg-card border border-line rounded-[18px] px-[13px] pt-[13px] pb-[11px] flex flex-col gap-[7px]">
       <div className="flex items-start justify-between">
-        <span className="w-11 h-11 rounded-[13px] flex items-center justify-center text-[11px] font-black text-white tracking-[-0.3px] shadow-[0_3px_8px_rgba(46,42,33,0.28)] shrink-0" style={{ background: brandOf(c.symbol) }}>{c.symbol}</span>
+        <Logo symbol={c.symbol} size={44} radius={13} />
         <span className={`rounded-[7px] px-[7px] py-[2px] text-[7.5px] font-black text-right leading-[1.2] whitespace-pre-line ${TONE[c.tone]}`}>{c.tag}</span>
       </div>
       <div>

@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { Logo } from "@/components/markets/Logo";
 import { useEffect, useState } from "react";
 import { cx } from "@/components/ui";
 import { BellIcon, SearchIcon } from "@/components/ui/icons";
@@ -180,7 +181,7 @@ function Post({ p, last }: { p: FeedPost; last: boolean }) {
       <p className="mt-[5px] text-[12.5px] font-semibold text-ink leading-[1.45]"><Cash t={p.text} /></p>
       {p.pick && (
         <Link href={`/discover/${p.pick.symbol}`} className="mt-[6px] flex items-center gap-[9px] bg-[#FBF6EA] border border-[#EFE4CF] rounded-[11px] px-[11px] py-2">
-          <span className="w-[30px] h-[30px] rounded-[9px] bg-line-2 flex items-center justify-center text-[8.5px] font-black text-ink-2">{p.pick.symbol}</span>
+          <Logo symbol={p.pick.symbol} size={30} radius={9} />
           <span className="flex-1 text-[11px] font-black text-ink">{p.pick.name} · {p.pick.stance} <span className="text-[#3A8C4A]">+{p.pick.sincePct}% since pick</span> <span className="text-ink-3 font-extrabold">· ✓ verified owner</span></span>
           <svg width="60" height="16" viewBox="0 0 60 16" preserveAspectRatio="none" className="shrink-0"><polyline fill="none" stroke="#4C8C4A" strokeWidth="2" points={p.pick.spark.map((y, i) => `${i * 12},${y}`).join(" ")} /></svg>
         </Link>

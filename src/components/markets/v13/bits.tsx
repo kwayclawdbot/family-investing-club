@@ -3,22 +3,7 @@ import type { ReactNode } from "react";
 import { brandOf } from "@/lib/content/brands";
 
 /** Brand-coloured ticker tile (prototype v2 logo treatment). */
-export function Logo({ symbol, size = 30, radius = 9 }: { symbol: string; size?: number; radius?: number }) {
-  const fs = size >= 34 ? 8.5 : size >= 28 ? 8 : size >= 24 ? 6.5 : 6;
-  const sym = symbol.toUpperCase();
-  // The real company mark sits on top of the brand-coloured ticker square. If Polygon has no logo
-  // for this symbol the proxy 404s, the <img> renders nothing, and the square below is what shows —
-  // so there is never a broken-image icon and never an empty hole.
-  return (
-    <span className="relative inline-flex items-center justify-center text-white font-black shrink-0 overflow-hidden shadow-[0_2px_5px_rgba(46,42,33,0.25)]"
-      style={{ width: size, height: size, borderRadius: radius, background: brandOf(sym), fontSize: fs, letterSpacing: -0.3 }}>
-      {sym.slice(0, 4)}
-      {/* eslint-disable-next-line @next/next/no-img-element -- proxied through our own route, no loader needed */}
-      <img src={`/api/market/logo/${sym}`} alt="" aria-hidden loading="lazy" decoding="async"
-        className="absolute inset-0 w-full h-full object-contain bg-white" />
-    </span>
-  );
-}
+export { Logo } from "@/components/markets/Logo";
 
 /** Inline $TICKER mention with a tiny brand square. */
 /** Rendered as a span (not an anchor) so it can sit inside card links without nesting <a>. */
