@@ -1,0 +1,77 @@
+"use client";
+
+import { m, useReducedMotion } from "@/lib/motion";
+import { useMemo } from "react";
+
+/**
+ * Lightweight particle burst — pure framer-motion transforms/opacity, no deps.
+ * Mount it (via a changing key) to fire. Sits absolutely inside a relative
+ * parent and is pointer-events-none so it never blocks the UI.
+ */
+export default function Burst({
+  // COLOUR LAW: the old default palette borrowed #22C55E (green) and #38BDF8
+  // (sky) — green belongs to PRICE and sky to nothing here, so a celebration
+  // was reading as a market signal. Confetti is a BRAND moment, so the default
+  // is the warm accent ramp plus a cream, which also holds up on the dark
+  // night-island stage and on the light page. Callers may still pass `colors`.
+  colors = ["#FF8A47", "#FBBF24", "#F59E0B", "#F7F3EA"],
+  count = 18,
+  power = 120,
+}: {
+  colors?: string[];
+  count?: number;
+  power?: number;
+}) {
+  const reduce = useReducedMotion();
+  const parts = useMemo(
+    () =>
+      Array.from({ length: count }).map((_, i) => {
+        // Deterministic jitter: React's compiler rules forbid Math.random() during render, and a
+        // seeded value looks identical for a burst that lives 600ms.
+        const r = (salt: number) => { const x = Math.sin((i + 1) * 12.9898 + salt * 78.233) * 43758.5453; return x - Math.floor(x); };
+        const angle = (i / count) * Math.PI * 2 + r(1) * 0.5;
+        const dist = power * (0.5 + r(2) * 0.7);
+        return {
+          id: i,
+          x: Math.cos(angle) * dist,
+          y: Math.sin(angle) * dist,
+          size: 5 + r(3) * 7,
+          color: colors[i % colors.length],
+          rot: r(4) * 360,
+          delay: r(5) * 0.06,
+        };
+      }),
+    [colors, count, power]
+  );
+
+  if (reduce) return null;
+
+  return (
+    <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center overflow-visible">
+      {/* ring pulse */}
+      <m.span
+        className="absolute rounded-full border-2"
+        style={{ borderColor: colors[0] }}
+        initial={{ width: 20, height: 20, opacity: 0.7 }}
+        animate={{ width: power * 2, height: power * 2, opacity: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      />
+      {parts.map((p) => (
+        <m.span
+          key={p.id}
+          className="absolute rounded-[2px]"
+          style={{ width: p.size, height: p.size, background: p.color }}
+          initial={{ x: 0, y: 0, opacity: 1, rotate: 0, scale: 1 }}
+          animate={{
+            x: p.x,
+            y: p.y + 30,
+            opacity: 0,
+            rotate: p.rot,
+            scale: 0.3,
+          }}
+          transition={{ duration: 0.7 + p.delay * 5, delay: p.delay, ease: "easeOut" }}
+        />
+      ))}
+    </div>
+  );
+}

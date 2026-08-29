@@ -102,3 +102,19 @@ body {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* ── Ported FTA game surfaces ───────────────────────────────────────────────
+   Candle Battle and Trend or Trap were built against FTA's `club-b-*` card
+   system. Rather than drag that token set across, the handful of classes they
+   use are re-expressed here in FIC's own palette, so the games look native. */
+.club-b-card { border-radius: 14px; background: var(--card); border: 1px solid var(--line); }
+.club-b-card-lead { border-color: #E58234; box-shadow: 0 0 12px rgba(229, 130, 52, 0.2); }
+.club-b-warm {
+  position: relative; isolation: isolate; overflow: hidden; border-radius: 16px;
+  border: 1px solid #EFE4CF;
+  background: linear-gradient(120deg, #FBEFD9 0%, #FBF6EA 55%, var(--card) 100%);
+}
+.club-b-chip { border-radius: 10px; background: rgba(255, 253, 247, 0.72); border: 1px solid rgba(230, 223, 207, 0.85); }
+.club-b-stack > * + * { margin-top: 10px; }
+.text-soft { color: var(--ink-3); }
+.text-gold-700, .text-gold-600 { color: #BC9227; }

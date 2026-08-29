@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { Game } from "@/lib/types";
+import { gameHref } from "@/lib/content/games";
 import { cx } from "@/components/ui";
 
 /** Artboard 17 — Practice Arcade: category tag tone + label per game kind. */
@@ -50,7 +51,7 @@ export function GamesHub({ games }: { games: Game[] }) {
           // The saved score (game_scores) and any unsynced local round — whichever is actually higher.
           const local = best[g.id]; const b = local !== undefined && g.best !== undefined ? Math.max(local, g.best) : local ?? g.best;
           return (
-            <Link key={g.id} href={`/learn/games/${g.id}`} className="rounded-[16px] border border-line bg-card px-[14px] py-[13px] active:scale-[0.98] transition">
+            <Link key={g.id} href={gameHref(g.id)} className="rounded-[16px] border border-line bg-card px-[14px] py-[13px] active:scale-[0.98] transition">
               <span className={cx("inline-block rounded-[8px] px-[9px] py-[3px] text-[10px] font-black", k.cls)}>{k.label}</span>
               <div className="mt-2 text-[14.5px] font-black text-ink">{g.title}</div>
               <div className="mt-[2px] text-[11px] font-bold text-ink-3">{g.skill} · {g.level === "All" ? "All levels" : `Lv ${g.level}`}</div>
@@ -61,7 +62,7 @@ export function GamesHub({ games }: { games: Game[] }) {
       </div>
 
       {family && (
-        <Link href={`/learn/games/${family.id}`} className="mt-3 flex items-center gap-3 rounded-[16px] border border-line bg-card px-4 py-[13px]">
+        <Link href={gameHref(family.id)} className="mt-3 flex items-center gap-3 rounded-[16px] border border-line bg-card px-4 py-[13px]">
           <span className="text-[24px]" aria-hidden>🏆</span>
           <span className="flex-1 min-w-0">
             <span className="block text-[14px] font-black text-ink">{family.title} · play together</span>

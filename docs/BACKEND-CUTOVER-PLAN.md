@@ -174,9 +174,12 @@ engine wasn't wired. Both are now mounted:
 Verified: a stepped lesson (Kids Corner, step 3/12, real authored question), a video lesson
 (Introduction to Financial Markets → the real FTA bundle iframe), a recording streaming from
 storage, and `smoke:learn` 17/17.
-**Still not ported:** FTA's two games — Candle Battle and Trend or Trap (`~/projects/fta-dashboard-v3`,
-`src/components/games/`, ~2.4k lines) — which are the only games with real `game_scores` history.
-FIC's arcade still lists a different, mostly unplayable catalogue.
+**Games ported 2026-08-29 (Phase 7.7):** Candle Battle and Trend or Trap now run in FIC at
+`/learn/games/{candle-battle,trend-or-trap}`, reading their 24 authored rounds each from `game_items`.
+XP moved server-side (`/api/learn/game` writes `game_scores` and pays only on a pass) — FTA awarded it
+from the client. FTA's `club-b-*` card classes are re-expressed in FIC tokens in `globals.css`; its
+icon, `f0/parts` and entitlement dependencies were replaced with local equivalents, and `framer-motion`
+is the one new dependency (code-split behind `MotionProvider`, mounted only on the game routes).
 
 ### Phase 8 — Cutover (after 2026-09-09)
 1. Vercel env parity on `family-investing-club` (full list in §4); `CRON_SECRET`, VAPID, Stripe,

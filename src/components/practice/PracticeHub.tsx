@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import type { Game } from "@/lib/types";
+import { gameHref } from "@/lib/content/games";
 import { money, pct } from "@/components/markets/format";
 import { Sparkline } from "@/components/markets/LineChart";
 import { Eyebrow } from "@/components/markets/v12/bits";
@@ -25,7 +26,7 @@ export function PracticeHub({ portfolio, games: all = [], embedded }: { portfoli
           <Link href="/learn/games/valuation" className="rounded-[11px] bg-purple text-cream-text px-3 py-[7px] text-[11px] font-black">Play</Link>
         </div>
         <div className="grid grid-cols-2 gap-2 mt-3">{games.map((g) => (
-          <Link key={g.id} href={`/learn/games/${g.id}`} className="bg-card border border-line rounded-[15px] px-3 py-3">
+          <Link key={g.id} href={gameHref(g.id)} className="bg-card border border-line rounded-[15px] px-3 py-3">
             <div className="text-[20px]">{g.emoji}</div>
             <div className="text-[13px] font-black text-ink mt-1">{g.title}</div>
             <div className="text-[9.5px] font-bold text-ink-3">{g.skill} · {g.minutes} min</div>
