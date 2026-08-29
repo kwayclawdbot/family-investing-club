@@ -9,13 +9,15 @@ import { circles, mainFeed, type FeedPost } from "@/lib/fixtures/v12-social";
 import { privateFeed } from "@/lib/fixtures/v12-social";
 import { openSheet } from "@/components/sheets/bus";
 import { Composer } from "./Composer";
+import { clubApi } from "@/lib/live/client-club";
+import type { FeedItem as LiveFeedItem } from "@/lib/live/community";
 import type { BeltColor } from "@/lib/types";
 
 type LocalPost = { id: string; text: string; audience: string; at: number; artifact?: string; poll?: string[] };
 function readPosts(): LocalPost[] { try { return JSON.parse(localStorage.getItem("fic.posts") || "[]"); } catch { return []; } }
 
 /** Home v4 (canvas v11, board 12): one job — what is FIC talking about right now. */
-export function HomeV4({ belt, clubName, initialFeed, openProposal }: { belt: BeltColor; clubName: string; initialFeed: "main" | "private"; openProposal: { id: string; text: string; voted: number; eligible: number; hoursLeft: number } | null }) {
+export function HomeV4({ belt, clubName, initialFeed, openProposal, livePosts }: { belt: BeltColor; clubName: string; initialFeed: "main" | "private"; openProposal: { id: string; text: string; voted: number; eligible: number; hoursLeft: number } | null; livePosts?: LiveFeedItem[] | null }) {
   const [feed, setFeed] = useState<"main" | "private">(initialFeed);
   const [mine, setMine] = useState<LocalPost[]>([]);
   const [proposeOpen, setProposeOpen] = useState(false);
@@ -63,11 +65,20 @@ export function HomeV4({ belt, clubName, initialFeed, openProposal }: { belt: Be
 
       {feed === "main" ? (
         <div className="mt-[6px]">
-          {sentMain.map((m, i) => <MinePost key={`sent-${i}`} p={{ id: `sent-${i}`, text: m.text, audience: "main", at: m.at }} belt={belt} />)}
-          {mine.filter((p) => p.audience === "main").map((p) => <MinePost key={p.id} p={p} belt={belt} />)}
-          {mainFeed.map((p, i) => <Post key={p.id} p={p} last={i === mainFeed.length - 1} />)}
-          {/* The composer is the point of a conversation-first Home — it belongs on BOTH feeds. */}
+          {/* The composer is the point of a conversation-first Home, so it sits ABOVE the feed
+              where it is always reachable — not buried under thirty posts. */}
           <Composer audience="main" clubName={clubName} onLocalEcho={(t) => setSentMain((x) => [{ text: t, at: Date.now() }, ...x])} />
+          <div className="mt-2">
+            {sentMain.map((m, i) => <MinePost key={`sent-${i}`} p={{ id: `sent-${i}`, text: m.text, audience: "main", at: m.at }} belt={belt} />)}
+            {livePosts
+              ? (livePosts.length
+                  ? livePosts.map((p, i) => <LivePost key={p.id} p={p} last={i === livePosts.length - 1} />)
+                  : <p className="py-8 text-center text-[12.5px] font-bold text-ink-3">Nothing here yet — say the first thing.</p>)
+              : <>
+                  {mine.filter((p) => p.audience === "main").map((p) => <MinePost key={p.id} p={p} belt={belt} />)}
+                  {mainFeed.map((p, i) => <Post key={p.id} p={p} last={i === mainFeed.length - 1} />)}
+                </>}
+          </div>
         </div>
       ) : (
         <PrivateFeed clubName={clubName} proposal={openProposal} mine={mine.filter((p) => p.audience === "private")} belt={belt} />
@@ -256,6 +267,39 @@ function ProposeCircleSheet({ onClose }: { onClose: () => void }) {
             <button type="button" disabled={name.trim().length < 3} onClick={save} className="mt-3 w-full h-11 rounded-[13px] bg-orange text-cream-text text-[13px] font-black disabled:opacity-50">Propose</button>
           </>
         )}
+      </div>
+    </div>
+  );
+}
+
+
+/** A real `feed_posts` row. Likes write through to post_likes; tapping a post opens its thread. */
+function LivePost({ p, last }: { p: LiveFeedItem; last: boolean }) {
+  const [liked, setLiked] = useState(p.likedByMe);
+  const [likes, setLikes] = useState(p.likes);
+  const toggle = async () => {
+    const next = !liked;
+    setLiked(next); setLikes((n) => n + (next ? 1 : -1));
+    const r = await clubApi.like(p.id);
+    if (!r.ok) { setLiked(!next); setLikes((n) => n + (next ? -1 : 1)); }
+  };
+  return (
+    <div className={cx("py-[10px]", !last && "border-b border-[#F1E8D4]")}>
+      <div className="flex items-center gap-2">
+        <RingAvatar initial={p.author.initial} bg={p.author.color} ring={p.author.belt ?? "white"} size={30} />
+        <span className="text-[12.5px] font-black text-ink">{p.author.name}</span>
+        {p.author.belt && <BarChip color={p.author.belt} label={p.author.belt[0].toUpperCase() + p.author.belt.slice(1)} />}
+        <span className="text-[9.5px] font-extrabold text-ink-4">· {p.ago}</span>
+      </div>
+      {p.title && <div className="mt-[5px] text-[13px] font-black text-ink">{p.title}</div>}
+      <p className="mt-[5px] text-[12.5px] font-semibold text-ink leading-[1.45]"><Cash t={p.text} /></p>
+      {p.artifact && <span className="mt-[6px] inline-flex rounded-[9px] bg-[#FBF6EA] border border-[#EFE4CF] px-[10px] py-[5px] text-[10.5px] font-black text-ink-2">{p.artifact}</span>}
+      {p.poll && <div className="mt-[6px] flex flex-col gap-1">{p.poll.map((o) => <span key={o} className="bg-paper-2 rounded-[9px] px-[11px] py-[6px] text-[11px] font-extrabold text-ink">{o}</span>)}</div>}
+      <div className="mt-[7px] flex items-center gap-4 text-[10.5px] font-extrabold text-ink-3">
+        <button type="button" onClick={toggle} aria-pressed={liked} className={cx(liked && "text-green")}>👍 {likes}</button>
+        <button type="button" onClick={() => openSheet("compose", { audience: "main", reply: p.id })}>💬 {p.comments}</button>
+        {p.tickers.slice(0, 3).map((t) => <Link key={t} href={`/discover/${t}`} className="text-green font-black">${t}</Link>)}
+        <button type="button" onClick={() => openSheet("compose", { audience: "main", reply: p.id })} className="ml-auto text-purple-2">reply →</button>
       </div>
     </div>
   );
