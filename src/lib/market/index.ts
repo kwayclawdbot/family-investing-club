@@ -1,7 +1,14 @@
 /**
  * Market façade used by `src/lib/data.ts`. Everything here returns `null` when Polygon is unavailable
  * so the data seam can fall back to fixtures. Server only.
+ *
+ * Waiting budget: these calls happen *during a page render*, so a long `maxWait` on a spent
+ * 5-requests/minute key turns a tap into a multi-second stall. Nothing here waits longer than
+ * `RENDER_WAIT`; a value that misses renders as "—" and fills in on the next visit once the cache
+ * is warm. Background work (crons) can afford to wait — pages cannot.
  */
+const RENDER_WAIT = 2_500;
+const SHORT_WAIT = 1_200;
 import type { Company, Metric, NewsItem } from "@/lib/types";
 import * as pg from "./polygon";
 import { getQuote, getQuotes, type Quote } from "./quote";
@@ -28,13 +35,13 @@ export async function seriesWithTimestamps(symbol: string, range: pg.Range) {
 export async function company(symbol: string): Promise<Company | null> {
   const s = symbol.toUpperCase();
   // Budget order on a 5/min key: quote (grouped, usually cached) → 1Y closes → details → 1D → 5Y (the last two skip when low).
-  const q = await getQuote(s, { maxWait: 12_000 });
+  const q = await getQuote(s, { maxWait: RENDER_WAIT });
   if (!q) return null;
-  const oneYear = await pg.aggregates(s, "1Y", { maxWait: 10_000 });
-  const details = await pg.tickerDetails(s, { maxWait: 4_000 });
+  const oneYear = await pg.aggregates(s, "1Y", { maxWait: RENDER_WAIT });
+  const details = await pg.tickerDetails(s, { maxWait: SHORT_WAIT });
   const [oneDay, fiveYear] = await Promise.all([
-    pg.budgetLeft() > 0 ? pg.aggregates(s, "1D", { maxWait: 1_000 }) : Promise.resolve(null),
-    pg.budgetLeft() > 1 ? pg.aggregates(s, "5Y", { maxWait: 1_000 }) : Promise.resolve(null),
+    pg.budgetLeft() > 0 ? pg.aggregates(s, "1D", { maxWait: SHORT_WAIT }) : Promise.resolve(null),
+    pg.budgetLeft() > 1 ? pg.aggregates(s, "5Y", { maxWait: SHORT_WAIT }) : Promise.resolve(null),
   ]);
   const u = universeEntry(s);
   const name = u?.name ?? details?.name ?? s;
@@ -63,7 +70,7 @@ export async function company(symbol: string): Promise<Company | null> {
 /** Quote-only companies for lists: ONE grouped-daily pair covers every symbol; sparkline = [prev close, close]
  *  plus any 1Y closes already cached for that symbol (never spends budget on sparklines). */
 export async function companies(symbols: string[] = UNIVERSE.map((u) => u.symbol)): Promise<Company[] | null> {
-  const quotes = await getQuotes(symbols, { maxWait: 12_000 });
+  const quotes = await getQuotes(symbols, { maxWait: RENDER_WAIT });
   if (Object.values(quotes).every((q) => q === null)) return null;
   const out: Company[] = [];
   for (const s of symbols) {
@@ -78,7 +85,7 @@ export async function companies(symbols: string[] = UNIVERSE.map((u) => u.symbol
 }
 
 export async function searchSymbols(q: string): Promise<{ symbol: string; name: string }[] | null> {
-  const r = await pg.search(q, 10, { maxWait: 6_000 });
+  const r = await pg.search(q, 10, { maxWait: SHORT_WAIT });
   return r ? r.hits.map((h) => ({ symbol: h.symbol, name: h.name })) : null;
 }
 
@@ -88,13 +95,13 @@ const fmtVol = (n: number) => (n >= 1e9 ? `${(n / 1e9).toFixed(1)}B` : n >= 1e6 
 /** Live key metrics with the same plain-language definitions/lesson links as the fixture. */
 export async function metrics(symbol: string, definitions: Metric[]): Promise<Metric[] | null> {
   const s = symbol.toUpperCase();
-  const q = await getQuote(s, { maxWait: 12_000 });
+  const q = await getQuote(s, { maxWait: RENDER_WAIT });
   if (!q) return null;
   // Budget-aware: each of these is cached for a week once it lands; when the minute is spent they return null → "—".
-  const year = await pg.aggregates(s, "1Y", { maxWait: 6_000 });
-  const details = await pg.tickerDetails(s, { maxWait: 4_000 });
-  const fin = pg.budgetLeft() > 0 ? await pg.financials(s, { maxWait: 2_000 }) : null;
-  const div = pg.budgetLeft() > 0 ? await pg.dividends(s, { maxWait: 2_000 }) : null;
+  const year = await pg.aggregates(s, "1Y", { maxWait: SHORT_WAIT });
+  const details = await pg.tickerDetails(s, { maxWait: SHORT_WAIT });
+  const fin = pg.budgetLeft() > 0 ? await pg.financials(s, { maxWait: SHORT_WAIT }) : null;
+  const div = pg.budgetLeft() > 0 ? await pg.dividends(s, { maxWait: SHORT_WAIT }) : null;
   const def = (key: string) => definitions.find((m) => m.key === key);
   const lows = year?.bars.map((b) => b.l) ?? []; const highs = year?.bars.map((b) => b.h) ?? [];
   const money0 = (n: number) => `$${n.toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
@@ -137,7 +144,7 @@ const newsCache = new Map<string, NewsItem>();
 export async function newsFor(symbols: string[], perSymbol = 4): Promise<NewsItem[] | null> {
   // One request per symbol, sequential and budget-aware (news is cached 30 min).
   const results: (pg.NewsResult | null)[] = [];
-  for (const s of [...new Set(symbols.map((x) => x.toUpperCase()))]) results.push(await pg.news(s, perSymbol, { maxWait: results.length ? 1_500 : 8_000 }));
+  for (const s of [...new Set(symbols.map((x) => x.toUpperCase()))]) results.push(await pg.news(s, perSymbol, { maxWait: results.length ? SHORT_WAIT : RENDER_WAIT }));
   if (results.every((r) => r === null)) return null;
   const seen = new Set<string>();
   const items: NewsItem[] = [];
@@ -156,7 +163,7 @@ export async function newsItem(id: string): Promise<NewsItem | null> {
   if (hit) return hit;
   const url = newsUrl(id);
   if (!url) return null;
-  const r = await pg.news(null, 50, { maxWait: 8_000 });
+  const r = await pg.news(null, 50, { maxWait: RENDER_WAIT });
   const a = r?.articles.find((x) => x.url === url);
   if (!a) return null;
   const item: NewsItem = { id, headline: a.title, source: a.publisher, ago: ago(a.publishedUtc), symbols: a.tickers.slice(0, 4), whyItMatters: whyTemplate(a.tickers), concepts: ["Expectations"], body: a.description || "Open the full story at the source for details.", url: a.url, publishedAt: a.publishedUtc, imageUrl: a.imageUrl ?? undefined };
@@ -171,7 +178,7 @@ export async function logo(symbol: string): Promise<string | null> {
 
 /** % return from a pick's price to the live price. */
 export async function sincePick(symbol: string, priceAtPick: number): Promise<{ pct: number; price: number; asOf: string } | null> {
-  const q = await getQuote(symbol, { maxWait: 6_000 });
+  const q = await getQuote(symbol, { maxWait: SHORT_WAIT });
   if (!q || !priceAtPick) return null;
   return { pct: +(((q.price - priceAtPick) / priceAtPick) * 100).toFixed(2), price: q.price, asOf: q.asOf };
 }

@@ -18,8 +18,11 @@ import { safe } from "./supa";
  */
 
 export const BENCHMARK = "SPY";
-/** Hard ceiling on live bar fetches per render — the rest come from cache or read as "—". */
-const MAX_LIVE_FETCHES = 3;
+/** Hard ceiling on live bar fetches per render — the rest come from cache or read as "—".
+ *  One per render: each miss can wait, and three of them turned a tap into an eight-second stall.
+ *  A page warms one new symbol per visit, which fills a six-holding club in six views and costs
+ *  nobody a hang. The nightly crons warm the rest. */
+const MAX_LIVE_FETCHES = 1;
 const RANGES = ["1M", "3M", "YTD", "1Y"] as const;
 export type ClubRange = (typeof RANGES)[number];
 
@@ -41,7 +44,7 @@ export async function barsFor(symbols: string[], opts: { spend?: number } = {}):
   for (const s of missing) {
     if (spend <= 0) break;
     spend--;
-    const a = await pg.aggregates(s, "1Y", { maxWait: 2_500 });
+    const a = await pg.aggregates(s, "1Y", { maxWait: 1_500 });
     if (a?.bars.length) out.set(s, a.bars.map((b) => ({ t: b.t, c: b.c })));
   }
   return out;
