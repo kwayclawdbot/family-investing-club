@@ -17,7 +17,8 @@
     "smoke:admin": "node scripts/admin-smoke.mjs",
     "smoke:learn": "node scripts/learn-smoke.mjs",
     "smoke:family": "node scripts/family-smoke.mjs",
-    "smoke:club": "node scripts/club-smoke.mjs"
+    "smoke:club": "node scripts/club-smoke.mjs",
+    "smoke:render": "node scripts/render-smoke.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.5",

@@ -15,8 +15,8 @@ function PathCard({ p, index }: { p: LearningPath; index: number }) {
     ? `${p.lessons} lessons · ${p.checkpoints} checkpoints`
     : active
     ? `${p.lessons} lessons · ${p.checkpoints} checkpoints · Lesson ${p.nextLesson} next`
-    : locked && index === 2
-    ? `${p.lessons} lessons · finish Foundations to unlock`
+    : locked
+    ? `${p.lessons} lessons · finish the course before it to unlock`
     : `${p.lessons} lessons · ${p.blurb.replace(/\.$/, "").replace(/^./, (c) => c.toLowerCase())}`;
 
   return (
@@ -31,10 +31,13 @@ function PathCard({ p, index }: { p: LearningPath; index: number }) {
           <span className={`${badge} bg-green-2 text-white font-black text-[17px]`}>✓</span>
         ) : active ? (
           <span className={`${badge} bg-orange-tint text-orange-2 font-black text-[15px]`}>{index + 1}</span>
-        ) : (
+        ) : locked ? (
           <span className={`${badge} bg-line-2 text-ink-5`}>
             <LockIcon size={15} strokeWidth={2.4} />
           </span>
+        ) : (
+          /* "available" — nothing started yet, but it IS startable. Only `locked` gets the padlock. */
+          <span className={`${badge} bg-paper-2 text-ink-3 font-black text-[15px]`}>{index + 1}</span>
         )}
         <div className="flex-1 min-w-0">
           <div className="text-[14.5px] font-black text-ink">{p.title}</div>
@@ -42,6 +45,7 @@ function PathCard({ p, index }: { p: LearningPath; index: number }) {
         </div>
         {done && <span className="text-[12px] font-black text-green">100%</span>}
         {active && <span className="text-[12px] font-black text-orange-2">{p.progress}%</span>}
+        {!done && !active && !locked && <span className="text-[12px] font-black text-green">Start</span>}
       </div>
       {(done || active) && (
         <div className="h-[6px] rounded-[3px] bg-line-2 mt-2 overflow-hidden">

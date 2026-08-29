@@ -9,6 +9,9 @@ import {
   processEmailQueue,
 } from "@/lib/server/email-fallback";
 
+/** VAPID contact of last resort — any https:/mailto: value is valid; it is only a contact address. */
+const VAPID_FALLBACK_SUBJECT = process.env.VAPID_SUBJECT?.trim() || "mailto:support@familyinvestingclub.com";
+
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
@@ -207,8 +210,14 @@ export async function POST(req: NextRequest) {
   }
 
   if (vapidConfigured()) {
+    // web-push rejects any subject that isn't https: or mailto:, and THROWS — which, because the
+    // Postgres trigger swallows its own errors, is the exact shape of "push silently stopped".
+    // siteUrl() is http://localhost in dev and could be misconfigured in prod, so fall back to a
+    // mailto: subject rather than hand web-push something it will reject.
+    const site = siteUrl();
+    const subject = site.startsWith("https:") || site.startsWith("mailto:") ? site : VAPID_FALLBACK_SUBJECT;
     webpush.setVapidDetails(
-      siteUrl(),
+      subject,
       process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!.trim(),
       process.env.VAPID_PRIVATE_KEY!.trim()
     );
