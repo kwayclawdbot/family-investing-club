@@ -13,7 +13,7 @@ import type { CircleView } from "@/lib/live/community";
 import { openSheet } from "@/components/sheets/bus";
 
 /** v11 — the private club is chat-default: my people, one conversation engine, rich artifacts. */
-export function ChatPane({ proposal, live, circles }: { proposal: { id: string; title: string; hoursLeft: number; voted: number; eligible: number } | null; live?: ClubChatMessage[] | null; circles?: CircleView[] | null }) {
+export function ChatPane({ proposal, live, circles, summary }: { proposal: { id: string; title: string; hoursLeft: number; voted: number; eligible: number } | null; live?: ClubChatMessage[] | null; circles?: CircleView[] | null; summary?: string }) {
   const router = useRouter();
   const [local, setLocal] = useStored<ClubChatMsg[]>("fic.club.chat", []);
   const [draft, setDraft] = useState("");
@@ -111,7 +111,7 @@ export function ChatPane({ proposal, live, circles }: { proposal: { id: string; 
           </div>
         </div>
       )}
-      <div className="mt-auto"><KaiSummaryRow /></div>
+      <div className="mt-auto"><KaiSummaryRow summary={summary} /></div>
       <form onSubmit={(e) => { e.preventDefault(); void send(); }} className="pt-3 pb-3">
         {error && <p role="alert" className="mb-[6px] text-[11px] font-bold text-coral px-1">{error}</p>}
         <div className="flex items-center gap-[9px] bg-card border-[1.5px] border-line rounded-[14px] px-[14px] py-[8px]">

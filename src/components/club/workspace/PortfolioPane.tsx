@@ -84,10 +84,12 @@ export function PortfolioPane({ p, exposure, value, ytdPct, initialView = "model
             <button onClick={() => setAll((v) => !v)} className="w-full py-[6px] text-center text-[10px] font-extrabold text-green">{all ? "Show fewer ▴" : `All ${p.holdings.length} holdings ▾`}</button>
           </Panel>
 
-          <div className="mt-[9px] bg-orange-tint border border-orange-line rounded-[13px] px-[13px] py-[10px] flex gap-[9px] items-center">
-            <span className="text-[14px]" aria-hidden>⚠</span>
-            <span className="flex-1 text-[11px] font-bold text-ink-2"><b className="text-ink">Concentration:</b> {p.concentration.text} <Link href={p.concentration.href} className="font-black text-green">{p.concentration.lessonLabel} · {p.concentration.minutes} min</Link></span>
-          </div>
+          {p.concentration && (
+            <div className="mt-[9px] bg-orange-tint border border-orange-line rounded-[13px] px-[13px] py-[10px] flex gap-[9px] items-center">
+              <span className="text-[14px]" aria-hidden>⚠</span>
+              <span className="flex-1 text-[11px] font-bold text-ink-2"><b className="text-ink">Concentration:</b> {p.concentration.text} <Link href={p.concentration.href} className="font-black text-green">{p.concentration.lessonLabel} · {p.concentration.minutes} min</Link></span>
+            </div>
+          )}
 
           <SectionLabel>DECISION JOURNAL</SectionLabel>
           <div className="bg-card border border-line rounded-[14px] px-[14px] py-[11px] mb-4">

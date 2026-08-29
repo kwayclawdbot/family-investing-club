@@ -1,8 +1,8 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { discoverCards, trendingTheme, type DiscoverCard } from "@/lib/fixtures/v14-explore";
 import { brandOf } from "@/lib/fixtures/v13-discover";
+import type { DiscoverCard } from "@/lib/live/discover";
 
 export type Quote = { price: number; changePct: number; ytdPct?: number };
 const TONE = { green: "bg-green-tint text-green", orange: "bg-orange-tint text-orange-2", gold: "bg-[#FFFDF4] text-[#BC9227]", purple: "bg-purple-tint text-purple-2" };
@@ -14,8 +14,8 @@ function Spark({ up }: { up: boolean }) {
 }
 
 function Card({ c, q }: { c: DiscoverCard; q?: Quote }) {
-  const pct = c.metric === "ytd" ? (q?.ytdPct ?? c.fallbackPct) : (q?.changePct ?? c.fallbackPct);
-  const up = pct >= 0;
+  const pct = c.metric === "ytd" ? q?.ytdPct : q?.changePct;
+  const up = (pct ?? 0) >= 0;
   return (
     <Link href={c.href} className="flex-1 min-w-0 h-[158px] bg-card border border-line rounded-[18px] px-[13px] pt-[13px] pb-[11px] flex flex-col gap-[7px]">
       <div className="flex items-start justify-between">
@@ -27,17 +27,17 @@ function Card({ c, q }: { c: DiscoverCard; q?: Quote }) {
         <div className="text-[9.5px] font-bold text-ink-3 leading-[1.35] mt-[2px]">{c.story}</div>
       </div>
       <div className="mt-auto flex items-end justify-between">
-        <span className={`text-[12.5px] font-black ${up ? "text-green-2" : "text-red"}`}>{up ? "+" : "−"}{Math.abs(pct).toFixed(1)}% {c.metric === "ytd" ? "YTD" : "today"}</span>
-        <Spark up={up} />
+        <span className={`text-[12.5px] font-black ${pct === undefined ? "text-ink-4" : up ? "text-green-2" : "text-red"}`}>{pct === undefined ? "—" : `${up ? "+" : "−"}${Math.abs(pct).toFixed(1)}% ${c.metric === "ytd" ? "YTD" : "today"}`}</span>
+        {pct !== undefined && <Spark up={up} />}
       </div>
     </Link>
   );
 }
 
 /** Discover — prototype v3 `discover`: one ticker per card · tap for the full company page. */
-export function DiscoverV13({ quotes }: { quotes: Record<string, Quote | undefined> }) {
+export function DiscoverV13({ quotes, cards: all, trending }: { quotes: Record<string, Quote | undefined>; cards: DiscoverCard[]; trending: { id: string; emoji: string; title: string; sub: string } | null }) {
   const [chip, setChip] = useState<(typeof CHIPS)[number]>("For You");
-  const cards = chip === "Themes" ? discoverCards.filter((c) => c.kind === "theme") : chip === "Trending" ? [...discoverCards].sort((a, b) => Math.abs((quotes[b.symbol]?.changePct ?? b.fallbackPct)) - Math.abs((quotes[a.symbol]?.changePct ?? a.fallbackPct))) : discoverCards;
+  const cards = chip === "Themes" ? all.filter((c) => c.kind === "theme") : chip === "Trending" ? [...all].sort((a, b) => Math.abs(quotes[b.symbol]?.changePct ?? 0) - Math.abs(quotes[a.symbol]?.changePct ?? 0)) : all;
   const rows: DiscoverCard[][] = [];
   for (let i = 0; i < cards.length; i += 2) rows.push(cards.slice(i, i + 2));
   return (
@@ -59,15 +59,18 @@ export function DiscoverV13({ quotes }: { quotes: Record<string, Quote | undefin
           {r.length === 1 && <div className="flex-1" />}
         </div>
       ))}
-      <Link href={`/theme/${trendingTheme.id}`} className="mt-[11px] rounded-[18px] px-4 py-[14px] flex items-center gap-[13px]" style={{ background: "linear-gradient(120deg,#E9C46A,#E58234)" }}>
-        <span className="w-[46px] h-[46px] rounded-[15px] bg-[rgba(255,253,247,0.25)] flex items-center justify-center text-[22px] shrink-0">{trendingTheme.emoji}</span>
-        <div className="flex-1">
-          <div className="text-[8.5px] font-black text-[rgba(255,253,247,0.85)]">THEME · TRENDING ACROSS FIC</div>
-          <div className="text-[15px] font-black text-cream-text">{trendingTheme.title}</div>
-          <div className="text-[9.5px] font-extrabold text-[rgba(255,253,247,0.9)]">{trendingTheme.sub}</div>
-        </div>
-        <span className="text-cream-text text-[16px] font-black">›</span>
-      </Link>
+      {!cards.length && <p className="mt-6 rounded-[16px] border border-line bg-card px-5 py-8 text-center text-[12px] font-bold text-ink-3">Nothing to show yet — add a company to your watchlist or make a pick.</p>}
+      {trending && (
+        <Link href={`/theme/${trending.id}`} className="mt-[11px] rounded-[18px] px-4 py-[14px] flex items-center gap-[13px]" style={{ background: "linear-gradient(120deg,#E9C46A,#E58234)" }}>
+          <span className="w-[46px] h-[46px] rounded-[15px] bg-[rgba(255,253,247,0.25)] flex items-center justify-center text-[22px] shrink-0">{trending.emoji}</span>
+          <div className="flex-1">
+            <div className="text-[8.5px] font-black text-[rgba(255,253,247,0.85)]">THEME · BEST BASKET THIS YEAR</div>
+            <div className="text-[15px] font-black text-cream-text">{trending.title}</div>
+            <div className="text-[9.5px] font-extrabold text-[rgba(255,253,247,0.9)]">{trending.sub}</div>
+          </div>
+          <span className="text-cream-text text-[16px] font-black">›</span>
+        </Link>
+      )}
       <p className="mt-[9px] text-center text-[9.5px] font-bold text-ink-4">One ticker per card · tap for the full company page</p>
     </div>
   );

@@ -54,14 +54,18 @@ export function Overview({ o, exposure }: { o: ClubOverview; exposure: VerifiedE
       <div className="flex gap-[7px] mt-[10px]">
         <div className="flex-1 bg-card border border-line rounded-[12px] px-[10px] py-2">
           <div className="text-[8.5px] font-black text-ink-3">BEST PICK</div>
-          <div className="flex items-center gap-1 mt-[2px]"><span className="text-[12px] font-black text-ink">{o.metrics.bestPick.symbol}</span><MiniSpark width={30} height={13} /></div>
-          <div className="text-[10px] font-black text-[#3A8C4A]">{pctText(o.metrics.bestPick.pct)} · {o.metrics.bestPick.by}</div>
+          {o.metrics.bestPick ? (
+            <>
+              <div className="flex items-center gap-1 mt-[2px]"><span className="text-[12px] font-black text-ink">{o.metrics.bestPick.symbol}</span><MiniSpark width={30} height={13} /></div>
+              <div className="text-[10px] font-black text-[#3A8C4A]">{pctText(o.metrics.bestPick.pct)} · {o.metrics.bestPick.by}</div>
+            </>
+          ) : <div className="text-[10px] font-extrabold text-ink-4 mt-[4px]">No picks priced yet</div>}
         </div>
         <div className="flex-1 bg-card border border-line rounded-[12px] px-[10px] py-2">
           <div className="text-[8.5px] font-black text-ink-3">WIN RATE</div>
           <div className="flex items-center gap-[6px] mt-[3px]">
-            <Ring pct={o.metrics.winRatePct} />
-            <div><div className="text-[12px] font-black text-ink">{o.metrics.winRatePct}%</div><div className="text-[8px] font-extrabold text-ink-3">{o.metrics.resolved} resolved</div></div>
+            <Ring pct={o.metrics.winRatePct ?? 0} />
+            <div><div className="text-[12px] font-black text-ink">{o.metrics.winRatePct === null ? "—" : `${o.metrics.winRatePct}%`}</div><div className="text-[8px] font-extrabold text-ink-3">{o.metrics.resolved} resolved</div></div>
           </div>
         </div>
         <div className="flex-1 bg-card border border-line rounded-[12px] px-[10px] py-2">

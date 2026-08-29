@@ -1,6 +1,6 @@
 import "server-only";
 import type {
-  BeltColor, ChildHome, Club, ClubActivity, ClubHolding, ClubMember, ClubOverview, ClubPortfolio, ClubProposal, Comment, JournalEntry,
+  BeltColor, ChildHome, Club, ClubActivity, ClubHolding, ClubMember, ClubOverview, ClubPortfolio, ClubProposal, Comment, DecisionMarker, JournalEntry,
   Member, MemberCard, MemberIdentity, Pick, PortfolioTab, ResearchAssignment,
 } from "@/lib/types";
 import * as fx from "@/lib/fixtures/club";
@@ -10,6 +10,7 @@ import { cache } from "react";
 import { getSession, levelOf, type ProfileRow } from "./session";
 import { identitiesFor } from "./identity";
 import { quotesSafe } from "./market-bridge";
+import { clubPerformance, type ClubPerformance, type ClubRange } from "./club-performance";
 import { ago, colorFor, endsIn, firstName, hoursLeft, initialOf, must, safe, userClient } from "./supa";
 
 /* ── rows ─────────────────────────────────────────────────────────── */
@@ -139,7 +140,7 @@ export async function getProposals(): Promise<ClubProposal[] | null> {
   return safe("club.getProposals", async () => {
     const supa = await userClient();
     const rows = must(await supa.from("fic_club_proposals").select("*").eq("club_id", ctx.club.id).order("created_at", { ascending: false })) as ProposalRow[];
-    const value = (await portfolioNumbers(ctx))?.value ?? fx.clubPortfolio.value;
+    const value = (await portfolioNumbers(ctx))?.value ?? practiceStake(ctx);
     return hydrateProposals(ctx, rows, value);
   });
 }
@@ -152,32 +153,49 @@ export async function getProposal(id: string): Promise<ClubProposal | null> {
     const supa = await userClient();
     const row = must(await supa.from("fic_club_proposals").select("*").eq("id", id).maybeSingle()) as ProposalRow | null;
     if (!row) return null;
-    const value = (await portfolioNumbers(ctx))?.value ?? fx.clubPortfolio.value;
+    const value = (await portfolioNumbers(ctx))?.value ?? practiceStake(ctx);
     return (await hydrateProposals(ctx, [row], value))[0];
   });
 }
 
 /* ── portfolio ─────────────────────────────────────────────────────── */
-type Numbers = { value: number; ytdPct: number; holdings: ClubHolding[]; quotesLive: boolean };
+/** A club holds weights, not dollars. The figure shown is an explicit practice stake grown by the
+ *  club's own weighted return — `fic_clubs.rules.startingValue`, or $10,000 when a club hasn't set one. */
+export const practiceStake = (ctx: ClubContext) => Number((ctx.club.rules as { startingValue?: number } | null)?.startingValue ?? 10_000);
+
+type Numbers = { value: number; ytdPct: number | null; benchmarkYtdPct: number | null; stake: number; holdings: ClubHolding[]; perf: ClubPerformance };
 const portfolioNumbers = cache(async (ctx: ClubContext): Promise<Numbers | null> => {
   return safe("club.portfolioNumbers", async () => {
     const supa = await userClient();
     const rows = must(await supa.from("fic_club_holdings").select("*").eq("club_id", ctx.club.id).order("weight_pct", { ascending: false })) as HoldingRow[];
     if (!rows.length) return null;
-    const quotes = await quotesSafe(rows.map((r) => r.symbol));
-    const live = Object.keys(quotes).length > 0;
-    const fxBySym = new Map(fx.clubPortfolio.holdings.map((h) => [h.symbol, h]));
-    const holdings: ClubHolding[] = rows.map((r) => ({
-      symbol: r.symbol, name: r.company_name ?? r.symbol, weightPct: Number(r.weight_pct),
-      returnPct: quotes[r.symbol]?.changePct ?? fxBySym.get(r.symbol)?.returnPct ?? 0,
-      origin: r.origin ?? "", proposalId: r.proposal_id ?? undefined,
+    const decisions = must(await supa.from("fic_club_decisions").select("id, decided_on, title, proposal_id").eq("club_id", ctx.club.id)) as { decided_on: string; title: string; proposal_id: string | null }[];
+    const perf = await clubPerformance(rows, (range, points) => markersFor(decisions, rows, range, points));
+    if (!perf) return null;
+    const stake = practiceStake(ctx);
+    const holdings: ClubHolding[] = perf.holdings.map((h) => ({
+      symbol: h.symbol, name: h.name, weightPct: h.weightPct, returnPct: h.ytdPct ?? 0, sinceAddPct: h.sinceAddPct, addedAt: h.addedAt,
+      origin: h.origin, proposalId: rows.find((r) => r.symbol === h.symbol)?.proposal_id ?? undefined,
     }));
-    // Practice dollars: the fixture's starting value scaled by weighted returns when quotes are live.
-    const base = fx.clubPortfolio.value;
-    const ytdPct = live ? +(holdings.reduce((a, h) => a + (h.weightPct / 100) * h.returnPct, 0)).toFixed(2) : fx.clubPortfolio.ytdPct;
-    return { value: live ? Math.round(base * (1 + ytdPct / 100)) : base, ytdPct, holdings, quotesLive: live };
+    return { value: Math.round(stake * (1 + (perf.ytdPct ?? 0) / 100)), ytdPct: perf.ytdPct, benchmarkYtdPct: perf.benchmarkYtdPct, stake, holdings, perf };
   });
 });
+
+/** Decisions plotted on the performance chart — a real dot per journal entry inside the window. */
+function markersFor(decisions: { decided_on: string; title: string; proposal_id: string | null }[], rows: HoldingRow[], range: ClubRange, points: number) {
+  const days = range === "1M" ? 32 : range === "3M" ? 93 : range === "1Y" ? 366 : (Date.now() - Date.UTC(new Date().getUTCFullYear(), 0, 1)) / 86_400_000;
+  const from = Date.now() - days * 86_400_000;
+  const held = new Set(rows.map((r) => r.symbol));
+  return decisions
+    .map((d) => ({ at: new Date(d.decided_on + "T00:00:00").getTime(), d }))
+    .filter((x) => x.at >= from)
+    .map(({ at, d }) => {
+      const sym = (d.title.match(/\b[A-Z]{1,5}\b/) ?? [])[0];
+      const idx = Math.min(points - 1, Math.max(0, Math.round(((at - from) / (Date.now() - from)) * (points - 1))));
+      const kind: DecisionMarker["kind"] = /trim|reduce/i.test(d.title) ? "trim" : /reject/i.test(d.title) ? "reject" : sym && held.has(sym) ? "add" : "vote";
+      return { idx, label: d.title.slice(0, 24), kind };
+    });
+}
 
 export async function getClubPortfolio(): Promise<ClubPortfolio | null> {
   const ctx = await clubContext();
@@ -194,7 +212,7 @@ export async function getClubPortfolio(): Promise<ClubPortfolio | null> {
       date: new Date(d.decided_on + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" }),
       title: d.title, believed: d.believed ?? undefined, wrongIf: d.wrong_if ?? undefined, review: d.review ?? undefined, learned: d.learned ?? undefined,
     }));
-    return { clubId: ctx.club.id, name: `${ctx.club.short_name ?? ctx.club.name} Portfolio`, value: nums.value, ytdPct: nums.ytdPct, benchmarkYtdPct: fx.clubPortfolio.benchmarkYtdPct, holdings: nums.holdings, journal, series: fx.clubPortfolio.series };
+    return { clubId: ctx.club.id, name: `${ctx.club.short_name ?? ctx.club.name} Portfolio`, value: nums.value, stake: nums.stake, ytdPct: nums.ytdPct ?? 0, benchmarkYtdPct: nums.benchmarkYtdPct ?? 0, holdings: nums.holdings, journal, series: nums.perf.series?.find((s) => s.range === "YTD")?.club ?? [] };
   });
 }
 
@@ -257,14 +275,15 @@ export async function getClubOverview(): Promise<ClubOverview | null> {
     const gatedNames = ctx.members.filter((m) => m.vote_gated).map((m) => nameOf(ctx, m.user_id));
     return {
       members: ctx.members.length, households: 1, streakWeeks: Math.max(1, Math.floor((Date.now() - new Date(ctx.club.created_at).getTime()) / (7 * 86400000))),
-      value: nums?.value ?? base.value, ytdPct: nums?.ytdPct ?? base.ytdPct, benchmarkPct: base.benchmarkPct, ranges: base.ranges, series: base.series,
+      value: nums?.value ?? practiceStake(ctx), stake: nums?.stake ?? practiceStake(ctx), ytdPct: nums?.ytdPct ?? 0, priced: nums?.perf.priced ?? 0,
+      benchmarkPct: nums?.benchmarkYtdPct ?? 0, ranges: nums?.perf.ranges ?? [], series: nums?.perf.series ?? [],
       metrics: {
-        bestPick: best ? { symbol: best.p.symbol, pct: Math.round(best.ret), by: best.p.author } : base.metrics.bestPick,
-        winRatePct: withRet.length ? Math.round((withRet.filter((x) => x.ret > 0).length / withRet.length) * 100) : base.metrics.winRatePct,
-        resolved: withRet.length || base.metrics.resolved,
+        bestPick: best ? { symbol: best.p.symbol, pct: Math.round(best.ret), by: best.p.author } : null,
+        winRatePct: withRet.length ? Math.round((withRet.filter((x) => x.ret > 0).length / withRet.length) * 100) : null,
+        resolved: withRet.length,
         verified: { connected: linkRows.length, adults: adults.length, syncedAgo: linkRows[0]?.synced_at ? ago(linkRows[0].synced_at) + " ago" : "—" },
       },
-      topInvestors: top.length ? top : base.topInvestors,
+      topInvestors: top,
       boards: base.boards,
       activeDecision: open ? { proposalId: open.id, title: `${open.kind === "add" ? "Add" : open.kind === "remove" ? "Remove" : "Add"} ${open.symbol} · ${open.fromWeightPct}% → ${open.toWeightPct}%`, by: open.by, hoursLeft: hoursLeft((proposals ?? []).length ? undefined : undefined) || Math.max(1, Math.round(parseFloat(open.endsIn) || 1) * (open.endsIn.includes("day") ? 24 : 1)), voted: open.votes.filter((v) => v.vote).length, eligible: ctx.members.filter((m) => !m.vote_gated).length, waitingOn: gatedNames[0] ? `${gatedNames[0]} 🎓` : undefined } : null,
       research: (research ?? []).slice(0, 4).map((r) => ({ symbol: r.symbol, name: r.name, assigneeId: r.assigneeId, assignee: r.assignee === "you" ? "you" : r.assignee, gated: ctx.members.find((m) => m.user_id === r.assigneeId)?.vote_gated || undefined, due: r.due, note: r.notes, status: r.status === "open" ? "open" : "ready" })),
@@ -279,18 +298,23 @@ export async function getPortfolioTab(): Promise<PortfolioTab | null> {
   return safe("club.getPortfolioTab", async () => {
     const [nums, port, proposals] = await Promise.all([portfolioNumbers(ctx), getClubPortfolio(), getProposals()]);
     if (!nums || !port) return null;
-    const base = ws.portfolioTab;
     const contrib = nums.holdings.map((h) => ({ symbol: h.symbol, pp: +((h.weightPct / 100) * h.returnPct).toFixed(1) })).sort((a, b) => b.pp - a.pp);
     const openFor = (sym: string) => (proposals ?? []).find((p) => p.symbol === sym && p.status === "open");
     const passedFor = (id?: string) => (proposals ?? []).find((p) => p.id === id);
+    const top = nums.perf.concentration;
+    const cap = ctx.club.rules?.maxWeightPct ?? 10;
     return {
-      allocation: base.allocation,
-      contributor: contrib[0] ?? base.contributor, detractor: contrib[contrib.length - 1] ?? base.detractor,
+      allocation: nums.perf.allocation,
+      contributor: contrib[0] ?? { symbol: "—", pp: 0 }, detractor: contrib[contrib.length - 1] ?? { symbol: "—", pp: 0 },
       holdings: nums.holdings.map((h) => {
         const o = openFor(h.symbol); const pr = passedFor(h.proposalId);
-        return { symbol: h.symbol, name: h.name, weightPct: h.weightPct, returnPct: h.returnPct, link: o ? { label: `open proposal ↑${o.toWeightPct}%`, href: `/club/vote/${o.id}` } : pr ? { label: `vote ${pr.votes.filter((v) => v.vote === "for").length}-${pr.votes.filter((v) => v.vote === "against").length} →`, href: `/club/vote/${pr.id}` } : undefined };
+        return { symbol: h.symbol, name: h.name, weightPct: h.weightPct, returnPct: h.returnPct, sinceAddPct: h.sinceAddPct, origin: h.origin,
+          link: o ? { label: `open proposal ↑${o.toWeightPct}%`, href: `/club/vote/${o.id}` } : pr ? { label: `vote ${pr.votes.filter((v) => v.vote === "for").length}-${pr.votes.filter((v) => v.vote === "against").length} →`, href: `/club/vote/${pr.id}` } : undefined };
       }),
-      concentration: base.concentration,
+      // Only warn when the club is actually concentrated — above its own weight rule.
+      concentration: top && top.pct > cap
+        ? { text: `${top.symbol} is ${top.pct}% of the club portfolio, past your ${cap}% rule.`, lessonLabel: "Diversification", minutes: 4, href: "/learn/path/investing-foundations" }
+        : null,
       journal: port.journal.map((j) => ({ date: j.date, title: j.title, believed: j.believed, wrongIf: j.wrongIf, review: j.review, learned: j.learned })),
     };
   });
@@ -435,6 +459,93 @@ export async function getClubMemberProfile(userId: string): Promise<Member | nul
       badges: [], favorites: symbols.slice(0, 6), ideas: symbols.length ? ((picks.data ?? []) as unknown[]).length : 0, comments: replies.count ?? 0,
       joined: new Date(m.joined_at).toLocaleDateString("en-US", { month: "short", year: "numeric" }),
       ageBadge: child ? "Young learner" : undefined,
+    };
+  });
+}
+
+/* ── the club's official record: what it voted in, and how each member's votes aged ──
+ * Both screens ("OFFICIAL CLUB PICKS", "MY DECISION RECORD") were fixtures. They read the same rows
+ * the vote flow writes: proposals → votes → decisions → holdings. */
+
+export type OfficialPicks = {
+  count: number; open: number; decided: number; priced: number; ytdPct: number | null; benchPct: number | null; stake: number;
+  rows: { symbol: string; name: string; stance: "BUY" | "CORE" | "WATCH"; line: string; pct: number | null }[];
+};
+export async function getOfficialPicks(): Promise<OfficialPicks | null> {
+  const ctx = await clubContext();
+  if (!ctx) return null;
+  return safe("club.getOfficialPicks", async () => {
+    const supa = await userClient();
+    const [nums, proposals, decisions] = await Promise.all([
+      portfolioNumbers(ctx), getProposals(),
+      supa.from("fic_club_decisions").select("id", { count: "exact", head: true }).eq("club_id", ctx.club.id),
+    ]);
+    if (!nums) return null;
+    const now = Date.now();
+    return {
+      count: nums.holdings.length,
+      open: (proposals ?? []).filter((p) => p.status === "open").length,
+      decided: decisions.count ?? 0, priced: nums.perf.priced,
+      ytdPct: nums.ytdPct, benchPct: nums.benchmarkYtdPct, stake: nums.stake,
+      rows: nums.holdings.map((h) => {
+        const heldDays = h.addedAt ? Math.floor((now - new Date(h.addedAt).getTime()) / 86_400_000) : 0;
+        const line = [h.origin, h.addedAt ? `added ${new Date(h.addedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}` : null].filter(Boolean).join(" · ");
+        return { symbol: h.symbol, name: h.name, stance: (heldDays > 90 ? "CORE" : "BUY") as "BUY" | "CORE", line: line || "club holding", pct: h.sinceAddPct ?? null };
+      }),
+    };
+  });
+}
+
+export type DecisionRecord = {
+  votesCast: number; agedWellPct: number | null; avgOutcome: string;
+  rows: { symbol: string; vote: string; what: string; date: string; result: string; pct: string; verdict: string }[];
+  counts: { label: string; n: number }[];
+};
+/** How this member's votes actually turned out: the outcome is the holding's return since the club added it. */
+export async function getDecisionRecord(): Promise<DecisionRecord | null> {
+  const ctx = await clubContext();
+  if (!ctx) return null;
+  return safe("club.getDecisionRecord", async () => {
+    const supa = await userClient();
+    const [nums, votes, proposalRows] = await Promise.all([
+      portfolioNumbers(ctx),
+      supa.from("fic_club_votes").select("proposal_id, vote, created_at").eq("user_id", ctx.me),
+      supa.from("fic_club_proposals").select("id, kind, symbol, company_name, from_weight_pct, to_weight_pct, status, created_at, resolved_at").eq("club_id", ctx.club.id),
+    ]);
+    const vs = (votes.data ?? []) as { proposal_id: string; vote: "for" | "against"; created_at: string }[];
+    const ps = (proposalRows.data ?? []) as { id: string; kind: string; symbol: string; company_name: string | null; from_weight_pct: number; to_weight_pct: number; status: string; created_at: string; resolved_at: string | null }[];
+    const bySymbol = new Map((nums?.holdings ?? []).map((h) => [h.symbol, h]));
+    const counts = [
+      { label: "Open", n: ps.filter((p) => p.status === "open").length },
+      { label: "Passed", n: ps.filter((p) => p.status === "passed").length },
+      { label: "Rejected", n: ps.filter((p) => p.status === "rejected").length },
+    ];
+    const rows = vs.map((v) => {
+      const p = ps.find((x) => x.id === v.proposal_id);
+      if (!p) return null;
+      const holding = bySymbol.get(p.symbol);
+      const outcome = holding?.sinceAddPct ?? null;
+      // "Aged well" = the outcome moved the way this member voted.
+      const aged = outcome === null || p.status === "open" ? null : v.vote === "for" ? outcome > 0 : outcome < 0;
+      return {
+        symbol: p.symbol, vote: v.vote === "for" ? "FOR" : "AGAINST",
+        what: `${p.kind === "add" ? "add" : p.kind === "remove" ? "remove" : "resize"} ${p.from_weight_pct}% → ${p.to_weight_pct}%`,
+        date: new Date(v.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+        result: p.status === "open" ? "vote still open" : p.status === "passed" ? "club passed it" : "club rejected it",
+        pct: outcome === null ? "—" : `${outcome >= 0 ? "+" : "−"}${Math.abs(outcome).toFixed(1)}%`,
+        verdict: aged === null ? "too early" : aged ? "aged well" : "aged badly",
+        aged,
+      };
+    }).filter((r): r is NonNullable<typeof r> => !!r);
+    const judged = rows.filter((r) => r.aged !== null);
+    const priced = rows.filter((r) => r.pct !== "—");
+    const avg = priced.length ? priced.reduce((a, r) => a + parseFloat(r.pct.replace("−", "-")), 0) / priced.length : null;
+    return {
+      votesCast: vs.length,
+      agedWellPct: judged.length ? Math.round((judged.filter((r) => r.aged).length / judged.length) * 100) : null,
+      avgOutcome: avg === null ? "—" : `${avg >= 0 ? "+" : "−"}${Math.abs(avg).toFixed(1)}%`,
+      rows: rows.map((r) => ({ symbol: r.symbol, vote: r.vote, what: r.what, date: r.date, result: r.result, pct: r.pct, verdict: r.verdict })),
+      counts,
     };
   });
 }

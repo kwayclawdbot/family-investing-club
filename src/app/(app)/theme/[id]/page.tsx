@@ -1,12 +1,16 @@
 import { notFound } from "next/navigation";
-import { getCompany } from "@/lib/data-live";
-import { themes } from "@/lib/fixtures/v13-discover";
+import { getCompanies } from "@/lib/data-live";
+import { themeOf } from "@/lib/content/themes";
+import { getThemeStats } from "@/lib/live/discover";
 import { ThemeView } from "@/components/markets/v13/ThemeView";
 
+/** Theme — curated companies and case; every number priced live or shown as "—". */
 export default async function ThemePage(props: PageProps<"/theme/[id]">) {
   const { id } = await props.params;
-  const t = themes[id];
+  const t = themeOf(id);
   if (!t) notFound();
-  const quotes = Object.fromEntries((await Promise.all(t.companies.map(async (c) => [c.symbol, await getCompany(c.symbol)] as const))).map(([s, c]) => [s, c ? { price: c.price, changePct: c.changePct } : undefined]));
-  return <ThemeView t={t} quotes={quotes} />;
+  const symbols = t.companies.map((c) => c.symbol);
+  const [stats, companies] = await Promise.all([getThemeStats(symbols), getCompanies(symbols)]);
+  const quotes = Object.fromEntries(companies.map((c) => [c.symbol, { price: c.price, changePct: c.changePct }]));
+  return <ThemeView t={t} stats={stats} quotes={quotes} />;
 }

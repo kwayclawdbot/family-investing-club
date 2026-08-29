@@ -159,9 +159,9 @@ export type ClubProposal = {
   by: string; byId: string; postedAgo: string; endsIn: string; rationale: string; evidence: { label: string; href: string }[]; sinceBuyPct?: number;
   conceptGate?: { concept: string; minutes: number; href: string }; votes: { memberId: string; vote: "for" | "against" | null }[]; status: "open" | "passed" | "rejected";
 };
-export type ClubHolding = { symbol: string; name: string; weightPct: number; returnPct: number; origin: string; proposalId?: string };
+export type ClubHolding = { symbol: string; name: string; weightPct: number; returnPct: number; sinceAddPct?: number | null; addedAt?: string; origin: string; proposalId?: string };
 export type JournalEntry = { date: string; title: string; believed?: string; wrongIf?: string; review?: string; learned?: string };
-export type ClubPortfolio = { clubId: string; name: string; value: number; ytdPct: number; benchmarkYtdPct: number; holdings: ClubHolding[]; journal: JournalEntry[]; series: number[] };
+export type ClubPortfolio = { clubId: string; name: string; value: number; stake?: number; ytdPct: number; benchmarkYtdPct: number; holdings: ClubHolding[]; journal: JournalEntry[]; series: number[] };
 export type ResearchAssignment = { id: string; symbol: string; name: string; assigneeId: string; assignee: string; due: string; status: "open" | "done"; notes?: string; reason: string };
 export type ClubActivity = { id: string; actorId: string; actor: string; ago: string; kind: "pick" | "comment" | "research" | "lesson" | "vote" | "add"; text: string; href: string; quote?: string };
 export type PublicClub = { id: string; name: string; emoji: string; members: number; blurb: string; portfolioYtdPct?: number; activeIdeas?: number; moderated?: boolean };
@@ -234,8 +234,8 @@ export type DecisionMarker = { idx: number; label: string; kind: "add" | "trim" 
 export type PerfSeries = { range: string; club: number[]; benchmark: number[]; markers: DecisionMarker[] };
 export type ClubOverview = {
   members: number; households: number; streakWeeks: number;
-  value: number; ytdPct: number; benchmarkPct: number; ranges: string[]; series: PerfSeries[];
-  metrics: { bestPick: { symbol: string; pct: number; by: string }; winRatePct: number; resolved: number; verified: { connected: number; adults: number; syncedAgo: string } };
+  value: number; stake?: number; priced?: number; ytdPct: number; benchmarkPct: number; ranges: string[]; series: PerfSeries[];
+  metrics: { bestPick: { symbol: string; pct: number; by: string } | null; winRatePct: number | null; resolved: number; verified: { connected: number; adults: number; syncedAgo: string } };
   topInvestors: { rank: number; memberId: string; name: string; picks: number; verified?: boolean; ytdPct: number }[];
   boards: string[];
   activeDecision: { proposalId: string; title: string; by: string; hoursLeft: number; voted: number; eligible: number; waitingOn?: string } | null;
@@ -245,8 +245,8 @@ export type ClubOverview = {
 export type PortfolioTab = {
   allocation: { label: string; pct: number; color: string }[];
   contributor: { symbol: string; pp: number }; detractor: { symbol: string; pp: number };
-  holdings: { symbol: string; name: string; weightPct: number; returnPct: number; link?: { label: string; href: string } }[];
-  concentration: { text: string; lessonLabel: string; minutes: number; href: string };
+  holdings: { symbol: string; name: string; weightPct: number; returnPct: number; sinceAddPct?: number | null; origin?: string; link?: { label: string; href: string } }[];
+  concentration: { text: string; lessonLabel: string; minutes: number; href: string } | null;
   journal: { date: string; title: string; by?: string; vote?: string; believed?: string; wrongIf?: string; review?: string; learned?: string; since?: string; rightCall?: string }[];
 };
 export type MemberCard = {

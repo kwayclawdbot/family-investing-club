@@ -1,202 +1,12 @@
 "use client";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
-import type { Club, ClubActivity, ClubMember, ClubPortfolio, ClubProposal, Pick, ResearchAssignment } from "@/lib/types";
+import type { Club, ClubProposal, ResearchAssignment } from "@/lib/types";
 import { cx } from "@/components/ui";
 import { Sheet } from "@/components/ui/extras";
 import { ChevronRight } from "@/components/ui/icons";
-import { AvatarStack, ClubToggle, InviteSheet, MemberAvatar, StanceTag, TickerTile, dots, useStoredClub } from "./club-shared";
-import { activityXp } from "@/lib/data";
-import { clubXpGoal } from "@/lib/fixtures/belts";
-import { BeltChip } from "@/components/ui/belt";
-import { RingedAvatar, summariseBelts } from "@/components/belts/identity";
-import { useBeltOf } from "@/components/belts/identity-context";
-import { NewClubEmpty, splitName } from "./NewClubEmpty";
+import { MemberAvatar, TickerTile } from "./club-shared";
 import { useStored } from "./storage";
-
-export type ClubTab = "Feed" | "Research" | "Portfolio" | "Members";
-const TABS: ClubTab[] = ["Feed", "Research", "Portfolio", "Members"];
-const FILTERS = ["All", "Picks", "Ideas", "Votes"] as const;
-type Filter = (typeof FILTERS)[number];
-
-type Props = {
-  club: Club; visible: ClubMember[]; picks: Pick[]; proposals: ClubProposal[]; research: ResearchAssignment[]; activity: ClubActivity[];
-  portfolio: ClubPortfolio; initialTab?: ClubTab; forceNew?: boolean;
-};
-
-/** Artboard 05 (canonical) + 11 — My Club: identity, toggle, 4 tabs, picks in feed, pick FAB. */
-export function MyClub({ club, visible, picks, proposals, research, activity, portfolio, initialTab = "Feed", forceNew }: Props) {
-  const beltOf = useBeltOf();
-  const router = useRouter();
-  const [stored] = useStoredClub();
-  const [isNew] = useStored<string>("fic.club.new", "");
-  const [tab, setTab] = useState<ClubTab>(initialTab);
-  const [filter, setFilter] = useState<Filter>("All");
-  const [invite, setInvite] = useState(false);
-  const [localPicks] = useStored<Pick[]>("fic.picks", []);
-  const [localProposals] = useStored<ClubProposal[]>("fic.proposals", []);
-  const [rsvp, setRsvp] = useStored<boolean>("fic.rsvp", false);
-  const name = stored.name ?? club.name;
-
-  if (forceNew || isNew === "1") return <NewClubEmpty club={club} name={name} />;
-
-  const open = [...localProposals, ...proposals].filter((p) => p.status === "open");
-  const allPicks = [...localPicks, ...picks];
-  const [line1, line2] = splitName(name);
-  const privacy = stored.privacy ?? club.privacy;
-
-  function switchTab(t: ClubTab) {
-    setTab(t);
-    router.replace(t === "Research" ? "/club/research" : t === "Members" ? "/club/members" : "/club", { scroll: false });
-  }
-
-  return (
-    <>
-      {/* identity header */}
-      <div className="mt-[14px] bg-card border border-line rounded-[18px] px-4 py-[15px]">
-        <div className="flex items-center gap-[13px]">
-          <span className="w-[54px] h-[54px] rounded-[17px] bg-green-2 text-cream-text font-black text-[21px] flex items-center justify-center shrink-0">{name.trim().charAt(0).toUpperCase()}</span>
-          <div className="flex-1 min-w-0">
-            <div className="text-[17.5px] font-black text-ink leading-[1.2]">{line1}{line2 && <><br />{line2}</>}</div>
-            <div className="text-[11px] font-extrabold text-ink-3 mt-[3px]">{privacy === "private" ? "🔒 Private" : "🌍 Public"} · {visible.length} members · est. {club.est}</div>
-          </div>
-        </div>
-        <div className="flex items-center justify-between mt-3">
-          <AvatarStack members={visible} />
-          <button onClick={() => setInvite(true)} className="bg-green-2 text-cream-text rounded-[13px] px-5 py-[10px] text-[13.5px] font-black shadow-[0_3px_0_#3A6B3E] active:translate-y-[2px] active:shadow-none transition">+ Invite</button>
-        </div>
-      </div>
-      <ClubToggle active="club" />
-
-      {/* tabs */}
-      <div className="flex gap-5 mt-3 border-b border-line" role="tablist">
-        {TABS.map((t) => (
-          <button key={t} role="tab" aria-selected={tab === t} onClick={() => switchTab(t)} className={cx("pb-[7px] text-[13.5px] border-b-[3px] -mb-px transition", tab === t ? "font-black text-ink border-purple" : "font-extrabold text-ink-4 border-transparent")}>
-            {t}
-          </button>
-        ))}
-      </div>
-
-      {tab === "Feed" && (
-        <>
-          <div className="mt-[11px] bg-card border border-line rounded-[16px] px-[15px] py-3">
-            <div className="flex justify-between items-center">
-              <span className="text-[11px] font-black text-ink-3">CLUB XP · {clubXpGoal.window}</span>
-              <span className="text-[11.5px] font-black text-green">{clubXpGoal.current} / {clubXpGoal.goal}</span>
-            </div>
-            <div className="h-[9px] rounded-[5px] bg-line-2 mt-2 overflow-hidden" role="progressbar" aria-valuenow={Math.round((clubXpGoal.current / clubXpGoal.goal) * 100)} aria-valuemin={0} aria-valuemax={100}>
-              <div className="h-full rounded-[5px] bg-green-2" style={{ width: `${Math.round((clubXpGoal.current / clubXpGoal.goal) * 100)}%` }} />
-            </div>
-            <div className="mt-[6px] text-[10.5px] font-bold text-ink-3">Cooperative goal — everyone&apos;s learning, research &amp; picks count · 🏁 milestone: {clubXpGoal.milestone}</div>
-          </div>
-          <div className="flex gap-[7px] mt-[10px]" role="tablist" aria-label="Filter">
-            {FILTERS.map((f) => (
-              <button key={f} role="tab" aria-selected={filter === f} onClick={() => setFilter(f)} className={cx("rounded-[16px] px-[13px] py-[5px] text-[11px] transition", filter === f ? "bg-ink text-cream-text font-black" : "bg-card border border-line text-ink-3 font-extrabold")}>
-                {f}
-              </button>
-            ))}
-          </div>
-
-          {(filter === "All" || filter === "Votes") && open.map((p) => (
-            <div key={p.id} className="mt-[10px] bg-purple-tint border border-[#DDD4F0] rounded-[14px] px-[14px] py-[11px] flex items-center gap-[10px]">
-              <span className="text-[16px]" aria-hidden>🗳</span>
-              <div className="flex-1 text-[12.5px] font-black text-ink">{proposalTitle(p)} · {tally(p)} voted · {p.endsIn} left</div>
-              <Link href={`/club/vote/${p.id}`} className="bg-purple text-cream-text rounded-[10px] px-3 py-[6px] text-[10.5px] font-black">Vote</Link>
-            </div>
-          ))}
-
-          {(filter === "All" || filter === "Picks" || filter === "Ideas") && (
-            <div className="mt-[9px] bg-card border border-line rounded-[16px] px-[15px] py-1">
-              {(filter !== "Ideas" ? allPicks : []).map((pk, i, arr) => (
-                <Link key={pk.id} href={`/club/pick/${pk.id}`} className={cx("flex gap-[10px] py-[11px]", (i < arr.length - 1 || filter === "All") && "border-b border-paper-2")}>
-                  <RingedAvatar belt={beltOf(pk.authorId)}><MemberAvatar m={avatarFor(club, pk.authorId, pk.author)} /></RingedAvatar>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-[12.5px] font-bold text-[#4A4436] flex items-center gap-[7px] flex-wrap"><b className="font-black">{pk.author}</b>{beltOf(pk.authorId) && <BeltChip belt={beltOf(pk.authorId)!} />}<span className="text-ink-4">· Pick · {pk.ago}{activityXp.a1 && pk.id === "andwele-nvda" ? ` · +${activityXp.a1} XP` : ""}</span></div>
-                    <div className="mt-[5px] bg-paper border border-line rounded-[11px] px-[11px] py-2 flex items-center gap-2">
-                      <StanceTag symbol={pk.symbol} stance={pk.stance} />
-                      <span className="text-[11.5px] font-bold text-ink-2 truncate">&quot;{shortQuote(pk.reason)}&quot; · {pk.horizon} · {dots(pk.confidence)}</span>
-                    </div>
-                    <div className="mt-[5px] text-[10.5px] font-extrabold text-ink-3">❤️ {pk.agree + 1} · 💬 {pk.replies.length} {pk.replies.length === 1 ? "reply" : "replies"}</div>
-                  </div>
-                </Link>
-              ))}
-              {filter !== "Picks" && activity.filter((a) => a.kind === "research").slice(0, 1).map((a) => (
-                <div key={a.id} className="flex gap-[10px] py-[11px]">
-                  <RingedAvatar belt={beltOf(a.actorId)}><MemberAvatar m={avatarFor(club, a.actorId, a.actor)} /></RingedAvatar>
-                  <div className="flex-1">
-                    <div className="text-[12.5px] font-bold text-[#4A4436] flex items-center gap-[7px] flex-wrap"><b className="font-black">{a.actor}</b>{beltOf(a.actorId) && <BeltChip belt={beltOf(a.actorId)!} />}<span>finished <b className="font-black">Costco</b> research · {a.ago}{activityXp[a.id] ? ` · +${activityXp[a.id]} XP` : ""}</span></div>
-                    {a.quote && <div className="mt-1 text-[11.5px] font-bold text-ink-2">&quot;{a.quote}&quot;</div>}
-                    <Link href="/club/new?from=research" className="mt-1 inline-block text-[10.5px] font-extrabold text-purple-2">Turn into an Idea →</Link>
-                  </div>
-                </div>
-              ))}
-              {filter === "Picks" && allPicks.length === 0 && <div className="py-6 text-center text-[12.5px] font-bold text-ink-3">No picks yet — make the first one.</div>}
-              {filter === "Ideas" && <Link href="/club/idea/nuclear-next-decade" className="block py-[11px] text-[12.5px] font-extrabold text-ink">🔥 Following: Nuclear Energy — The Next Decade <span className="text-ink-3 font-bold">· Sarah J. · public idea</span></Link>}
-            </div>
-          )}
-
-          {filter === "All" && (
-            <>
-              <div className="mt-[9px] bg-orange-tint border border-orange-line rounded-[14px] px-[14px] py-[10px] flex items-center gap-[10px]">
-                <span className="text-[16px]" aria-hidden>📅</span>
-                <span className="flex-1 text-[11.5px] font-extrabold text-orange-2">Family Investing Night — {club.investingNight.when} · {club.investingNight.topic}</span>
-                <button onClick={() => setRsvp(!rsvp)} aria-pressed={rsvp} className="text-[10.5px] font-black text-orange-2">{rsvp ? "Going ✓" : "RSVP ›"}</button>
-              </div>
-              <div className="mt-[10px] bg-card border border-line rounded-[16px] px-[15px] py-3">
-                <div className="text-[11px] font-black text-ink-3">MEMBERS · COLLECTIVE PROGRESSION</div>
-                <div className="flex gap-[14px] mt-[9px] items-center">
-                  {club.members.map((m) => (
-                    <RingedAvatar key={m.id} belt={beltOf(m.id)}><MemberAvatar m={m} size={34} /></RingedAvatar>
-                  ))}
-                  <span className="text-[10.5px] font-bold text-ink-3 leading-[1.4]">
-                    {summariseBelts(club.members.map((m) => beltOf(m.id)).filter((b): b is NonNullable<typeof b> => !!b)).map((line) => <span key={line} className="block">{line}</span>)}
-                  </span>
-                </div>
-              </div>
-              <p className="mt-[9px] text-center text-[10px] font-bold text-ink-4">Belt = participation &amp; progression. Pick accuracy and verified holdings live on their own layers.</p>
-              <div className="mt-[9px] mb-24 text-center text-[11px] font-bold text-ink-4">🔥 Club streak: {club.streakWeeks} weeks of activity — light touch, no pressure</div>
-            </>
-          )}
-          {filter !== "All" && <div className="mb-24" />}
-        </>
-      )}
-
-      {tab === "Research" && <ResearchList research={research} club={club} />}
-
-      {tab === "Portfolio" && (
-        <Link href="/club/portfolio" className="mt-3 mb-24 block bg-card border border-line rounded-[16px] px-4 py-[13px]">
-          <div className="flex items-center justify-between">
-            <span className="bg-green-tint text-green rounded-[20px] px-[13px] py-[5px] text-[11px] font-black">PRACTICE · SIMULATED</span>
-            <ChevronRight className="text-ink-4" />
-          </div>
-          <div className="mt-2 text-[17px] font-black text-ink">{portfolio.name}</div>
-          <div className="text-[11.5px] font-bold text-ink-3">No pooled money — decisions are real, dollars are practice</div>
-          <div className="flex gap-[9px] mt-3">
-            <div className="flex-1 bg-paper border border-line rounded-[14px] px-[13px] py-[11px]">
-              <div className="text-[10px] font-extrabold text-ink-3">VALUE · YTD</div>
-              <div className="text-[18px] font-black text-ink">${Math.round(portfolio.value).toLocaleString()} <span className="text-[12px] text-green-2">+{portfolio.ytdPct}%</span></div>
-            </div>
-            <div className="flex-1 bg-paper border border-line rounded-[14px] px-[13px] py-[11px]">
-              <div className="text-[10px] font-extrabold text-ink-3">HOLDINGS</div>
-              <div className="text-[18px] font-black text-ink">{portfolio.holdings.length} <span className="text-[11px] font-extrabold text-ink-3">each links to its proposal</span></div>
-            </div>
-          </div>
-          {open[0] && <div className="mt-3 text-[11.5px] font-extrabold text-purple-2">🗳 Open: {proposalTitle(open[0])} · {tally(open[0])} voted →</div>}
-        </Link>
-      )}
-
-      {tab === "Members" && <MembersList club={club} onInvite={() => setInvite(true)} />}
-
-      {/* pick FAB */}
-      <Link href="/club/pick/new" className="absolute right-[18px] bottom-[126px] z-40 flex items-center gap-2 bg-orange text-cream-text rounded-[28px] px-[19px] py-[13px] shadow-[0_6px_16px_rgba(201,109,37,0.4)] active:scale-95 transition">
-        <span className="text-[17px] font-black leading-none">＋</span>
-        <span className="text-[14px] font-black">Make a Pick</span>
-      </Link>
-      <InviteSheet open={invite} onClose={() => setInvite(false)} club={club} />
-    </>
-  );
-}
 
 /* ── Research tab — collaborative list with reasons + assignees ────── */
 export function ResearchList({ research, club }: { research: ResearchAssignment[]; club: Club }) {
@@ -262,57 +72,6 @@ export function ResearchList({ research, club }: { research: ResearchAssignment[
 }
 
 /* ── Members tab ───────────────────────────────────────────────────── */
-const roleLabel: Record<ClubMember["role"], { text: string; cls: string }> = {
-  founder: { text: "Founder", cls: "bg-green-tint text-green" },
-  admin: { text: "Admin", cls: "bg-orange-tint text-orange-2" },
-  member: { text: "Member", cls: "bg-paper-2 text-ink-3" },
-  child: { text: "Child", cls: "bg-purple-tint text-purple-2" },
-};
-export function MembersList({ club, onInvite }: { club: Club; onInvite: () => void }) {
-  const beltOf = useBeltOf();
-  const members = club.members.filter((m) => m.id !== "dad");
-  return (
-    <div className="mb-24">
-      <div className="flex items-center justify-between mt-3">
-        <div className="text-[11px] font-black text-ink-3">{members.length} MEMBERS · {club.rules.votes.toUpperCase()} VOTES{club.rules.kidsCanVote ? " · KIDS CAN VOTE" : ""}</div>
-        <button onClick={onInvite} className="text-[11px] font-black text-green">+ Invite</button>
-      </div>
-      <div className="mt-2 bg-card border border-line rounded-[16px] px-[15px] py-1">
-        {members.map((m, i) => (
-          <div key={m.id} className={cx("flex items-center gap-[11px] py-[10px]", i < members.length - 1 && "border-b border-paper-2")}>
-            <RingedAvatar belt={beltOf(m.id)}><MemberAvatar m={m} size={34} /></RingedAvatar>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-[6px] flex-wrap">
-                <span className="text-[13px] font-black text-ink">{m.name}{m.isYou ? " (you)" : ""}</span>
-                {beltOf(m.id) && <BeltChip belt={beltOf(m.id)!} />}
-                <span className={cx("rounded-[6px] px-[7px] py-[2px] text-[9.5px] font-black", roleLabel[m.role].cls)}>{roleLabel[m.role].text}</span>
-              </div>
-              <div className="text-[10.5px] font-bold text-ink-3">{m.level} level{m.voteGated ? ` · 🎓 ${m.gateReason}` : ""}</div>
-            </div>
-          </div>
-        ))}
-      </div>
-      <Link href="/club/leaderboards" className="mt-3 flex items-center gap-[11px] rounded-[16px] border border-line bg-card px-[15px] py-[12px]">
-        <span className="w-[34px] h-[34px] rounded-[10px] bg-[#FBF3DC] flex items-center justify-center text-[17px]" aria-hidden>🏆</span>
-        <span className="flex-1 min-w-0">
-          <span className="block text-[13px] font-black text-ink">Leaderboards</span>
-          <span className="block text-[10.5px] font-bold text-ink-3">Many ways to win — not just returns</span>
-        </span>
-        <span className="font-black text-ink-4" aria-hidden>›</span>
-      </Link>
-      <Link href="/club/xp" className="mt-2 flex items-center gap-[11px] rounded-[16px] border border-line bg-card px-[15px] py-[12px]">
-        <span className="w-[34px] h-[34px] rounded-[10px] bg-green-tint flex items-center justify-center text-[17px]" aria-hidden>🏅</span>
-        <span className="flex-1 min-w-0">
-          <span className="block text-[13px] font-black text-ink">XP board</span>
-          <span className="block text-[10.5px] font-bold text-ink-3">Progression &amp; participation — never returns</span>
-        </span>
-        <span className="font-black text-ink-4" aria-hidden>›</span>
-      </Link>
-      <p className="mt-3 text-center text-[11px] font-bold text-ink-4">Roles come from the household: guardians manage kids&apos; settings in Family.</p>
-    </div>
-  );
-}
-
 /* helpers */
 export function proposalTitle(p: ClubProposal) {
   const delta = p.toWeightPct - p.fromWeightPct;
@@ -321,14 +80,8 @@ export function proposalTitle(p: ClubProposal) {
   return `${delta >= 0 ? "Add" : "Trim"} ${p.symbol} ${delta >= 0 ? "+" : ""}${delta}%`;
 }
 export function tally(p: ClubProposal) {
-  const cast = p.votes.filter((v) => v.vote).length;
-  return `${cast}/${p.votes.filter((v) => v.memberId !== "dad").length}`;
+  return `${p.votes.filter((v) => v.vote).length}/${p.votes.length}`;
 }
 export function avatarFor(club: Club, id: string, name: string) {
   return club.members.find((m) => m.id === id) ?? { initial: name.charAt(0).toUpperCase(), color: "bg-purple" };
-}
-export function shortQuote(s: string, max = 34) {
-  const t = s.replace(/\.$/, "");
-  const lower = t.charAt(0).toLowerCase() + t.slice(1);
-  return lower.length > max ? lower.slice(0, max - 1).trimEnd() + "…" : lower;
 }

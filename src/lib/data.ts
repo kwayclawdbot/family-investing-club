@@ -23,10 +23,14 @@ export async function getLessonQuestions(lessonId: string) { return fx.questions
 const fixtureCompany = (symbol: string) => fx.companies.find((c) => c.symbol.toUpperCase() === symbol.toUpperCase());
 const withSample = (c: Company): Company => ({ ...c, freshness: c.freshness ?? "sample" });
 
-/** Tracked universe with live quotes (one cached daily call per symbol); fixture list when offline. */
-export async function getCompanies(): Promise<Company[]> {
-  const live = mkt.hasPolygon() ? await mkt.companies() : null;
-  return live && live.length ? live : fx.companies.map(withSample);
+/** Quotes for a set of symbols (default: the tracked universe). One cached grouped-daily call covers
+ *  every symbol, so passing a longer list costs nothing extra. Fixture list when offline. */
+export async function getCompanies(symbols?: string[]): Promise<Company[]> {
+  const want = symbols?.length ? [...new Set(symbols.map((s) => s.toUpperCase()))] : undefined;
+  const live = mkt.hasPolygon() ? await mkt.companies(want) : null;
+  if (live && live.length) return live;
+  const f = fx.companies.map(withSample);
+  return want ? f.filter((c) => want.includes(c.symbol.toUpperCase())) : f;
 }
 export async function getCompany(symbol: string): Promise<Company | undefined> {
   const live = mkt.hasPolygon() ? await mkt.company(symbol) : null;

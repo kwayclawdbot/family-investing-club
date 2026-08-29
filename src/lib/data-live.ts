@@ -91,7 +91,7 @@ export async function getHomePulse(): Promise<HomePulse> {
       me: { ...base.me, note: "practice + verified" },
       club: { ...base.club, value: overview.value, ytdPct: overview.ytdPct },
       ranges: base.ranges,
-      tiles: { bestPick: { symbol: overview.metrics.bestPick.symbol, pct: overview.metrics.bestPick.pct }, clubRank: { rank: rank >= 0 ? rank + 1 : overview.topInvestors.length + 1, of: club.members.length }, xp: me?.lifetimeXp ?? 0 },
+      tiles: { bestPick: overview.metrics.bestPick ?? { symbol: "—", pct: 0 }, clubRank: { rank: rank >= 0 ? rank + 1 : overview.topInvestors.length + 1, of: club.members.length }, xp: me?.lifetimeXp ?? 0 },
       clubSnapshot: { name: club.shortName, members: club.members.length, value: overview.value, ytdPct: overview.ytdPct, verified: `${overview.metrics.verified.connected} of ${overview.metrics.verified.adults} adults verified` },
       decision: overview.activeDecision ? { proposalId: overview.activeDecision.proposalId, text: `Club is deciding on ${overview.activeDecision.title}`, voted: overview.activeDecision.voted, eligible: overview.activeDecision.eligible, hoursLeft: overview.activeDecision.hoursLeft } : base.decision,
       stream: overview.happened.slice(0, 3).map((h) => ({ id: h.id, actorId: h.actorId, actor: h.actor, text: h.text, ago: h.ago, pct: h.pct, href: "/club" })),
