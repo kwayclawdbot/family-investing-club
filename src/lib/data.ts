@@ -8,6 +8,7 @@ import * as r2 from "@/lib/fixtures/round2";
 import * as c from "@/lib/fixtures/club";
 import * as v from "@/lib/fixtures/verified";
 import * as bl from "@/lib/fixtures/belts";
+import { GAMES, gameById } from "@/lib/content/games";
 import * as ws from "@/lib/fixtures/workspace";
 import type { Company, Idea, LearningPath, Metric, NewsItem, Portfolio } from "@/lib/types";
 import * as mkt from "@/lib/market";
@@ -101,8 +102,8 @@ export const onboardingOptions = fx.onboarding;
 export async function getLiveSessions() { return r2.liveSessions; }
 export async function getLiveSession(id: string) { return r2.liveSessions.find((s) => s.id === id); }
 export async function getFlashcards() { return r2.flashcards; }
-export async function getGames() { return r2.games; }
-export async function getGame(id: string) { return r2.games.find((g) => g.id === id); }
+export async function getGames() { return GAMES; }
+export async function getGame(id: string) { return gameById(id); }
 export const termPairs = r2.termPairs;
 export async function getChartDrills() { return r2.chartDrills; }
 export async function getScenarios() { return r2.scenarios; }

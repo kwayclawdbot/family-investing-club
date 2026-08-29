@@ -18,6 +18,8 @@ import { safe } from "./supa";
  */
 
 export const BENCHMARK = "SPY";
+/** Hard ceiling on live bar fetches per render — the rest come from cache or read as "—". */
+const MAX_LIVE_FETCHES = 3;
 const RANGES = ["1M", "3M", "YTD", "1Y"] as const;
 export type ClubRange = (typeof RANGES)[number];
 
@@ -31,13 +33,15 @@ export async function barsFor(symbols: string[], opts: { spend?: number } = {}):
     const a = await pg.aggregates(s, "1Y", { cacheOnly: true });
     if (a?.bars.length) out.set(s, a.bars.map((b) => ({ t: b.t, c: b.c }))); else missing.push(s);
   }
-  // Leave one slot for whatever else the page needs (quotes are grouped and usually already cached).
-  // `spend: 0` means cache-only — for secondary widgets that must never starve the page's own data.
-  let spend = opts.spend ?? Math.max(0, pg.budgetLeft() - 1);
+  // Leave one slot for whatever else the page needs (quotes are grouped and usually already cached),
+  // and never spend more than MAX_LIVE_FETCHES on one render: each miss can wait, and a page that
+  // blocks for twenty seconds on a cold cache is worse than one that says "3 of 6 priced" and fills
+  // in on the next visit. `spend: 0` means cache-only, for widgets that must not starve the page.
+  let spend = Math.min(MAX_LIVE_FETCHES, opts.spend ?? Math.max(0, pg.budgetLeft() - 1));
   for (const s of missing) {
     if (spend <= 0) break;
     spend--;
-    const a = await pg.aggregates(s, "1Y", { maxWait: 4_000 });
+    const a = await pg.aggregates(s, "1Y", { maxWait: 2_500 });
     if (a?.bars.length) out.set(s, a.bars.map((b) => ({ t: b.t, c: b.c })));
   }
   return out;

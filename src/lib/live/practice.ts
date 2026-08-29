@@ -1,4 +1,6 @@
 import "server-only";
+import type { Game } from "@/lib/types";
+import { GAMES, gameById } from "@/lib/content/games";
 import type { Order, Portfolio } from "@/lib/types";
 import { portfolio as fxPortfolio } from "@/lib/fixtures";
 import { getSession } from "./session";
@@ -46,4 +48,23 @@ export async function getOrders(): Promise<Order[] | null> {
     const trades = must(await supa.from("sim_trades").select("*").eq("portfolio_id", port.id).order("opened_at", { ascending: false }).limit(50)) as Trade[];
     return trades.map((t) => ({ id: t.id, symbol: t.symbol, side: (t.side ?? "buy").toLowerCase().startsWith("s") ? "sell" : "buy", shares: t.quantity, price: Number(t.entry_price), at: t.opened_at, status: "filled" as const }));
   });
+}
+
+/* ── practice games: the catalog is content, the scores are the member's own ── */
+/** Every game with this member's real best score from `game_scores` (undefined = never played). */
+export async function getGames(): Promise<Game[] | null> {
+  const s = await getSession();
+  if (!s) return null;
+  return safe("practice.getGames", async () => {
+    const supa = await userClient();
+    const rows = must(await supa.from("game_scores").select("game, score").eq("user_id", s.user.id)) as { game: string; score: number }[];
+    const best = new Map<string, number>();
+    for (const r of rows) best.set(r.game, Math.max(best.get(r.game) ?? 0, r.score ?? 0));
+    return GAMES.map((g) => ({ ...g, best: best.get(g.id) }));
+  });
+}
+
+export async function getGame(id: string): Promise<Game | null> {
+  const all = await getGames();
+  return all?.find((g) => g.id === id) ?? gameById(id) ?? null;
 }

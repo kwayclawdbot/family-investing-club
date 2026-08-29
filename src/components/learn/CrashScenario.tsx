@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { crash } from "@/lib/fixtures/v13-learn";
+import { crash } from "@/lib/content/crash-scenario";
 
 /** Scenario · Market crash (prototype v2 `scenario`): breaking-news header, Simbot, three calls, based on March 2020. */
 export function CrashScenario() {

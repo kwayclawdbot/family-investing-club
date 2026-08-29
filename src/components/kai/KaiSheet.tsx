@@ -3,10 +3,10 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { KaiSpark, CloseIcon } from "@/components/ui/icons";
+import { askKai } from "@/lib/live/client-kai";
+import { Rich } from "./rich";
 
 type Msg = { role: "user" | "kai"; text: string; lesson?: { label: string; href: string } };
-
-const CANNED = "I'm still being wired up — for now, try one of the prompts above.";
 
 function contextLabel(raw: string | null): string {
   if (!raw || raw === "home") return "Home";
@@ -17,13 +17,14 @@ function contextLabel(raw: string | null): string {
 
 export function KaiSheet({
   prompts,
-  sample,
+  you,
   embedded,
   onClose,
   contextOverride,
 }: {
   prompts: string[];
-  sample: { question: string; answer: string; lessonLabel: string; lessonHref: string };
+  /** Name to greet — the signed-in member, not a hardcoded one. */
+  you?: string;
   /** render inside a host (the ＋ sheet): no backdrop/spacer, close via onClose instead of router.back */
   embedded?: boolean;
   onClose?: () => void;
@@ -32,10 +33,9 @@ export function KaiSheet({
   const router = useRouter();
   const params = useSearchParams();
   const context = contextLabel(contextOverride ?? params.get("context"));
-  const [msgs, setMsgs] = useState<Msg[]>([
-    { role: "user", text: sample.question },
-    { role: "kai", text: sample.answer, lesson: { label: sample.lessonLabel, href: sample.lessonHref } },
-  ]);
+  const [msgs, setMsgs] = useState<Msg[]>([]);
+  const [busy, setBusy] = useState(false);
+  const [threadId, setThreadId] = useState<string | null>(null);
   const [draft, setDraft] = useState(params.get("q") ?? "");
   const [open, setOpen] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
@@ -48,11 +48,25 @@ export function KaiSheet({
     endRef.current?.scrollIntoView({ block: "end" });
   }, [msgs]);
 
-  function send(text: string) {
+  /** One real turn against /api/kai/chat, streamed into the last bubble. */
+  async function send(text: string) {
     const t = text.trim();
-    if (!t) return;
-    setMsgs((m) => [...m, { role: "user", text: t }, { role: "kai", text: CANNED }]);
+    if (!t || busy) return;
+    setBusy(true);
     setDraft("");
+    setMsgs((m) => [...m, { role: "user", text: t }, { role: "kai", text: "" }]);
+    const append = (chunk: string) => setMsgs((m) => m.map((msg, i) => (i === m.length - 1 ? { ...msg, text: msg.text + chunk } : msg)));
+    const replace = (full: string) => setMsgs((m) => m.map((msg, i) => (i === m.length - 1 ? { ...msg, text: full } : msg)));
+    const r = await askKai(t, {
+      threadId,
+      onEvent: (e) => {
+        if (e.type === "meta") setThreadId(e.threadId);
+        else if (e.type === "token") append(e.text);
+        else if (e.type === "error") replace(e.error);
+      },
+    });
+    if (!r.ok) replace(r.signedOut ? "Sign in to ask Kai." : r.error);
+    setBusy(false);
   }
   function close() {
     setOpen(false);
@@ -90,13 +104,14 @@ export function KaiSheet({
 
         <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar pb-3">
           <div className="mt-[18px] text-[20px] font-black text-ink leading-tight">
-            Hey Kway! 👋<br />How can I help you today?
+            {you ? `Hey ${you}!` : "Hey there!"} 👋<br />How can I help you today?
           </div>
           <div className="flex flex-col gap-[9px] mt-4">
             {prompts.map((p) => (
               <button
                 key={p}
-                onClick={() => send(p)}
+                onClick={() => void send(p)}
+                disabled={busy}
                 className="bg-card border border-line rounded-[14px] px-[15px] py-3 flex items-center gap-[10px] text-left active:scale-[0.99]"
               >
                 <span className="text-orange font-black">＋</span>
@@ -117,7 +132,7 @@ export function KaiSheet({
                     <KaiSpark size={13} />
                   </span>
                   <div className="bg-card border border-line rounded-[4px_16px_16px_16px] px-[14px] py-[11px] text-[13.5px] font-semibold text-ink leading-[1.45] max-w-[82%]">
-                    {m.text}{" "}
+                    {m.text ? <Rich text={m.text} /> : busy ? "…" : null}{" "}
                     {m.lesson && (
                       <Link href={m.lesson.href} className="bg-purple-tint text-purple-2 rounded-[8px] px-2 py-[2px] text-[10.5px] font-extrabold whitespace-nowrap">
                         {m.lesson.label} →
@@ -134,7 +149,7 @@ export function KaiSheet({
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            send(draft);
+            void send(draft);
           }}
           className="shrink-0 pb-[calc(40px+env(safe-area-inset-bottom))] sm:pb-10 pt-2"
         >

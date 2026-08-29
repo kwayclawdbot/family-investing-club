@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { valuationRounds } from "@/lib/fixtures/v12-explore";
+import { valuationRounds } from "@/lib/content/valuation-drill";
 
 /** "Practice valuation: cheap or expensive?" — 6 rounds, real companies' P/E vs their sector. */
 export function ValuationDrill() {

@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { brandOf } from "@/lib/fixtures/v13-discover";
+import { brandOf } from "@/lib/content/brands";
 import type { DiscoverCard } from "@/lib/live/discover";
 
 export type Quote = { price: number; changePct: number; ytdPct?: number };

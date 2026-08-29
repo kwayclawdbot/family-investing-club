@@ -61,6 +61,8 @@ export type Question = {
 export type Company = {
   symbol: string;
   name: string;
+  /** Raw SIC description from the ticker details feed; map with `sectorOf` for a friendly label. */
+  sector?: string | null;
   price: number;
   change: number;
   changePct: number;

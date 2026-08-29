@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { CashText, Logo } from "@/components/markets/v13/bits";
-import { earningsSurprise as e } from "@/lib/fixtures/v14-explore";
+import { earningsSurprise as e } from "@/lib/content/earnings-scenario";
 
 /** Prototype v3 `practice` → "Earnings surprise — react in real time": opens with the real report; honest until then. */
 export function EarningsSurpriseIntro() {

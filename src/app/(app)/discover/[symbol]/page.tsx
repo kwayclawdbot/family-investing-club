@@ -1,40 +1,52 @@
 import { notFound } from "next/navigation";
-import { getCompany, getMetrics, getNews, getClubConsensus, getFicConsensus, clubWatchers, getPicks, getClubPortfolio } from "@/lib/data-live";
+import { getCompany, getMetrics, getClubConsensus, getFicConsensus, getPicks, getClubPortfolio } from "@/lib/data-live";
 import { resolveCompany } from "@/components/markets/companies-extra";
-import { dossiers, genericDossier } from "@/lib/fixtures/v12-explore";
-import { companyExtras, genericExtra, newsItems } from "@/lib/fixtures/v13-discover";
+import { getCircles } from "@/lib/live/community";
+import { getNewsFeed } from "@/lib/live/newsfeed";
 import { CompanyV13 } from "@/components/markets/v13/CompanyV13";
+import { sectorOf } from "@/lib/server/shared/screener-sectors";
+import { getSession } from "@/lib/live/session";
 
-const COLORS: Record<string, string> = { kway: "#4C8C4A", andwele: "#7BA05B", arielle: "#E9B949", mom: "#D98E73", dad: "#B08968" };
-const RINGS: Record<string, string> = { kway: "#8B7BC7", andwele: "#E9C46A", arielle: "#E6DFCF", mom: "#E6DFCF", dad: "#E9C46A" };
+const COLORS = ["#4C8C4A", "#7BA05B", "#E9B949", "#D98E73", "#B08968", "#8B7BC7"];
+const hue = (id: string) => { let h = 0; for (const c of id) h = (h * 31 + c.charCodeAt(0)) >>> 0; return COLORS[h % COLORS.length]; };
 
-/** Company — prototype v2 `company`: understand one investment, see your club + FIC, make a pick. */
+/** Company — understand one investment, see your club's case on it, make a pick. */
 export default async function CompanyPage(props: PageProps<"/discover/[symbol]">) {
   const { symbol } = await props.params;
   const sym = symbol.toUpperCase();
   const c = resolveCompany(await getCompany(sym), sym);
   if (!c) notFound();
-  const [metrics, news, club, fic, picks, portfolio] = await Promise.all([getMetrics(sym), getNews(), getClubConsensus(sym), getFicConsensus(sym), getPicks(), getClubPortfolio()]);
-  const ids = clubWatchers(sym);
+  const [metrics, fic, picks, portfolio, circles, news, session] = await Promise.all([
+    getMetrics(sym), getFicConsensus(sym), getPicks(), getClubPortfolio(), getCircles(), getNewsFeed(), getSession(),
+  ]);
+  void getClubConsensus; // club opinion is rendered from the club's own picks below
+
   const symPicks = picks.filter((p) => p.symbol === sym);
   const holding = portfolio.holdings.find((h) => h.symbol === sym);
-  const avatars = (ids.length ? ids : symPicks.map((p) => p.authorId)).slice(0, 3).map((id) => ({ initial: id[0].toUpperCase(), color: COLORS[id] ?? "#8B7BC7", ring: RINGS[id] ?? "#E6DFCF" }));
-  const line = [holding ? `Your club: ${holding.weightPct}% holding` : "Your club: no holding yet", ids.length ? `${ids.length} own it ✓` : null].filter(Boolean).join(" · ");
-  const sub = symPicks.length ? symPicks.slice(0, 2).map((p) => `${p.author} ${p.stance.toUpperCase()}${p.stance === "buy" ? ` "${p.reason.split(".")[0].slice(0, 28)}"` : ""}`).join(" · ") : "No picks yet — make the first one";
-  const d = dossiers[sym] ?? genericDossier(c.name);
-  const extra = companyExtras[sym] ?? genericExtra(c.name);
-  const cap = metrics.find((m) => m.key === "mcap")?.value;
-  const related = news.filter((n) => n.symbols.includes(sym))[0];
-  const fx = newsItems.find((n) => n.symbol === sym);
-  const newsLine = extra?.newsLine ?? (fx ? fx.headline.replace(/^[A-Za-z]+ /, "") : related?.headline);
-  const ficData = fic ? { buy: fic.buyPct, watch: fic.watchPct, pass: fic.passPct, picks: fic.picks, verified: fic.verifiedOwners } : null;
-  void club;
+  const avatars = symPicks.slice(0, 3).map((p) => ({ initial: p.author.charAt(0).toUpperCase(), color: hue(p.authorId), ring: hue(p.author) }));
+  const line = [holding ? `Your club holds ${Math.round(holding.weightPct)}%` : "Your club holds none of this",
+    symPicks.length ? `${symPicks.length} ${symPicks.length === 1 ? "pick" : "picks"}` : null].filter(Boolean).join(" · ");
+  const sub = symPicks.length
+    ? symPicks.slice(0, 2).map((p) => `${p.author} ${p.stance.toUpperCase()}`).join(" · ")
+    : "No picks yet — make the first one";
+
+  const caseFor = (want: "bull" | "bear") => symPicks
+    .filter((p) => (want === "bull" ? p.stance !== "pass" : p.stance === "pass"))
+    .map((p) => ({ by: p.author, text: p.reason.split(".")[0].slice(0, 90) }));
+
+  const circle = circles?.find((x) => x.symbol?.toUpperCase() === sym && x.open) ?? null;
+  const newsLine = [...(news?.club ?? []), ...(news?.mine ?? []), ...(news?.markets ?? [])].find((n) => n.symbols.includes(sym))?.headline;
+
   return (
     <CompanyV13
       symbol={sym} name={c.name} price={c.price} changePct={c.changePct} series={c.series ?? {}}
-      extra={extra} dossier={d} marketCap={cap && cap !== "—" ? cap : undefined}
-      club={{ line, sub, avatars, hasPick: symPicks.some((p) => p.authorId === "kway"), hasHolding: !!holding }}
-      fic={ficData} newsLine={newsLine}
+      sector={sectorOf(c.sector) ?? c.sector ?? null} about={c.about ?? null}
+      understand={(c.understand ?? []).map((u) => u.q)} metrics={metrics}
+      bull={caseFor("bull")} bear={caseFor("bear")}
+      circle={circle ? { slug: circle.slug, name: circle.name, daysLeft: circle.daysLeft } : null}
+      club={{ line, sub, avatars, hasPick: symPicks.some((p) => p.authorId === session?.user.id), hasHolding: !!holding }}
+      fic={fic ? { buy: fic.buyPct, watch: fic.watchPct, pass: fic.passPct, picks: fic.picks, verified: fic.verifiedOwners } : null}
+      newsLine={newsLine}
     />
   );
 }

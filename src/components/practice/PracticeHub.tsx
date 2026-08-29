@@ -1,15 +1,16 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { practiceGames } from "@/lib/fixtures/v12-explore";
+import type { Game } from "@/lib/types";
 import { money, pct } from "@/components/markets/format";
 import { Sparkline } from "@/components/markets/LineChart";
 import { Eyebrow } from "@/components/markets/v12/bits";
 
 const CHIPS = ["Games", "Charts", "Scenarios", "Portfolio"] as const;
-export function PracticeHub({ portfolio, embedded }: { portfolio: { value: number; changePct: number; holdings: number; series: number[] }; embedded?: boolean }) {
+/** Practice — the real game catalog with this member's own best scores, and their real sim portfolio. */
+export function PracticeHub({ portfolio, games: all = [], embedded }: { portfolio: { value: number; changePct: number; holdings: number; series: number[] }; games?: Game[]; embedded?: boolean }) {
   const [chip, setChip] = useState<(typeof CHIPS)[number]>("Games");
-  const games = chip === "Charts" ? practiceGames.filter((g) => g.id === "chart-rush") : chip === "Scenarios" ? [] : practiceGames;
+  const games = chip === "Charts" ? all.filter((g) => g.kind === "chart") : chip === "Scenarios" ? [] : all;
   return (
     <div className={embedded ? "" : "pt-[14px] pb-6"}>
       {!embedded && <><h1 className="text-[21px] font-black text-ink">Practice</h1>
@@ -23,11 +24,19 @@ export function PracticeHub({ portfolio, embedded }: { portfolio: { value: numbe
           <div className="flex-1"><div className="text-[10px] font-black text-purple-2">FROM YOUR LAST LESSON</div><div className="text-[14px] font-black text-ink">Practice valuation: cheap or expensive?</div><div className="text-[10px] font-bold text-ink-3">6 rounds · real companies · +15 XP</div></div>
           <Link href="/learn/games/valuation" className="rounded-[11px] bg-purple text-cream-text px-3 py-[7px] text-[11px] font-black">Play</Link>
         </div>
-        <div className="grid grid-cols-2 gap-2 mt-3">{games.map((g) => <Link key={g.id} href={g.href} className="bg-card border border-line rounded-[15px] px-3 py-3"><div className="text-[20px]">{g.emoji}</div><div className="text-[13px] font-black text-ink mt-1">{g.title}</div><div className="text-[9.5px] font-bold text-ink-3">{g.sub}</div></Link>)}</div>
+        <div className="grid grid-cols-2 gap-2 mt-3">{games.map((g) => (
+          <Link key={g.id} href={`/learn/games/${g.id}`} className="bg-card border border-line rounded-[15px] px-3 py-3">
+            <div className="text-[20px]">{g.emoji}</div>
+            <div className="text-[13px] font-black text-ink mt-1">{g.title}</div>
+            <div className="text-[9.5px] font-bold text-ink-3">{g.skill} · {g.minutes} min</div>
+            {g.best !== undefined && <div className="text-[9.5px] font-black text-gold mt-[2px]">★ your best {g.best}</div>}
+          </Link>))}
+          {!games.length && <p className="col-span-2 py-4 text-center text-[11.5px] font-bold text-ink-3">No games here yet.</p>}
+        </div>
       </>)}
       <Eyebrow className="mt-4 mb-2">YOUR PRACTICE PORTFOLIO</Eyebrow>
       <div className="bg-card border border-line rounded-[15px] px-4 py-3 flex items-center gap-3">
-        <div className="flex-1"><Link href="/practice/portfolio" className="text-[17px] font-black text-ink">{money(portfolio.value, 0)} <span className="text-[11px] text-[#3A8C4A]">{pct(portfolio.changePct, 2)}</span></Link><div className="text-[10px] font-bold text-ink-3">{portfolio.holdings} holdings · <Link href="/practice/trade/CEG" className="text-green">try your club&apos;s CEG thesis here first</Link></div></div>
+        <div className="flex-1"><Link href="/practice/portfolio" className="text-[17px] font-black text-ink">{money(portfolio.value, 0)} <span className="text-[11px] text-[#3A8C4A]">{pct(portfolio.changePct, 2)}</span></Link><div className="text-[10px] font-bold text-ink-3">{portfolio.holdings} {portfolio.holdings === 1 ? "holding" : "holdings"} · <Link href="/practice/portfolio" className="text-green">place a practice order</Link></div></div>
         <Link href="/practice/portfolio" aria-label="Open practice portfolio"><Sparkline data={portfolio.series} width={70} height={26} color="#E58234" /></Link>
       </div>
       <p className="mt-4 text-center text-[10px] font-bold text-ink-4">Practice results feed the Practice leaderboard · never mixed with real returns</p>

@@ -141,6 +141,22 @@ Port `/admin/*` (CRM overview, contacts, marketing, funnels, help desk, families
 push broadcast, announcements, shop orders/products, view-as) against the ~30 `admin_*` RPCs.
 This is the last thing keeping FTA alive.
 
+### Phase 7.5 — Make it real ✅ done 2026-08-29
+Every member-facing surface reads live rows; the fixture seam survives only as the signed-out demo.
+Shipped: `IdentityProvider` + `lib/belts.ts` (belts resolve against real club members) ·
+`lib/live/club-performance.ts` (model portfolio priced from Polygon bars: since-add, weighted YTD, SPY
+benchmark, decision markers, allocation; budget-aware, degrades to "N of M priced") ·
+`getOfficialPicks` / `getDecisionRecord` (proposals → votes → decisions → holdings) ·
+`lib/live/me-performance.ts` (own picks, measured from the day of each) ·
+`lib/live/discover.ts` (cards from holdings/research/picks/watchlist; theme baskets priced) ·
+`lib/live/screener.ts` (the ~11.7k-row `screener_metrics` universe, filtered in Postgres) ·
+`lib/live/newsfeed.ts` (Polygon stories for what you hold and watch + the desk wrap) ·
+`KaiSheet` → `/api/kai/chat` (streamed, markdown rendered) · Learn hub → `getLearnHub()` (the real
+curriculum, live sessions, review deck, weakest skills) · circles end-to-end (`club_circles`) ·
+Search over real circles, club-mates and courses. Deleted five dead prototype components.
+Decisions #56–64. Known data gaps surfaced honestly rather than filled: `screener_metrics.mcap`/`sector`
+are populated for only ~20 of 11.7k rows until the nightly round-robin catches up.
+
 ### Phase 8 — Cutover (after 2026-09-09)
 1. Vercel env parity on `family-investing-club` (full list in §4); `CRON_SECRET`, VAPID, Stripe,
    Resend, Twilio, Anthropic, OpenAI, Polygon, FB, `MARKETING_TOKEN_SECRET`.

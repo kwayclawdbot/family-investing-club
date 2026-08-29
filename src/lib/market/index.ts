@@ -55,7 +55,7 @@ export async function company(symbol: string): Promise<Company | null> {
   return {
     symbol: s, name, price: q.price, change: q.change, changePct: q.changePct, series: seriesMap,
     understand: u?.understand ?? defaultUnderstand(name),
-    about: details?.description ?? undefined, logoUrl: details?.iconUrl ?? details?.logoUrl ?? undefined, marketCap: details?.marketCap ?? undefined,
+    about: details?.description ?? undefined, sector: details?.sic ?? null, logoUrl: details?.iconUrl ?? details?.logoUrl ?? undefined, marketCap: details?.marketCap ?? undefined,
     asOf: q.asOf, freshness: q.freshness,
   };
 }

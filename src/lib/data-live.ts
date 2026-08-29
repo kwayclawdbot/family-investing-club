@@ -108,6 +108,8 @@ export const getPaths = () => pick(live.getPaths, () => fx.paths);
 export const getPath = (slug: string) => pick(() => live.getPath(slug), () => fxData.getPath(slug));
 export const getContinueLesson = () => pick(live.getContinueLesson, () => fx.continueLesson);
 export const getFlashcards = () => pick(live.getFlashcards, () => r2.flashcards);
+export const getGames = () => pick(live.getGames, () => fxData.getGames());
+export const getGame = (id: string) => pick(() => live.getGame(id), () => fxData.getGame(id));
 export const getLiveSessions = () => pick(live.getLiveSessions, () => r2.liveSessions);
 export const getLiveSession = (id: string) => pick(() => live.getLiveSession(id), () => fxData.getLiveSession(id));
 export const getNews = () => pick(live.getNews, () => r2.news);

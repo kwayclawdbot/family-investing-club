@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { brandOf } from "@/lib/fixtures/v13-discover";
+import { brandOf } from "@/lib/content/brands";
 
 /** Brand-coloured ticker tile (prototype v2 logo treatment). */
 export function Logo({ symbol, size = 30, radius = 9 }: { symbol: string; size?: number; radius?: number }) {

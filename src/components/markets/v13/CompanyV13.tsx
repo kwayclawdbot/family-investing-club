@@ -2,14 +2,19 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Logo, Pct, CashText, Label } from "./bits";
-import type { CompanyExtra } from "@/lib/fixtures/v13-discover";
-import type { Dossier } from "@/lib/fixtures/v12-explore";
+import type { Metric } from "@/lib/types";
 import { openSheet } from "@/components/sheets/bus";
 
 type Range = "1D" | "1W" | "1Y" | "5Y";
+export type ClubCase = { by: string; text: string };
 export type CompanyV13Props = {
   symbol: string; name: string; price: number; changePct: number; series: Record<string, number[] | undefined>;
-  extra: CompanyExtra; dossier: Dossier; marketCap?: string;
+  sector: string | null; about: string | null; understand: string[];
+  /** The live key metrics (`lib/market` → Polygon): market cap, P/E, dividend yield, 52-week range, volume. */
+  metrics: Metric[];
+  /** The club's own case — its members' picks on this company. Empty until somebody makes one. */
+  bull: ClubCase[]; bear: ClubCase[];
+  circle: { slug: string; name: string; daysLeft: number } | null;
   club: { line: string; sub: string; avatars: { initial: string; color: string; ring: string }[]; hasPick: boolean; hasHolding: boolean };
   fic: { buy: number; watch: number; pass: number; picks: number; verified: number } | null;
   newsLine?: string;
@@ -41,15 +46,14 @@ export function CompanyV13(p: CompanyV13Props) {
     return () => { alive = false; };
   }, [range, local, fetched, p.symbol]);
   const markers = [p.club.hasPick ? { idx: Math.floor(data.length * 0.3), color: "#8B7BC7" } : null, p.club.hasHolding ? { idx: Math.floor(data.length * 0.7), color: "#E58234" } : null].filter(Boolean) as { idx: number; color: string }[];
-  const n = p.dossier.numbers;
-  const pe = parseFloat(String(n.pe)); const rg = parseFloat(String(n.revGrowth)); const gm = parseFloat(String(n.grossMargin));
   const tile = "flex-1 bg-card border border-line rounded-[12px] px-[9px] py-[7px]";
+  const shown = p.metrics.filter((m) => m.value && m.value !== "—").slice(0, 4);
   return (
     <div className="pt-[14px] pb-[90px]">
       <div className="flex items-center gap-[11px]">
         <Link href="/discover" aria-label="Back" className="text-ink-2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"><path d="M15 5l-7 7 7 7" /></svg></Link>
         <Logo symbol={p.symbol} size={36} radius={12} />
-        <div className="flex-1"><div className="text-[15px] font-black text-ink">{p.name}</div><div className="text-[9.5px] font-extrabold text-ink-3">{p.extra.sector}{p.extra.earnings && <> · <span className="text-orange-2">{p.extra.earnings}</span></>}</div></div>
+        <div className="flex-1"><div className="text-[15px] font-black text-ink">{p.name}</div><div className="text-[9.5px] font-extrabold text-ink-3">{p.sector ?? p.symbol}</div></div>
         <button aria-label="Save" className="text-ink-4">🔖</button>
       </div>
       <div className="mt-[9px] flex items-baseline gap-2">
@@ -60,22 +64,36 @@ export function CompanyV13(p: CompanyV13Props) {
       <Chart data={data} markers={markers} />
       <div className="flex gap-1 mt-[3px] items-center">
         {(["1D", "1W", "1Y", "5Y"] as Range[]).map((r) => <button key={r} onClick={() => setRange(r)} className={range === r ? "bg-ink text-cream-text rounded-[8px] px-[10px] py-[3px] text-[10px] font-black" : "text-ink-4 px-[7px] py-[3px] text-[10px] font-extrabold"}>{r}</button>)}
-        {p.extra.circleId && <Link href={`/circle/${p.extra.circleId}`} className="ml-auto text-[9.5px] font-black text-purple-2">📊 Join earnings circle ›</Link>}
+        {p.circle && <Link href={`/circle/${p.circle.slug}`} className="ml-auto text-[9.5px] font-black text-purple-2">📊 {p.circle.name} circle · {p.circle.daysLeft}d ›</Link>}
       </div>
+      {!!shown.length && (
+        <div className="flex gap-[7px] mt-[9px]">
+          {shown.map((m) => (
+            <div key={m.key} className={tile} title={m.definition}>
+              <div className="text-[12.5px] font-black text-ink truncate">{m.value}</div>
+              <div className="text-[7.5px] font-extrabold text-ink-3 uppercase truncate">{m.label}</div>
+            </div>
+          ))}
+        </div>
+      )}
+      {p.about && (
+        <div className="mt-[9px] bg-card border border-line rounded-[13px] px-3 py-[9px]">
+          <div className="text-[8.5px] font-black text-ink-3">WHAT IT DOES</div>
+          <p className="mt-[5px] text-[11px] font-semibold text-ink-2 leading-[1.5]">{p.about}</p>
+        </div>
+      )}
+      {/* The case for and against is the club's own — its members' picks, in their words. */}
       <div className="flex gap-[7px] mt-[9px]">
-        <div className={tile}><div className="text-[12.5px] font-black text-ink">{n.pe}</div><div className="text-[7.5px] font-extrabold text-purple-2">P/E</div><div className="h-[3px] rounded-[2px] bg-line-2 mt-1"><div className="h-full rounded-[2px]" style={{ width: `${isNaN(pe) ? 0 : Math.min(100, (pe / 70) * 100)}%`, background: pe >= 40 ? "#C96A57" : "#4C8C4A" }} /></div></div>
-        <div className={tile}><div className="text-[12.5px] font-black text-ink">{n.revGrowth}</div><div className="text-[7.5px] font-extrabold text-ink-3">REV GROWTH</div><div className="h-[3px] rounded-[2px] bg-line-2 mt-1"><div className="h-full rounded-[2px] bg-green-2" style={{ width: `${isNaN(rg) ? 0 : Math.min(100, Math.abs(rg))}%` }} /></div></div>
-        <div className={tile}><div className="text-[12.5px] font-black text-ink">{n.grossMargin}</div><div className="text-[7.5px] font-extrabold text-ink-3">MARGIN</div><div className="h-[3px] rounded-[2px] bg-line-2 mt-1"><div className="h-full rounded-[2px] bg-green-2" style={{ width: `${isNaN(gm) ? 0 : Math.min(100, gm)}%` }} /></div></div>
-        <div className={tile}><div className="text-[12.5px] font-black text-ink">{p.marketCap ?? n.mktCap}</div><div className="text-[7.5px] font-extrabold text-ink-3">MKT CAP</div>{p.extra.rank && <div className="text-[7.5px] font-extrabold text-[#3A8C4A] mt-1">{p.extra.rank}</div>}</div>
-      </div>
-      <div className="mt-[9px] bg-card border border-line rounded-[13px] px-3 py-[9px]">
-        <div className="flex justify-between"><span className="text-[8.5px] font-black text-ink-3">HOW IT MAKES MONEY</span><span className="text-[8px] font-extrabold text-ink-4">{p.extra.mixYear}</span></div>
-        <div className="flex h-[14px] rounded-[7px] overflow-hidden mt-[6px]">{p.extra.mix.map((m) => <span key={m.label} style={{ width: `${m.pct}%`, background: m.color }} />)}</div>
-        <div className="flex gap-[10px] mt-[5px] text-[8.5px] font-extrabold text-ink-2 flex-wrap">{p.extra.mix.map((m, i) => <span key={m.label}>{["🟩", "🟧", "🟨", "⬜"][i] ?? "⬜"} {m.label} {m.pct}%</span>)}</div>
-      </div>
-      <div className="flex gap-[7px] mt-[9px]">
-        <div className="flex-1 bg-green-tint border border-green-line rounded-[12px] px-[10px] py-2"><div className="text-[8.5px] font-black text-green">🐂 BULL</div><div className="text-[9.5px] font-bold text-ink-2 leading-[1.4] mt-[2px]">{p.dossier.bull}</div></div>
-        <div className="flex-1 bg-[#F7E9E5] border border-[#ECD4CC] rounded-[12px] px-[10px] py-2"><div className="text-[8.5px] font-black text-red">🐻 BEAR</div><div className="text-[9.5px] font-bold text-ink-2 leading-[1.4] mt-[2px]">{p.dossier.bear}</div></div>
+        <div className="flex-1 bg-green-tint border border-green-line rounded-[12px] px-[10px] py-2">
+          <div className="text-[8.5px] font-black text-green">🐂 BULL · YOUR CLUB</div>
+          {p.bull.length ? p.bull.slice(0, 2).map((c, i) => <div key={i} className="text-[9.5px] font-bold text-ink-2 leading-[1.4] mt-[2px]">&ldquo;{c.text}&rdquo; <span className="text-ink-4">— {c.by}</span></div>)
+            : <div className="text-[9.5px] font-bold text-ink-4 leading-[1.4] mt-[2px]">No bull case yet — make the first pick.</div>}
+        </div>
+        <div className="flex-1 bg-[#F7E9E5] border border-[#ECD4CC] rounded-[12px] px-[10px] py-2">
+          <div className="text-[8.5px] font-black text-red">🐻 BEAR · YOUR CLUB</div>
+          {p.bear.length ? p.bear.slice(0, 2).map((c, i) => <div key={i} className="text-[9.5px] font-bold text-ink-2 leading-[1.4] mt-[2px]">&ldquo;{c.text}&rdquo; <span className="text-ink-4">— {c.by}</span></div>)
+            : <div className="text-[9.5px] font-bold text-ink-4 leading-[1.4] mt-[2px]">Nobody has argued the other side yet.</div>}
+        </div>
       </div>
       <Link href="/club?tab=performance" className="mt-[9px] bg-card border border-line rounded-[13px] px-3 py-[9px] flex items-center gap-[9px]">
         <span className="flex">{p.club.avatars.map((a, i) => <span key={i} className="w-6 h-6 rounded-full text-white flex items-center justify-center text-[9px] font-black shadow-[0_0_0_2px_#FFFDF7] shrink-0" style={{ background: a.color, border: `2.5px solid ${a.ring}`, marginLeft: i ? -7 : 0 }}>{a.initial}</span>)}</span>
@@ -96,10 +114,10 @@ export function CompanyV13(p: CompanyV13Props) {
       )}
       <Label className="mt-3 mb-[6px]">UNDERSTAND {p.name.toUpperCase()}</Label>
       <div className="bg-card border border-line rounded-[14px] px-[14px] py-[2px]">
-        {p.extra.understand.map((u, i) => {
+        {p.understand.map((u, i) => {
           const isPe = /expensive/i.test(u);
           const inner = <><span className="text-orange font-black">＋</span><span className="flex-1 text-[11.5px] font-extrabold text-ink">{u} {isPe && <span className="bg-purple-tint text-purple-2 rounded-[7px] px-[7px] py-[1px] text-[8.5px] font-black">P/E LESSON</span>}</span></>;
-          const cls = `flex items-center gap-[10px] py-[9px] w-full text-left ${i < p.extra.understand.length - 1 ? "border-b border-paper-2" : ""}`;
+          const cls = `flex items-center gap-[10px] py-[9px] w-full text-left ${i < p.understand.length - 1 ? "border-b border-paper-2" : ""}`;
           return isPe ? <Link key={u} href="/lesson/valuation" className={cls}>{inner}</Link> : <button key={u} onClick={() => openSheet("kai", { context: `symbol:${p.symbol}`, q: u })} className={cls}>{inner}</button>;
         })}
       </div>
