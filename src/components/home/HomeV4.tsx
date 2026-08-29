@@ -8,6 +8,7 @@ import { CirclesRail } from "@/components/circles/CircleRing";
 import { circles, mainFeed, type FeedPost } from "@/lib/fixtures/v12-social";
 import { privateFeed } from "@/lib/fixtures/v12-social";
 import { openSheet } from "@/components/sheets/bus";
+import { Composer } from "./Composer";
 import type { BeltColor } from "@/lib/types";
 
 type LocalPost = { id: string; text: string; audience: string; at: number; artifact?: string; poll?: string[] };
@@ -18,6 +19,7 @@ export function HomeV4({ belt, clubName, initialFeed, openProposal }: { belt: Be
   const [feed, setFeed] = useState<"main" | "private">(initialFeed);
   const [mine, setMine] = useState<LocalPost[]>([]);
   const [proposeOpen, setProposeOpen] = useState(false);
+  const [sentMain, setSentMain] = useState<{ text: string; at: number }[]>([]);
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate from localStorage after mount
     setMine(readPosts());
@@ -61,8 +63,11 @@ export function HomeV4({ belt, clubName, initialFeed, openProposal }: { belt: Be
 
       {feed === "main" ? (
         <div className="mt-[6px]">
+          {sentMain.map((m, i) => <MinePost key={`sent-${i}`} p={{ id: `sent-${i}`, text: m.text, audience: "main", at: m.at }} belt={belt} />)}
           {mine.filter((p) => p.audience === "main").map((p) => <MinePost key={p.id} p={p} belt={belt} />)}
           {mainFeed.map((p, i) => <Post key={p.id} p={p} last={i === mainFeed.length - 1} />)}
+          {/* The composer is the point of a conversation-first Home — it belongs on BOTH feeds. */}
+          <Composer audience="main" clubName={clubName} onLocalEcho={(t) => setSentMain((x) => [{ text: t, at: Date.now() }, ...x])} />
         </div>
       ) : (
         <PrivateFeed clubName={clubName} proposal={openProposal} mine={mine.filter((p) => p.audience === "private")} belt={belt} />
@@ -189,8 +194,6 @@ function MinePost({ p, belt }: { p: LocalPost; belt: BeltColor }) {
 }
 
 function PrivateFeed({ clubName, proposal, mine, belt }: { clubName: string; proposal: { id: string; text: string; voted: number; eligible: number; hoursLeft: number } | null; mine: LocalPost[]; belt: BeltColor }) {
-  const [attach, setAttach] = useState(false);
-  const [draft, setDraft] = useState("");
   const [sent, setSent] = useState<string[]>([]);
   return (
     <div className="mt-[6px] relative">
@@ -212,28 +215,8 @@ function PrivateFeed({ clubName, proposal, mine, belt }: { clubName: string; pro
         {mine.map((p) => <MinePost key={p.id} p={p} belt={belt} />)}
         {sent.map((t, i) => <div key={i} className="flex justify-end"><div className="max-w-[82%] bg-green-tint border border-green-line rounded-[13px_3px_13px_13px] px-3 py-2 text-[12px] font-semibold text-ink"><Cash t={t} /></div></div>)}
       </div>
-      <div className="mt-3 flex items-center gap-2 bg-card border border-line rounded-[14px] px-3 py-2">
-        <button type="button" onClick={() => setAttach(true)} aria-label="Attach" className="text-[16px] font-black text-ink-3">＋</button>
-        <input value={draft} onChange={(e) => setDraft(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && draft.trim()) { setSent((x) => [...x, draft.trim()]); setDraft(""); } }} placeholder="Message the club…" className="flex-1 bg-transparent text-[12.5px] font-bold text-ink placeholder:text-ink-4 outline-none" />
-        <button type="button" onClick={() => { if (draft.trim()) { setSent((x) => [...x, draft.trim()]); setDraft(""); } }} aria-label="Send" className="w-7 h-7 rounded-full bg-green text-cream-text text-[12px] font-black">↑</button>
-      </div>
-      {attach && (
-        <div className="fixed inset-0 z-[60] flex flex-col justify-end" role="dialog" aria-label="Add to your message">
-          <button aria-label="Cancel" onClick={() => setAttach(false)} className="absolute inset-0 bg-[#2E2A21]/45" />
-          <div className="relative bg-card rounded-t-[24px] px-[18px] pt-3 pb-[calc(24px+env(safe-area-inset-bottom))] sm:max-w-[402px] sm:mx-auto sm:w-full">
-            <div className="mx-auto w-10 h-[5px] rounded-full bg-line-3" />
-            <div className="mt-3 text-[10px] font-black tracking-[0.5px] text-ink-3">{clubName.toUpperCase()}</div>
-            <div className="text-[16px] font-black text-ink">Add to your message</div>
-            {([["📷", "Photo or video", "camera roll or record now", () => setAttach(false)],
-              ["📈", "Trade idea", "structured pick card — ticker, stance, why", () => { setAttach(false); openSheet("pick", { symbol: "NVDA" }); }],
-              ["📊", "Poll", "let the club vote on anything", () => { setAttach(false); openSheet("compose", { audience: "club" }); }],
-              ["📎", "Research artifact", "attach a thesis, chart or Kai summary", () => { setAttach(false); openSheet("compose", { audience: "club" }); }]] as [string, string, string, () => void][]).map(([e, t, d, fn]) => (
-              <button key={t} type="button" onClick={fn} className="mt-2 w-full flex items-center gap-3 rounded-[13px] border border-line bg-paper px-3 py-[10px] text-left"><span className="text-[18px]">{e}</span><span className="flex-1"><span className="block text-[13px] font-black text-ink">{t}</span><span className="block text-[10.5px] font-extrabold text-ink-3">{d}</span></span><span className="text-ink-4">›</span></button>
-            ))}
-            <button onClick={() => setAttach(false)} className="mt-3 w-full h-11 rounded-[14px] bg-card border border-line text-[13px] font-black text-ink-2">Cancel</button>
-          </div>
-        </div>
-      )}
+      {/* Real club chat: /api/club/chat writes a chat_messages row (was a local-only echo). */}
+      <Composer audience="private" clubName={clubName} onLocalEcho={(t) => setSent((x) => [...x, t])} />
     </div>
   );
 }
