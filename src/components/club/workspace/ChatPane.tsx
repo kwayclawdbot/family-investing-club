@@ -2,6 +2,9 @@
 import { KaiSummaryRow } from "./OfficialPicks";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { clubApi, signedOut } from "@/lib/live/client-club";
+import type { ClubChatMessage } from "@/lib/live/club";
 import { clubChat, type ClubChatMsg } from "@/lib/fixtures/v12-club";
 import { useStored } from "../storage";
 import { MemberDot, MiniSpark } from "./shared";
@@ -12,15 +15,26 @@ import { BeltChip } from "@/components/ui/belt";
 import { BELTS } from "@/lib/fixtures/belts";
 
 /** v11 — the private club is chat-default: my people, one conversation engine, rich artifacts. */
-export function ChatPane({ proposal }: { proposal: { id: string; title: string; hoursLeft: number; voted: number; eligible: number } | null }) {
+export function ChatPane({ proposal, live }: { proposal: { id: string; title: string; hoursLeft: number; voted: number; eligible: number } | null; live?: ClubChatMessage[] | null }) {
+  const router = useRouter();
   const [local, setLocal] = useStored<ClubChatMsg[]>("fic.club.chat", []);
   const [draft, setDraft] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [echo, setEcho] = useState<ClubChatMsg[]>([]);
   const [attach, setAttach] = useState(false);
-  const msgs = [...clubChat, ...local];
-  function send() {
-    const t = draft.trim(); if (!t) return;
-    setLocal([...local, { kind: "msg", id: `l${Date.now()}`, memberId: "kway", name: "Kway", text: t, mine: true }]);
-    setDraft("");
+  // Signed in → the family thread from the database; signed out (demo) → the fixture conversation.
+  const msgs: ClubChatMsg[] = live
+    ? [...live.map((m): ClubChatMsg => ({ kind: m.kind === "system" ? "system" : "msg", id: m.id, memberId: m.authorId ?? "club", name: m.author, text: m.text, mine: m.mine })), ...echo]
+    : [...clubChat, ...local];
+  async function send() {
+    const t = draft.trim(); if (!t || busy) return;
+    setBusy(true); setError(null);
+    const r = await clubApi.chat(t);
+    setBusy(false);
+    if (r.ok) { setDraft(""); setEcho((x) => [...x, { kind: "msg", id: `s${Date.now()}`, memberId: "me", name: "You", text: t, mine: true }]); router.refresh(); return; }
+    if (signedOut(r)) { setLocal([...local, { kind: "msg", id: `l${Date.now()}`, memberId: "kway", name: "Kway", text: t, mine: true }]); setDraft(""); return; }
+    setError(r.error);
   }
   return (
     <div className="flex flex-col min-h-[calc(100dvh-230px)] sm:min-h-[610px]">
@@ -108,13 +122,14 @@ export function ChatPane({ proposal }: { proposal: { id: string; title: string; 
           </div>
         </div>
       )}
-      <form onSubmit={(e) => { e.preventDefault(); send(); }} className="mt-auto pt-3 pb-3">
+      <div className="mt-auto"><KaiSummaryRow /></div>
+      <form onSubmit={(e) => { e.preventDefault(); void send(); }} className="pt-3 pb-3">
+        {error && <p role="alert" className="mb-[6px] text-[11px] font-bold text-coral px-1">{error}</p>}
         <div className="flex items-center gap-[9px] bg-card border-[1.5px] border-line rounded-[14px] px-[14px] py-[8px]">
-      <KaiSummaryRow />
-          <input value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Message the club…" className="flex-1 bg-transparent text-[12px] font-bold text-ink placeholder:text-ink-4 outline-none" />
+          <input value={draft} onChange={(e) => { setDraft(e.target.value); if (error) setError(null); }} placeholder="Message the club…" aria-label="Message the club" className="flex-1 bg-transparent text-[12px] font-bold text-ink placeholder:text-ink-4 outline-none" />
           <button type="button" onClick={() => setAttach(true)} aria-label="Attach" className="text-[15px] font-black text-ink-3">＋</button>
           <button type="button" onClick={() => openSheet("compose", { audience: "club" })} aria-label="Share something" className="text-[13px] text-ink-3">✎</button>
-          <button type="submit" aria-label="Send" className="w-7 h-7 rounded-full bg-green-2 text-cream-text flex items-center justify-center text-[12px]">➤</button>
+          <button type="submit" aria-label="Send" disabled={busy || !draft.trim()} className="w-7 h-7 rounded-full bg-green-2 text-cream-text flex items-center justify-center text-[12px] disabled:opacity-40">➤</button>
         </div>
       </form>
     </div>
