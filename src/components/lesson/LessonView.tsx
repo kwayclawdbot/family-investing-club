@@ -32,6 +32,9 @@ export function LessonView({ lesson }: { lesson: LessonData }) {
   const [xp, setXp] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const backHref = `/learn/path/${lesson.courseSlug}`;
+  // FTA's `html` lessons are whole interactive courses, not clips — they get the screen, not a
+  // 16:9 well. Everything else keeps the padded reading column.
+  const fullBleed = phase === "content" && !steps && lesson.videoProvider === "html";
 
   const pct = phase === "done" ? 100 : total ? Math.round((i / total) * 100) : lesson.progress.pct;
 
@@ -79,13 +82,13 @@ export function LessonView({ lesson }: { lesson: LessonData }) {
   }
 
   return (
-    <div className="min-h-full flex flex-col px-[18px] pt-[14px] pb-6">
-      <LessonHeader backHref={backHref} pct={pct} right={<span className="text-[10.5px] font-extrabold text-ink-3">{lesson.courseTitle} · {lesson.lessonNo}/{lesson.lessonTotal}</span>} />
+    <div className={cx("flex flex-col", fullBleed ? "h-full pt-[14px]" : "min-h-full px-[18px] pt-[14px] pb-6")}>
+      <div className={fullBleed ? "px-[18px]" : undefined}><LessonHeader backHref={backHref} pct={pct} right={<span className="text-[10.5px] font-extrabold text-ink-3">{lesson.courseTitle} · {lesson.lessonNo}/{lesson.lessonTotal}</span>} /></div>
 
       {phase === "content" && (steps ? (
         <StepHost key={steps[i]?.id ?? i} spec={steps[i]} register={lesson.register} xpNote={i === 0 ? `+${lesson.xp} XP` : undefined} onResolve={onResolve} />
       ) : (
-        <VideoLesson lesson={lesson} onDone={afterContent} />
+        <VideoLesson lesson={lesson} onDone={afterContent} fullBleed={fullBleed} />
       ))}
 
       {phase === "quiz" && lesson.quiz && (
@@ -130,7 +133,7 @@ function StepHost({ spec, register, xpNote, onResolve }: { spec: StepSpec; regis
 }
 
 /** Legacy viewer for the ~90 non-stepped lessons: an embedded video or an FTA html bundle. */
-function VideoLesson({ lesson, onDone }: { lesson: LessonData; onDone: () => void }) {
+function VideoLesson({ lesson, onDone, fullBleed = false }: { lesson: LessonData; onDone: () => void; fullBleed?: boolean }) {
   const [watched, setWatched] = useState(lesson.progress.status === "completed");
   const frame = useRef<HTMLIFrameElement>(null);
   const src = useMemo(() => {
@@ -159,6 +162,26 @@ function VideoLesson({ lesson, onDone }: { lesson: LessonData; onDone: () => voi
   }, [lesson.id, onDone]);
 
   useEffect(() => { void learnApi.progress(lesson.id, Math.max(lesson.progress.pct, 5)); }, [lesson.id, lesson.progress.pct]);
+
+  // An html bundle is the lesson: it gets the whole screen, edge to edge, with only the slim
+  // header above it and one action pinned below. A clip keeps its 16:9 well and the reading column.
+  if (fullBleed) {
+    return (
+      <div className="flex-1 min-h-0 flex flex-col">
+        {src ? (
+          <iframe ref={frame} src={src} title={lesson.title} allow="autoplay; microphone; fullscreen" allowFullScreen
+            className="flex-1 min-h-0 w-full border-0 bg-paper" />
+        ) : (
+          <p className="m-auto px-8 text-center text-[12.5px] font-bold text-ink-3">This lesson has no content attached yet.</p>
+        )}
+        <div className="shrink-0 border-t border-line bg-paper px-[18px] py-3 pb-[calc(12px+env(safe-area-inset-bottom))]">
+          <PrimaryButton onClick={() => { setWatched(true); onDone(); }}>
+            {watched ? "Continue" : lesson.quiz ? "Finished → take the quiz" : "Mark complete"}
+          </PrimaryButton>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 flex flex-col">
