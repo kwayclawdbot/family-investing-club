@@ -44,12 +44,20 @@ async function loadCurriculum(userId: string | null) {
   if (!courses.length) return null;
   const ids = courses.map((c) => c.id);
   const modules = must(await supa.from("modules").select("id, course_id, title, description, sort_order").in("course_id", ids).order("sort_order")) as Module[];
-  const lessons = modules.length ? (must(await supa.from("lessons").select("id, module_id, title, est_minutes, lesson_xp, node_kind, sort_order, retired, has_quiz, is_free, video_duration_sec").in("module_id", modules.map((m) => m.id)).order("sort_order")) as LessonRow[]).filter((l) => !l.retired) : [];
+  const allLessons = modules.length ? (must(await supa.from("lessons").select("id, module_id, title, est_minutes, lesson_xp, node_kind, sort_order, retired, has_quiz, is_free, video_duration_sec, video_id, steps").in("module_id", modules.map((m) => m.id)).order("sort_order")) as (LessonRow & { video_id: string | null; steps: unknown })[]) : [];
+  // A lesson is real when it has something to play — an authored step set or a video/bundle. The
+  // catalogue carries shells from the FTA import (whole published courses with lesson rows and no
+  // content), and a member who opens one gets an empty screen. They are dropped here, at the source,
+  // so the hub, the library, the course page and the next/prev walk all agree on what exists.
+  const lessons = allLessons.filter((l) => !l.retired && (l.steps !== null || !!l.video_id));
   const [progress, stepped] = await Promise.all([
     userId && lessons.length ? supa.from("lesson_progress").select("lesson_id, status, progress_pct").eq("user_id", userId) : Promise.resolve({ data: [] as Progress[] }),
     lessons.length ? supa.from("lessons").select("id").not("steps", "is", null) : Promise.resolve({ data: [] as { id: string }[] }),
   ]);
-  return { courses, modules, lessons, progress: (progress.data ?? []) as Progress[], stepped: new Set(((stepped.data ?? []) as { id: string }[]).map((r) => r.id)) };
+  // …and a module or course with nothing playable left is not shown at all.
+  const liveModules = modules.filter((m) => lessons.some((l) => l.module_id === m.id));
+  const liveCourses = courses.filter((c) => liveModules.some((m) => m.course_id === c.id));
+  return { courses: liveCourses, modules: liveModules, lessons, progress: (progress.data ?? []) as Progress[], stepped: new Set(((stepped.data ?? []) as { id: string }[]).map((r) => r.id)) };
 }
 type Curriculum = NonNullable<Awaited<ReturnType<typeof loadCurriculum>>>;
 

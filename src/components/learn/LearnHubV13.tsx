@@ -27,10 +27,10 @@ export function LearnHubV13({ tab, portfolio, hub, course, games }: { tab: Learn
   const [remind, setRemind] = useState<Record<string, boolean>>({});
   const streak = hub?.streak ?? 0;
   const cont = hub?.continueLesson ?? null;
-  // "Core" is the club's own program; anything else on the shelf is an elective.
+  // The shelf reads by who a course is for: the club's own programs first, then the wider library.
   const courses = hub?.courses ?? [];
-  const coreCourses = courses.filter((c) => (c.program ?? "fic") === "fic");
-  const electives = courses.filter((c) => (c.program ?? "fic") !== "fic");
+  const coreCourses = courses.filter((c) => c.program === "fic");
+  const electives = courses.filter((c) => c.program !== "fic");
   const liveNow = hub?.live.now[0] ?? null;
   const upcoming = hub?.live.upcoming ?? [];
   const recordings = hub?.live.recordings ?? [];
@@ -70,14 +70,14 @@ export function LearnHubV13({ tab, portfolio, hub, course, games }: { tab: Learn
             </Link>
           )}
           {!courses.length && <p className="mt-4 text-center text-[12px] font-bold text-ink-3">No courses published yet.</p>}
-          {!!coreCourses.length && <div className={eyebrow}>CORE CURRICULUM</div>}
+          {!!coreCourses.length && <div className={eyebrow}>THE CLUB CURRICULUM</div>}
           {!!coreCourses.length && <div className={`${card} px-4 py-1`}>{coreCourses.map((c, i) => (
             <Link key={c.slug} href={`/learn/path/${c.slug}`} className={`flex items-center gap-3 py-[10px] ${i < coreCourses.length - 1 ? "border-b border-paper-2" : ""}`}>
               <span className="w-9 h-9 rounded-[11px] bg-paper-2 flex items-center justify-center text-[16px]">📘</span>
               <div className="flex-1"><div className="text-[13.5px] font-black text-ink">{c.title}</div><div className="text-[10.5px] font-bold text-ink-3">{c.lessons} {c.lessons === 1 ? "lesson" : "lessons"}{c.modules ? ` · ${c.modules} modules` : ""}</div></div>
               <span className={`text-[11px] font-black ${c.pct === 100 ? "text-green" : c.pct > 0 ? "text-orange-2" : "text-ink-4"}`}>{c.pct > 0 ? `${c.pct}% complete` : "Start"}</span>
             </Link>))}</div>}
-          {!!electives.length && <div className={eyebrow}>ELECTIVES</div>}
+          {!!electives.length && <div className={eyebrow}>THE LIBRARY</div>}
           {!!electives.length && <div className={`${card} px-4 py-1`}>{electives.map((c, i) => (
             <Link key={c.slug} href={`/learn/path/${c.slug}`} className={`flex items-center gap-3 py-[10px] ${i < electives.length - 1 ? "border-b border-paper-2" : ""}`}>
               <span className="w-9 h-9 rounded-[11px] bg-paper-2 flex items-center justify-center text-[16px]">🎓</span>
