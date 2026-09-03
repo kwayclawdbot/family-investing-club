@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, cx } from "@/components/ui";
 import { adminApi } from "@/lib/live/client-admin";
+import { fullWhen } from "@/lib/format/when";
 import type { SessionRow } from "@/lib/live/admin-crm";
 import { Chip, EmptyRow, Label, Notice, Panel, StatusChip, Table, Td, Th, field, textarea } from "./ui";
 
@@ -14,7 +15,7 @@ const TIERS = ["free", "challenge", "academy"];
 type F = { title: string; description: string; scheduled_at: string; duration_min: number; zoom_join_url: string; recording_url: string; status: string; track: string; min_tier: string; class_type: string; worksheet_url: string; assignment: string; host_name: string };
 const toLocal = (iso: string | null) => { if (!iso) return ""; const d = new Date(iso); const p = (n: number) => String(n).padStart(2, "0"); return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`; };
 const form = (s?: SessionRow): F => ({ title: s?.title ?? "", description: s?.description ?? "", scheduled_at: toLocal(s?.scheduled_at ?? null), duration_min: s?.duration_min ?? 60, zoom_join_url: s?.zoom_join_url ?? "", recording_url: s?.recording_url ?? "", status: s?.status ?? "scheduled", track: s?.track ?? "all", min_tier: s?.min_tier ?? "challenge", class_type: s?.class_type ?? "", worksheet_url: s?.worksheet_url ?? "", assignment: s?.assignment ?? "", host_name: s?.host_name ?? "" });
-const when = (iso: string | null) => (iso ? new Date(iso).toLocaleString("en-US", { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "—");
+const when = (iso: string | null) => (iso ? fullWhen(iso) : "—");
 
 export function LiveSessionsEditor({ sessions }: { sessions: SessionRow[] }) {
   const router = useRouter();

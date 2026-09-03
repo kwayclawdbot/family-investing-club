@@ -7,6 +7,7 @@ import { BellIcon } from "@/components/ui/icons";
 import { BarChip, RingAvatar } from "@/components/community/BarChip";
 import { PulseChart, markerColor } from "./PulseChart";
 import { useBeltOf } from "@/components/belts/identity-context";
+import { marketHour } from "@/lib/format/when";
 
 const AV: Record<string, { bg: string; initial: string }> = {
   kway: { bg: "bg-green-2", initial: "K" }, andwele: { bg: "bg-green-3", initial: "A" }, mom: { bg: "bg-coral", initial: "M" }, dad: { bg: "bg-[#B08968]", initial: "D" }, arielle: { bg: "bg-gold", initial: "A" },
@@ -21,7 +22,7 @@ export function PulseHome({ p, belt, nextBeltLabel, xpToNext, extras }: { p: Hom
   const beltOf = useBeltOf();
   const [scope, setScope] = useState<"me" | "club">("me");
   const [range, setRange] = useState(p.ranges[0]);
-  const [hour] = useState(() => new Date().getHours());
+  const [hour] = useState(marketHour);
   const hero = scope === "me" ? p.me : p.club;
   const me = AV.kway;
   const xpPct = xpToNext != null ? Math.round((1 - xpToNext / (xpToNext + (p.tiles.xp % 1000 || 560))) * 100) : 100;

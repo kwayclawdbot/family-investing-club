@@ -7,10 +7,9 @@ import { KaiSpark } from "@/components/ui/icons";
 import { CompanyChart } from "./CompanyChart";
 import { money, pct, tileTone } from "./format";
 import { readOrders } from "./store";
+import { shortDate } from "@/lib/format/when";
 
 const TABS = ["Holdings", "Orders", "History"] as const;
-
-const fmtDate = (iso: string) => new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric" });
 
 export function PracticePortfolio({ portfolio, orders = [], companies = [] }: { portfolio: Portfolio; orders?: Order[]; companies?: Company[] }) {
   const [info, setInfo] = useState(false);
@@ -149,7 +148,7 @@ export function PracticePortfolio({ portfolio, orders = [], companies = [] }: { 
                   {o.thesis && <div className="text-[11px] font-bold text-ink-3 truncate">{o.thesis}</div>}
                 </div>
                 <div className="text-right shrink-0">
-                  <div className="text-[11px] font-extrabold text-ink-3">{fmtDate(o.at)}</div>
+                  <div className="text-[11px] font-extrabold text-ink-3">{shortDate(o.at)}</div>
                   <div className={`text-[10px] font-extrabold uppercase ${o.status === "filled" ? "text-green" : "text-orange-2"}`}>{o.status}</div>
                 </div>
               </Link>
@@ -170,7 +169,7 @@ export function PracticePortfolio({ portfolio, orders = [], companies = [] }: { 
                     {i < allOrders.length - 1 && <span className="flex-1 w-[2px] bg-line-2 my-1" />}
                   </div>
                   <div className={`flex-1 pb-4 ${i === allOrders.length - 1 ? "pb-2" : ""}`}>
-                    <div className="text-[11px] font-extrabold text-ink-3">{fmtDate(o.at)}</div>
+                    <div className="text-[11px] font-extrabold text-ink-3">{shortDate(o.at)}</div>
                     <div className="text-[13.5px] font-extrabold text-ink">
                       {o.side === "buy" ? "Bought" : "Sold"} {o.shares} {o.symbol} for ${money(o.shares * o.price)}
                     </div>

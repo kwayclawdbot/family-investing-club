@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui";
 import { adminApi } from "@/lib/live/client-admin";
+import { dateAndTime } from "@/lib/format/when";
 import type { AdminNote } from "@/lib/live/admin-crm";
 import { Label, Notice, Panel, field, textarea } from "./ui";
 
@@ -58,7 +59,7 @@ export function NotesPanel({ userId, notes }: { userId: string; notes: AdminNote
         {notes.map((n) => (
           <li key={n.id} className="rounded-[12px] bg-paper-2 px-3 py-2.5">
             <p className="text-[13px] font-bold text-ink whitespace-pre-wrap leading-[1.5]">{n.note}</p>
-            <div className="mt-1 flex items-center justify-between text-[11px] font-bold text-ink-4"><span>{n.author?.display_name ?? "Admin"} · {new Date(n.created_at).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}</span><button type="button" onClick={() => del(n.id)} className="text-red hover:underline">Delete</button></div>
+            <div className="mt-1 flex items-center justify-between text-[11px] font-bold text-ink-4"><span>{n.author?.display_name ?? "Admin"} · {dateAndTime(n.created_at)}</span><button type="button" onClick={() => del(n.id)} className="text-red hover:underline">Delete</button></div>
           </li>
         ))}
       </ul>

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button, cx } from "@/components/ui";
 import { MemberAvatar } from "./MemberAvatar";
 import { familyApi } from "@/lib/live/client-family";
+import { shortDate } from "@/lib/format/when";
 import type { NightState } from "@/lib/live/family";
 
 type Step = "pick" | "talk" | "who" | "done";
@@ -154,7 +155,7 @@ export function FamilyNightFlow({ night }: { night: NightState }) {
             {night.history.map((h, i) => (
               <div key={h.night} className={cx("flex items-center gap-3 py-[10px]", i < night.history.length - 1 && "border-b border-paper-2")}>
                 <span className="w-9 h-9 rounded-[10px] bg-purple-tint text-purple-2 text-[10.5px] font-black flex items-center justify-center">{h.ticker ?? "—"}</span>
-                <div className="flex-1 min-w-0"><div className="text-[13px] font-extrabold text-ink truncate">{h.name ?? "Family night"}</div><div className="text-[11px] font-bold text-ink-3">{new Date(`${h.night}T12:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric" })} · {h.attendees} there · hosted by {h.host}</div></div>
+                <div className="flex-1 min-w-0"><div className="text-[13px] font-extrabold text-ink truncate">{h.name ?? "Family night"}</div><div className="text-[11px] font-bold text-ink-3">{shortDate(`${h.night}T12:00:00`)} · {h.attendees} there · hosted by {h.host}</div></div>
               </div>
             ))}
           </div>

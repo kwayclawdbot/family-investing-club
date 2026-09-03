@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Logo, Pct, Signed, BackBar } from "./bits";
 import type { ScreenerHit, ScreenerResult } from "@/lib/live/screener";
 import type { Sector } from "@/lib/server/shared/screener-sectors";
+import { shortDate } from "@/lib/format/when";
 
 const chipOn = "bg-green-tint border border-[#A9C69E] text-green rounded-[15px] px-3 py-[5px] text-[10px] font-black whitespace-nowrap";
 const chipOff = "bg-card border border-line text-ink-3 rounded-[15px] px-3 py-[5px] text-[10px] font-extrabold whitespace-nowrap";
@@ -121,7 +122,7 @@ export function Screener({ result, filters }: { result: ScreenerResult | null; f
         ))}
       </div>
       <p className="mt-2 text-center text-[9.5px] font-bold text-ink-4">
-        {result ? `${result.universe.toLocaleString()} US listings${on("all") ? "" : " · $1+, 100k+ average volume, splits excluded"}${result.asOf ? ` · as of ${new Date(result.asOf).toLocaleDateString("en-US", { month: "short", day: "numeric" })}` : ""} · end-of-day` : "end-of-day data"}
+        {result ? `${result.universe.toLocaleString()} US listings${on("all") ? "" : " · $1+, 100k+ average volume, splits excluded"}${result.asOf ? ` · as of ${shortDate(result.asOf)}` : ""} · end-of-day` : "end-of-day data"}
       </p>
     </div>
   );

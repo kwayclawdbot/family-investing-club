@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { cx } from "@/components/ui";
+import { longDate } from "@/lib/format/when";
 import type { ContactRow } from "@/lib/live/admin-crm";
 import { AdminAvatar, EmptyRow, KindChip, RoleChip, SeenDot, StageChip, Table, Td, Th, field } from "./ui";
 
@@ -70,7 +71,7 @@ export function MembersTable({ rows, nowMs }: { rows: ContactRow[]; nowMs: numbe
                 <Td>{r.role ? <RoleChip role={r.role} /> : <span className="text-ink-4">—</span>}</Td>
                 <Td><StageChip stage={r.stage} /></Td>
                 <Td muted><SeenDot iso={r.last_activity} nowMs={nowMs} />{rel(r.last_activity, nowMs)}</Td>
-                <Td muted>{new Date(r.created).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</Td>
+                <Td muted>{longDate(r.created)}</Td>
               </tr>
             );
           })}

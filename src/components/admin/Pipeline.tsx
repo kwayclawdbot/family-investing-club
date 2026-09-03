@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, cx } from "@/components/ui";
 import { adminApi } from "@/lib/live/client-admin";
+import { dateAndTime } from "@/lib/format/when";
 import type { Lead, LeadDetail } from "@/lib/live/admin-crm";
 import { Chip, Label, Notice, Panel, STAGE_TONE, StageChip, field, textarea } from "./ui";
 
@@ -91,7 +92,7 @@ export function LeadEditor({ detail }: { detail: LeadDetail }) {
       <ul className="space-y-1.5 max-h-[320px] overflow-y-auto">
         {detail.events.length === 0 && <li className="text-[12px] font-bold text-ink-4">No events yet.</li>}
         {detail.events.map((e) => (
-          <li key={e.id} className="flex items-start gap-2 text-[12px] font-bold"><Chip className="mt-[1px]">{e.type}</Chip><span className="text-ink-3">{new Date(e.created_at).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}</span>{e.meta && Object.keys(e.meta).length > 0 && <span className="text-ink-4 truncate">{JSON.stringify(e.meta)}</span>}</li>
+          <li key={e.id} className="flex items-start gap-2 text-[12px] font-bold"><Chip className="mt-[1px]">{e.type}</Chip><span className="text-ink-3">{dateAndTime(e.created_at)}</span>{e.meta && Object.keys(e.meta).length > 0 && <span className="text-ink-4 truncate">{JSON.stringify(e.meta)}</span>}</li>
         ))}
       </ul>
     </Panel>

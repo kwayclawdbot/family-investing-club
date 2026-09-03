@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, cx } from "@/components/ui";
 import { familyApi } from "@/lib/live/client-family";
+import { shortDate } from "@/lib/format/when";
 import type { FamilyInvite } from "@/lib/live/family";
 
 type Kind = "kids" | "teens" | "parent";
@@ -92,7 +93,7 @@ export function InviteManager({ invites, familyName }: { invites: FamilyInvite[]
             <div key={i.id} className={cx("flex items-center gap-3 py-[10px]", idx < open.length - 1 && "border-b border-paper-2")}>
               <div className="flex-1 min-w-0">
                 <div className="text-[14px] font-black text-ink tracking-[1px]">{i.code}</div>
-                <div className="text-[11px] font-bold text-ink-3 truncate">{i.role === "parent" ? "Parent" : i.ageGroup === "teens" ? "Teen" : "Child"}{i.email ? ` · ${i.email}` : ""} · expires {new Date(i.expiresAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</div>
+                <div className="text-[11px] font-bold text-ink-3 truncate">{i.role === "parent" ? "Parent" : i.ageGroup === "teens" ? "Teen" : "Child"}{i.email ? ` · ${i.email}` : ""} · expires {shortDate(i.expiresAt)}</div>
               </div>
               <button type="button" onClick={() => share(i.code)} className="text-[12px] font-extrabold text-green">{copied === i.code ? "Copied" : "Share"}</button>
               <button type="button" onClick={() => revoke(i.id)} className="text-[12px] font-extrabold text-red">Revoke</button>

@@ -8,12 +8,10 @@ import { CashText } from "@/components/markets/v13/bits";
 import { scenarioList } from "@/lib/content/scenarios";
 import type { CourseDetail, LearnHubData } from "@/lib/learn/types";
 import type { Game } from "@/lib/types";
+import { clockTime, shortDate, weekday } from "@/lib/format/when";
 import { Toggle } from "@/components/ui/extras";
 
-const when = (iso: string) => {
-  const d = new Date(iso);
-  return { day: d.toLocaleDateString("en-US", { weekday: "short" }), time: d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }) };
-};
+const when = (iso: string) => ({ day: weekday(iso), time: clockTime(iso) });
 
 export type LearnTab = "path" | "courses" | "live" | "practice" | "review";
 const TABS: [LearnTab, string][] = [["path", "Path"], ["courses", "Courses"], ["live", "Live"], ["practice", "Practice"], ["review", "Review"]];
@@ -113,7 +111,7 @@ export function LearnHubV13({ tab, portfolio, hub, course, games }: { tab: Learn
           {!!recordings.length && <div className={`${card} px-[14px] py-[3px]`}>{recordings.map((r, i) => (
             <Link key={r.id} href={`/live/${r.id}`} className={`flex items-center gap-3 py-[10px] ${i < recordings.length - 1 ? "border-b border-paper-2" : ""}`}>
               <span className="w-9 h-9 rounded-[11px] bg-[#2E2A21] text-cream-text flex items-center justify-center text-[13px]">▶</span>
-              <div className="flex-1 min-w-0"><div className="text-[13px] font-black text-ink truncate">{r.title}</div><div className="text-[10px] font-bold text-ink-3">{new Date(r.startsAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}{r.minutes ? ` · ${r.minutes} min` : ""}</div></div><span className="text-ink-4">›</span>
+              <div className="flex-1 min-w-0"><div className="text-[13px] font-black text-ink truncate">{r.title}</div><div className="text-[10px] font-bold text-ink-3">{shortDate(r.startsAt)}{r.minutes ? ` · ${r.minutes} min` : ""}</div></div><span className="text-ink-4">›</span>
             </Link>))}</div>}
         </>
       )}

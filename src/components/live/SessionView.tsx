@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { LiveItem } from "@/lib/learn/types";
 import { learnApi } from "@/lib/live/client-learn";
+import { clockTime, dayAndDate } from "@/lib/format/when";
 import { cx } from "@/components/ui";
 import { TopBar } from "@/components/shell/TopBar";
 
@@ -66,7 +67,7 @@ export function SessionView({ item }: { item: LiveItem }) {
 
         <h1 className="mt-4 text-[21px] font-black text-ink leading-[1.25]">{item.title}</h1>
         <div className="mt-1 text-[11px] font-extrabold text-ink-3">
-          {when.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })} · {when.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })} · {item.minutes} min · {item.host}{item.hostTitle ? ` · ${item.hostTitle}` : ""}
+          {dayAndDate(when)} · {clockTime(when)} · {item.minutes} min · {item.host}{item.hostTitle ? ` · ${item.hostTitle}` : ""}
         </div>
         {item.blurb && <p className="mt-3 text-[13.5px] font-semibold text-ink-2 leading-[1.55]">{item.blurb}</p>}
 
