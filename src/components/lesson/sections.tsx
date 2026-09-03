@@ -367,8 +367,12 @@ export function FlipCardsStep({ spec, onResolve }: StepComponentProps<FlipSpec>)
             <button key={i} type="button" aria-pressed={on} data-on={on} className="fic-flip fic-press grid min-h-[124px] text-left"
               onClick={() => setFlipped((f) => (f.includes(i) ? f.filter((x) => x !== i) : [...f, i]))}>
               <span className="fic-flip-inner">
-                <span className="fic-flip-face rounded-[16px] border border-line bg-card shadow-[0_3px_0_#EFE4CF] px-3 py-3 flex flex-col justify-between gap-2">
-                  <span className="text-[14px] font-black text-ink leading-[1.25]">{card.front}</span>
+                {/* The card keeps one height through the flip — it is the same object turning
+                    over, and a box that resizes mid-rotation reads as two. That height comes
+                    from the longer face, so the term sits centred in whatever room it has
+                    rather than pinned to the top of a hole. */}
+                <span className="fic-flip-face rounded-[16px] border border-line bg-card shadow-[0_3px_0_#EFE4CF] px-3 py-3 flex flex-col">
+                  <span className="flex-1 flex items-center text-[14px] font-black text-ink leading-[1.25]">{card.front}</span>
                   <span className="text-[10.5px] font-extrabold text-ink-4 uppercase tracking-[0.3px]">Tap to flip</span>
                 </span>
                 {/* The term stays on the back too — a stack of answers with no questions
