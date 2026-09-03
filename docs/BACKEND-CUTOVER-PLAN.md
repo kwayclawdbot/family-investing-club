@@ -181,13 +181,29 @@ from the client. FTA's `club-b-*` card classes are re-expressed in FIC tokens in
 icon, `f0/parts` and entitlement dependencies were replaced with local equivalents, and `framer-motion`
 is the one new dependency (code-split behind `MotionProvider`, mounted only on the game routes).
 
-### Phase 8 — Cutover ✅ DONE 2026-09-03
-The 9/9 freeze was lifted: the challenge cohort was cancelled, and the live DB showed the window was
-already inert (0 `xp_events` and 0 active users in the preceding 7 days). `app.familyinvestingclub.com`
-now serves **family-investing-club**; `fta-dashboard` is retained, unmodified, as the legacy asset and
-admin host at `fta-dashboard-kways-clawds-projects.vercel.app`.
+### Phase 8 — Cutover: REHEARSED AND ROLLED BACK 2026-09-03
+**Status: NOT cut over. `app.familyinvestingclub.com` serves `fta-dashboard` (the old app), as before.**
 
-What was actually done, in order:
+The 9/9 freeze was lifted (the challenge cohort was cancelled), so the full cutover was executed —
+and reversed the same day on the owner's call: **the new app is not ready to face members.** Its
+blockers are product, not infrastructure:
+- placeholder copy still on member-facing screens;
+- the LMS does not show all course content accurately.
+
+Both are tracked in `docs/GO-LIVE-BLOCKERS.md`. The infrastructure below is proven and can be re-run
+in minutes when the product is ready — treat this section as the rehearsal record, not history.
+
+**Reverted:** domain moved back to `fta-dashboard`; FTA's crons re-enabled and FIC's disabled (one
+owner only — see below); `NEXT_PUBLIC_SITE_URL` back to `https://family-investing-club.vercel.app`
+and FIC redeployed. Verified after: the old app answers on the domain and its lesson bundles serve
+from it again; the new app answers on its own Vercel URL.
+
+**Kept, because each was a fix rather than a cutover step:** the `MARKETING_FROM_EMAIL` correction,
+the `NEXT_PUBLIC_LEGACY_LESSON_ORIGIN` value (correct in both directions), and the two additions to
+Supabase's redirect allowlist.
+
+#### What the rehearsal proved (all of it verified against the live host while it was cut over)
+The sequence that worked, in order:
 1. **Pre-flight** — `next build` green, all 6 API smoke suites green (identity · platform 19 ·
    admin · learn 17 · family 8 · club 10) against the live DB.
 2. **Env** — parity was already in place (23 production vars, copied 2026-08-29). Three corrections:
