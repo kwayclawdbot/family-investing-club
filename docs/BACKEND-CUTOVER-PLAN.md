@@ -181,22 +181,66 @@ from the client. FTA's `club-b-*` card classes are re-expressed in FIC tokens in
 icon, `f0/parts` and entitlement dependencies were replaced with local equivalents, and `framer-motion`
 is the one new dependency (code-split behind `MotionProvider`, mounted only on the game routes).
 
-### Phase 8 — Cutover (after 2026-09-09)
-1. Vercel env parity on `family-investing-club` (full list in §4); `CRON_SECRET`, VAPID, Stripe,
-   Resend, Twilio, Anthropic, OpenAI, Polygon, FB, `MARKETING_TOKEN_SECRET`.
-2. Supabase Auth → Redirect URLs: add FIC preview + prod origins; Site URL stays
-   `https://app.familyinvestingclub.com`.
-3. Stripe dashboard: point both webhook endpoints at the new host (same paths); verify with a
-   test event.
-4. Meta Lead Ads: update webhook URL, same `FB_LEADS_VERIFY_TOKEN`.
-5. `dispatch_push_notification()`: leave the URL (it already targets `app.familyinvestingclub.com`);
-   verify with a manual `notifications` insert after DNS moves.
-6. Vercel: move `app.familyinvestingclub.com` from `fta-dashboard` → `family-investing-club`;
-   attach `legacy.familyinvestingclub.com` to `fta-dashboard`; set
-   `NEXT_PUBLIC_CANONICAL_HOST` on FTA so its middleware 308s to the new host for non-admin paths.
-7. Smoke: login as parent / child / admin, lesson progress write, pick → vote → decision, push
-   round-trip, Stripe test checkout, cron hit with `CRON_SECRET`.
-8. Retire FTA when Phase 7 lands; delete `backend/`, `docker-compose.yml` (dead FastAPI).
+### Phase 8 — Cutover ✅ DONE 2026-09-03
+The 9/9 freeze was lifted: the challenge cohort was cancelled, and the live DB showed the window was
+already inert (0 `xp_events` and 0 active users in the preceding 7 days). `app.familyinvestingclub.com`
+now serves **family-investing-club**; `fta-dashboard` is retained, unmodified, as the legacy asset and
+admin host at `fta-dashboard-kways-clawds-projects.vercel.app`.
+
+What was actually done, in order:
+1. **Pre-flight** — `next build` green, all 6 API smoke suites green (identity · platform 19 ·
+   admin · learn 17 · family 8 · club 10) against the live DB.
+2. **Env** — parity was already in place (23 production vars, copied 2026-08-29). Three corrections:
+   - `MARKETING_FROM_EMAIL` held **literal double quotes inside the value** (`""Family Investing
+     Club <hello@…>""` on pull, vs FTA's clean value) — every Resend send would have carried a
+     malformed From header. Re-set without them.
+   - `NEXT_PUBLIC_SITE_URL` was still `https://family-investing-club.vercel.app` → the app host.
+   - `NEXT_PUBLIC_LEGACY_LESSON_ORIGIN` **set for the first time** (see step 5).
+   Then redeployed production, because `NEXT_PUBLIC_*` is inlined at build time — an env edit alone
+   would not have reached the client bundle.
+3. **Supabase Auth** — Site URL was already correct. Added `https://app.familyinvestingclub.com/**`
+   and `https://family-investing-club-*-kways-clawds-projects.vercel.app/**` to the redirect allowlist.
+4. **Domain move** — `app.familyinvestingclub.com` DELETEd from `fta-dashboard` and POSTed to
+   `family-investing-club` via the Vercel API, back to back (3.3 s gap, verified: true).
+5. **The one real landmine: the 41 `video_provider='html'` lessons.** Their bundles live in FTA's
+   `public/lessons` (113 MB) and were served *only* by whatever project held the app domain — the
+   default origin in `src/lib/learn/legacy.ts` is the app host itself. Moving the domain would have
+   404'd all 41 (confirmed: that path now 404s on the new host). `legacy.familyinvestingclub.com` was
+   not available — DNS is at GoDaddy (`ns61/ns62.domaincontrol.com`), not Vercel, and no registrar
+   credentials exist here. Used `https://fta-dashboard-kways-clawds-projects.vercel.app` instead: a
+   stable project alias that serves the bundles 200 and is *not* caught by FTA's canonical redirect.
+6. **FTA crons disabled** — not in the original plan and the most dangerous omission in it. FIC's
+   `vercel.json` mirrors FTA's 20 cron definitions 1:1, and both projects point at the same database,
+   so from the moment FIC deployed, every job (drip emails, alert digests, challenge pushes,
+   `club-refresh` every 15 min) had two runners. Disabled on `fta-dashboard` via
+   `PATCH /v1/projects/{id}/crons {enabled:false}` (`disabledAt` set); FIC's 20 remain enabled.
+7. **Verified on the live host** — 28/28 screens rendered in Chromium under a real magic-link session
+   (`BASE=https://app.familyinvestingclub.com npm run smoke:render`, member + admin, 0 failed); an
+   html lesson's iframe resolving to the legacy origin and fetching 200; signed-out `/home` → `/login`
+   and `/admin` → `/login?next=/admin`; API 401; both Stripe webhooks rejecting a bad signature (400);
+   cron and push refusing without their secrets (401); the Meta lead-ads handshake echoing
+   `hub.challenge` with the right token and 403 with a wrong one; and a full push round-trip —
+   `notifications` insert → DB trigger → FIC → `{"ok":true,"sent":1}` → `dispatched_at` stamped
+   (test row removed).
+
+**Plan corrections found during execution:**
+- Steps 3, 4 and 5 of the original plan (repoint Stripe, repoint Meta, re-verify push) were **no-ops**:
+  the hostname did not change, only the project behind it, so every external callback URL still
+  resolves. Verified rather than edited. Nothing in any third-party dashboard was touched.
+- Step 6's "set `NEXT_PUBLIC_CANONICAL_HOST` on FTA so its middleware 308s to the new host for
+  non-admin paths" **describes behaviour FTA does not have**: `src/middleware.ts` only redirects when
+  `host === "fta-dashboard-ruddy.vercel.app"`. FTA was therefore left completely untouched — no env
+  change, no redeploy — which is also why the lesson bundles kept serving.
+
+**Left for the owner (neither blocks anything):**
+- Add a GoDaddy CNAME `legacy.familyinvestingclub.com → cname.vercel-dns.com`, attach it to
+  `fta-dashboard`, and repoint `NEXT_PUBLIC_LEGACY_LESSON_ORIGIN` at it, so the lesson bundles do not
+  depend on a Vercel-generated alias. Cosmetic and durability, not correctness.
+- `stripe_customer_id` backfill (still null on all 23 families) before the billing portal is used.
+
+9. Retire FTA when the un-ported admin pages (shop orders/products, coach-demos, community-watchlist,
+   picks) are either ported or abandoned; the 113 MB of lesson bundles must move first. Then delete
+   `backend/`, `docker-compose.yml` (dead FastAPI).
 
 ## 3. Explicit non-goals
 - No second Supabase project, no table copies, no `auth.users` re-import.
