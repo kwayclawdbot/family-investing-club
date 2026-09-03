@@ -1,16 +1,27 @@
 {
   "lessons": [
     {
-      "match": { "course": "fta-trade-ready", "title": "Live Class: Supply & Demand Zones" },
+      "match": {
+        "course": "belt-black",
+        "title": "Live Class: Supply & Demand Zones"
+      },
       "json": {
         "schema": 1,
         "title": "Supply and demand zones",
-        "skills": ["technical_analysis"],
+        "skills": [
+          "technical_analysis"
+        ],
         "difficulty": 4,
-        "audience": ["adult", "teen"],
+        "audience": [
+          "adult",
+          "teen"
+        ],
         "duration_minutes": 16,
         "xp": 50,
-        "guide": { "intro": "Last week: the track. This week: the places the track was made.", "outro": "You can find where the orders were. Next: what happens when the market goes hunting for yours." },
+        "guide": {
+          "intro": "Last week: the track. This week: the places the track was made.",
+          "outro": "You can find where the orders were. Next: what happens when the market goes hunting for yours."
+        },
         "steps": [
           {
             "id": "concept",
@@ -35,31 +46,187 @@
               {
                 "title": "Level — one price",
                 "tone": "neutral",
-                "points": ["Drawn where price turned before", "Matters because of memory and round numbers", "Either respected or broken, cleanly", "Fine on a daily chart, useless at execution zoom"]
+                "points": [
+                  "Drawn where price turned before",
+                  "Matters because of memory and round numbers",
+                  "Either respected or broken, cleanly",
+                  "Fine on a daily chart, useless at execution zoom"
+                ]
               },
               {
                 "title": "Zone — a band",
                 "tone": "green",
-                "points": ["Drawn from the base before an impulse", "Matters because orders were actually filled there", "Has an edge you enter at and an edge that invalidates", "Survives the noise a line cannot"]
+                "points": [
+                  "Drawn from the base before an impulse",
+                  "Matters because orders were actually filled there",
+                  "Has an edge you enter at and an edge that invalidates",
+                  "Survives the noise a line cannot"
+                ]
               }
             ],
             "note": "The practical difference: a level gives you a price. A zone gives you a price to act at AND a price to be wrong at — which is what you need to size a position at Blue Belt."
           },
           {
             "id": "drawing",
-            "type": "anatomy",
-            "label": "INTERACTIVE",
+            "type": "chart",
+            "label": "ON THE CHART",
             "skill": "technical_analysis",
             "heading": "Drawing the zone off the base candle",
-            "caption": "The last quiet candle before the move. Tap each part to see what it becomes.",
-            "candle": { "open": 118, "high": 121, "low": 116, "close": 119 },
-            "hotspots": [
-              { "part": "high", "title": "The top of the zone", "body": "The high of the base candle. For a demand zone below price this is the first edge price touches on its way back — the proximal edge, where you act." },
-              { "part": "low", "title": "The bottom of the zone", "body": "The low of the base candle. This is the distal edge: the price that says the zone has failed. Your invalidation lives here, not one tick under it." },
-              { "part": "body", "title": "The quiet body", "body": "Small, because nothing was resolved yet. A big body here means the move already happened and you are drawing a zone around the result instead of the cause." },
-              { "part": "open", "title": "Why it was quiet", "body": "A large buyer working an order does not want to move the price against themselves. Quiet is the point — the calm is the accumulation." },
-              { "part": "close", "title": "What comes next", "body": "The candle after this one leaves the area fast. That impulse is what proves the base was a base, and you can only draw the zone in hindsight because of it." }
-            ]
+            "intro": "A zone needs two things on the screen: the quiet candle it is drawn from, and the move that left it. One without the other is a guess.",
+            "prompt": "Tap the base, the candle it ends on, the zone that comes off it, and the leg that proves the whole thing.",
+            "done": "Got it → Continue",
+            "figure": {
+              "ticker": "AMZN",
+              "session": "Amazon · 5-minute · 19 August 2026",
+              "bars": [
+                {
+                  "t": "10:00",
+                  "o": 259.88,
+                  "h": 260.68,
+                  "l": 259.72,
+                  "c": 260.38
+                },
+                {
+                  "t": "10:05",
+                  "o": 260.4,
+                  "h": 260.82,
+                  "l": 260.15,
+                  "c": 260.78
+                },
+                {
+                  "t": "10:10",
+                  "o": 260.76,
+                  "h": 261.38,
+                  "l": 260.74,
+                  "c": 260.92
+                },
+                {
+                  "t": "10:15",
+                  "o": 260.9,
+                  "h": 261.22,
+                  "l": 260.71,
+                  "c": 261.16
+                },
+                {
+                  "t": "10:20",
+                  "o": 261.21,
+                  "h": 261.38,
+                  "l": 261,
+                  "c": 261.07
+                },
+                {
+                  "t": "10:25",
+                  "o": 261.04,
+                  "h": 261.22,
+                  "l": 260.75,
+                  "c": 261.22
+                },
+                {
+                  "t": "10:30",
+                  "o": 261.19,
+                  "h": 261.73,
+                  "l": 261.18,
+                  "c": 261.68
+                },
+                {
+                  "t": "10:35",
+                  "o": 261.69,
+                  "h": 261.94,
+                  "l": 261.53,
+                  "c": 261.66
+                },
+                {
+                  "t": "10:40",
+                  "o": 261.68,
+                  "h": 262.99,
+                  "l": 261.68,
+                  "c": 262.95
+                },
+                {
+                  "t": "10:45",
+                  "o": 262.97,
+                  "h": 263.67,
+                  "l": 262.94,
+                  "c": 263.5
+                },
+                {
+                  "t": "10:50",
+                  "o": 263.5,
+                  "h": 264.56,
+                  "l": 263.45,
+                  "c": 264.33
+                },
+                {
+                  "t": "10:55",
+                  "o": 264.31,
+                  "h": 264.97,
+                  "l": 263.65,
+                  "c": 263.78
+                },
+                {
+                  "t": "11:00",
+                  "o": 263.8,
+                  "h": 264.54,
+                  "l": 263.75,
+                  "c": 264.46
+                }
+              ],
+              "marks": [
+                {
+                  "id": "base",
+                  "anchor": {
+                    "at": "span",
+                    "from": 0,
+                    "to": 7
+                  },
+                  "chip": "the base",
+                  "name": "The base",
+                  "tone": "note",
+                  "title": "The base · 10:00 to 10:35",
+                  "body": "Eight five-minute candles in which Amazon went from 260.38 to 261.66 — a dollar and twenty-eight cents in forty minutes. Nothing appears to be happening, and that is the point. Quiet is what a large buyer working an order looks like from the outside."
+                },
+                {
+                  "id": "candle",
+                  "anchor": {
+                    "at": "bar",
+                    "index": 7
+                  },
+                  "chip": "base candle",
+                  "name": "The base candle",
+                  "tone": "zone",
+                  "title": "The base candle · 10:35",
+                  "body": "The LAST candle before the move. It traded 261.53 to 261.94 — forty-one cents, the tightest of the eight. This is the one you draw from, because it is the last price at which that buyer could still be filled quietly."
+                },
+                {
+                  "id": "zone",
+                  "anchor": {
+                    "at": "band",
+                    "top": 261.94,
+                    "bottom": 261.53,
+                    "from": 7,
+                    "to": 12
+                  },
+                  "chip": "the zone",
+                  "name": "The zone",
+                  "tone": "zone",
+                  "title": "The zone · 261.53 to 261.94",
+                  "body": "The base candle's own high and low, extended forward. A band, not a line, because the fills happened across a range of prices. The top edge is where you would act on a return; the bottom edge is where the idea is wrong."
+                },
+                {
+                  "id": "leg",
+                  "anchor": {
+                    "at": "span",
+                    "from": 8,
+                    "to": 10
+                  },
+                  "chip": "the leg",
+                  "name": "The leg away",
+                  "tone": "up",
+                  "title": "The leg · 10:40 to 10:50",
+                  "body": "From 261.68 to 264.56 in fifteen minutes — more than twice the entire forty-minute base, in a third of the time. The leg is what proves the base was a base. Without a move away this hard, eight quiet candles are just eight quiet candles."
+                }
+              ]
+            }
           },
           {
             "id": "process",
@@ -69,10 +236,22 @@
             "heading": "Drawing a zone you can actually trade",
             "intro": "Four moves, in this order. Skipping the first is how people end up with forty zones on a chart and no decisions.",
             "moves": [
-              { "title": "Find the impulse first", "body": "Look for the move that broke structure — the leg that went somewhere in a hurry. No impulse, no zone. You are looking backwards from a result, not scanning for shapes." },
-              { "title": "Walk back to the last quiet candle", "body": "From the start of the impulse, step back until the candles go small. That final small candle before the run is the base." },
-              { "title": "Mark its high and low, extend right", "body": "Two lines from one candle, drawn forward. Not the whole consolidation, not the wick of the impulse — one candle." },
-              { "title": "Mark it used once price returns", "body": "A zone is spent when price has traded back into it and left again. The orders that made it have been filled. A used zone is history; only unmitigated zones are live." }
+              {
+                "title": "Find the impulse first",
+                "body": "Look for the move that broke structure — the leg that went somewhere in a hurry. No impulse, no zone. You are looking backwards from a result, not scanning for shapes."
+              },
+              {
+                "title": "Walk back to the last quiet candle",
+                "body": "From the start of the impulse, step back until the candles go small. That final small candle before the run is the base."
+              },
+              {
+                "title": "Mark its high and low, extend right",
+                "body": "Two lines from one candle, drawn forward. Not the whole consolidation, not the wick of the impulse — one candle."
+              },
+              {
+                "title": "Mark it used once price returns",
+                "body": "A zone is spent when price has traded back into it and left again. The orders that made it have been filled. A used zone is history; only unmitigated zones are live."
+              }
             ],
             "closing": "Three or four live zones on a chart is a working map. Twenty is a wall, and a wall tells you nothing."
           },
@@ -104,10 +283,19 @@
             "correctIndex": 1,
             "explanation": "The zone existed because an order was unfinished. Once price has traded back in, the balance is filled and the reason is gone. Second visits are much weaker than first ones.",
             "wrongFeedback": [
-              { "text": "It worked precisely once, and that is what used it up. A zone is fuel, not a wall.", "kai": true },
+              {
+                "text": "It worked precisely once, and that is what used it up. A zone is fuel, not a wall.",
+                "kai": true
+              },
               null,
-              { "text": "They expire by being used. That is the whole mechanism — unfinished business, then finished.", "kai": true },
-              { "text": "That is a role flip, which is about a broken level. A mitigated zone is simply spent, not reversed.", "kai": true }
+              {
+                "text": "They expire by being used. That is the whole mechanism — unfinished business, then finished.",
+                "kai": true
+              },
+              {
+                "text": "That is a role flip, which is about a broken level. A mitigated zone is simply spent, not reversed.",
+                "kai": true
+              }
             ],
             "reinforce": "Unmitigated means untouched since it was formed. Only those are live."
           },
@@ -126,10 +314,19 @@
             "correctIndex": 1,
             "explanation": "The bottom edge is the price at which the idea is wrong — the order clearly was not there. A stop above it is inside the noise the zone exists to absorb.",
             "wrongFeedback": [
-              { "text": "A percentage knows nothing about this chart. The stop belongs where the idea fails, and the chart says where that is.", "kai": true },
+              {
+                "text": "A percentage knows nothing about this chart. The stop belongs where the idea fails, and the chart says where that is.",
+                "kai": true
+              },
               null,
-              { "text": "That puts the stop inside the zone, so ordinary movement within the band takes you out. Small stops are not the same as good stops.", "kai": true },
-              { "text": "Backwards, and this is the most expensive habit in trading. The chart sets the stop; the stop sets the size. Never the other way round." , "kai": true }
+              {
+                "text": "That puts the stop inside the zone, so ordinary movement within the band takes you out. Small stops are not the same as good stops.",
+                "kai": true
+              },
+              {
+                "text": "Backwards, and this is the most expensive habit in trading. The chart sets the stop; the stop sets the size. Never the other way round.",
+                "kai": true
+              }
             ],
             "reinforce": "The chart decides where you are wrong. Your account decides how much that costs."
           },
@@ -151,13 +348,21 @@
       }
     },
     {
-      "match": { "course": "fta-trade-ready", "title": "Drill: Draw 3 Zones on Real Charts" },
+      "match": {
+        "course": "belt-black",
+        "title": "Drill: Draw 3 Zones on Real Charts"
+      },
       "json": {
         "schema": 1,
         "title": "Drill — draw three zones",
-        "skills": ["technical_analysis"],
+        "skills": [
+          "technical_analysis"
+        ],
         "difficulty": 4,
-        "audience": ["adult", "teen"],
+        "audience": [
+          "adult",
+          "teen"
+        ],
         "duration_minutes": 8,
         "xp": 50,
         "steps": [
@@ -166,23 +371,190 @@
             "type": "explainer",
             "label": "PROCESS",
             "heading": "Three zones, three decisions",
-            "body": ["Each one asks where the zone is, or whether there is one at all. The second option is right more often than people expect."]
+            "body": [
+              "Three real charts. Each one asks where the zone is, or whether there is one worth having at all. The second answer is right more often than people expect."
+            ]
           },
           {
             "id": "d1",
             "type": "prediction",
             "label": "EXERCISE",
             "skill": "technical_analysis",
-            "question": "Price drifts sideways between 118 and 121 for four candles, then runs from 121 to 138 in two. Where is the demand zone?",
+            "question": "Alphabet has gone nowhere for forty minutes — eight candles between 354.01 and 354.67. If price leaves this base upward, where does the demand zone belong?",
             "options": [
-              { "label": "116–121, the whole sideways patch", "value": "all" },
-              { "label": "The high and low of the last quiet candle before the run", "value": "last" },
-              { "label": "121–138, the impulse itself", "value": "impulse" }
+              {
+                "label": "Across the whole base, 354.01–354.67",
+                "value": "all"
+              },
+              {
+                "label": "On the last quiet candle before the move — its own high and low",
+                "value": "last"
+              },
+              {
+                "label": "At the lowest low, 354.01, drawn as a line",
+                "value": "line"
+              }
             ],
             "outcomeValue": "last",
+            "chart": {
+              "ticker": "GOOGL",
+              "session": "Alphabet · 5-minute · 10 August 2026",
+              "bars": [
+                {
+                  "t": "14:00",
+                  "o": 354.24,
+                  "h": 354.43,
+                  "l": 354.14,
+                  "c": 354.21
+                },
+                {
+                  "t": "14:05",
+                  "o": 354.24,
+                  "h": 354.46,
+                  "l": 354.16,
+                  "c": 354.34
+                },
+                {
+                  "t": "14:10",
+                  "o": 354.35,
+                  "h": 354.48,
+                  "l": 354.25,
+                  "c": 354.39
+                },
+                {
+                  "t": "14:15",
+                  "o": 354.38,
+                  "h": 354.38,
+                  "l": 354.02,
+                  "c": 354.04
+                },
+                {
+                  "t": "14:20",
+                  "o": 354.02,
+                  "h": 354.35,
+                  "l": 354.01,
+                  "c": 354.25
+                },
+                {
+                  "t": "14:25",
+                  "o": 354.25,
+                  "h": 354.51,
+                  "l": 354.25,
+                  "c": 354.35
+                },
+                {
+                  "t": "14:30",
+                  "o": 354.35,
+                  "h": 354.6,
+                  "l": 354.14,
+                  "c": 354.46
+                },
+                {
+                  "t": "14:35",
+                  "o": 354.46,
+                  "h": 354.67,
+                  "l": 354.46,
+                  "c": 354.61
+                },
+                {
+                  "t": "14:40",
+                  "o": 354.63,
+                  "h": 355.68,
+                  "l": 354.6,
+                  "c": 355.66
+                },
+                {
+                  "t": "14:45",
+                  "o": 355.67,
+                  "h": 356.23,
+                  "l": 355.6,
+                  "c": 355.68
+                },
+                {
+                  "t": "14:50",
+                  "o": 355.63,
+                  "h": 356.2,
+                  "l": 355.63,
+                  "c": 356.09
+                },
+                {
+                  "t": "14:55",
+                  "o": 356.06,
+                  "h": 356.25,
+                  "l": 355.94,
+                  "c": 355.95
+                },
+                {
+                  "t": "15:00",
+                  "o": 355.97,
+                  "h": 356.15,
+                  "l": 355.88,
+                  "c": 355.99
+                }
+              ],
+              "revealFrom": 8,
+              "marks": [
+                {
+                  "id": "base",
+                  "anchor": {
+                    "at": "span",
+                    "from": 0,
+                    "to": 7
+                  },
+                  "chip": "the base",
+                  "name": "The base",
+                  "tone": "note",
+                  "title": "Forty minutes, sixty-six cents",
+                  "body": "354.01 to 354.67, eight candles."
+                },
+                {
+                  "id": "candle",
+                  "anchor": {
+                    "at": "bar",
+                    "index": 7
+                  },
+                  "chip": "base candle",
+                  "name": "Base candle",
+                  "tone": "zone",
+                  "phase": "reveal",
+                  "title": "14:35 — the last quiet candle",
+                  "body": "354.46 to 354.67. Twenty-one cents."
+                },
+                {
+                  "id": "zone",
+                  "anchor": {
+                    "at": "band",
+                    "top": 354.67,
+                    "bottom": 354.46,
+                    "from": 7,
+                    "to": 12
+                  },
+                  "chip": "the zone",
+                  "name": "The zone",
+                  "tone": "zone",
+                  "phase": "reveal",
+                  "title": "354.46 to 354.67",
+                  "body": "Drawn off one candle, extended forward."
+                },
+                {
+                  "id": "leg",
+                  "anchor": {
+                    "at": "span",
+                    "from": 8,
+                    "to": 9
+                  },
+                  "chip": "the leg",
+                  "name": "The leg",
+                  "tone": "up",
+                  "phase": "reveal",
+                  "title": "14:40 to 14:45",
+                  "body": "354.63 to 356.23 in ten minutes."
+                }
+              ]
+            },
             "reveal": {
               "headline": "The last quiet candle, and only that one",
-              "body": "The whole patch is too wide to trade — a stop under 116 on an entry at 121 is a loss you did not need to take. The impulse is the result, not the cause. One candle, its high and its low."
+              "body": "Alphabet left at 14:40 and was at 356.23 five minutes later. The candle immediately before it, 14:35, traded 354.46 to 354.67 — twenty-one cents. That is the zone.\n\nDraw it across the whole base instead and you have a sixty-six cent band, three times as wide, that any pullback will \"reach\" — which tells you nothing and costs three times as much when you are wrong. Draw it as a line at 354.01 and price misses you by twelve cents."
             }
           },
           {
@@ -190,16 +562,235 @@
             "type": "prediction",
             "label": "EXERCISE",
             "skill": "technical_analysis",
-            "question": "A zone formed three weeks ago. Price has been back into it twice since and bounced both times. You are looking at it now. Is it tradeable?",
+            "question": "Tesla's 341–342 supply, built on 23 July, has now been reached once — on 13 August, which topped at 341.64 and closed back at 339.96. Is that zone still fresh?",
             "options": [
-              { "label": "Yes — twice proven makes it the strongest zone on the chart", "value": "strong" },
-              { "label": "No — it has been mitigated, twice over", "value": "spent" },
-              { "label": "Only with a wider stop", "value": "wider" }
+              {
+                "label": "Fresher — it just held, which proves it works",
+                "value": "strong"
+              },
+              {
+                "label": "Used — the first visit is where the resting orders start getting filled",
+                "value": "spent"
+              },
+              {
+                "label": "Unchanged — zones do not expire",
+                "value": "same"
+              }
             ],
             "outcomeValue": "spent",
+            "chart": {
+              "ticker": "TSLA",
+              "session": "Tesla · Daily · 23 July – 20 August 2026",
+              "bars": [
+                {
+                  "t": "Jul 23",
+                  "o": 341,
+                  "h": 342.11,
+                  "l": 315.74,
+                  "c": 319.69
+                },
+                {
+                  "t": "Jul 24",
+                  "o": 320.72,
+                  "h": 322.96,
+                  "l": 306.51,
+                  "c": 313.03
+                },
+                {
+                  "t": "Jul 27",
+                  "o": 313.24,
+                  "h": 317,
+                  "l": 304.28,
+                  "c": 309.22
+                },
+                {
+                  "t": "Jul 28",
+                  "o": 305.93,
+                  "h": 311.16,
+                  "l": 300.69,
+                  "c": 307.44
+                },
+                {
+                  "t": "Jul 29",
+                  "o": 307.14,
+                  "h": 309.06,
+                  "l": 297.38,
+                  "c": 298.32
+                },
+                {
+                  "t": "Jul 30",
+                  "o": 302.7,
+                  "h": 310.87,
+                  "l": 301.33,
+                  "c": 308.85
+                },
+                {
+                  "t": "Jul 31",
+                  "o": 309.69,
+                  "h": 315.5,
+                  "l": 301.97,
+                  "c": 311.21
+                },
+                {
+                  "t": "Aug 3",
+                  "o": 310.96,
+                  "h": 324.65,
+                  "l": 310.43,
+                  "c": 322.08
+                },
+                {
+                  "t": "Aug 4",
+                  "o": 324,
+                  "h": 329.57,
+                  "l": 320.79,
+                  "c": 327.35
+                },
+                {
+                  "t": "Aug 5",
+                  "o": 323.42,
+                  "h": 327.14,
+                  "l": 320.28,
+                  "c": 321.55
+                },
+                {
+                  "t": "Aug 6",
+                  "o": 317.05,
+                  "h": 323,
+                  "l": 315.52,
+                  "c": 319.53
+                },
+                {
+                  "t": "Aug 7",
+                  "o": 322.34,
+                  "h": 333.73,
+                  "l": 321.25,
+                  "c": 328.58
+                },
+                {
+                  "t": "Aug 10",
+                  "o": 326.6,
+                  "h": 332.05,
+                  "l": 326.15,
+                  "c": 330.88
+                },
+                {
+                  "t": "Aug 11",
+                  "o": 332.8,
+                  "h": 336.2,
+                  "l": 329.53,
+                  "c": 332.81
+                },
+                {
+                  "t": "Aug 12",
+                  "o": 335,
+                  "h": 335.5,
+                  "l": 323.64,
+                  "c": 327.51
+                },
+                {
+                  "t": "Aug 13",
+                  "o": 327.2,
+                  "h": 341.64,
+                  "l": 325.24,
+                  "c": 339.96
+                },
+                {
+                  "t": "Aug 14",
+                  "o": 342.33,
+                  "h": 351.26,
+                  "l": 335.33,
+                  "c": 342.27
+                },
+                {
+                  "t": "Aug 17",
+                  "o": 340.69,
+                  "h": 345.45,
+                  "l": 337.48,
+                  "c": 339.3
+                },
+                {
+                  "t": "Aug 18",
+                  "o": 333.22,
+                  "h": 340.53,
+                  "l": 331.12,
+                  "c": 336.87
+                },
+                {
+                  "t": "Aug 19",
+                  "o": 338.89,
+                  "h": 351.62,
+                  "l": 335.7,
+                  "c": 351.12
+                },
+                {
+                  "t": "Aug 20",
+                  "o": 346.2,
+                  "h": 347.5,
+                  "l": 338.96,
+                  "c": 345.13
+                }
+              ],
+              "revealFrom": 16,
+              "marks": [
+                {
+                  "id": "wall",
+                  "anchor": {
+                    "at": "band",
+                    "top": 342.11,
+                    "bottom": 341
+                  },
+                  "chip": "341–342",
+                  "name": "The supply",
+                  "tone": "level",
+                  "title": "341.00 to 342.11",
+                  "body": "Built on 23 July, untouched for fourteen sessions."
+                },
+                {
+                  "id": "first",
+                  "anchor": {
+                    "at": "point",
+                    "index": 15,
+                    "price": 341.64
+                  },
+                  "chip": "341.64",
+                  "name": "First visit",
+                  "tone": "down",
+                  "title": "13 August · 341.64",
+                  "body": "Forty-seven cents under the top of the band, then closed back at 339.96."
+                },
+                {
+                  "id": "through",
+                  "anchor": {
+                    "at": "point",
+                    "index": 16,
+                    "price": 351.26
+                  },
+                  "chip": "351.26",
+                  "name": "Second visit",
+                  "tone": "up",
+                  "phase": "reveal",
+                  "title": "14 August · through it, to 351.26",
+                  "body": "Opened at 342.33, above the whole band."
+                },
+                {
+                  "id": "give",
+                  "anchor": {
+                    "at": "point",
+                    "index": 16,
+                    "price": 335.33
+                  },
+                  "chip": "335.33",
+                  "name": "And back",
+                  "tone": "down",
+                  "phase": "reveal",
+                  "title": "…and back to 335.33 the same morning",
+                  "body": "The same session gave all of it back."
+                }
+              ]
+            },
             "reveal": {
-              "headline": "Spent — and the bounces are why",
-              "body": "Every visit fills more of what was resting there. A zone is not a wall that gets stronger with each hit; it is fuel that gets used. The third visit is where beginners buy and the order that made the zone is no longer there to catch them."
+              "headline": "Used — and the next morning showed you how used",
+              "body": "Every visit fills more of what was resting there. A zone is not a wall that gets stronger with each hit; it is fuel, and the first visit is where the queue starts getting spent.\n\nOn 14 August Tesla opened at 342.33, straight through the top of the band, and ran to 351.26. Then the same session handed it all back to 335.33. The band that had stopped price dead three weeks running did not stop it at all the second time it was asked."
             }
           },
           {
@@ -207,16 +798,186 @@
             "type": "prediction",
             "label": "EXERCISE",
             "skill": "technical_analysis",
-            "question": "Tesla sold from 341–342 on 23 July and did not trade back to it until 13 August. What was that band for those three weeks?",
+            "question": "Tesla sold from 341–342 on 23 July and has not traded back to it in fourteen sessions. What is that band, right now?",
             "options": [
-              { "label": "An unmitigated supply zone overhead", "value": "unmitigated" },
-              { "label": "A spent zone with no further meaning", "value": "spent" },
-              { "label": "A demand zone, because price rose toward it", "value": "demand" }
+              {
+                "label": "An unmitigated supply zone overhead",
+                "value": "unmitigated"
+              },
+              {
+                "label": "A spent zone with no further meaning",
+                "value": "spent"
+              },
+              {
+                "label": "A demand zone, because price is rising toward it",
+                "value": "demand"
+              }
             ],
             "outcomeValue": "unmitigated",
+            "chart": {
+              "ticker": "TSLA",
+              "session": "Tesla · Daily · 23 July – 13 August 2026",
+              "bars": [
+                {
+                  "t": "Jul 23",
+                  "o": 341,
+                  "h": 342.11,
+                  "l": 315.74,
+                  "c": 319.69
+                },
+                {
+                  "t": "Jul 24",
+                  "o": 320.72,
+                  "h": 322.96,
+                  "l": 306.51,
+                  "c": 313.03
+                },
+                {
+                  "t": "Jul 27",
+                  "o": 313.24,
+                  "h": 317,
+                  "l": 304.28,
+                  "c": 309.22
+                },
+                {
+                  "t": "Jul 28",
+                  "o": 305.93,
+                  "h": 311.16,
+                  "l": 300.69,
+                  "c": 307.44
+                },
+                {
+                  "t": "Jul 29",
+                  "o": 307.14,
+                  "h": 309.06,
+                  "l": 297.38,
+                  "c": 298.32
+                },
+                {
+                  "t": "Jul 30",
+                  "o": 302.7,
+                  "h": 310.87,
+                  "l": 301.33,
+                  "c": 308.85
+                },
+                {
+                  "t": "Jul 31",
+                  "o": 309.69,
+                  "h": 315.5,
+                  "l": 301.97,
+                  "c": 311.21
+                },
+                {
+                  "t": "Aug 3",
+                  "o": 310.96,
+                  "h": 324.65,
+                  "l": 310.43,
+                  "c": 322.08
+                },
+                {
+                  "t": "Aug 4",
+                  "o": 324,
+                  "h": 329.57,
+                  "l": 320.79,
+                  "c": 327.35
+                },
+                {
+                  "t": "Aug 5",
+                  "o": 323.42,
+                  "h": 327.14,
+                  "l": 320.28,
+                  "c": 321.55
+                },
+                {
+                  "t": "Aug 6",
+                  "o": 317.05,
+                  "h": 323,
+                  "l": 315.52,
+                  "c": 319.53
+                },
+                {
+                  "t": "Aug 7",
+                  "o": 322.34,
+                  "h": 333.73,
+                  "l": 321.25,
+                  "c": 328.58
+                },
+                {
+                  "t": "Aug 10",
+                  "o": 326.6,
+                  "h": 332.05,
+                  "l": 326.15,
+                  "c": 330.88
+                },
+                {
+                  "t": "Aug 11",
+                  "o": 332.8,
+                  "h": 336.2,
+                  "l": 329.53,
+                  "c": 332.81
+                },
+                {
+                  "t": "Aug 12",
+                  "o": 335,
+                  "h": 335.5,
+                  "l": 323.64,
+                  "c": 327.51
+                },
+                {
+                  "t": "Aug 13",
+                  "o": 327.2,
+                  "h": 341.64,
+                  "l": 325.24,
+                  "c": 339.96
+                }
+              ],
+              "revealFrom": 15,
+              "marks": [
+                {
+                  "id": "wall",
+                  "anchor": {
+                    "at": "band",
+                    "top": 342.11,
+                    "bottom": 341
+                  },
+                  "chip": "341–342",
+                  "name": "The band",
+                  "tone": "level",
+                  "title": "341.00 to 342.11",
+                  "body": "Where the selling on 23 July was filled."
+                },
+                {
+                  "id": "wait",
+                  "anchor": {
+                    "at": "span",
+                    "from": 1,
+                    "to": 14
+                  },
+                  "chip": "untouched",
+                  "name": "The wait",
+                  "tone": "note",
+                  "title": "Fourteen sessions with no return",
+                  "body": "The closest was 336.20 on 11 August — $4.80 short."
+                },
+                {
+                  "id": "arrive",
+                  "anchor": {
+                    "at": "point",
+                    "index": 15,
+                    "price": 341.64
+                  },
+                  "chip": "341.64",
+                  "name": "The arrival",
+                  "tone": "down",
+                  "phase": "reveal",
+                  "title": "13 August · 341.64",
+                  "body": "Stopped 47 cents under the top and closed at 339.96."
+                }
+              ]
+            },
             "reveal": {
               "headline": "Unmitigated supply — and it held on the retest",
-              "body": "Untouched for three weeks means the selling that made it was never finished. When Tesla finally got there on 13 August it stopped at 341.64 — sixty cents short — and closed at 339.96. Real session. The band did exactly what an unmitigated zone is supposed to do."
+              "body": "Untouched since it formed means the selling that made it was never finished. That is the only thing that makes a zone live.\n\nWhen Tesla finally got there on 13 August it reached 341.64 — 47 cents under the top of the band at 342.11 — and closed the session back down at 339.96. Real numbers. The band did exactly what an unmitigated zone is supposed to do, and it only got to do it once."
             }
           },
           {
@@ -234,16 +995,27 @@
       }
     },
     {
-      "match": { "course": "fta-trade-ready", "title": "Live Class: Liquidity Sweeps (The Bait & the Grab)" },
+      "match": {
+        "course": "belt-black",
+        "title": "Live Class: Liquidity Sweeps (The Bait & the Grab)"
+      },
       "json": {
         "schema": 1,
         "title": "Liquidity sweeps — the bait and the grab",
-        "skills": ["technical_analysis"],
+        "skills": [
+          "technical_analysis"
+        ],
         "difficulty": 5,
-        "audience": ["adult", "teen"],
+        "audience": [
+          "adult",
+          "teen"
+        ],
         "duration_minutes": 17,
         "xp": 50,
-        "guide": { "intro": "The move that makes people quit trading, explained.", "outro": "You now know why you got stopped out and then watched it go." },
+        "guide": {
+          "intro": "The move that makes people quit trading, explained.",
+          "outro": "You now know why you got stopped out and then watched it go."
+        },
         "steps": [
           {
             "id": "concept",
@@ -251,7 +1023,11 @@
             "label": "CORE CONCEPT",
             "skill": "technical_analysis",
             "heading": "Your stop is somebody else's fill",
-            "figure": { "kind": "quote", "value": "A stop loss is a market order with a trigger price.", "caption": "Which is exactly what a large buyer is looking for" },
+            "figure": {
+              "kind": "quote",
+              "value": "A stop loss is a market order with a trigger price.",
+              "caption": "Which is exactly what a large buyer is looking for"
+            },
             "body": [
               "When you place a stop below a swing low, you have left a resting sell order at that price. So has everyone else who read the same chart the same way. A shelf of equal lows is therefore a shelf of stop orders, sitting in a known place.",
               "A large buyer needs sellers. Below that shelf is a pile of guaranteed sellers, and the only thing standing between them is a few cents of price. Pushing price down into that shelf is not manipulation in any mysterious sense — it is going where the supply is.",
@@ -261,19 +1037,161 @@
           },
           {
             "id": "shape",
-            "type": "anatomy",
-            "label": "INTERACTIVE",
+            "type": "chart",
+            "label": "ON THE CHART",
             "skill": "technical_analysis",
             "heading": "The shape a sweep leaves behind",
-            "caption": "Tap the parts. A swept low has a signature you can name.",
-            "candle": { "open": 121, "high": 124, "low": 108, "close": 122 },
-            "hotspots": [
-              { "part": "low", "title": "The grab", "body": "A long spike below the shelf of equal lows. This is where the resting stop orders were triggered and filled. The further it goes, the more it collected." },
-              { "part": "lower_wick", "title": "The rejection", "body": "The wick is the whole story: price went there and could not stay. Everything sold into that spike was bought by someone who wanted it." },
-              { "part": "close", "title": "Back inside", "body": "The close returns above the level that was broken. A sweep is defined by this — break below, close back above. Break and STAY below is not a sweep, it is a genuine break." },
-              { "part": "body", "title": "Small body, high in the range", "body": "The classic signature. Almost all range, almost no net move, finishing near the top. If you had to describe the candle in one word it would be rejection." },
-              { "part": "high", "title": "What comes after", "body": "The move that follows a sweep is often fast, because the sellers who would have resisted it were just cleared out at the bottom." }
-            ]
+            "intro": "Three things, in this order, and all three have to be on the chart before you can call it a sweep. You saw this morning in Week 1's drill; this is the other name for what it did.",
+            "prompt": "Tap the shelf, the candles that built it, the candle that took it, and the close that gave it away.",
+            "done": "Got it → Continue",
+            "figure": {
+              "ticker": "TSLA",
+              "session": "Tesla · 5-minute · 4 August 2026",
+              "bars": [
+                {
+                  "t": "09:35",
+                  "o": 324.45,
+                  "h": 326.9,
+                  "l": 322.42,
+                  "c": 322.54
+                },
+                {
+                  "t": "09:40",
+                  "o": 322.49,
+                  "h": 323.49,
+                  "l": 321.05,
+                  "c": 321.66
+                },
+                {
+                  "t": "09:45",
+                  "o": 321.7,
+                  "h": 323,
+                  "l": 321.5,
+                  "c": 322.79
+                },
+                {
+                  "t": "09:50",
+                  "o": 322.75,
+                  "h": 323.11,
+                  "l": 321.71,
+                  "c": 322.82
+                },
+                {
+                  "t": "09:55",
+                  "o": 322.78,
+                  "h": 323.38,
+                  "l": 321.17,
+                  "c": 321.84
+                },
+                {
+                  "t": "10:00",
+                  "o": 321.8,
+                  "h": 323.21,
+                  "l": 320.79,
+                  "c": 323.12
+                },
+                {
+                  "t": "10:05",
+                  "o": 323.12,
+                  "h": 324.76,
+                  "l": 323.04,
+                  "c": 324.11
+                },
+                {
+                  "t": "10:10",
+                  "o": 324.13,
+                  "h": 325.45,
+                  "l": 323.67,
+                  "c": 324.85
+                },
+                {
+                  "t": "10:15",
+                  "o": 324.81,
+                  "h": 325.28,
+                  "l": 323.78,
+                  "c": 323.85
+                },
+                {
+                  "t": "10:20",
+                  "o": 323.9,
+                  "h": 323.91,
+                  "l": 322.77,
+                  "c": 323.38
+                },
+                {
+                  "t": "10:25",
+                  "o": 323.32,
+                  "h": 324.1,
+                  "l": 323.04,
+                  "c": 323.73
+                }
+              ],
+              "marks": [
+                {
+                  "id": "shelf",
+                  "anchor": {
+                    "at": "price",
+                    "price": 321.05
+                  },
+                  "chip": "equal lows",
+                  "name": "The shelf",
+                  "tone": "level",
+                  "title": "The shelf · 321.05",
+                  "body": "Four candles in a row turned between 321.05 and 321.71 — sixty-six cents apart on a stock that moves six dollars in an hour. That flat underside is a shelf, and every trader who is long above it has left a stop order just beneath it. A shelf is not support. It is a pile of resting sell orders with a sign on it."
+                },
+                {
+                  "id": "built",
+                  "anchor": {
+                    "at": "span",
+                    "from": 1,
+                    "to": 4
+                  },
+                  "chip": "four candles",
+                  "name": "Where it formed",
+                  "tone": "note",
+                  "title": "Four candles built it · 9:40 to 9:55",
+                  "body": "A shelf is a run of candles, never one. These four each turned at almost the same price, which is what makes the level obvious enough for the whole market to draw it — and being obvious is exactly what makes it worth attacking."
+                },
+                {
+                  "id": "sweep",
+                  "anchor": {
+                    "at": "bar",
+                    "index": 5
+                  },
+                  "chip": "the sweep",
+                  "name": "The sweep",
+                  "tone": "down",
+                  "title": "The sweep · the 10:00 candle",
+                  "body": "One candle does the whole job. Look at its shape: almost all range, almost no net move, and it finishes near the top. If you had to describe it in one word it would be rejection."
+                },
+                {
+                  "id": "grab",
+                  "anchor": {
+                    "at": "point",
+                    "index": 5,
+                    "price": 320.79
+                  },
+                  "chip": "320.79",
+                  "name": "How far under",
+                  "tone": "down",
+                  "title": "320.79 — twenty-six cents through",
+                  "body": "A sweep does not need to go far. It only needs to go far enough to trigger the orders, and those orders sit just under the obvious price. Twenty-six cents cleared four candles' worth of stops, and every share they sold was bought by whoever pushed it down there."
+                },
+                {
+                  "id": "reclaim",
+                  "anchor": {
+                    "at": "point",
+                    "index": 5,
+                    "price": 323.12
+                  },
+                  "chip": "closed 323.12",
+                  "name": "The reclaim",
+                  "tone": "up",
+                  "title": "Closed 323.12 — back above the shelf",
+                  "body": "This is the part that makes it a sweep and not a break. The close is $2.07 above the level it just went through. A break closes below and stays there; a sweep closes back above, and the fifteen minutes after this one took Tesla to 325.45."
+                }
+              ]
+            }
           },
           {
             "id": "distinction",
@@ -286,17 +1204,37 @@
               {
                 "title": "Sweep — the trap",
                 "tone": "green",
-                "candle": { "open": 121, "high": 124, "low": 108, "close": 122 },
-                "points": ["Spikes through the low, closes back above", "Long wick, small body", "Sellers below were the fuel", "The reversal is the trade"]
+                "candle": {
+                  "open": 121,
+                  "high": 124,
+                  "low": 108,
+                  "close": 122
+                },
+                "points": [
+                  "Spikes through the low, closes back above",
+                  "Long wick, small body",
+                  "Sellers below were the fuel",
+                  "The reversal is the trade"
+                ]
               },
               {
                 "title": "Break — the real thing",
                 "tone": "red",
-                "candle": { "open": 121, "high": 122, "low": 107, "close": 109 },
-                "points": ["Trades through the low and CLOSES below", "Body carries the move, wick is small", "The level genuinely failed", "The continuation is the trade"]
+                "candle": {
+                  "open": 121,
+                  "high": 122,
+                  "low": 107,
+                  "close": 109
+                },
+                "points": [
+                  "Trades through the low and CLOSES below",
+                  "Body carries the move, wick is small",
+                  "The level genuinely failed",
+                  "The continuation is the trade"
+                ]
               }
             ],
-            "note": "The distinction is the close, exactly as it has been since White Belt. What changes here is what you do with it: a close back above a swept low is not just 'the level held', it is a signal that the other side has been cleared out."
+            "note": "The distinction is the close, exactly as it has been since Yellow Belt. What changes here is what you do with it: a close back above a swept low is not just 'the level held', it is a signal that the other side has been cleared out."
           },
           {
             "id": "process",
@@ -306,10 +1244,22 @@
             "heading": "Trading the sweep, not the bait",
             "intro": "The order of these matters more than usual — the first two happen before anything interesting is on the screen.",
             "moves": [
-              { "title": "Find the obvious low, before the event", "body": "Equal lows, a well-defined swing, the level everyone would draw. The more obvious it is, the more stops are resting under it, and the more attractive it is to sweep." },
-              { "title": "Wait. Do not pre-position", "body": "There is no way to know in advance whether the level holds, is swept, or genuinely breaks. Anyone who tells you otherwise is selling something. You are waiting for the market to declare." },
-              { "title": "Require the close back inside", "body": "The candle must close back above the level. Not trade back above — close. Until then, the more likely reading is a genuine break." },
-              { "title": "Enter on the reclaim, invalidate at the spike low", "body": "Your idea is that the sweep collected the sellers. If price returns below the spike low, it clearly did not, and you are out with a defined loss." }
+              {
+                "title": "Find the obvious low, before the event",
+                "body": "Equal lows, a well-defined swing, the level everyone would draw. The more obvious it is, the more stops are resting under it, and the more attractive it is to sweep."
+              },
+              {
+                "title": "Wait. Do not pre-position",
+                "body": "There is no way to know in advance whether the level holds, is swept, or genuinely breaks. Anyone who tells you otherwise is selling something. You are waiting for the market to declare."
+              },
+              {
+                "title": "Require the close back inside",
+                "body": "The candle must close back above the level. Not trade back above — close. Until then, the more likely reading is a genuine break."
+              },
+              {
+                "title": "Enter on the reclaim, invalidate at the spike low",
+                "body": "Your idea is that the sweep collected the sellers. If price returns below the spike low, it clearly did not, and you are out with a defined loss."
+              }
             ],
             "closing": "The reason this works is not that you have found a secret. It is that you waited for the one piece of information — the close — that everyone who got stopped out did not wait for."
           },
@@ -341,10 +1291,19 @@
             "correctIndex": 1,
             "explanation": "Below and back above within one candle is the signature. The sellers resting under the shelf were collected and the price would not stay down there.",
             "wrongFeedback": [
-              { "text": "A breakdown requires a close below. This one closed above the level it broke.", "kai": true },
+              {
+                "text": "A breakdown requires a close below. This one closed above the level it broke.",
+                "kai": true
+              },
               null,
-              { "text": "A great deal changed: everyone with a stop under that shelf is now flat, and their sell orders have been absorbed.", "kai": true },
-              { "text": "Zones form from a quiet base before an impulse, not from a rejection wick.", "kai": true }
+              {
+                "text": "A great deal changed: everyone with a stop under that shelf is now flat, and their sell orders have been absorbed.",
+                "kai": true
+              },
+              {
+                "text": "Zones form from a quiet base before an impulse, not from a rejection wick.",
+                "kai": true
+              }
             ],
             "reinforce": "Below and back above in one candle. That is the shape."
           },
@@ -363,10 +1322,19 @@
             "correctIndex": 2,
             "explanation": "A shelf of equal lows can be swept, can break for real, or can simply hold. You cannot know which, and every version of guessing early costs money.",
             "wrongFeedback": [
-              { "text": "That is buying the bait. If it is a genuine break you are long into it with your stop in the pile that gets collected.", "kai": true },
-              { "text": "Sometimes they do. Trading on 'usually', with no confirmation, is the definition of the gambler in this program.", "kai": true },
+              {
+                "text": "That is buying the bait. If it is a genuine break you are long into it with your stop in the pile that gets collected.",
+                "kai": true
+              },
+              {
+                "text": "Sometimes they do. Trading on 'usually', with no confirmation, is the definition of the gambler in this program.",
+                "kai": true
+              },
               null,
-              { "text": "That order fills in the middle of the spike with no idea yet whether price is coming back. You would be catching the knife on purpose.", "kai": true }
+              {
+                "text": "That order fills in the middle of the spike with no idea yet whether price is coming back. You would be catching the knife on purpose.",
+                "kai": true
+              }
             ],
             "reinforce": "The gambler hopes. The trader waits for the close."
           },
@@ -388,13 +1356,21 @@
       }
     },
     {
-      "match": { "course": "fta-trade-ready", "title": "Drill: Find 3 Equal-Lows Charts & Predict the Sweep" },
+      "match": {
+        "course": "belt-black",
+        "title": "Drill: Find 3 Equal-Lows Charts & Predict the Sweep"
+      },
       "json": {
         "schema": 1,
         "title": "Drill — find equal lows, predict the sweep",
-        "skills": ["technical_analysis"],
+        "skills": [
+          "technical_analysis"
+        ],
         "difficulty": 5,
-        "audience": ["adult", "teen"],
+        "audience": [
+          "adult",
+          "teen"
+        ],
         "duration_minutes": 8,
         "xp": 50,
         "steps": [
@@ -403,23 +1379,165 @@
             "type": "explainer",
             "label": "PROCESS",
             "heading": "Three setups, one question each",
-            "body": ["Two of these are about telling a sweep from a break. The third is about doing nothing, which is a skill and is graded like one."]
+            "body": [
+              "Two of these are about telling a sweep from a break. The third is about doing nothing, which is a skill and is graded like one."
+            ]
           },
           {
             "id": "d1",
             "type": "prediction",
             "label": "EXERCISE",
             "skill": "technical_analysis",
-            "question": "Equal lows at 218.40. A candle trades to 217.85 and closes at 217.90. Sweep or break?",
+            "question": "Meta's last three candles all found a floor between 546.39 and 546.80. The 10:00 candle trades to 545.26 and closes at 545.49. Sweep or break?",
             "options": [
-              { "label": "Sweep — it went below the shelf", "value": "sweep" },
-              { "label": "Break — it closed below and stayed", "value": "break" },
-              { "label": "Neither, too close to call", "value": "none" }
+              {
+                "label": "Sweep — it went below the shelf",
+                "value": "sweep"
+              },
+              {
+                "label": "Break — it closed below and did not come back",
+                "value": "break"
+              },
+              {
+                "label": "Neither, too close to call",
+                "value": "none"
+              }
             ],
             "outcomeValue": "break",
+            "chart": {
+              "ticker": "META",
+              "session": "Meta Platforms · 5-minute · 20 August 2026",
+              "bars": [
+                {
+                  "t": "09:35",
+                  "o": 545.33,
+                  "h": 549.02,
+                  "l": 544.46,
+                  "c": 546.68
+                },
+                {
+                  "t": "09:40",
+                  "o": 546.19,
+                  "h": 548.99,
+                  "l": 546,
+                  "c": 547.48
+                },
+                {
+                  "t": "09:45",
+                  "o": 547.41,
+                  "h": 549.99,
+                  "l": 546.8,
+                  "c": 547.29
+                },
+                {
+                  "t": "09:50",
+                  "o": 547.57,
+                  "h": 548.12,
+                  "l": 546.39,
+                  "c": 546.9
+                },
+                {
+                  "t": "09:55",
+                  "o": 546.8,
+                  "h": 548.05,
+                  "l": 546.75,
+                  "c": 547.67
+                },
+                {
+                  "t": "10:00",
+                  "o": 547.67,
+                  "h": 547.75,
+                  "l": 545.26,
+                  "c": 545.49
+                },
+                {
+                  "t": "10:05",
+                  "o": 545.55,
+                  "h": 546.88,
+                  "l": 544.15,
+                  "c": 545.43
+                },
+                {
+                  "t": "10:10",
+                  "o": 545.4,
+                  "h": 546.76,
+                  "l": 544.24,
+                  "c": 544.3
+                },
+                {
+                  "t": "10:15",
+                  "o": 544.29,
+                  "h": 545.02,
+                  "l": 543.06,
+                  "c": 543.73
+                },
+                {
+                  "t": "10:20",
+                  "o": 543.58,
+                  "h": 545.09,
+                  "l": 543.41,
+                  "c": 544.93
+                },
+                {
+                  "t": "10:25",
+                  "o": 544.92,
+                  "h": 544.94,
+                  "l": 543.69,
+                  "c": 544.44
+                },
+                {
+                  "t": "10:30",
+                  "o": 544.35,
+                  "h": 545.26,
+                  "l": 544.25,
+                  "c": 544.92
+                }
+              ],
+              "revealFrom": 6,
+              "marks": [
+                {
+                  "id": "shelf",
+                  "anchor": {
+                    "at": "price",
+                    "price": 546.39
+                  },
+                  "chip": "the shelf",
+                  "name": "The shelf",
+                  "tone": "level",
+                  "title": "546.39 to 546.80",
+                  "body": "Three candles turned in that forty-one cent band."
+                },
+                {
+                  "id": "bar",
+                  "anchor": {
+                    "at": "bar",
+                    "index": 5
+                  },
+                  "chip": "10:00",
+                  "name": "The candle",
+                  "tone": "down",
+                  "title": "The 10:00 candle",
+                  "body": "Traded to 545.26 and closed at 545.49 — below everything."
+                },
+                {
+                  "id": "after",
+                  "anchor": {
+                    "at": "span",
+                    "from": 6,
+                    "to": 11
+                  },
+                  "chip": "stayed below",
+                  "name": "After",
+                  "tone": "down",
+                  "phase": "reveal",
+                  "title": "The next half hour",
+                  "body": "543.06 by 10:15, and no close back above the shelf."
+                }
+              ]
+            },
             "reveal": {
               "headline": "Break — the close is below",
-              "body": "Going below the shelf is not what makes a sweep; coming back is. Closing at 217.90, beneath a level at 218.40, is the level failing. Long here on 'it must be a sweep' is how a small loss becomes a large one."
+              "body": "Going below the shelf is not what makes a sweep. Coming back is. Closing at 545.49, ninety cents beneath a floor at 546.39, is the floor failing.\n\nMeta went on to 543.06 by 10:15 and did not close back above the shelf for the next half hour. Buying here on \"it must be a sweep\" is how a small loss becomes a large one."
             }
           },
           {
@@ -427,16 +1545,176 @@
             "type": "prediction",
             "label": "EXERCISE",
             "skill": "technical_analysis",
-            "question": "Same shelf at 218.40. The candle trades to 217.60 and closes at 219.10, with almost no body and a long lower wick. Then the next candle closes above the most recent lower high. What have you got?",
+            "question": "Tesla's last two lows sit at 323.88 and 323.85. The 10:15 candle trades to 322.80 and closes at 324.92 — almost no body, a long lower wick. What have you got so far?",
             "options": [
-              { "label": "A sweep, unconfirmed — wait for more", "value": "unconfirmed" },
-              { "label": "A sweep plus a change of character — the setup is complete", "value": "confirmed" },
-              { "label": "A supply zone at 217.60", "value": "zone" }
+              {
+                "label": "A completed setup — buy the 324.92 close",
+                "value": "buy"
+              },
+              {
+                "label": "A sweep. It still needs a close above the last lower high at 324.89",
+                "value": "confirm"
+              },
+              {
+                "label": "A supply zone at 322.80",
+                "value": "zone"
+              }
             ],
-            "outcomeValue": "confirmed",
+            "outcomeValue": "confirm",
+            "chart": {
+              "ticker": "TSLA",
+              "session": "Tesla · 5-minute · 7 August 2026",
+              "bars": [
+                {
+                  "t": "09:45",
+                  "o": 326.26,
+                  "h": 327.6,
+                  "l": 325.91,
+                  "c": 326.99
+                },
+                {
+                  "t": "09:50",
+                  "o": 326.99,
+                  "h": 328.92,
+                  "l": 326.92,
+                  "c": 328.38
+                },
+                {
+                  "t": "09:55",
+                  "o": 328.38,
+                  "h": 328.49,
+                  "l": 325.98,
+                  "c": 326.57
+                },
+                {
+                  "t": "10:00",
+                  "o": 326.65,
+                  "h": 326.9,
+                  "l": 323.88,
+                  "c": 323.96
+                },
+                {
+                  "t": "10:05",
+                  "o": 323.98,
+                  "h": 324.97,
+                  "l": 323.85,
+                  "c": 324.37
+                },
+                {
+                  "t": "10:10",
+                  "o": 324.36,
+                  "h": 324.89,
+                  "l": 323.15,
+                  "c": 323.17
+                },
+                {
+                  "t": "10:15",
+                  "o": 323.13,
+                  "h": 324.99,
+                  "l": 322.8,
+                  "c": 324.92
+                },
+                {
+                  "t": "10:20",
+                  "o": 324.94,
+                  "h": 326.79,
+                  "l": 324.54,
+                  "c": 326.42
+                },
+                {
+                  "t": "10:25",
+                  "o": 326.39,
+                  "h": 328.45,
+                  "l": 326.38,
+                  "c": 327.22
+                },
+                {
+                  "t": "10:30",
+                  "o": 327.17,
+                  "h": 328.3,
+                  "l": 326.8,
+                  "c": 327.67
+                },
+                {
+                  "t": "10:35",
+                  "o": 327.72,
+                  "h": 328.6,
+                  "l": 327.4,
+                  "c": 327.9
+                }
+              ],
+              "revealFrom": 7,
+              "marks": [
+                {
+                  "id": "shelf",
+                  "anchor": {
+                    "at": "price",
+                    "price": 323.85
+                  },
+                  "chip": "the lows",
+                  "name": "The lows",
+                  "tone": "level",
+                  "title": "323.88 and 323.85",
+                  "body": "Two candles, three cents apart. The obvious floor."
+                },
+                {
+                  "id": "lh",
+                  "anchor": {
+                    "at": "point",
+                    "index": 5,
+                    "price": 324.89
+                  },
+                  "chip": "lower high",
+                  "name": "The lower high",
+                  "tone": "down",
+                  "title": "324.89 at 10:10",
+                  "body": "The most recent lower high — the sequence that is still pointing down."
+                },
+                {
+                  "id": "grab",
+                  "anchor": {
+                    "at": "point",
+                    "index": 6,
+                    "price": 322.8
+                  },
+                  "chip": "322.80",
+                  "name": "The grab",
+                  "tone": "down",
+                  "title": "Traded to 322.80",
+                  "body": "A dollar and five cents under the lows."
+                },
+                {
+                  "id": "back",
+                  "anchor": {
+                    "at": "point",
+                    "index": 6,
+                    "price": 324.92
+                  },
+                  "chip": "closed 324.92",
+                  "name": "The reclaim",
+                  "tone": "up",
+                  "title": "Closed at 324.92",
+                  "body": "Back above the lows, with almost no body left behind."
+                },
+                {
+                  "id": "cc",
+                  "anchor": {
+                    "at": "point",
+                    "index": 7,
+                    "price": 326.42
+                  },
+                  "chip": "closed 326.42",
+                  "name": "What came next",
+                  "tone": "up",
+                  "phase": "reveal",
+                  "title": "10:20 closed 326.42",
+                  "body": "Through the 324.89 lower high."
+                }
+              ]
+            },
             "reveal": {
-              "headline": "Both halves are present",
-              "body": "The spike below with a close back above collected the sellers. The close above the last lower high says the downtrend sequence has broken for the first time. Sweep plus change of character is the whole signal — waiting past this point is waiting for comfort, not information."
+              "headline": "A sweep — and the confirmation came five minutes later",
+              "body": "The spike to 322.80 filled the stops under the lows, and the close at 324.92 put price back above them. That is the grab, and on its own it is half a signal: the sequence of lower highs, 324.97 then 324.89, was still intact at that moment.\n\nThe 10:20 candle closed at 326.42, straight through both of them. That is the change of character, and only now is the setup complete. Tesla was at 328.45 five minutes after that."
             }
           },
           {
@@ -444,16 +1722,283 @@
             "type": "prediction",
             "label": "EXERCISE",
             "skill": "technical_analysis",
-            "question": "Tesla opens 14 August at 342.33, above the 341–342 wall. It runs to 350.35, then at 10:10 closes at 347.03 — back inside the opening range. By 11:25 it is at 335.33. What was the 350.35 high?",
+            "question": "Tesla opens 14 August at 342.33, above the 341–342 wall it could not clear for three weeks. It runs to 351.26, then the 10:10 candle closes at 347.03 — back inside the opening range. What was that high?",
             "options": [
-              { "label": "A breakout that simply failed on low volume", "value": "failed" },
-              { "label": "Liquidity above the wall being taken, with the trapped buyers becoming the fuel down", "value": "trap" },
-              { "label": "An unmitigated demand zone", "value": "demand" }
+              {
+                "label": "A breakout that simply failed on low volume",
+                "value": "failed"
+              },
+              {
+                "label": "Liquidity above the wall being taken, with the trapped buyers becoming the fuel down",
+                "value": "trap"
+              },
+              {
+                "label": "An unmitigated demand zone",
+                "value": "demand"
+              }
             ],
             "outcomeValue": "trap",
+            "chart": {
+              "ticker": "TSLA",
+              "session": "Tesla · 5-minute · 14 August 2026",
+              "bars": [
+                {
+                  "t": "09:30",
+                  "o": 342.33,
+                  "h": 345.65,
+                  "l": 342.01,
+                  "c": 345.23
+                },
+                {
+                  "t": "09:35",
+                  "o": 345.23,
+                  "h": 347.12,
+                  "l": 344.82,
+                  "c": 346.91
+                },
+                {
+                  "t": "09:40",
+                  "o": 346.92,
+                  "h": 347.8,
+                  "l": 345.11,
+                  "c": 347.54
+                },
+                {
+                  "t": "09:45",
+                  "o": 347.54,
+                  "h": 348.99,
+                  "l": 346.25,
+                  "c": 348.29
+                },
+                {
+                  "t": "09:50",
+                  "o": 348.33,
+                  "h": 349.99,
+                  "l": 348.23,
+                  "c": 349.4
+                },
+                {
+                  "t": "09:55",
+                  "o": 349.4,
+                  "h": 350.35,
+                  "l": 348.42,
+                  "c": 350.01
+                },
+                {
+                  "t": "10:00",
+                  "o": 350.09,
+                  "h": 350.35,
+                  "l": 349.14,
+                  "c": 349.97
+                },
+                {
+                  "t": "10:05",
+                  "o": 349.98,
+                  "h": 351.26,
+                  "l": 349.91,
+                  "c": 349.93
+                },
+                {
+                  "t": "10:10",
+                  "o": 349.96,
+                  "h": 350.01,
+                  "l": 346.92,
+                  "c": 347.03
+                },
+                {
+                  "t": "10:15",
+                  "o": 347.06,
+                  "h": 348.48,
+                  "l": 346.25,
+                  "c": 346.28
+                },
+                {
+                  "t": "10:20",
+                  "o": 346.36,
+                  "h": 347.09,
+                  "l": 345.62,
+                  "c": 345.97
+                },
+                {
+                  "t": "10:25",
+                  "o": 345.87,
+                  "h": 346.8,
+                  "l": 345.64,
+                  "c": 346.22
+                },
+                {
+                  "t": "10:30",
+                  "o": 346.27,
+                  "h": 346.39,
+                  "l": 344.35,
+                  "c": 345.02
+                },
+                {
+                  "t": "10:35",
+                  "o": 345.07,
+                  "h": 345.6,
+                  "l": 344.8,
+                  "c": 345.13
+                },
+                {
+                  "t": "10:40",
+                  "o": 345.02,
+                  "h": 345.1,
+                  "l": 342.8,
+                  "c": 342.83
+                },
+                {
+                  "t": "10:45",
+                  "o": 342.85,
+                  "h": 343.6,
+                  "l": 342.02,
+                  "c": 342.62
+                },
+                {
+                  "t": "10:50",
+                  "o": 342.65,
+                  "h": 342.86,
+                  "l": 341.58,
+                  "c": 341.58
+                },
+                {
+                  "t": "10:55",
+                  "o": 341.58,
+                  "h": 342.1,
+                  "l": 340.95,
+                  "c": 341.2
+                },
+                {
+                  "t": "11:00",
+                  "o": 341.16,
+                  "h": 341.52,
+                  "l": 339.62,
+                  "c": 340.43
+                },
+                {
+                  "t": "11:05",
+                  "o": 340.43,
+                  "h": 340.58,
+                  "l": 339.26,
+                  "c": 339.36
+                },
+                {
+                  "t": "11:10",
+                  "o": 339.31,
+                  "h": 339.78,
+                  "l": 338.45,
+                  "c": 338.45
+                },
+                {
+                  "t": "11:15",
+                  "o": 338.48,
+                  "h": 338.72,
+                  "l": 337.51,
+                  "c": 337.71
+                },
+                {
+                  "t": "11:20",
+                  "o": 337.72,
+                  "h": 337.81,
+                  "l": 336.27,
+                  "c": 336.36
+                },
+                {
+                  "t": "11:25",
+                  "o": 336.36,
+                  "h": 337.57,
+                  "l": 335.33,
+                  "c": 337.35
+                }
+              ],
+              "revealFrom": 10,
+              "marks": [
+                {
+                  "id": "wall",
+                  "anchor": {
+                    "at": "band",
+                    "top": 342.11,
+                    "bottom": 341
+                  },
+                  "chip": "the wall",
+                  "name": "The wall",
+                  "tone": "level",
+                  "title": "341.00 to 342.11",
+                  "body": "Three weeks of supply. The session opened above all of it."
+                },
+                {
+                  "id": "or",
+                  "anchor": {
+                    "at": "band",
+                    "top": 347.8,
+                    "bottom": 342.01,
+                    "from": 0
+                  },
+                  "chip": "opening range",
+                  "name": "Opening range",
+                  "tone": "note",
+                  "title": "342.01 to 347.80",
+                  "body": "The first fifteen minutes, 9:30 to 9:44."
+                },
+                {
+                  "id": "top",
+                  "anchor": {
+                    "at": "point",
+                    "index": 7,
+                    "price": 351.26
+                  },
+                  "chip": "351.26",
+                  "name": "The high",
+                  "tone": "up",
+                  "title": "351.26 at 10:05",
+                  "body": "Nine dollars above the wall, forty minutes after the open."
+                },
+                {
+                  "id": "inside",
+                  "anchor": {
+                    "at": "point",
+                    "index": 9,
+                    "price": 347.03
+                  },
+                  "chip": "closed 347.03",
+                  "name": "Back inside",
+                  "tone": "down",
+                  "title": "10:10 closes 347.03",
+                  "body": "Seventy-seven cents back inside the opening range."
+                },
+                {
+                  "id": "unwind",
+                  "anchor": {
+                    "at": "span",
+                    "from": 10,
+                    "to": 23
+                  },
+                  "chip": "the unwind",
+                  "name": "The unwind",
+                  "tone": "down",
+                  "phase": "reveal",
+                  "title": "10:15 to 11:25",
+                  "body": "One direction, seventy-five minutes."
+                },
+                {
+                  "id": "end",
+                  "anchor": {
+                    "at": "point",
+                    "index": 23,
+                    "price": 335.33
+                  },
+                  "chip": "335.33",
+                  "name": "Where it ended",
+                  "tone": "down",
+                  "phase": "reveal",
+                  "title": "335.33 by 11:25",
+                  "body": "Six dollars below the wall it had opened above."
+                }
+              ]
+            },
             "reveal": {
               "headline": "The bait, the grab, and the bill",
-              "body": "Opening above a three-week wall put every breakout buyer in at once, with stops beneath. The run to 350.35 took the resting orders above; the 10:10 close back inside the range trapped everyone who bought the break. Fifteen minutes of relief, then 335.33 by 11:25 — a twelve-dollar unwind. Real session, 14 August 2026."
+              "body": "Opening above a three-week wall put every breakout buyer in at once, with their stops beneath. The run to 351.26 took the resting orders above the wall — that is the grab, and it is the same mechanism as a sweep of lows, upside down.\n\nThe 10:10 close back inside the opening range trapped everyone who bought the break. Their exits are the fuel: 335.33 by 11:25, nearly twelve dollars off the 347.03 close, in seventy-five minutes. Real session, 14 August 2026."
             }
           },
           {

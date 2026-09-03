@@ -52,7 +52,12 @@ const COURSE = {
   program: "fic",
   min_tier: "challenge",
   sort_order: -5,
-  published: true,
+  // Unpublished on purpose. `published` is the one flag the frozen app at
+  // app.familyinvestingclub.com checks on every course listing it has, and its lesson engine
+  // cannot render the step types the belts are built from. See
+  // supabase/migrations/20260903020000_belt_courses_are_fic_only.sql for the RLS grant that keeps
+  // this app reading them anyway, and scripts/create-belt-black.mjs for the same decision.
+  published: false,
 };
 
 const MODULES = [

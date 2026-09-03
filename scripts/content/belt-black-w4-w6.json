@@ -1,16 +1,27 @@
 {
   "lessons": [
     {
-      "match": { "course": "fta-trade-ready", "title": "Live Class: Fair Value Gaps" },
+      "match": {
+        "course": "belt-black",
+        "title": "Live Class: Fair Value Gaps"
+      },
       "json": {
         "schema": 1,
         "title": "Fair value gaps",
-        "skills": ["technical_analysis"],
+        "skills": [
+          "technical_analysis"
+        ],
         "difficulty": 5,
-        "audience": ["adult", "teen"],
+        "audience": [
+          "adult",
+          "teen"
+        ],
         "duration_minutes": 15,
         "xp": 50,
-        "guide": { "intro": "When price moves too fast, it leaves a hole. Holes get filled.", "outro": "You have the zones, the sweeps and the gaps. Next week they become one play." },
+        "guide": {
+          "intro": "When price moves too fast, it leaves a hole. Holes get filled.",
+          "outro": "You have the zones, the sweeps and the gaps. Next week they become one play."
+        },
         "steps": [
           {
             "id": "concept",
@@ -18,7 +29,11 @@
             "label": "CORE CONCEPT",
             "skill": "technical_analysis",
             "heading": "A gap is a price range that never traded properly",
-            "figure": { "kind": "stat", "value": "3 candles", "caption": "The smallest unit that can show an imbalance" },
+            "figure": {
+              "kind": "stat",
+              "value": "3 candles",
+              "caption": "The smallest unit that can show an imbalance"
+            },
             "body": [
               "Normal trading is two-sided: buyers and sellers meet at every price on the way up or down. When one side overwhelms the other, price jumps through a range so quickly that almost nobody transacts there.",
               "You can see it in three candles. Take any candle with a large body, and look at the candle before it and the candle after it. If the high of the first candle is below the low of the third, there is a band of prices in the middle that the neighbours never touched. That band is the fair value gap.",
@@ -28,19 +43,143 @@
           },
           {
             "id": "shape",
-            "type": "anatomy",
-            "label": "INTERACTIVE",
+            "type": "chart",
+            "label": "ON THE CHART",
             "skill": "technical_analysis",
             "heading": "The three-candle gap",
-            "caption": "The middle candle is the impulse. Tap its parts.",
-            "candle": { "open": 112, "high": 134, "low": 111, "close": 132 },
-            "hotspots": [
-              { "part": "body", "title": "The impulse candle", "body": "The middle of the three. Large body, little hesitation. This is the move that was too fast for the other side to keep up with." },
-              { "part": "high", "title": "The top of the run", "body": "Where the impulse ran out. The gap is not measured from here — it is measured from the candles on either side of this one." },
-              { "part": "open", "title": "The gap's lower edge", "body": "The HIGH of the candle before the impulse. Below this, the market traded normally. Above it, for a stretch, it did not." },
-              { "part": "close", "title": "The gap's upper edge", "body": "The LOW of the candle after the impulse. Between this and the lower edge is the band nobody properly traded — the gap itself." },
-              { "part": "low", "title": "Where it started", "body": "The impulse began here. Note that the gap has nothing to do with this candle's own range — it is defined entirely by its neighbours." }
-            ]
+            "intro": "Three candles, drawn here as three candles. The gap is not on any one of them — it is the space between the first and the third, and the middle one is only the reason it exists.",
+            "prompt": "Tap the three candles, then the first one's high, the middle one, the third one's low, and finally the band between them.",
+            "done": "Got it → Continue",
+            "figure": {
+              "ticker": "TSLA",
+              "session": "Tesla · 5-minute · 13 August 2026",
+              "bars": [
+                {
+                  "t": "09:35",
+                  "o": 328.63,
+                  "h": 330.42,
+                  "l": 328.57,
+                  "c": 330.35
+                },
+                {
+                  "t": "09:40",
+                  "o": 330.38,
+                  "h": 331.69,
+                  "l": 329.11,
+                  "c": 329.4
+                },
+                {
+                  "t": "09:45",
+                  "o": 329.41,
+                  "h": 330.84,
+                  "l": 329.06,
+                  "c": 330.76
+                },
+                {
+                  "t": "09:50",
+                  "o": 330.79,
+                  "h": 332.51,
+                  "l": 330.59,
+                  "c": 332.45
+                },
+                {
+                  "t": "09:55",
+                  "o": 332.5,
+                  "h": 333.45,
+                  "l": 331.62,
+                  "c": 332.92
+                },
+                {
+                  "t": "10:00",
+                  "o": 332.92,
+                  "h": 333.56,
+                  "l": 331.98,
+                  "c": 332.6
+                },
+                {
+                  "t": "10:05",
+                  "o": 332.64,
+                  "h": 333.14,
+                  "l": 332.5,
+                  "c": 333.02
+                },
+                {
+                  "t": "10:10",
+                  "o": 333.05,
+                  "h": 333.71,
+                  "l": 332.47,
+                  "c": 332.64
+                }
+              ],
+              "marks": [
+                {
+                  "id": "three",
+                  "anchor": {
+                    "at": "span",
+                    "from": 2,
+                    "to": 4
+                  },
+                  "chip": "3 candles",
+                  "name": "The three candles",
+                  "tone": "note",
+                  "title": "Candles one, two and three · 9:45, 9:50, 9:55",
+                  "body": "A fair value gap is defined by three consecutive candles and cannot be seen on fewer than three. Read them left to right: the first sets a high, the second runs, the third sets a low."
+                },
+                {
+                  "id": "c1",
+                  "anchor": {
+                    "at": "point",
+                    "index": 2,
+                    "price": 330.84
+                  },
+                  "chip": "high 330.84",
+                  "name": "Candle 1's high",
+                  "tone": "note",
+                  "title": "Candle one · high 330.84",
+                  "body": "The highest price the 9:45 candle traded. Nothing above this was touched while that candle was live — which makes it the BOTTOM edge of the gap. It belongs to this candle, not to the big one next to it."
+                },
+                {
+                  "id": "impulse",
+                  "anchor": {
+                    "at": "bar",
+                    "index": 3
+                  },
+                  "chip": "the impulse",
+                  "name": "Candle 2",
+                  "tone": "up",
+                  "title": "Candle two · 9:50, the impulse",
+                  "body": "It opened at 330.79 and closed at 332.45 — a $1.66 body in five minutes. Price went through the middle of that range so fast that buyers and sellers barely met in there. The gap has nothing to do with this candle's own high or low; it is caused by how quickly it travelled."
+                },
+                {
+                  "id": "c3",
+                  "anchor": {
+                    "at": "point",
+                    "index": 4,
+                    "price": 331.62
+                  },
+                  "chip": "low 331.62",
+                  "name": "Candle 3's low",
+                  "tone": "note",
+                  "title": "Candle three · low 331.62",
+                  "body": "The lowest price the 9:55 candle traded. Nothing below this was touched while that candle was live — the TOP edge of the gap. Again: read off the third candle, not the impulse."
+                },
+                {
+                  "id": "gap",
+                  "anchor": {
+                    "at": "band",
+                    "top": 331.62,
+                    "bottom": 330.84,
+                    "from": 2,
+                    "to": 7
+                  },
+                  "chip": "the gap",
+                  "name": "The gap",
+                  "tone": "zone",
+                  "title": "The gap · 330.84 to 331.62",
+                  "body": "Seventy-eight cents that the first candle never reached up into and the third never reached down into. Only the middle candle crossed it, and it crossed in one move. That band is the fair value gap — and Tesla's lowest print for the rest of that session was 331.98, so it was still open at the close."
+                }
+              ]
+            }
           },
           {
             "id": "distinction",
@@ -53,12 +192,22 @@
               {
                 "title": "Open — untraded",
                 "tone": "green",
-                "points": ["Price has not returned into the band", "The imbalance is still there", "A live place to expect a reaction", "The far edge is your invalidation"]
+                "points": [
+                  "Price has not returned into the band",
+                  "The imbalance is still there",
+                  "A live place to expect a reaction",
+                  "The far edge is your invalidation"
+                ]
               },
               {
                 "title": "Filled — traded through",
                 "tone": "red",
-                "points": ["Price has traded back through the band", "Two-sided trade has happened at those prices", "No longer a reason for anything", "Marking it clutters the chart"]
+                "points": [
+                  "Price has traded back through the band",
+                  "Two-sided trade has happened at those prices",
+                  "No longer a reason for anything",
+                  "Marking it clutters the chart"
+                ]
               }
             ],
             "note": "Same rule as a zone, for the same reason: the thing that made it interesting was unfinished business, and returning finishes it. Clear filled gaps off your chart or you will end up trading a map of the past."
@@ -70,10 +219,22 @@
             "skill": "technical_analysis",
             "heading": "Marking a gap you can use",
             "moves": [
-              { "title": "Find an impulse that broke structure", "body": "Not any big candle — one that did something. A gap inside a range is a curiosity; a gap inside the move that broke structure is where price is likely to come back to before continuing." },
-              { "title": "Check the two neighbours", "body": "High of the candle before, low of the candle after. If they overlap there is no gap, however impressive the middle candle looked." },
-              { "title": "Draw the band, not a line", "body": "Two edges. The near edge is where a reaction can start; the far edge is where the idea is wrong." },
-              { "title": "Prefer gaps that agree with something else", "body": "A gap sitting inside an unmitigated zone, or right where a sweep just happened, is worth far more than a gap on its own. Alone, it is a coin-flip with a nice name." }
+              {
+                "title": "Find an impulse that broke structure",
+                "body": "Not any big candle — one that did something. A gap inside a range is a curiosity; a gap inside the move that broke structure is where price is likely to come back to before continuing."
+              },
+              {
+                "title": "Check the two neighbours",
+                "body": "High of the candle before, low of the candle after. If they overlap there is no gap, however impressive the middle candle looked."
+              },
+              {
+                "title": "Draw the band, not a line",
+                "body": "Two edges. The near edge is where a reaction can start; the far edge is where the idea is wrong."
+              },
+              {
+                "title": "Prefer gaps that agree with something else",
+                "body": "A gap sitting inside an unmitigated zone, or right where a sweep just happened, is worth far more than a gap on its own. Alone, it is a coin-flip with a nice name."
+              }
             ],
             "closing": "That last move is the one that separates this from pattern-spotting. Confluence is not a bonus — it is the filter."
           },
@@ -105,10 +266,19 @@
             "correctIndex": 1,
             "explanation": "A gap needs clean air: the third candle's low must sit ABOVE the first candle's high. At 118 against 120 the neighbours overlap, so every price in between was traded.",
             "wrongFeedback": [
-              { "text": "That band was traded by both neighbours — the opposite of a gap. Check which number is higher.", "kai": true },
+              {
+                "text": "That band was traded by both neighbours — the opposite of a gap. Check which number is higher.",
+                "kai": true
+              },
               null,
-              { "text": "The impulse candle's own body is never the gap. The gap is defined by the candles either side of it.", "kai": true },
-              { "text": "Where candle 2 closed does not enter into it. The test is only candle 1's high against candle 3's low.", "kai": true }
+              {
+                "text": "The impulse candle's own body is never the gap. The gap is defined by the candles either side of it.",
+                "kai": true
+              },
+              {
+                "text": "Where candle 2 closed does not enter into it. The test is only candle 1's high against candle 3's low.",
+                "kai": true
+              }
             ],
             "reinforce": "Third candle's low above first candle's high. No overlap, no gap."
           },
@@ -140,13 +310,21 @@
       }
     },
     {
-      "match": { "course": "fta-trade-ready", "title": "Drill: Mark 3 FVGs & Watch the Fill" },
+      "match": {
+        "course": "belt-black",
+        "title": "Drill: Mark 3 FVGs & Watch the Fill"
+      },
       "json": {
         "schema": 1,
         "title": "Drill — mark three gaps and watch the fill",
-        "skills": ["technical_analysis"],
+        "skills": [
+          "technical_analysis"
+        ],
         "difficulty": 5,
-        "audience": ["adult", "teen"],
+        "audience": [
+          "adult",
+          "teen"
+        ],
         "duration_minutes": 8,
         "xp": 50,
         "steps": [
@@ -155,23 +333,154 @@
             "type": "explainer",
             "label": "PROCESS",
             "heading": "Three gaps, or not",
-            "body": ["Two of these are arithmetic. The third asks whether a real gap is worth trading, which is the harder question."]
+            "body": [
+              "Three real charts. Two are arithmetic you can do off the screen. The third asks whether a real gap is worth trading, which is the harder question and the one the week is actually about."
+            ]
           },
           {
             "id": "d1",
             "type": "prediction",
             "label": "EXERCISE",
             "skill": "technical_analysis",
-            "question": "Candle 1 high 46.20 · candle 2 a large green body · candle 3 low 47.10. Where is the gap?",
+            "question": "Nvidia, 12 August. Candle one tops at 221.60. Candle two is a $1.76 green body. Candle three bottoms at 222.47. Where is the gap?",
             "options": [
-              { "label": "46.20 to 47.10", "value": "right" },
-              { "label": "There is no gap", "value": "none" },
-              { "label": "The full range of candle 2", "value": "body" }
+              {
+                "label": "221.60 to 222.47",
+                "value": "right"
+              },
+              {
+                "label": "There is no gap",
+                "value": "none"
+              },
+              {
+                "label": "The full range of candle two, 221.20 to 223.23",
+                "value": "body"
+              }
             ],
             "outcomeValue": "right",
+            "chart": {
+              "ticker": "NVDA",
+              "session": "Nvidia · 5-minute · 12 August 2026",
+              "bars": [
+                {
+                  "t": "09:35",
+                  "o": 221.72,
+                  "h": 222.25,
+                  "l": 220.86,
+                  "c": 220.9
+                },
+                {
+                  "t": "09:40",
+                  "o": 220.91,
+                  "h": 221.6,
+                  "l": 220.3,
+                  "c": 221.32
+                },
+                {
+                  "t": "09:45",
+                  "o": 221.32,
+                  "h": 223.23,
+                  "l": 221.2,
+                  "c": 223.08
+                },
+                {
+                  "t": "09:50",
+                  "o": 223.08,
+                  "h": 223.46,
+                  "l": 222.47,
+                  "c": 222.52
+                },
+                {
+                  "t": "09:55",
+                  "o": 222.52,
+                  "h": 223.83,
+                  "l": 222.42,
+                  "c": 223.64
+                },
+                {
+                  "t": "10:00",
+                  "o": 223.64,
+                  "h": 224.05,
+                  "l": 222.8,
+                  "c": 222.8
+                },
+                {
+                  "t": "10:05",
+                  "o": 222.8,
+                  "h": 223.2,
+                  "l": 222.63,
+                  "c": 223
+                },
+                {
+                  "t": "10:10",
+                  "o": 222.98,
+                  "h": 223.43,
+                  "l": 222.42,
+                  "c": 223.11
+                }
+              ],
+              "revealFrom": 4,
+              "marks": [
+                {
+                  "id": "three",
+                  "anchor": {
+                    "at": "span",
+                    "from": 1,
+                    "to": 3
+                  },
+                  "chip": "3 candles",
+                  "name": "The three",
+                  "tone": "note",
+                  "title": "9:40, 9:45, 9:50",
+                  "body": "The three candles you are reading."
+                },
+                {
+                  "id": "c1",
+                  "anchor": {
+                    "at": "point",
+                    "index": 1,
+                    "price": 221.6
+                  },
+                  "chip": "221.60",
+                  "name": "Candle 1 high",
+                  "tone": "note",
+                  "title": "Candle one's high",
+                  "body": "221.60."
+                },
+                {
+                  "id": "c3",
+                  "anchor": {
+                    "at": "point",
+                    "index": 3,
+                    "price": 222.47
+                  },
+                  "chip": "222.47",
+                  "name": "Candle 3 low",
+                  "tone": "note",
+                  "title": "Candle three's low",
+                  "body": "222.47."
+                },
+                {
+                  "id": "gap",
+                  "anchor": {
+                    "at": "band",
+                    "top": 222.47,
+                    "bottom": 221.6,
+                    "from": 1,
+                    "to": 7
+                  },
+                  "chip": "the gap",
+                  "name": "The gap",
+                  "tone": "zone",
+                  "phase": "reveal",
+                  "title": "221.60 to 222.47",
+                  "body": "Eighty-seven cents of air."
+                }
+              ]
+            },
             "reveal": {
-              "headline": "46.20 to 47.10 — ninety cents of untraded air",
-              "body": "Candle 3's low sits above candle 1's high, so the band between them was skipped. Near edge 47.10 on the way back down, far edge 46.20 as invalidation."
+              "headline": "221.60 to 222.47 — eighty-seven cents of untraded air",
+              "body": "Candle three's low sits above candle one's high, so the band between them was skipped: neither neighbour ever traded there, and the impulse crossed it in one five-minute move.\n\nNear edge 222.47 on the way back down, far edge 221.60 as the invalidation. Candle two's own range is not the gap and never is."
             }
           },
           {
@@ -179,16 +488,209 @@
             "type": "prediction",
             "label": "EXERCISE",
             "skill": "technical_analysis",
-            "question": "A gap formed at 46.20–47.10. Price later traded down to 46.05 and rallied. Is the gap still live?",
+            "question": "Tesla leaves a gap at 348.48–349.91 on the way down on 14 August. Over the next fifty minutes it falls to 341.58. Is the gap filled?",
             "options": [
-              { "label": "Yes — it only touched the edge", "value": "live" },
-              { "label": "No — price traded through the whole band", "value": "filled" },
-              { "label": "Half — the top half is spent", "value": "half" }
+              {
+                "label": "Yes — price moved a long way after it",
+                "value": "filled"
+              },
+              {
+                "label": "No — filling it means trading back UP through the band, and price went the other way",
+                "value": "live"
+              },
+              {
+                "label": "Half — the bottom edge counts",
+                "value": "half"
+              }
             ],
-            "outcomeValue": "filled",
+            "outcomeValue": "live",
+            "chart": {
+              "ticker": "TSLA",
+              "session": "Tesla · 5-minute · 14 August 2026",
+              "bars": [
+                {
+                  "t": "09:30",
+                  "o": 342.33,
+                  "h": 345.65,
+                  "l": 342.01,
+                  "c": 345.23
+                },
+                {
+                  "t": "09:35",
+                  "o": 345.23,
+                  "h": 347.12,
+                  "l": 344.82,
+                  "c": 346.91
+                },
+                {
+                  "t": "09:40",
+                  "o": 346.92,
+                  "h": 347.8,
+                  "l": 345.11,
+                  "c": 347.54
+                },
+                {
+                  "t": "09:45",
+                  "o": 347.54,
+                  "h": 348.99,
+                  "l": 346.25,
+                  "c": 348.29
+                },
+                {
+                  "t": "09:50",
+                  "o": 348.33,
+                  "h": 349.99,
+                  "l": 348.23,
+                  "c": 349.4
+                },
+                {
+                  "t": "09:55",
+                  "o": 349.4,
+                  "h": 350.35,
+                  "l": 348.42,
+                  "c": 350.01
+                },
+                {
+                  "t": "10:00",
+                  "o": 350.09,
+                  "h": 350.35,
+                  "l": 349.14,
+                  "c": 349.97
+                },
+                {
+                  "t": "10:05",
+                  "o": 349.98,
+                  "h": 351.26,
+                  "l": 349.91,
+                  "c": 349.93
+                },
+                {
+                  "t": "10:10",
+                  "o": 349.96,
+                  "h": 350.01,
+                  "l": 346.92,
+                  "c": 347.03
+                },
+                {
+                  "t": "10:15",
+                  "o": 347.06,
+                  "h": 348.48,
+                  "l": 346.25,
+                  "c": 346.28
+                },
+                {
+                  "t": "10:20",
+                  "o": 346.36,
+                  "h": 347.09,
+                  "l": 345.62,
+                  "c": 345.97
+                },
+                {
+                  "t": "10:25",
+                  "o": 345.87,
+                  "h": 346.8,
+                  "l": 345.64,
+                  "c": 346.22
+                },
+                {
+                  "t": "10:30",
+                  "o": 346.27,
+                  "h": 346.39,
+                  "l": 344.35,
+                  "c": 345.02
+                },
+                {
+                  "t": "10:35",
+                  "o": 345.07,
+                  "h": 345.6,
+                  "l": 344.8,
+                  "c": 345.13
+                },
+                {
+                  "t": "10:40",
+                  "o": 345.02,
+                  "h": 345.1,
+                  "l": 342.8,
+                  "c": 342.83
+                },
+                {
+                  "t": "10:45",
+                  "o": 342.85,
+                  "h": 343.6,
+                  "l": 342.02,
+                  "c": 342.62
+                },
+                {
+                  "t": "10:50",
+                  "o": 342.65,
+                  "h": 342.86,
+                  "l": 341.58,
+                  "c": 341.58
+                },
+                {
+                  "t": "10:55",
+                  "o": 341.58,
+                  "h": 342.1,
+                  "l": 340.95,
+                  "c": 341.2
+                },
+                {
+                  "t": "11:00",
+                  "o": 341.16,
+                  "h": 341.52,
+                  "l": 339.62,
+                  "c": 340.43
+                }
+              ],
+              "revealFrom": 10,
+              "marks": [
+                {
+                  "id": "three",
+                  "anchor": {
+                    "at": "span",
+                    "from": 7,
+                    "to": 9
+                  },
+                  "chip": "3 candles",
+                  "name": "The three",
+                  "tone": "note",
+                  "title": "10:05, 10:10, 10:15",
+                  "body": "First candle's low 349.91, third candle's high 348.48 — a gap left going down."
+                },
+                {
+                  "id": "gap",
+                  "anchor": {
+                    "at": "band",
+                    "top": 349.91,
+                    "bottom": 348.48,
+                    "from": 7,
+                    "to": 18
+                  },
+                  "chip": "the gap",
+                  "name": "The gap",
+                  "tone": "zone",
+                  "title": "348.48 to 349.91",
+                  "body": "A dollar forty-three the market skipped on its way out."
+                },
+                {
+                  "id": "away",
+                  "anchor": {
+                    "at": "span",
+                    "from": 10,
+                    "to": 18
+                  },
+                  "chip": "away from it",
+                  "name": "What followed",
+                  "tone": "down",
+                  "phase": "reveal",
+                  "title": "10:20 to 11:00",
+                  "body": "Straight down, never a print back above 348.48."
+                }
+              ]
+            },
             "reveal": {
-              "headline": "Filled, and then some",
-              "body": "Trading to 46.05 means price passed through every price from 47.10 down to 46.20 on the way. The imbalance has been resolved — everyone who wanted to trade in that band has had the chance. Take it off the chart."
+              "headline": "Still open — and moving away is not filling",
+              "body": "A gap is filled when price trades back THROUGH the band. This one was left on the way down, so filling it means climbing back up through 348.48 to 349.91.\n\nTesla went the other way: 341.58 by 10:50, and it did not print above 348.48 again for the rest of the session. Distance travelled is not the test; direction through the band is."
             }
           },
           {
@@ -196,16 +698,195 @@
             "type": "prediction",
             "label": "EXERCISE",
             "skill": "technical_analysis",
-            "question": "You find a clean, unfilled gap in the middle of a three-week sideways range, with no zone and no swept level near it. What do you do?",
+            "question": "Nvidia, midday on 13 August. A clean gap at 224.13–224.46 sits in the middle of an hour of two-sided drift — no zone, no swept level, nothing else at that price. What do you do?",
             "options": [
-              { "label": "Trade it — an unfilled gap is an unfilled gap", "value": "trade" },
-              { "label": "Nothing — a gap with no confluence is not a setup", "value": "pass" },
-              { "label": "Trade it with a smaller size", "value": "small" }
+              {
+                "label": "Trade it — an unfilled gap is an unfilled gap",
+                "value": "trade"
+              },
+              {
+                "label": "Nothing — a gap with no confluence is not a setup",
+                "value": "pass"
+              },
+              {
+                "label": "Trade it with a smaller size",
+                "value": "small"
+              }
             ],
             "outcomeValue": "pass",
+            "chart": {
+              "ticker": "NVDA",
+              "session": "Nvidia · 5-minute · 13 August 2026",
+              "bars": [
+                {
+                  "t": "11:30",
+                  "o": 224.45,
+                  "h": 224.59,
+                  "l": 223.76,
+                  "c": 223.78
+                },
+                {
+                  "t": "11:35",
+                  "o": 223.79,
+                  "h": 224.13,
+                  "l": 223.71,
+                  "c": 224.13
+                },
+                {
+                  "t": "11:40",
+                  "o": 224.12,
+                  "h": 224.8,
+                  "l": 224.02,
+                  "c": 224.58
+                },
+                {
+                  "t": "11:45",
+                  "o": 224.56,
+                  "h": 224.82,
+                  "l": 224.46,
+                  "c": 224.68
+                },
+                {
+                  "t": "11:50",
+                  "o": 224.69,
+                  "h": 224.75,
+                  "l": 224.18,
+                  "c": 224.31
+                },
+                {
+                  "t": "11:55",
+                  "o": 224.3,
+                  "h": 224.39,
+                  "l": 224.1,
+                  "c": 224.26
+                },
+                {
+                  "t": "12:00",
+                  "o": 224.26,
+                  "h": 224.87,
+                  "l": 224.21,
+                  "c": 224.72
+                },
+                {
+                  "t": "12:05",
+                  "o": 224.74,
+                  "h": 225.14,
+                  "l": 224.72,
+                  "c": 225.1
+                },
+                {
+                  "t": "12:10",
+                  "o": 225.09,
+                  "h": 225.15,
+                  "l": 224.73,
+                  "c": 224.8
+                },
+                {
+                  "t": "12:15",
+                  "o": 224.79,
+                  "h": 224.92,
+                  "l": 224.66,
+                  "c": 224.83
+                },
+                {
+                  "t": "12:20",
+                  "o": 224.82,
+                  "h": 225.27,
+                  "l": 224.7,
+                  "c": 225.25
+                },
+                {
+                  "t": "12:25",
+                  "o": 225.25,
+                  "h": 225.46,
+                  "l": 225.24,
+                  "c": 225.29
+                },
+                {
+                  "t": "12:30",
+                  "o": 225.3,
+                  "h": 225.48,
+                  "l": 225.22,
+                  "c": 225.44
+                },
+                {
+                  "t": "12:35",
+                  "o": 225.44,
+                  "h": 225.6,
+                  "l": 225.11,
+                  "c": 225.17
+                },
+                {
+                  "t": "12:40",
+                  "o": 225.15,
+                  "h": 225.26,
+                  "l": 224.96,
+                  "c": 225.02
+                }
+              ],
+              "revealFrom": 4,
+              "marks": [
+                {
+                  "id": "three",
+                  "anchor": {
+                    "at": "span",
+                    "from": 1,
+                    "to": 3
+                  },
+                  "chip": "3 candles",
+                  "name": "The three",
+                  "tone": "note",
+                  "title": "11:35, 11:40, 11:45",
+                  "body": "A real gap, correctly formed."
+                },
+                {
+                  "id": "gap",
+                  "anchor": {
+                    "at": "band",
+                    "top": 224.46,
+                    "bottom": 224.13,
+                    "from": 1,
+                    "to": 14
+                  },
+                  "chip": "the gap",
+                  "name": "The gap",
+                  "tone": "zone",
+                  "title": "224.13 to 224.46",
+                  "body": "Thirty-three cents, and nothing else at that price."
+                },
+                {
+                  "id": "fill",
+                  "anchor": {
+                    "at": "point",
+                    "index": 5,
+                    "price": 224.1
+                  },
+                  "chip": "224.10",
+                  "name": "Filled",
+                  "tone": "down",
+                  "phase": "reveal",
+                  "title": "11:55 · straight through it",
+                  "body": "Price traded to 224.10, under the whole band, ten minutes later."
+                },
+                {
+                  "id": "drift",
+                  "anchor": {
+                    "at": "span",
+                    "from": 4,
+                    "to": 14
+                  },
+                  "chip": "nothing happened",
+                  "name": "And then",
+                  "tone": "note",
+                  "phase": "reveal",
+                  "title": "The next forty-five minutes",
+                  "body": "224.26 to 225.02. A dollar, in both directions, going nowhere."
+                }
+              ]
+            },
             "reveal": {
               "headline": "Pass, and this is the lesson of the week",
-              "body": "Ranges are full of gaps and most of them resolve without ceremony. What makes a gap tradeable is agreement with something else — a zone, a sweep, a level that matters. Trading it smaller is not risk management, it is taking a bad trade quietly."
+              "body": "The gap was real and it was worth nothing. Ten minutes later price traded to 224.10, straight through the whole band, and then drifted from 224.26 to 225.02 over the next three quarters of an hour without doing anything you could have traded.\n\nRanges are full of gaps like this. What makes one worth acting on is agreement — a gap inside an unmitigated zone, or right where a sweep just cleared a level. Trading it smaller is not risk management; it is taking a bad trade quietly."
             }
           },
           {
@@ -223,16 +904,27 @@
       }
     },
     {
-      "match": { "course": "fta-trade-ready", "title": "Live Class: The Opening Range Breakout" },
+      "match": {
+        "course": "belt-black",
+        "title": "Live Class: The Opening Range Breakout"
+      },
       "json": {
         "schema": 1,
         "title": "The opening range breakout",
-        "skills": ["technical_analysis"],
+        "skills": [
+          "technical_analysis"
+        ],
         "difficulty": 5,
-        "audience": ["adult", "teen"],
+        "audience": [
+          "adult",
+          "teen"
+        ],
         "duration_minutes": 18,
         "xp": 50,
-        "guide": { "intro": "Five weeks of reading, one time of day, four beats.", "outro": "You have the play. Next week it becomes a routine you can repeat." },
+        "guide": {
+          "intro": "Five weeks of reading, one time of day, four beats.",
+          "outro": "You have the play. Next week it becomes a routine you can repeat."
+        },
         "steps": [
           {
             "id": "concept",
@@ -240,10 +932,14 @@
             "label": "CORE CONCEPT",
             "skill": "technical_analysis",
             "heading": "The first half hour is not like the rest of the day",
-            "figure": { "kind": "stat", "value": "9:30–10:00", "caption": "Where the day's argument gets had" },
+            "figure": {
+              "kind": "stat",
+              "value": "9:30–9:45",
+              "caption": "The window this course uses, every session"
+            },
             "body": [
               "Everything that happened while the market was shut — earnings, news, overnight moves in other markets — has to be priced in at once when it opens. Orders that queued for sixteen hours all arrive together.",
-              "So the opening range, the high and low of the first fifteen or thirty minutes, is not an arbitrary box. It is the range within which the day's competing views fought to a standstill before anyone had the upper hand.",
+              "So the opening range — the high and the low of the first fifteen minutes — is not an arbitrary box. It is the range within which the day's competing views fought to a standstill before either side had the upper hand.",
               "When price leaves that range and stays out, the argument has been settled, and the rest of the session tends to travel in that direction. That is the whole idea. The work is in the word 'stays'.",
               "Everything you have learned in this belt shows up inside that first hour, faster and more clearly than anywhere else on a chart."
             ]
@@ -256,28 +952,212 @@
             "heading": "Range, break, retest, go",
             "intro": "Four beats. You have met all four already; this is where they run on a clock.",
             "moves": [
-              { "title": "RANGE — mark the box and then leave it alone", "body": "The high and the low of the first fifteen or thirty minutes. Pick one window and keep it for every session — changing it after the fact is how you end up justifying whatever just happened." },
-              { "title": "BREAK — a CLOSE outside, never a wick", "body": "A five-minute candle must close beyond the box. A wick through the top that closes back inside is not a break; it is a sweep of everyone who bought the wick." },
-              { "title": "RETEST — the professional moment", "body": "Price comes back to the broken edge. The old ceiling should now act as a floor: the role flip you learned at Yellow Belt. Holding it is the confirmation, and it is where the entry belongs." },
-              { "title": "GO — with the invalidation already decided", "body": "If the retest fails and price closes back inside the box, the break was a fakeout and you are out. That is decided before you enter, not while you are watching." }
+              {
+                "title": "RANGE — mark the box and then leave it alone",
+                "body": "The high and the low of the first fifteen minutes. Pick one window, use it for every session, and never adjust it after the fact — changing the window afterwards is how you end up justifying whatever just happened."
+              },
+              {
+                "title": "BREAK — a CLOSE outside, never a wick",
+                "body": "A five-minute candle must close beyond the box. A wick through the top that closes back inside is not a break; it is a sweep of everyone who bought the wick."
+              },
+              {
+                "title": "RETEST — the professional moment",
+                "body": "Price comes back to the broken edge. The old ceiling should now act as a floor: the role flip you learned at Yellow Belt. Holding it is the confirmation, and it is where the entry belongs."
+              },
+              {
+                "title": "GO — with the invalidation already decided",
+                "body": "If the retest fails and price closes back inside the box, the break was a fakeout and you are out. That is decided before you enter, not while you are watching."
+              }
             ],
             "closing": "The retest is the beat beginners skip. Entering on the break itself means being in before the market has confirmed anything — and being the fuel when it has not."
           },
           {
             "id": "live",
-            "type": "annotated_values",
+            "type": "chart",
             "label": "LIVE EXAMPLE",
             "skill": "technical_analysis",
             "heading": "The morning it worked",
-            "subject": "Tesla · 5-minute · 13 August 2026",
-            "caption": "Real session, real prices. Tap each number.",
-            "candle": { "open": 327.2, "high": 341.64, "low": 325.24, "close": 339.96 },
-            "values": [
-              { "part": "low", "label": "OR low", "value": "$325.24", "meaning": "The bottom of the opening range, and the low of the entire day. Once price left the box upward it never came back to test this." },
-              { "part": "open", "label": "OR high", "value": "$331.69", "meaning": "The top of the opening range. This is the line that had to be closed above — and then had to hold as support on the way back." },
-              { "part": "close", "label": "Break + retest", "value": "$332.45", "meaning": "The 9:50 candle closed at 332.45, above the box. Five minutes later price came back to 331.62 — sixty-seven cents into the old ceiling — and rejected. That is the role flip, on the clock." },
-              { "part": "high", "label": "Day high", "value": "$341.64", "meaning": "By 15:10 it had run to 341.64, stopping sixty cents under the 341–342 wall from 23 July. Closed 339.96. The week-one level and the week-five play, on the same chart." }
-            ]
+            "intro": "Thirteen five-minute candles from a real session. Every number this lesson quotes is on this chart, on the candle it came from.",
+            "prompt": "Tap the box, the candle that broke it, and the candle that came back to test it.",
+            "done": "Got it → Continue",
+            "figure": {
+              "ticker": "TSLA",
+              "session": "Tesla · 5-minute · 13 August 2026",
+              "bars": [
+                {
+                  "t": "09:30",
+                  "o": 327.2,
+                  "h": 328.77,
+                  "l": 325.24,
+                  "c": 328.58
+                },
+                {
+                  "t": "09:35",
+                  "o": 328.63,
+                  "h": 330.42,
+                  "l": 328.57,
+                  "c": 330.35
+                },
+                {
+                  "t": "09:40",
+                  "o": 330.38,
+                  "h": 331.69,
+                  "l": 329.11,
+                  "c": 329.4
+                },
+                {
+                  "t": "09:45",
+                  "o": 329.41,
+                  "h": 330.84,
+                  "l": 329.06,
+                  "c": 330.76
+                },
+                {
+                  "t": "09:50",
+                  "o": 330.79,
+                  "h": 332.51,
+                  "l": 330.59,
+                  "c": 332.45
+                },
+                {
+                  "t": "09:55",
+                  "o": 332.5,
+                  "h": 333.45,
+                  "l": 331.62,
+                  "c": 332.92
+                },
+                {
+                  "t": "10:00",
+                  "o": 332.92,
+                  "h": 333.56,
+                  "l": 331.98,
+                  "c": 332.6
+                },
+                {
+                  "t": "10:05",
+                  "o": 332.64,
+                  "h": 333.14,
+                  "l": 332.5,
+                  "c": 333.02
+                },
+                {
+                  "t": "10:10",
+                  "o": 333.05,
+                  "h": 333.71,
+                  "l": 332.47,
+                  "c": 332.64
+                },
+                {
+                  "t": "10:15",
+                  "o": 332.64,
+                  "h": 333.12,
+                  "l": 332.3,
+                  "c": 332.56
+                },
+                {
+                  "t": "10:20",
+                  "o": 332.54,
+                  "h": 333.54,
+                  "l": 332.4,
+                  "c": 333.15
+                },
+                {
+                  "t": "10:25",
+                  "o": 333.14,
+                  "h": 333.2,
+                  "l": 332.32,
+                  "c": 332.9
+                },
+                {
+                  "t": "10:30",
+                  "o": 332.91,
+                  "h": 333.49,
+                  "l": 332.48,
+                  "c": 333.1
+                }
+              ],
+              "marks": [
+                {
+                  "id": "or",
+                  "anchor": {
+                    "at": "band",
+                    "top": 331.69,
+                    "bottom": 325.24,
+                    "from": 0
+                  },
+                  "chip": "opening range",
+                  "name": "The opening range",
+                  "tone": "level",
+                  "title": "The opening range · 325.24 to 331.69",
+                  "body": "The first fifteen minutes: 9:30, 9:35 and 9:40. The low is 325.24, which turned out to be the low of the whole day, and the high is 331.69. Everything the session does from here is measured against those two prices."
+                },
+                {
+                  "id": "built",
+                  "anchor": {
+                    "at": "span",
+                    "from": 0,
+                    "to": 2
+                  },
+                  "chip": "9:30–9:44",
+                  "name": "Who drew the box",
+                  "tone": "note",
+                  "title": "Three candles draw the range",
+                  "body": "The range is not a candle and not a number — it is the box those three drew, and it is finished the moment the 9:40 candle closes. After that you stop drawing and start waiting."
+                },
+                {
+                  "id": "attempt",
+                  "anchor": {
+                    "at": "point",
+                    "index": 3,
+                    "price": 330.84
+                  },
+                  "chip": "330.84",
+                  "name": "The near miss",
+                  "tone": "note",
+                  "title": "9:45 stops at 330.84 — inside",
+                  "body": "The candle before the break got to within eighty-five cents of the range high and closed at 330.76, still inside the box. Nothing has happened yet. This is the candle beginners buy."
+                },
+                {
+                  "id": "break",
+                  "anchor": {
+                    "at": "point",
+                    "index": 4,
+                    "price": 332.45
+                  },
+                  "chip": "closed 332.45",
+                  "name": "The break",
+                  "tone": "up",
+                  "title": "9:50 closes at 332.45",
+                  "body": "Seventy-six cents above the range high of 331.69 — and it is a CLOSE, not a wick. This is the first candle to finish its five minutes on the other side of the box, which is the only version of a break this course accepts."
+                },
+                {
+                  "id": "retest",
+                  "anchor": {
+                    "at": "point",
+                    "index": 5,
+                    "price": 331.62
+                  },
+                  "chip": "held 331.62",
+                  "name": "The retest",
+                  "tone": "up",
+                  "title": "9:55 dips to 331.62 and holds",
+                  "body": "The next candle comes straight back down and trades seven cents through the old range high — 331.69 against 331.62 — then closes at 332.92. The ceiling has become the floor, and seven cents is all the room the market gave you to find that out. That is the entry."
+                },
+                {
+                  "id": "after",
+                  "anchor": {
+                    "at": "span",
+                    "from": 6,
+                    "to": 12
+                  },
+                  "chip": "never back inside",
+                  "name": "What followed",
+                  "tone": "up",
+                  "title": "It never went back in",
+                  "body": "From 10:00 to 10:30 the lowest price Tesla traded was 331.98 — above the range high the entire time. The day went on to top at 341.64 and close at 339.96, but the read was settled at 9:55."
+                }
+              ]
+            }
           },
           {
             "id": "distinction",
@@ -290,15 +1170,25 @@
               {
                 "title": "13 Aug — confirmed",
                 "tone": "green",
-                "points": ["OR 325.24–331.69", "9:50 closes 332.45, outside", "Retest holds at 331.62", "Runs to 341.64, closes 339.96"]
+                "points": [
+                  "OR 325.24–331.69",
+                  "9:50 closes 332.45, outside",
+                  "Retest holds at 331.62",
+                  "Runs to 341.64, closes 339.96"
+                ]
               },
               {
                 "title": "14 Aug — fakeout",
                 "tone": "red",
-                "points": ["Opens 342.33, above the wall", "OR 342.01–347.80", "9:45 breaks, runs 350.35", "10:10 closes 347.03 — back INSIDE"]
+                "points": [
+                  "Opens 342.33, above the wall",
+                  "OR 342.01–347.80",
+                  "9:45 closes 348.29, outside",
+                  "10:10 closes 347.03 — back INSIDE"
+                ]
               }
             ],
-            "note": "Thursday's 10:10 close back inside the range is the entire signal. Everyone long from the break was trapped at that moment, and their exit took it to 335.33 by 11:25 — a twelve-dollar unwind. The rule that saved you was the one you already knew: a close, never a wick."
+            "note": "Thursday's 10:10 close back inside the range is the entire signal. It came after a run to 351.26, so everyone long from the 348.29 break was in profit right up until they were trapped — and their exits took it to 335.33 by 11:25, nearly twelve dollars off the 347.03 close. The rule that saved you was the one you already knew: a close, never a wick."
           },
           {
             "id": "insight",
@@ -310,7 +1200,7 @@
               "At the moment of the break, nobody knows anything. Price is outside the box, which it does on plenty of mornings that end up going nowhere. Buying there is buying a maybe.",
               "At the retest, something has been established: price left the range, came back to the edge, and could not get back in. The sellers who would have pushed it back inside had their chance and did not take it.",
               "That is also why the invalidation is so clean. If it does close back inside, the premise is simply gone. You are not deciding whether to hold and hope — the condition that made this a trade has failed.",
-              "Beginners chase the break because it feels like the move is leaving without them. The move that leaves without you costs you nothing. The break you chased that closes back inside costs you twelve dollars in ninety minutes."
+              "Beginners chase the break because it feels like the move is leaving without them. The move that leaves without you costs you nothing. The break you chased on 14 August closed back inside at 10:10 and was thirteen dollars lower a hundred minutes later."
             ]
           },
           {
@@ -328,10 +1218,19 @@
             "correctIndex": 1,
             "explanation": "A wick outside with a close inside is the range holding. It has also just collected everyone who bought the wick — which makes it a sweep, not a breakout.",
             "wrongFeedback": [
-              { "text": "Exceeding the range is not the test. Closing outside it is, and this candle closed at 101.80 — inside.", "kai": true },
+              {
+                "text": "Exceeding the range is not the test. Closing outside it is, and this candle closed at 101.80 — inside.",
+                "kai": true
+              },
               null,
-              { "text": "A retest requires a break first. There has not been one.", "kai": true },
-              { "text": "A gap needs three candles with no overlap between the outer two. One wick is not a gap.", "kai": true }
+              {
+                "text": "A retest requires a break first. There has not been one.",
+                "kai": true
+              },
+              {
+                "text": "A gap needs three candles with no overlap between the outer two. One wick is not a gap.",
+                "kai": true
+              }
             ],
             "reinforce": "Closes, never wicks — the same rule that has run through every week of this belt."
           },
@@ -342,7 +1241,7 @@
             "skill": "technical_analysis",
             "question": "On 14 August, at what moment did the Tesla long become invalid?",
             "options": [
-              "At 350.35, the high of the run",
+              "At 351.26, the high of the run",
               "At the 10:10 close of 347.03, back inside the opening range",
               "At 335.33, when the loss was obvious",
               "At the open, because it gapped above the wall"
@@ -350,10 +1249,19 @@
             "correctIndex": 1,
             "explanation": "The premise was that price had left the range and would stay out. The 10:10 close back inside ended that premise. Everything after it is a loss getting larger.",
             "wrongFeedback": [
-              { "text": "A high is not an exit signal. Nothing had failed yet — it was still outside the range.", "kai": true },
+              {
+                "text": "A high is not an exit signal. Nothing had failed yet — price was still outside the range.",
+                "kai": true
+              },
               null,
-              { "text": "By 335.33 the trade had been wrong for over an hour. The rule fired at 10:10; obvious is not the same as timely.", "kai": true },
-              { "text": "Opening above the wall was a warning worth respecting, but the trade itself was invalidated by a specific candle at a specific time.", "kai": true }
+              {
+                "text": "By 335.33 the trade had been wrong for over an hour. The rule fired at 10:10; obvious is not the same as timely.",
+                "kai": true
+              },
+              {
+                "text": "Opening above the wall was a warning worth respecting, but the trade itself was invalidated by a specific candle at a specific time.",
+                "kai": true
+              }
             ],
             "reinforce": "The invalidation is a price and a condition, decided before entry. It is not a feeling you arrive at later."
           },
@@ -363,7 +1271,7 @@
             "label": "WRAP UP",
             "heading": "Key takeaways",
             "points": [
-              "The opening range is the first 15 or 30 minutes — where the overnight argument gets settled.",
+              "The opening range is the first fifteen minutes — where the overnight argument gets settled.",
               "Range, break, retest, go. Pick your window and keep it for every session.",
               "The break is a CLOSE outside the box. A wick outside that closes back in is a sweep of the people who chased.",
               "The retest is the entry, because it is the first moment the market has confirmed anything.",
@@ -375,13 +1283,21 @@
       }
     },
     {
-      "match": { "course": "fta-trade-ready", "title": "Drill: Replay 3 ORB Days" },
+      "match": {
+        "course": "belt-black",
+        "title": "Drill: Replay 3 ORB Days"
+      },
       "json": {
         "schema": 1,
         "title": "Drill — replay three ORB days",
-        "skills": ["technical_analysis"],
+        "skills": [
+          "technical_analysis"
+        ],
         "difficulty": 5,
-        "audience": ["adult", "teen"],
+        "audience": [
+          "adult",
+          "teen"
+        ],
         "duration_minutes": 9,
         "xp": 50,
         "steps": [
@@ -390,23 +1306,169 @@
             "type": "explainer",
             "label": "PROCESS",
             "heading": "Three mornings, in real time",
-            "body": ["Each question stops at a specific minute. Answer with only what a trader had on the screen at that moment — not with what you know happened next."]
+            "body": [
+              "Three real sessions. Each chart stops at the exact candle the decision had to be made on — you see what a trader watching live would have seen, and nothing after it.",
+              "Make the call, then the rest of the session is drawn in. One of these three is a morning where the right answer is no trade at all."
+            ]
           },
           {
             "id": "d1",
             "type": "prediction",
             "label": "EXERCISE",
             "skill": "technical_analysis",
-            "question": "13 August, 9:50. The opening range is 325.24–331.69 and this candle just closed at 332.45. What now?",
+            "question": "13 August, 9:50. The opening range is 325.24–331.69 and this candle has just closed at 332.45. What now?",
             "options": [
-              { "label": "Buy immediately — the break is confirmed", "value": "chase" },
-              { "label": "Wait for the retest of 331.69 to hold", "value": "wait" },
-              { "label": "Short it — extended above the range", "value": "short" }
+              {
+                "label": "Buy immediately — the break is confirmed",
+                "value": "chase"
+              },
+              {
+                "label": "Wait for a retest of 331.69 to hold",
+                "value": "wait"
+              },
+              {
+                "label": "Short it — extended above the range",
+                "value": "short"
+              }
             ],
             "outcomeValue": "wait",
+            "chart": {
+              "ticker": "TSLA",
+              "session": "Tesla · 5-minute · 13 August 2026",
+              "bars": [
+                {
+                  "t": "09:30",
+                  "o": 327.2,
+                  "h": 328.77,
+                  "l": 325.24,
+                  "c": 328.58
+                },
+                {
+                  "t": "09:35",
+                  "o": 328.63,
+                  "h": 330.42,
+                  "l": 328.57,
+                  "c": 330.35
+                },
+                {
+                  "t": "09:40",
+                  "o": 330.38,
+                  "h": 331.69,
+                  "l": 329.11,
+                  "c": 329.4
+                },
+                {
+                  "t": "09:45",
+                  "o": 329.41,
+                  "h": 330.84,
+                  "l": 329.06,
+                  "c": 330.76
+                },
+                {
+                  "t": "09:50",
+                  "o": 330.79,
+                  "h": 332.51,
+                  "l": 330.59,
+                  "c": 332.45
+                },
+                {
+                  "t": "09:55",
+                  "o": 332.5,
+                  "h": 333.45,
+                  "l": 331.62,
+                  "c": 332.92
+                },
+                {
+                  "t": "10:00",
+                  "o": 332.92,
+                  "h": 333.56,
+                  "l": 331.98,
+                  "c": 332.6
+                },
+                {
+                  "t": "10:05",
+                  "o": 332.64,
+                  "h": 333.14,
+                  "l": 332.5,
+                  "c": 333.02
+                },
+                {
+                  "t": "10:10",
+                  "o": 333.05,
+                  "h": 333.71,
+                  "l": 332.47,
+                  "c": 332.64
+                },
+                {
+                  "t": "10:15",
+                  "o": 332.64,
+                  "h": 333.12,
+                  "l": 332.3,
+                  "c": 332.56
+                }
+              ],
+              "revealFrom": 5,
+              "marks": [
+                {
+                  "id": "or",
+                  "anchor": {
+                    "at": "band",
+                    "top": 331.69,
+                    "bottom": 325.24,
+                    "from": 0
+                  },
+                  "chip": "opening range",
+                  "name": "The box",
+                  "tone": "level",
+                  "title": "325.24 to 331.69",
+                  "body": "The first fifteen minutes."
+                },
+                {
+                  "id": "break",
+                  "anchor": {
+                    "at": "point",
+                    "index": 4,
+                    "price": 332.45
+                  },
+                  "chip": "closed 332.45",
+                  "name": "This candle",
+                  "tone": "up",
+                  "title": "9:50 · closed 332.45",
+                  "body": "Seventy-six cents above the box, on a close."
+                },
+                {
+                  "id": "retest",
+                  "anchor": {
+                    "at": "point",
+                    "index": 5,
+                    "price": 331.62
+                  },
+                  "chip": "held 331.62",
+                  "name": "The retest",
+                  "tone": "up",
+                  "phase": "reveal",
+                  "title": "9:55 · low 331.62",
+                  "body": "Seven cents into the old ceiling, then closed 332.92."
+                },
+                {
+                  "id": "held",
+                  "anchor": {
+                    "at": "span",
+                    "from": 6,
+                    "to": 9
+                  },
+                  "chip": "held above",
+                  "name": "After",
+                  "tone": "up",
+                  "phase": "reveal",
+                  "title": "10:00 onwards",
+                  "body": "Lowest print 331.98 — never back in the box."
+                }
+              ]
+            },
             "reveal": {
               "headline": "Wait — and five minutes later you were paid for waiting",
-              "body": "The 9:55 candle came back to 331.62, sixty-seven cents into the old ceiling, and rejected. That is the retest holding and the entry. Buying at 332.45 got the same trade with a worse price and no confirmation."
+              "body": "The 9:55 candle came straight back to 331.62, seven cents into the old ceiling, and closed at 332.92. That is the retest holding, and that is the entry.\n\nBuying at 332.45 got you the same trade at a worse price with nothing confirmed. Tesla never traded back inside the box that day and topped at 341.64."
             }
           },
           {
@@ -414,16 +1476,283 @@
             "type": "prediction",
             "label": "EXERCISE",
             "skill": "technical_analysis",
-            "question": "14 August, 10:10. You are long from the 9:45 break at 348.29. This candle closes at 347.03 — back inside the 342.01–347.80 range. What do you do?",
+            "question": "14 August, 10:10. You are long from the 9:45 break at 348.29. This candle has just closed at 347.03 — back inside the 342.01–347.80 range. What do you do?",
             "options": [
-              { "label": "Hold — it is only just back inside", "value": "hold" },
-              { "label": "Out. The premise failed", "value": "out" },
-              { "label": "Add — better price than the break", "value": "add" }
+              {
+                "label": "Hold — it is only just back inside",
+                "value": "hold"
+              },
+              {
+                "label": "Out. The premise failed",
+                "value": "out"
+              },
+              {
+                "label": "Add — better price than the break",
+                "value": "add"
+              }
             ],
             "outcomeValue": "out",
+            "chart": {
+              "ticker": "TSLA",
+              "session": "Tesla · 5-minute · 14 August 2026",
+              "bars": [
+                {
+                  "t": "09:30",
+                  "o": 342.33,
+                  "h": 345.65,
+                  "l": 342.01,
+                  "c": 345.23
+                },
+                {
+                  "t": "09:35",
+                  "o": 345.23,
+                  "h": 347.12,
+                  "l": 344.82,
+                  "c": 346.91
+                },
+                {
+                  "t": "09:40",
+                  "o": 346.92,
+                  "h": 347.8,
+                  "l": 345.11,
+                  "c": 347.54
+                },
+                {
+                  "t": "09:45",
+                  "o": 347.54,
+                  "h": 348.99,
+                  "l": 346.25,
+                  "c": 348.29
+                },
+                {
+                  "t": "09:50",
+                  "o": 348.33,
+                  "h": 349.99,
+                  "l": 348.23,
+                  "c": 349.4
+                },
+                {
+                  "t": "09:55",
+                  "o": 349.4,
+                  "h": 350.35,
+                  "l": 348.42,
+                  "c": 350.01
+                },
+                {
+                  "t": "10:00",
+                  "o": 350.09,
+                  "h": 350.35,
+                  "l": 349.14,
+                  "c": 349.97
+                },
+                {
+                  "t": "10:05",
+                  "o": 349.98,
+                  "h": 351.26,
+                  "l": 349.91,
+                  "c": 349.93
+                },
+                {
+                  "t": "10:10",
+                  "o": 349.96,
+                  "h": 350.01,
+                  "l": 346.92,
+                  "c": 347.03
+                },
+                {
+                  "t": "10:15",
+                  "o": 347.06,
+                  "h": 348.48,
+                  "l": 346.25,
+                  "c": 346.28
+                },
+                {
+                  "t": "10:20",
+                  "o": 346.36,
+                  "h": 347.09,
+                  "l": 345.62,
+                  "c": 345.97
+                },
+                {
+                  "t": "10:25",
+                  "o": 345.87,
+                  "h": 346.8,
+                  "l": 345.64,
+                  "c": 346.22
+                },
+                {
+                  "t": "10:30",
+                  "o": 346.27,
+                  "h": 346.39,
+                  "l": 344.35,
+                  "c": 345.02
+                },
+                {
+                  "t": "10:35",
+                  "o": 345.07,
+                  "h": 345.6,
+                  "l": 344.8,
+                  "c": 345.13
+                },
+                {
+                  "t": "10:40",
+                  "o": 345.02,
+                  "h": 345.1,
+                  "l": 342.8,
+                  "c": 342.83
+                },
+                {
+                  "t": "10:45",
+                  "o": 342.85,
+                  "h": 343.6,
+                  "l": 342.02,
+                  "c": 342.62
+                },
+                {
+                  "t": "10:50",
+                  "o": 342.65,
+                  "h": 342.86,
+                  "l": 341.58,
+                  "c": 341.58
+                },
+                {
+                  "t": "10:55",
+                  "o": 341.58,
+                  "h": 342.1,
+                  "l": 340.95,
+                  "c": 341.2
+                },
+                {
+                  "t": "11:00",
+                  "o": 341.16,
+                  "h": 341.52,
+                  "l": 339.62,
+                  "c": 340.43
+                },
+                {
+                  "t": "11:05",
+                  "o": 340.43,
+                  "h": 340.58,
+                  "l": 339.26,
+                  "c": 339.36
+                },
+                {
+                  "t": "11:10",
+                  "o": 339.31,
+                  "h": 339.78,
+                  "l": 338.45,
+                  "c": 338.45
+                },
+                {
+                  "t": "11:15",
+                  "o": 338.48,
+                  "h": 338.72,
+                  "l": 337.51,
+                  "c": 337.71
+                },
+                {
+                  "t": "11:20",
+                  "o": 337.72,
+                  "h": 337.81,
+                  "l": 336.27,
+                  "c": 336.36
+                },
+                {
+                  "t": "11:25",
+                  "o": 336.36,
+                  "h": 337.57,
+                  "l": 335.33,
+                  "c": 337.35
+                }
+              ],
+              "revealFrom": 10,
+              "marks": [
+                {
+                  "id": "or",
+                  "anchor": {
+                    "at": "band",
+                    "top": 347.8,
+                    "bottom": 342.01,
+                    "from": 0
+                  },
+                  "chip": "opening range",
+                  "name": "The box",
+                  "tone": "level",
+                  "title": "342.01 to 347.80",
+                  "body": "The first fifteen minutes of 14 August."
+                },
+                {
+                  "id": "entry",
+                  "anchor": {
+                    "at": "point",
+                    "index": 3,
+                    "price": 348.29
+                  },
+                  "chip": "your entry",
+                  "name": "Your entry",
+                  "tone": "up",
+                  "title": "9:45 closed 348.29",
+                  "body": "The break, forty-nine cents above the box."
+                },
+                {
+                  "id": "top",
+                  "anchor": {
+                    "at": "point",
+                    "index": 7,
+                    "price": 351.26
+                  },
+                  "chip": "351.26",
+                  "name": "The high",
+                  "tone": "up",
+                  "title": "351.26 at 10:05",
+                  "body": "Three dollars of open profit at the best moment."
+                },
+                {
+                  "id": "fail",
+                  "anchor": {
+                    "at": "point",
+                    "index": 9,
+                    "price": 347.03
+                  },
+                  "chip": "closed 347.03",
+                  "name": "This candle",
+                  "tone": "down",
+                  "title": "10:10 · closed 347.03",
+                  "body": "Back inside the box. The premise has failed."
+                },
+                {
+                  "id": "after",
+                  "anchor": {
+                    "at": "span",
+                    "from": 10,
+                    "to": 23
+                  },
+                  "chip": "after 10:10",
+                  "name": "After",
+                  "tone": "down",
+                  "phase": "reveal",
+                  "title": "10:15 to 11:25",
+                  "body": "One direction."
+                },
+                {
+                  "id": "end",
+                  "anchor": {
+                    "at": "point",
+                    "index": 23,
+                    "price": 335.33
+                  },
+                  "chip": "335.33",
+                  "name": "By 11:25",
+                  "tone": "down",
+                  "phase": "reveal",
+                  "title": "335.33",
+                  "body": "Nearly twelve dollars below the 10:10 close."
+                }
+              ]
+            },
             "reveal": {
               "headline": "Out, at 347.03",
-              "body": "By 11:25 it was 335.33. Holding cost twelve dollars a share, adding cost more. The rule fired at 10:10 and it fired cleanly — the only difficulty is doing it while it still feels early."
+              "body": "By 11:25 it was 335.33. Holding from the 10:10 close cost nearly twelve dollars a share; adding cost more, and adding at 347.03 would have doubled the size at exactly the moment the reason for the trade disappeared.\n\nThe rule fired at 10:10 and it fired cleanly. The only hard part is doing it while it still feels early — at that moment you were still above your 348.29 entry by nothing, and the high of 351.26 was only twenty-five minutes old."
             }
           },
           {
@@ -431,16 +1760,271 @@
             "type": "prediction",
             "label": "EXERCISE",
             "skill": "technical_analysis",
-            "question": "A morning opens and the first thirty minutes are a two-dollar box. By 11:00 price has not closed outside it once. What is the play?",
+            "question": "Apple, 21 August. The first thirty minutes ran 307.01 to 312.38 — a $5.37 box. It is 11:00 and no candle has closed outside it. What is the play?",
             "options": [
-              { "label": "Take the next touch of the range high", "value": "touch" },
-              { "label": "No trade — the setup never appeared", "value": "none" },
-              { "label": "Widen the box until something qualifies", "value": "widen" }
+              {
+                "label": "Take the next touch of the range high",
+                "value": "touch"
+              },
+              {
+                "label": "No trade — the setup never appeared",
+                "value": "none"
+              },
+              {
+                "label": "Narrow the box until something qualifies",
+                "value": "narrow"
+              }
             ],
             "outcomeValue": "none",
+            "chart": {
+              "ticker": "AAPL",
+              "session": "Apple · 15-minute · 21 August 2026",
+              "bars": [
+                {
+                  "t": "09:30",
+                  "o": 312.05,
+                  "h": 312.38,
+                  "l": 307.44,
+                  "c": 308.12
+                },
+                {
+                  "t": "09:45",
+                  "o": 308.09,
+                  "h": 308.33,
+                  "l": 307.01,
+                  "c": 307.38
+                },
+                {
+                  "t": "10:00",
+                  "o": 307.38,
+                  "h": 308.05,
+                  "l": 307.09,
+                  "c": 307.72
+                },
+                {
+                  "t": "10:15",
+                  "o": 307.7,
+                  "h": 308.23,
+                  "l": 307.46,
+                  "c": 307.8
+                },
+                {
+                  "t": "10:30",
+                  "o": 307.81,
+                  "h": 308.74,
+                  "l": 307.6,
+                  "c": 308.58
+                },
+                {
+                  "t": "10:45",
+                  "o": 308.55,
+                  "h": 309.5,
+                  "l": 308.3,
+                  "c": 309.46
+                },
+                {
+                  "t": "11:00",
+                  "o": 309.46,
+                  "h": 309.94,
+                  "l": 309.25,
+                  "c": 309.7
+                },
+                {
+                  "t": "11:15",
+                  "o": 309.7,
+                  "h": 310.65,
+                  "l": 309.53,
+                  "c": 310.6
+                },
+                {
+                  "t": "11:30",
+                  "o": 310.62,
+                  "h": 311.64,
+                  "l": 310.4,
+                  "c": 311.31
+                },
+                {
+                  "t": "11:45",
+                  "o": 311.31,
+                  "h": 311.93,
+                  "l": 310.92,
+                  "c": 311.53
+                },
+                {
+                  "t": "12:00",
+                  "o": 311.52,
+                  "h": 311.82,
+                  "l": 311.17,
+                  "c": 311.19
+                },
+                {
+                  "t": "12:15",
+                  "o": 311.18,
+                  "h": 311.43,
+                  "l": 311,
+                  "c": 311.2
+                },
+                {
+                  "t": "12:30",
+                  "o": 311.2,
+                  "h": 311.25,
+                  "l": 310.26,
+                  "c": 310.7
+                },
+                {
+                  "t": "12:45",
+                  "o": 310.72,
+                  "h": 311.03,
+                  "l": 310.58,
+                  "c": 311.01
+                },
+                {
+                  "t": "13:00",
+                  "o": 310.99,
+                  "h": 311.65,
+                  "l": 310.89,
+                  "c": 311.56
+                },
+                {
+                  "t": "13:15",
+                  "o": 311.54,
+                  "h": 311.64,
+                  "l": 310.97,
+                  "c": 311.05
+                },
+                {
+                  "t": "13:30",
+                  "o": 311.04,
+                  "h": 311.17,
+                  "l": 309.84,
+                  "c": 310.04
+                },
+                {
+                  "t": "13:45",
+                  "o": 310.02,
+                  "h": 310.15,
+                  "l": 309.42,
+                  "c": 309.56
+                },
+                {
+                  "t": "14:00",
+                  "o": 309.56,
+                  "h": 309.61,
+                  "l": 309,
+                  "c": 309.19
+                },
+                {
+                  "t": "14:15",
+                  "o": 309.19,
+                  "h": 309.19,
+                  "l": 308.4,
+                  "c": 308.48
+                },
+                {
+                  "t": "14:30",
+                  "o": 308.48,
+                  "h": 308.96,
+                  "l": 308.46,
+                  "c": 308.55
+                },
+                {
+                  "t": "14:45",
+                  "o": 308.55,
+                  "h": 308.88,
+                  "l": 308.16,
+                  "c": 308.78
+                },
+                {
+                  "t": "15:00",
+                  "o": 308.78,
+                  "h": 308.88,
+                  "l": 308.4,
+                  "c": 308.69
+                },
+                {
+                  "t": "15:15",
+                  "o": 308.7,
+                  "h": 309.85,
+                  "l": 308.69,
+                  "c": 309.74
+                },
+                {
+                  "t": "15:30",
+                  "o": 309.75,
+                  "h": 310.01,
+                  "l": 309.42,
+                  "c": 309.55
+                },
+                {
+                  "t": "15:45",
+                  "o": 309.54,
+                  "h": 310.18,
+                  "l": 309.16,
+                  "c": 309.42
+                }
+              ],
+              "revealFrom": 7,
+              "marks": [
+                {
+                  "id": "or",
+                  "anchor": {
+                    "at": "band",
+                    "top": 312.38,
+                    "bottom": 307.01,
+                    "from": 0
+                  },
+                  "chip": "opening range",
+                  "name": "The box",
+                  "tone": "level",
+                  "title": "307.01 to 312.38",
+                  "body": "Five dollars thirty-seven — wide, and drawn by the first two candles."
+                },
+                {
+                  "id": "built",
+                  "anchor": {
+                    "at": "span",
+                    "from": 0,
+                    "to": 1
+                  },
+                  "chip": "first 30 min",
+                  "name": "The first half hour",
+                  "tone": "note",
+                  "title": "9:30 to 10:00",
+                  "body": "One big candle down, one small one. That is the whole range."
+                },
+                {
+                  "id": "rest",
+                  "anchor": {
+                    "at": "span",
+                    "from": 7,
+                    "to": 25
+                  },
+                  "chip": "still inside",
+                  "name": "The rest of the day",
+                  "tone": "note",
+                  "phase": "reveal",
+                  "title": "11:15 to the close",
+                  "body": "Not one candle closed outside the box."
+                },
+                {
+                  "id": "close",
+                  "anchor": {
+                    "at": "point",
+                    "index": 25,
+                    "price": 309.42
+                  },
+                  "chip": "closed 309.42",
+                  "name": "The close",
+                  "tone": "note",
+                  "phase": "reveal",
+                  "title": "309.42",
+                  "body": "Right in the middle of where it started."
+                }
+              ]
+            },
             "reveal": {
               "headline": "No trade, and this is a result",
-              "body": "Most mornings do not produce this setup. A trader with a rule sits out; a trader without one finds something. Widening the box after the fact is the purest version of that mistake — you would be changing the test until the market passes it."
+              "body": "Apple spent the entire session inside the first thirty minutes. The high for the rest of the day was 311.93 and the low was 307.09 — both inside a box that had already been drawn by 10:00 — and it closed at 309.42, in the middle of it.\n\nMost mornings do not produce this setup. A trader with a rule sits out. A trader without one finds something, and narrowing the box after the fact is the purest version of that mistake: you would be changing the test until the market passes it."
             }
           },
           {
@@ -458,16 +2042,27 @@
       }
     },
     {
-      "match": { "course": "fta-trade-ready", "title": "Live Class: The Full Execution Model" },
+      "match": {
+        "course": "belt-black",
+        "title": "Live Class: The Full Execution Model"
+      },
       "json": {
         "schema": 1,
         "title": "The full execution model",
-        "skills": ["technical_analysis"],
+        "skills": [
+          "technical_analysis"
+        ],
         "difficulty": 5,
-        "audience": ["adult", "teen"],
+        "audience": [
+          "adult",
+          "teen"
+        ],
         "duration_minutes": 16,
         "xp": 50,
-        "guide": { "intro": "Five layers, one routine, in an order that never changes.", "outro": "That is the model. The exam is a chart you have not seen." },
+        "guide": {
+          "intro": "Five layers, one routine, in an order that never changes.",
+          "outro": "That is the model. The exam is a chart you have not seen."
+        },
         "steps": [
           {
             "id": "concept",
@@ -489,12 +2084,30 @@
             "heading": "The model, top to bottom",
             "intro": "Every step can end the session. Most mornings end at step three, and that is the model working.",
             "moves": [
-              { "title": "Context — the daily", "body": "Structure first. Direction, and the one level that would break it. If the daily is a range with no clear read, you are done for the day. No context, no trade." },
-              { "title": "Location — where the orders are", "body": "Mark the unmitigated zones and the open gaps in the direction of the context. If price is nowhere near any of them, you are done. A good trigger in a bad location is a bad trade." },
-              { "title": "The opening range", "body": "Mark the box on the five-minute. Note whether it sits at one of your locations — if it opened right inside an unmitigated zone in the direction of the daily, the morning has your attention." },
-              { "title": "Trigger — break, then retest", "body": "A close outside the box, then a hold of the flipped edge. A sweep of the opposite side first makes it stronger, not weaker: the fuel was collected before the move." },
-              { "title": "Risk — decided before the click", "body": "Invalidation at the far edge of the structure you entered against. Position size from the account, never from conviction. If the stop distance makes the size uncomfortable, the trade is too big, not the stop too wide." },
-              { "title": "Record — while it is still fresh", "body": "Thesis, entry, invalidation, size, and what you expected. Written before the outcome, or it is not a record, it is a story about a result." }
+              {
+                "title": "Context — the daily",
+                "body": "Structure first. Direction, and the one level that would break it. If the daily is a range with no clear read, you are done for the day. No context, no trade."
+              },
+              {
+                "title": "Location — where the orders are",
+                "body": "Mark the unmitigated zones and the open gaps in the direction of the context. If price is nowhere near any of them, you are done. A good trigger in a bad location is a bad trade."
+              },
+              {
+                "title": "The opening range",
+                "body": "Mark the box on the five-minute. Note whether it sits at one of your locations — if it opened right inside an unmitigated zone in the direction of the daily, the morning has your attention."
+              },
+              {
+                "title": "Trigger — break, then retest",
+                "body": "A close outside the box, then a hold of the flipped edge. A sweep of the opposite side first makes it stronger, not weaker: the fuel was collected before the move."
+              },
+              {
+                "title": "Risk — decided before the click",
+                "body": "Invalidation at the far edge of the structure you entered against. Position size from the account, never from conviction. If the stop distance makes the size uncomfortable, the trade is too big, not the stop too wide."
+              },
+              {
+                "title": "Record — while it is still fresh",
+                "body": "Thesis, entry, invalidation, size, and what you expected. Written before the outcome, or it is not a record, it is a story about a result."
+              }
             ],
             "closing": "Six steps, four of which are permission to do nothing. That ratio is the job."
           },
@@ -508,12 +2121,24 @@
               {
                 "title": "The model said yes",
                 "tone": "green",
-                "points": ["Daily direction is clear", "Price is at an unmitigated location", "Break closed outside the box", "Retest held the flipped edge", "Invalidation written before entry"]
+                "points": [
+                  "Daily direction is clear",
+                  "Price is at an unmitigated location",
+                  "Break closed outside the box",
+                  "Retest held the flipped edge",
+                  "Invalidation written before entry"
+                ]
               },
               {
                 "title": "You wanted a trade",
                 "tone": "red",
-                "points": ["Daily is a range you called a trend", "Nearest zone is 'close enough'", "Entered on the wick, not the close", "No retest — it was 'moving too fast'", "Stop set to make the size feel right"]
+                "points": [
+                  "Daily is a range you called a trend",
+                  "Nearest zone is 'close enough'",
+                  "Entered on the wick, not the close",
+                  "No retest — it was 'moving too fast'",
+                  "Stop set to make the size feel right"
+                ]
               }
             ],
             "note": "Every line on the right is a rule from an earlier week, broken. Nobody breaks them out of ignorance by this point in the course — they break them because there was no trade and they wanted one."
@@ -546,10 +2171,19 @@
             "correctIndex": 1,
             "explanation": "Context comes first and never gets overruled by a trigger. A five-minute break against a daily uptrend at demand is exactly the sweep this course spent week three on.",
             "wrongFeedback": [
-              { "text": "The trigger is the last filter, not the first. It cannot promote itself above the context.", "kai": true },
+              {
+                "text": "The trigger is the last filter, not the first. It cannot promote itself above the context.",
+                "kai": true
+              },
               null,
-              { "text": "Smaller size does not repair a trade the model rejected. It just loses less, more often.", "kai": true },
-              { "text": "Sitting and waiting for the chart to produce the answer you wanted is not the model running — that is you running.", "kai": true }
+              {
+                "text": "Smaller size does not repair a trade the model rejected. It just loses less, more often.",
+                "kai": true
+              },
+              {
+                "text": "Sitting and waiting for the chart to produce the answer you wanted is not the model running — that is you running.",
+                "kai": true
+              }
             ],
             "reinforce": "Context, location, trigger — in that order, always. The order is the method."
           },
@@ -582,23 +2216,37 @@
       }
     },
     {
-      "match": { "course": "fta-trade-ready", "title": "Trade Ready Exam: Fresh Chart + Paper Trade" },
+      "match": {
+        "course": "belt-black",
+        "title": "Trade Ready Exam: Fresh Chart + Paper Trade"
+      },
       "json": {
         "schema": 1,
         "title": "Trade Ready exam — fresh chart, paper trade",
-        "skills": ["technical_analysis"],
+        "skills": [
+          "technical_analysis"
+        ],
         "difficulty": 5,
-        "audience": ["adult", "teen"],
+        "audience": [
+          "adult",
+          "teen"
+        ],
         "duration_minutes": 30,
         "xp": 50,
-        "guide": { "intro": "One chart you have not seen. One plan, written before the outcome." },
+        "guide": {
+          "intro": "One chart you have not seen. One plan, written before the outcome."
+        },
         "steps": [
           {
             "id": "brief",
             "type": "explainer",
             "label": "PROCESS",
             "heading": "What this exam actually grades",
-            "figure": { "kind": "quote", "value": "The result is not on the rubric.", "caption": "Your process is" },
+            "figure": {
+              "kind": "quote",
+              "value": "The result is not on the rubric.",
+              "caption": "Your process is"
+            },
             "body": [
               "You will be given a chart you have not worked before, and you will submit a plan for it: the context, the location, the trigger you would require, the invalidation, and the size — written before you know how the session ended.",
               "It is graded on the process. A losing trade that followed the model passes. A winning trade that skipped the retest, or set the stop to fit the size, fails — because that habit is the one that eventually takes an account apart.",
@@ -613,12 +2261,30 @@
             "heading": "What a passing submission contains",
             "intro": "Six parts, in the model's order. Missing any one is an automatic re-sit.",
             "moves": [
-              { "title": "Context", "body": "The daily read in one sentence, and the exact level that would break it." },
-              { "title": "Location", "body": "The zone or gap you are trading at, with both edges as prices — near edge and far edge." },
-              { "title": "Trigger", "body": "The specific condition you require. Not 'a breakout' — which candle, closing where, relative to which level." },
-              { "title": "Invalidation", "body": "One price, and the reason it is that price. If it comes from your account balance rather than the chart, it is wrong." },
-              { "title": "Size", "body": "Derived from the account and the stop distance, at 1–2% risk. Show the arithmetic." },
-              { "title": "The sentence you would regret", "body": "One line on what would have to happen for this idea to be wrong in a way you did not anticipate. Traders who can write this one are the ones who survive." }
+              {
+                "title": "Context",
+                "body": "The daily read in one sentence, and the exact level that would break it."
+              },
+              {
+                "title": "Location",
+                "body": "The zone or gap you are trading at, with both edges as prices — near edge and far edge."
+              },
+              {
+                "title": "Trigger",
+                "body": "The specific condition you require. Not 'a breakout' — which candle, closing where, relative to which level."
+              },
+              {
+                "title": "Invalidation",
+                "body": "One price, and the reason it is that price. If it comes from your account balance rather than the chart, it is wrong."
+              },
+              {
+                "title": "Size",
+                "body": "Derived from the account and the stop distance, at 1–2% risk. Show the arithmetic."
+              },
+              {
+                "title": "The sentence you would regret",
+                "body": "One line on what would have to happen for this idea to be wrong in a way you did not anticipate. Traders who can write this one are the ones who survive."
+              }
             ],
             "closing": "Submit before the session resolves. A plan written after the fact is not a plan, and it is visible from a mile away."
           },
@@ -637,10 +2303,19 @@
             "correctIndex": 1,
             "explanation": "Every setup in this course is an edge over many repetitions, not a promise about one morning. Grading the outcome would teach you to judge decisions by their luck.",
             "wrongFeedback": [
-              { "text": "If losses failed the exam, the exam would be teaching you that good decisions always pay — which is the belief that ends accounts.", "kai": true },
+              {
+                "text": "If losses failed the exam, the exam would be teaching you that good decisions always pay — which is the belief that ends accounts.",
+                "kai": true
+              },
               null,
-              { "text": "There is nothing to re-sit. The plan was sound and the market did what markets do.", "kai": true },
-              { "text": "There is no partial credit for an outcome nobody controls. The process either held or it did not.", "kai": true }
+              {
+                "text": "There is nothing to re-sit. The plan was sound and the market did what markets do.",
+                "kai": true
+              },
+              {
+                "text": "There is no partial credit for an outcome nobody controls. The process either held or it did not.",
+                "kai": true
+              }
             ],
             "reinforce": "Judge the decision by what you knew when you made it. That is the whole discipline."
           },

@@ -314,8 +314,8 @@ decision, the playbooks are the next scope.**
 one under observation.
 
 **Prerequisite:** Blue Belt. This is the FTA program (`program = 'fta'`, `min_tier = academy`) — the
-existing `fta-trade-ready` course, which today has all twelve lesson rows and no content behind any
-of them. This belt IS that course, filled in.
+`fta-trade-ready` is the six-week cohort product and stays as it is; Black Belt is the self-paced
+course of the same material, on its own rows (see §8).
 
 **Source:** the FTA 6-week ICT program and the beta-cohort decks already taught (W1 candles/trends,
 W2 support/resistance/trendlines, W3 patterns + breakout lifecycle, W4 the ORB framework on real
@@ -368,6 +368,18 @@ Kids courses mirror White/Yellow with `audience: ["kid"]` in the lesson JSON; th
 `fic-kids-corner` (12 lessons, complete) already covers the White + Yellow concept set in kid voice
 and should be **re-sequenced into `belt-white` and `belt-yellow` kid tracks rather than rewritten**.
 
-Existing `fta-trade-ready` becomes `belt-black` — same twelve lesson rows, same ids, content added.
+`belt-black` is its OWN course. **Do not write Black Belt onto `fta-trade-ready`.** That was this
+document's instruction until 2026-09-03 and it was wrong: those twelve lesson rows are served to
+paying academy members by the frozen app at app.familyinvestingclub.com, whose lesson engine ships
+six step types (`explainer`, `multiple_choice`, `true_false`, `match_pairs`, `prediction`,
+`real_world`). Every other type the belts use renders there as *"This step isn't available in your
+app version"* with a Skip button — so filling those rows turned a course that read "no content yet"
+into a course that read broken. `fta-trade-ready` is back to twelve empty rows, and
+`scripts/create-belt-black.mjs` makes the belt its own six modules and twelve lessons.
+
+Every belt course is created with `published = false`, which is what keeps it out of the frozen
+app: `published` is the only flag that app checks on every surface that lists a course.
+`supabase/migrations/20260903020000_belt_courses_are_fic_only.sql` grants members read access to
+the `belt-%` rows in spite of the flag, and `src/lib/live/learning.ts` asks for them by name.
 The three existing Foundations courses stay exactly as they are; they are the 6-week cohort product,
 and the belts are the self-paced spine. A lesson may be referenced by both.

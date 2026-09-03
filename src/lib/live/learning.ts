@@ -40,7 +40,13 @@ function lessonLockReason(l: { is_free: boolean | null }, program: string | null
 
 async function loadCurriculum(userId: string | null) {
   const supa = await userClient();
-  const courses = (must(await supa.from("courses").select("id, slug, title, description, program, published, sort_order, min_tier").eq("published", true).order("sort_order")) as Course[]);
+  // `published` is the flag the FROZEN app at app.familyinvestingclub.com gates every course
+  // listing on, and it is the only flag it checks on every one of them. The belt courses are
+  // therefore unpublished — that is what keeps them out of an app whose lesson engine ships six
+  // step types and renders the other nine as "This step isn't available in your app version".
+  // They are read here by name instead. See supabase/migrations/20260903020000_belt_courses_are_fic_only.sql,
+  // which carries the matching RLS grant and the list of legacy call sites the flag closes.
+  const courses = (must(await supa.from("courses").select("id, slug, title, description, program, published, sort_order, min_tier").or("published.eq.true,slug.like.belt-*").order("sort_order")) as Course[]);
   if (!courses.length) return null;
   const ids = courses.map((c) => c.id);
   const modules = must(await supa.from("modules").select("id, course_id, title, description, sort_order").in("course_id", ids).order("sort_order")) as Module[];

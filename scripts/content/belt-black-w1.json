@@ -1,13 +1,21 @@
 {
   "lessons": [
     {
-      "match": { "course": "fta-trade-ready", "title": "Live Class: Market Structure & Who Moves Price" },
+      "match": {
+        "course": "belt-black",
+        "title": "Live Class: Market Structure & Who Moves Price"
+      },
       "json": {
         "schema": 1,
         "title": "Market structure — who really moves the price",
-        "skills": ["technical_analysis"],
+        "skills": [
+          "technical_analysis"
+        ],
         "difficulty": 4,
-        "audience": ["adult", "teen"],
+        "audience": [
+          "adult",
+          "teen"
+        ],
         "duration_minutes": 16,
         "xp": 50,
         "guide": {
@@ -21,7 +29,11 @@
             "label": "CORE CONCEPT",
             "skill": "technical_analysis",
             "heading": "Price moves because someone has to fill an order",
-            "figure": { "kind": "stat", "value": "One buyer, many prices", "caption": "The reason a chart has a shape at all" },
+            "figure": {
+              "kind": "stat",
+              "value": "One buyer, many prices",
+              "caption": "The reason a chart has a shape at all"
+            },
             "body": [
               "A fund that wants two million shares cannot buy two million shares at one price. There is nobody on the other side offering that much at any single number. So the order gets worked — filled in pieces, at whatever prices there are sellers, over hours or days.",
               "Every one of those fills moves the price a little further away from where they started. That is what you have been looking at for five belts: the track left behind by orders too large to fill in one go.",
@@ -30,19 +42,150 @@
           },
           {
             "id": "swings",
-            "type": "anatomy",
-            "label": "INTERACTIVE",
+            "type": "chart",
+            "label": "ON THE CHART",
             "skill": "technical_analysis",
             "heading": "The four points that define structure",
-            "caption": "Tap each part. Structure is only ever these, in sequence.",
-            "candle": { "open": 112, "high": 130, "low": 106, "close": 124 },
-            "hotspots": [
-              { "part": "high", "title": "A swing high", "body": "A point price reached and then turned away from. It matters because the sellers who stopped it there are on record — and the buyers who bought under it left stop orders below." },
-              { "part": "low", "title": "A swing low", "body": "A point price fell to and then turned up from. Buyers stepped in here once. Until price closes below it, that is still the last place they defended." },
-              { "part": "body", "title": "The move between them", "body": "The distance from one swing to the next is the part that was filled in a hurry. A long body means the order ran out of willing sellers on the way." },
-              { "part": "open", "title": "Where the leg began", "body": "Structure is read leg by leg. The start of a leg is the last point the other side had control." },
-              { "part": "close", "title": "Where the leg ended", "body": "The close is what confirms a leg finished. A wick past a level is an attempt; a close past it is a result. This distinction decides every read in this course." }
-            ]
+            "intro": "Every one of these is a point on a run of candles, not a part of one candle. Eleven real sessions in Tesla; tap each turn in order.",
+            "prompt": "Tap a marked turn on the chart — or a name below it — to read what that point is and why it counts.",
+            "done": "Got it → Continue",
+            "figure": {
+              "ticker": "TSLA",
+              "session": "Tesla · Daily · 3–17 August 2026",
+              "bars": [
+                {
+                  "t": "Aug 3",
+                  "o": 310.96,
+                  "h": 324.65,
+                  "l": 310.43,
+                  "c": 322.08
+                },
+                {
+                  "t": "Aug 4",
+                  "o": 324,
+                  "h": 329.57,
+                  "l": 320.79,
+                  "c": 327.35
+                },
+                {
+                  "t": "Aug 5",
+                  "o": 323.42,
+                  "h": 327.14,
+                  "l": 320.28,
+                  "c": 321.55
+                },
+                {
+                  "t": "Aug 6",
+                  "o": 317.05,
+                  "h": 323,
+                  "l": 315.52,
+                  "c": 319.53
+                },
+                {
+                  "t": "Aug 7",
+                  "o": 322.34,
+                  "h": 333.73,
+                  "l": 321.25,
+                  "c": 328.58
+                },
+                {
+                  "t": "Aug 10",
+                  "o": 326.6,
+                  "h": 332.05,
+                  "l": 326.15,
+                  "c": 330.88
+                },
+                {
+                  "t": "Aug 11",
+                  "o": 332.8,
+                  "h": 336.2,
+                  "l": 329.53,
+                  "c": 332.81
+                },
+                {
+                  "t": "Aug 12",
+                  "o": 335,
+                  "h": 335.5,
+                  "l": 323.64,
+                  "c": 327.51
+                },
+                {
+                  "t": "Aug 13",
+                  "o": 327.2,
+                  "h": 341.64,
+                  "l": 325.24,
+                  "c": 339.96
+                },
+                {
+                  "t": "Aug 14",
+                  "o": 342.33,
+                  "h": 351.26,
+                  "l": 335.33,
+                  "c": 342.27
+                },
+                {
+                  "t": "Aug 17",
+                  "o": 340.69,
+                  "h": 345.45,
+                  "l": 337.48,
+                  "c": 339.3
+                }
+              ],
+              "marks": [
+                {
+                  "id": "sl",
+                  "anchor": {
+                    "at": "point",
+                    "index": 3,
+                    "price": 315.52
+                  },
+                  "chip": "swing low",
+                  "name": "Swing low",
+                  "tone": "up",
+                  "title": "Swing low · 315.52 on 6 August",
+                  "body": "A price the market fell to and then turned up from. It takes three sessions to see it: 5 August had to sell off, 6 August had to stop, and 7 August had to leave. One candle can never show you that. Until something closes below 315.52, this is still the last place buyers defended."
+                },
+                {
+                  "id": "sh",
+                  "anchor": {
+                    "at": "point",
+                    "index": 6,
+                    "price": 336.2
+                  },
+                  "chip": "swing high",
+                  "name": "Swing high",
+                  "tone": "down",
+                  "title": "Swing high · 336.20 on 11 August",
+                  "body": "The top of the leg. Sellers stopped the advance here, and the two sessions either side both made lower highs — which is what turns a candle's high into a swing high. Not every high is one. This is the test."
+                },
+                {
+                  "id": "hl",
+                  "anchor": {
+                    "at": "point",
+                    "index": 7,
+                    "price": 323.64
+                  },
+                  "chip": "higher low",
+                  "name": "Higher low",
+                  "tone": "up",
+                  "title": "Higher low · 323.64 on 12 August",
+                  "body": "The pullback after the swing high stopped at 323.64 — eight dollars above the 315.52 low that came before it. A low that is higher than the last low is the quiet half of an uptrend, and it is the reason you were still allowed to be long."
+                },
+                {
+                  "id": "hh",
+                  "anchor": {
+                    "at": "point",
+                    "index": 9,
+                    "price": 351.26
+                  },
+                  "chip": "higher high",
+                  "name": "Higher high",
+                  "tone": "up",
+                  "title": "Higher high · 351.26 on 14 August",
+                  "body": "Price went straight through 336.20 and kept going, fifteen dollars past it. Now read the sequence out loud: higher low, higher high, higher low, higher high. That sentence is the whole of market structure — not a pattern, not an indicator, a sentence you can either say cleanly or not say at all."
+                }
+              ]
+            }
           },
           {
             "id": "distinction",
@@ -55,14 +198,34 @@
               {
                 "title": "Pullback — trend intact",
                 "tone": "green",
-                "candle": { "open": 118, "high": 128, "low": 114, "close": 125 },
-                "points": ["Price dips but holds above the last swing low", "The higher low is still higher", "The order being filled is still being filled", "You are looking for a place to join, not to leave"]
+                "candle": {
+                  "open": 118,
+                  "high": 128,
+                  "low": 114,
+                  "close": 125
+                },
+                "points": [
+                  "Price dips but holds above the last swing low",
+                  "The higher low is still higher",
+                  "The order being filled is still being filled",
+                  "You are looking for a place to join, not to leave"
+                ]
               },
               {
                 "title": "Break — trend in question",
                 "tone": "red",
-                "candle": { "open": 124, "high": 126, "low": 108, "close": 111 },
-                "points": ["Price CLOSES below the last swing low", "The sequence of higher lows is broken", "Whoever was being filled has stopped, or reversed", "The prior read is void until new structure forms"]
+                "candle": {
+                  "open": 124,
+                  "high": 126,
+                  "low": 108,
+                  "close": 111
+                },
+                "points": [
+                  "Price CLOSES below the last swing low",
+                  "The sequence of higher lows is broken",
+                  "Whoever was being filled has stopped, or reversed",
+                  "The prior read is void until new structure forms"
+                ]
               }
             ],
             "note": "The test is a close, never a wick. A wick below the low is an attempt that failed; a close below it is the attempt succeeding. Every rule in this course rests on that one distinction."
@@ -75,28 +238,219 @@
             "heading": "Mapping structure, in four moves",
             "intro": "Do this before anything else on a chart. It takes under a minute once it is habit.",
             "moves": [
-              { "title": "Zoom out first", "body": "Start on the daily, whatever you intend to trade. The biggest clock has the biggest crowd behind it, and the bigger crowd outranks the smaller one when they disagree." },
-              { "title": "Mark the obvious swings only", "body": "The turns you would point at from across the room. If you have to squint to justify a swing, it is not one — you are drawing your opinion, not the market's record." },
-              { "title": "Read the sequence out loud", "body": "Higher high, higher low, higher high — that is an uptrend and you say so. The moment you cannot say it cleanly, the market is in a range, and a range is a different game." },
-              { "title": "Find the last decision point", "body": "The most recent swing low in an uptrend, or swing high in a downtrend. That single level is what would have to give way for your read to be wrong. Everything else is commentary." }
+              {
+                "title": "Zoom out first",
+                "body": "Start on the daily, whatever you intend to trade. The biggest clock has the biggest crowd behind it, and the bigger crowd outranks the smaller one when they disagree."
+              },
+              {
+                "title": "Mark the obvious swings only",
+                "body": "The turns you would point at from across the room. If you have to squint to justify a swing, it is not one — you are drawing your opinion, not the market's record."
+              },
+              {
+                "title": "Read the sequence out loud",
+                "body": "Higher high, higher low, higher high — that is an uptrend and you say so. The moment you cannot say it cleanly, the market is in a range, and a range is a different game."
+              },
+              {
+                "title": "Find the last decision point",
+                "body": "The most recent swing low in an uptrend, or swing high in a downtrend. That single level is what would have to give way for your read to be wrong. Everything else is commentary."
+              }
             ],
             "closing": "You now have a direction and the one price that would break it. That pair is the whole output of structure work, and it is what the next four weeks are built on."
           },
           {
             "id": "live",
-            "type": "annotated_values",
+            "type": "chart",
             "label": "LIVE EXAMPLE",
             "skill": "technical_analysis",
             "heading": "Tesla's wall, and the recovery under it",
-            "subject": "Tesla · Daily · 23 July 2026",
-            "caption": "The day that built the level. Tap each number.",
-            "candle": { "open": 341.0, "high": 342.11, "low": 319.0, "close": 319.69 },
-            "values": [
-              { "part": "open", "label": "Open", "value": "$341.00", "meaning": "The day opened right at the top of the prior range — the highest anyone had been willing to pay." },
-              { "part": "high", "label": "High", "value": "$342.11", "meaning": "Buyers got just over a dollar further, and stopped. This is where the selling was waiting, and it is why 341–342 became a wall the market kept respecting for weeks." },
-              { "part": "low", "label": "Low", "value": "$319.00", "meaning": "The distance from 342 to 319 in one session is the shape of an order that had to be worked through every bid on the way down." },
-              { "part": "close", "label": "Close", "value": "$319.69", "meaning": "Closing at the low is a break of structure, not a pullback. Everything after this day was a recovery underneath a known ceiling." }
-            ]
+            "intro": "One session built the level. The fifteen sessions after it are what makes it a level at all.",
+            "prompt": "Tap the wall, the day that built it, and the three weeks the market spent underneath it.",
+            "done": "Got it → Continue",
+            "figure": {
+              "ticker": "TSLA",
+              "session": "Tesla · Daily · 23 July – 13 August 2026",
+              "bars": [
+                {
+                  "t": "Jul 23",
+                  "o": 341,
+                  "h": 342.11,
+                  "l": 315.74,
+                  "c": 319.69
+                },
+                {
+                  "t": "Jul 24",
+                  "o": 320.72,
+                  "h": 322.96,
+                  "l": 306.51,
+                  "c": 313.03
+                },
+                {
+                  "t": "Jul 27",
+                  "o": 313.24,
+                  "h": 317,
+                  "l": 304.28,
+                  "c": 309.22
+                },
+                {
+                  "t": "Jul 28",
+                  "o": 305.93,
+                  "h": 311.16,
+                  "l": 300.69,
+                  "c": 307.44
+                },
+                {
+                  "t": "Jul 29",
+                  "o": 307.14,
+                  "h": 309.06,
+                  "l": 297.38,
+                  "c": 298.32
+                },
+                {
+                  "t": "Jul 30",
+                  "o": 302.7,
+                  "h": 310.87,
+                  "l": 301.33,
+                  "c": 308.85
+                },
+                {
+                  "t": "Jul 31",
+                  "o": 309.69,
+                  "h": 315.5,
+                  "l": 301.97,
+                  "c": 311.21
+                },
+                {
+                  "t": "Aug 3",
+                  "o": 310.96,
+                  "h": 324.65,
+                  "l": 310.43,
+                  "c": 322.08
+                },
+                {
+                  "t": "Aug 4",
+                  "o": 324,
+                  "h": 329.57,
+                  "l": 320.79,
+                  "c": 327.35
+                },
+                {
+                  "t": "Aug 5",
+                  "o": 323.42,
+                  "h": 327.14,
+                  "l": 320.28,
+                  "c": 321.55
+                },
+                {
+                  "t": "Aug 6",
+                  "o": 317.05,
+                  "h": 323,
+                  "l": 315.52,
+                  "c": 319.53
+                },
+                {
+                  "t": "Aug 7",
+                  "o": 322.34,
+                  "h": 333.73,
+                  "l": 321.25,
+                  "c": 328.58
+                },
+                {
+                  "t": "Aug 10",
+                  "o": 326.6,
+                  "h": 332.05,
+                  "l": 326.15,
+                  "c": 330.88
+                },
+                {
+                  "t": "Aug 11",
+                  "o": 332.8,
+                  "h": 336.2,
+                  "l": 329.53,
+                  "c": 332.81
+                },
+                {
+                  "t": "Aug 12",
+                  "o": 335,
+                  "h": 335.5,
+                  "l": 323.64,
+                  "c": 327.51
+                },
+                {
+                  "t": "Aug 13",
+                  "o": 327.2,
+                  "h": 341.64,
+                  "l": 325.24,
+                  "c": 339.96
+                }
+              ],
+              "marks": [
+                {
+                  "id": "wall",
+                  "anchor": {
+                    "at": "band",
+                    "top": 342.11,
+                    "bottom": 341
+                  },
+                  "chip": "341–342",
+                  "name": "The wall",
+                  "tone": "level",
+                  "title": "The wall · 341.00 to 342.11",
+                  "body": "On 23 July Tesla opened at 341.00 and got a dollar and eleven cents higher before it stopped. That dollar is the range across which a large seller was filled. It is drawn as a band and not a line because the fills happened at many prices, and price reacts to the band."
+                },
+                {
+                  "id": "close",
+                  "anchor": {
+                    "at": "point",
+                    "index": 0,
+                    "price": 319.69
+                  },
+                  "chip": "closed 319.69",
+                  "name": "The break",
+                  "tone": "down",
+                  "title": "23 July closed at 319.69",
+                  "body": "Twenty-one dollars below the open, and the session's low was 315.74 — so it did not close at the low; it closed $3.95 above it, in the bottom fifth of a twenty-six dollar range. That is still a break of structure. What makes it one is not where in the candle the close landed, but that the close landed below the swing low the uptrend had been standing on."
+                },
+                {
+                  "id": "floor",
+                  "anchor": {
+                    "at": "point",
+                    "index": 4,
+                    "price": 297.38
+                  },
+                  "chip": "297.38",
+                  "name": "Where it stopped",
+                  "tone": "down",
+                  "title": "The selling ended at 297.38 on 29 July",
+                  "body": "Four sessions after the break, the fall stopped. Everything from here is a recovery, and every dollar of it happened underneath a ceiling that was built in a single morning."
+                },
+                {
+                  "id": "under",
+                  "anchor": {
+                    "at": "span",
+                    "from": 1,
+                    "to": 14
+                  },
+                  "chip": "14 sessions under it",
+                  "name": "Three weeks below",
+                  "tone": "note",
+                  "title": "Fourteen sessions, none of them back at the wall",
+                  "body": "From 24 July to 12 August the closest Tesla came to 341.00 was 336.20, on 11 August — still $4.80 short. Nobody had to remember what happened on 23 July. The orders left resting in that band did the remembering."
+                },
+                {
+                  "id": "return",
+                  "anchor": {
+                    "at": "point",
+                    "index": 15,
+                    "price": 341.64
+                  },
+                  "chip": "341.64",
+                  "name": "The return",
+                  "tone": "level",
+                  "title": "13 August · 341.64, and no further",
+                  "body": "Three weeks later price finally reached the wall — and stopped 47 cents under its top at 342.11, closing back down at 339.96. That is what a level is: not a line on a screen, but a queue of resting orders that holds until the queue is used up."
+                }
+              ]
+            }
           },
           {
             "id": "insight",
@@ -126,10 +480,19 @@
             "correctIndex": 1,
             "explanation": "A wick is an attempt; a close is a result. Price reached below the low and was rejected, which is the low doing its job.",
             "wrongFeedback": [
-              { "text": "A low is broken by a CLOSE below it, not by a wick reaching under it. The wick is the attempt failing.", "kai": true },
+              {
+                "text": "A low is broken by a CLOSE below it, not by a wick reaching under it. The wick is the attempt failing.",
+                "kai": true
+              },
               null,
-              { "text": "The candle in question has already closed — that is the information. Waiting for another one is a different decision.", "kai": true },
-              { "text": "A trend becomes a range when the sequence of higher highs and higher lows stops, which has not happened here.", "kai": true }
+              {
+                "text": "The candle in question has already closed — that is the information. Waiting for another one is a different decision.",
+                "kai": true
+              },
+              {
+                "text": "A trend becomes a range when the sequence of higher highs and higher lows stops, which has not happened here.",
+                "kai": true
+              }
             ],
             "reinforce": "Closes, never wicks. This single rule decides more calls than anything else in the course."
           },
@@ -148,10 +511,19 @@
             "correctIndex": 1,
             "explanation": "A daily candle is every large participant voting across a full session; a five-minute candle is a few thousand fast traders. The big clock sets direction, the small clock sets timing.",
             "wrongFeedback": [
-              { "text": "Most recent is not the same as most important. The five-minute is where you time an entry, not where you decide which way to face.", "kai": true },
+              {
+                "text": "Most recent is not the same as most important. The five-minute is where you time an entry, not where you decide which way to face.",
+                "kai": true
+              },
               null,
-              { "text": "They do not cancel. A pullback on a small clock inside an uptrend on a big one is the most ordinary thing on a chart — and often the opportunity.", "kai": true },
-              { "text": "That is the position talking, not the chart. The ladder is read top-down regardless of what you already hold.", "kai": true }
+              {
+                "text": "They do not cancel. A pullback on a small clock inside an uptrend on a big one is the most ordinary thing on a chart — and often the opportunity.",
+                "kai": true
+              },
+              {
+                "text": "That is the position talking, not the chart. The ladder is read top-down regardless of what you already hold.",
+                "kai": true
+              }
             ],
             "reinforce": "Top-down, every time. Big clocks set direction, small clocks set timing."
           },
@@ -173,16 +545,26 @@
       }
     },
     {
-      "match": { "course": "fta-trade-ready", "title": "Drill: Map the Structure on 3 Charts" },
+      "match": {
+        "course": "belt-black",
+        "title": "Drill: Map the Structure on 3 Charts"
+      },
       "json": {
         "schema": 1,
         "title": "Drill — map the structure on three charts",
-        "skills": ["technical_analysis"],
+        "skills": [
+          "technical_analysis"
+        ],
         "difficulty": 4,
-        "audience": ["adult", "teen"],
+        "audience": [
+          "adult",
+          "teen"
+        ],
         "duration_minutes": 8,
         "xp": 50,
-        "guide": { "intro": "Three charts. Call the structure before you read the answer." },
+        "guide": {
+          "intro": "Three charts. Call the structure before you read the answer."
+        },
         "steps": [
           {
             "id": "brief",
@@ -190,7 +572,7 @@
             "label": "PROCESS",
             "heading": "How this drill is graded",
             "body": [
-              "Three charts, one question each. Decide before you tap — a call you revise after seeing the options is not a call.",
+              "Three real charts, one question each. The chart is on the screen before the options are — read it, decide, then choose. A call you revise after seeing the options is not a call.",
               "You are not being asked to predict anything. You are being asked to say what the market has already done, which is the only thing structure can tell you."
             ]
           },
@@ -199,16 +581,204 @@
             "type": "prediction",
             "label": "EXERCISE",
             "skill": "technical_analysis",
-            "question": "Price makes 100, pulls to 94, runs to 112, pulls to 103, runs to 121. What is the structure?",
+            "question": "Tesla, daily. It bottomed at 297.38 on 29 July, made a higher low at 315.52, ran to 336.20, and has just pulled back to 323.64. What is the structure?",
             "options": [
-              { "label": "Uptrend — higher highs and higher lows", "value": "up" },
-              { "label": "Range — no clear sequence", "value": "range" },
-              { "label": "Downtrend", "value": "down" }
+              {
+                "label": "Uptrend — higher highs and higher lows",
+                "value": "up"
+              },
+              {
+                "label": "Range — no sequence you can say cleanly",
+                "value": "range"
+              },
+              {
+                "label": "Downtrend, still",
+                "value": "down"
+              }
             ],
             "outcomeValue": "up",
             "reveal": {
-              "headline": "Uptrend, cleanly",
-              "body": "Highs 100 → 112 → 121, lows 94 → 103. Both sequences rising, so you can say it out loud without squinting. That is the test."
+              "headline": "Uptrend, and it kept going",
+              "body": "Lows 297.38 → 315.52 → 323.64. Highs 329.57 → 333.73 → 336.20. Both sequences rising, so you can say it out loud without squinting — and that is the whole test.\n\nThe two sessions after the one you were shown took it to 341.64 and then 351.26. The structure was already telling you which way to lean before either of them printed."
+            },
+            "chart": {
+              "ticker": "TSLA",
+              "session": "Tesla · Daily · 29 July – 14 August 2026",
+              "bars": [
+                {
+                  "t": "Jul 29",
+                  "o": 307.14,
+                  "h": 309.06,
+                  "l": 297.38,
+                  "c": 298.32
+                },
+                {
+                  "t": "Jul 30",
+                  "o": 302.7,
+                  "h": 310.87,
+                  "l": 301.33,
+                  "c": 308.85
+                },
+                {
+                  "t": "Jul 31",
+                  "o": 309.69,
+                  "h": 315.5,
+                  "l": 301.97,
+                  "c": 311.21
+                },
+                {
+                  "t": "Aug 3",
+                  "o": 310.96,
+                  "h": 324.65,
+                  "l": 310.43,
+                  "c": 322.08
+                },
+                {
+                  "t": "Aug 4",
+                  "o": 324,
+                  "h": 329.57,
+                  "l": 320.79,
+                  "c": 327.35
+                },
+                {
+                  "t": "Aug 5",
+                  "o": 323.42,
+                  "h": 327.14,
+                  "l": 320.28,
+                  "c": 321.55
+                },
+                {
+                  "t": "Aug 6",
+                  "o": 317.05,
+                  "h": 323,
+                  "l": 315.52,
+                  "c": 319.53
+                },
+                {
+                  "t": "Aug 7",
+                  "o": 322.34,
+                  "h": 333.73,
+                  "l": 321.25,
+                  "c": 328.58
+                },
+                {
+                  "t": "Aug 10",
+                  "o": 326.6,
+                  "h": 332.05,
+                  "l": 326.15,
+                  "c": 330.88
+                },
+                {
+                  "t": "Aug 11",
+                  "o": 332.8,
+                  "h": 336.2,
+                  "l": 329.53,
+                  "c": 332.81
+                },
+                {
+                  "t": "Aug 12",
+                  "o": 335,
+                  "h": 335.5,
+                  "l": 323.64,
+                  "c": 327.51
+                },
+                {
+                  "t": "Aug 13",
+                  "o": 327.2,
+                  "h": 341.64,
+                  "l": 325.24,
+                  "c": 339.96
+                },
+                {
+                  "t": "Aug 14",
+                  "o": 342.33,
+                  "h": 351.26,
+                  "l": 335.33,
+                  "c": 342.27
+                }
+              ],
+              "revealFrom": 11,
+              "marks": [
+                {
+                  "id": "l1",
+                  "anchor": {
+                    "at": "point",
+                    "index": 0,
+                    "price": 297.38
+                  },
+                  "chip": "297.38",
+                  "name": "Low 1",
+                  "tone": "up",
+                  "title": "Low 1",
+                  "body": "297.38 on 29 July."
+                },
+                {
+                  "id": "h1",
+                  "anchor": {
+                    "at": "point",
+                    "index": 4,
+                    "price": 329.57
+                  },
+                  "chip": "329.57",
+                  "name": "High 1",
+                  "tone": "down",
+                  "title": "High 1",
+                  "body": "329.57 on 4 August."
+                },
+                {
+                  "id": "l2",
+                  "anchor": {
+                    "at": "point",
+                    "index": 6,
+                    "price": 315.52
+                  },
+                  "chip": "315.52",
+                  "name": "Low 2",
+                  "tone": "up",
+                  "title": "Low 2",
+                  "body": "315.52 on 6 August."
+                },
+                {
+                  "id": "h2",
+                  "anchor": {
+                    "at": "point",
+                    "index": 9,
+                    "price": 336.2
+                  },
+                  "chip": "336.20",
+                  "name": "High 2",
+                  "tone": "down",
+                  "title": "High 2",
+                  "body": "336.20 on 11 August."
+                },
+                {
+                  "id": "l3",
+                  "anchor": {
+                    "at": "point",
+                    "index": 10,
+                    "price": 323.64
+                  },
+                  "chip": "323.64",
+                  "name": "Low 3",
+                  "tone": "up",
+                  "title": "Low 3",
+                  "body": "323.64 on 12 August — the pullback you are being asked about."
+                },
+                {
+                  "id": "after",
+                  "anchor": {
+                    "at": "span",
+                    "from": 11,
+                    "to": 12
+                  },
+                  "chip": "what happened",
+                  "name": "After",
+                  "tone": "up",
+                  "phase": "reveal",
+                  "title": "13 and 14 August",
+                  "body": "341.64, then 351.26."
+                }
+              ]
             }
           },
           {
@@ -216,16 +786,163 @@
             "type": "prediction",
             "label": "EXERCISE",
             "skill": "technical_analysis",
-            "question": "An uptrend has its last swing low at 103. Price now trades to 101 intraday but the daily candle closes at 106. Broken?",
+            "question": "Tesla, five-minute. Four candles have turned within sixty-six cents of 321.05. The 10:00 candle trades down to 320.79 and closes at 323.12. Has that low broken?",
             "options": [
-              { "label": "Broken — price traded below 103", "value": "broken" },
-              { "label": "Intact — the close held above 103", "value": "intact" },
-              { "label": "Cannot tell without volume", "value": "volume" }
+              {
+                "label": "Broken — price traded below 321.05",
+                "value": "broken"
+              },
+              {
+                "label": "Intact — the close came back above it",
+                "value": "intact"
+              },
+              {
+                "label": "Cannot tell without volume",
+                "value": "volume"
+              }
             ],
             "outcomeValue": "intact",
             "reveal": {
               "headline": "Intact — and this is the whole rule",
-              "body": "The wick to 101 is the attempt. The close at 106 is the result. Traders who called this broken sold the low of the pullback, which is exactly what the wick was there to collect."
+              "body": "The trade to 320.79 is the attempt. The close at 323.12 is the result, and it is $2.07 back above the level. A wick through is an attempt that failed; a close through is the attempt succeeding.\n\nAnyone who called this broken sold the low of the pullback, which is exactly what the wick was there to collect. Tesla's lowest print for the rest of that session was 322.77 and it closed the day at 327.38."
+            },
+            "chart": {
+              "ticker": "TSLA",
+              "session": "Tesla · 5-minute · 4 August 2026",
+              "bars": [
+                {
+                  "t": "09:35",
+                  "o": 324.45,
+                  "h": 326.9,
+                  "l": 322.42,
+                  "c": 322.54
+                },
+                {
+                  "t": "09:40",
+                  "o": 322.49,
+                  "h": 323.49,
+                  "l": 321.05,
+                  "c": 321.66
+                },
+                {
+                  "t": "09:45",
+                  "o": 321.7,
+                  "h": 323,
+                  "l": 321.5,
+                  "c": 322.79
+                },
+                {
+                  "t": "09:50",
+                  "o": 322.75,
+                  "h": 323.11,
+                  "l": 321.71,
+                  "c": 322.82
+                },
+                {
+                  "t": "09:55",
+                  "o": 322.78,
+                  "h": 323.38,
+                  "l": 321.17,
+                  "c": 321.84
+                },
+                {
+                  "t": "10:00",
+                  "o": 321.8,
+                  "h": 323.21,
+                  "l": 320.79,
+                  "c": 323.12
+                },
+                {
+                  "t": "10:05",
+                  "o": 323.12,
+                  "h": 324.76,
+                  "l": 323.04,
+                  "c": 324.11
+                },
+                {
+                  "t": "10:10",
+                  "o": 324.13,
+                  "h": 325.45,
+                  "l": 323.67,
+                  "c": 324.85
+                },
+                {
+                  "t": "10:15",
+                  "o": 324.81,
+                  "h": 325.28,
+                  "l": 323.78,
+                  "c": 323.85
+                },
+                {
+                  "t": "10:20",
+                  "o": 323.9,
+                  "h": 323.91,
+                  "l": 322.77,
+                  "c": 323.38
+                },
+                {
+                  "t": "10:25",
+                  "o": 323.32,
+                  "h": 324.1,
+                  "l": 323.04,
+                  "c": 323.73
+                }
+              ],
+              "revealFrom": 6,
+              "marks": [
+                {
+                  "id": "low",
+                  "anchor": {
+                    "at": "price",
+                    "price": 321.05
+                  },
+                  "chip": "321.05",
+                  "name": "The low",
+                  "tone": "level",
+                  "title": "The swing low · 321.05",
+                  "body": "Four candles turned between 321.05 and 321.71 — that flat underside is the level being tested."
+                },
+                {
+                  "id": "wick",
+                  "anchor": {
+                    "at": "point",
+                    "index": 5,
+                    "price": 320.79
+                  },
+                  "chip": "320.79",
+                  "name": "The attempt",
+                  "tone": "down",
+                  "title": "Traded to 320.79",
+                  "body": "Twenty-six cents under the low. That is the attempt."
+                },
+                {
+                  "id": "close",
+                  "anchor": {
+                    "at": "point",
+                    "index": 5,
+                    "price": 323.12
+                  },
+                  "chip": "closed 323.12",
+                  "name": "The close",
+                  "tone": "up",
+                  "title": "Closed at 323.12",
+                  "body": "Two dollars and seven cents back above the low. That is the result."
+                },
+                {
+                  "id": "after",
+                  "anchor": {
+                    "at": "span",
+                    "from": 6,
+                    "to": 10
+                  },
+                  "chip": "held",
+                  "name": "After",
+                  "tone": "up",
+                  "phase": "reveal",
+                  "title": "The next half hour",
+                  "body": "It never went back down there."
+                }
+              ]
             }
           },
           {
@@ -233,16 +950,171 @@
             "type": "prediction",
             "label": "EXERCISE",
             "skill": "technical_analysis",
-            "question": "Tesla closed at 319.69 on 23 July after opening at 341.00 — its low of the day, and below the prior swing low. What is the read the next morning?",
+            "question": "Tesla, daily. It has been holding above 369 all week. On 23 July it opens at 341.00, tops at 342.11 and closes at 319.69. What is the read the next morning?",
             "options": [
-              { "label": "Uptrend continues, this was a pullback", "value": "up" },
-              { "label": "Structure is broken; 341–342 is now a ceiling above", "value": "broken" },
-              { "label": "Buy it, that is a discount", "value": "buy" }
+              {
+                "label": "Uptrend continues, this was a pullback",
+                "value": "up"
+              },
+              {
+                "label": "Structure is broken; 341–342 is now a ceiling above",
+                "value": "broken"
+              },
+              {
+                "label": "Buy it, that is a discount",
+                "value": "buy"
+              }
             ],
             "outcomeValue": "broken",
             "reveal": {
               "headline": "Broken — and the wall is now overhead",
-              "body": "A close at the low, through the prior swing low, is a break of structure. Everything Tesla did for the next three weeks happened underneath 341–342, and it took until 13 August to get back within a dollar of it. Real session, real numbers."
+              "body": "A close fifty dollars below the last swing low is a break of structure, whatever the rest of the candle did. Tesla did not close at its low that day — the low was 315.74 and it recovered $3.95 into the bell — and it does not matter. The close was through the level, and that is the test.\n\nEverything Tesla did for the next three weeks happened underneath 341–342. It bottomed at 297.38 on 29 July and it took until 13 August to get back within a dollar of the wall. Real session, real numbers."
+            },
+            "chart": {
+              "ticker": "TSLA",
+              "session": "Tesla · Daily · 20–31 July 2026",
+              "bars": [
+                {
+                  "t": "Jul 20",
+                  "o": 386.05,
+                  "h": 386.61,
+                  "l": 369.43,
+                  "c": 369.57
+                },
+                {
+                  "t": "Jul 21",
+                  "o": 371.17,
+                  "h": 384.07,
+                  "l": 369.98,
+                  "c": 378.93
+                },
+                {
+                  "t": "Jul 22",
+                  "o": 375.53,
+                  "h": 380.17,
+                  "l": 372.9,
+                  "c": 374.01
+                },
+                {
+                  "t": "Jul 23",
+                  "o": 341,
+                  "h": 342.11,
+                  "l": 315.74,
+                  "c": 319.69
+                },
+                {
+                  "t": "Jul 24",
+                  "o": 320.72,
+                  "h": 322.96,
+                  "l": 306.51,
+                  "c": 313.03
+                },
+                {
+                  "t": "Jul 27",
+                  "o": 313.24,
+                  "h": 317,
+                  "l": 304.28,
+                  "c": 309.22
+                },
+                {
+                  "t": "Jul 28",
+                  "o": 305.93,
+                  "h": 311.16,
+                  "l": 300.69,
+                  "c": 307.44
+                },
+                {
+                  "t": "Jul 29",
+                  "o": 307.14,
+                  "h": 309.06,
+                  "l": 297.38,
+                  "c": 298.32
+                },
+                {
+                  "t": "Jul 30",
+                  "o": 302.7,
+                  "h": 310.87,
+                  "l": 301.33,
+                  "c": 308.85
+                },
+                {
+                  "t": "Jul 31",
+                  "o": 309.69,
+                  "h": 315.5,
+                  "l": 301.97,
+                  "c": 311.21
+                }
+              ],
+              "revealFrom": 4,
+              "marks": [
+                {
+                  "id": "prior",
+                  "anchor": {
+                    "at": "point",
+                    "index": 0,
+                    "price": 369.43
+                  },
+                  "chip": "369.43",
+                  "name": "The last low",
+                  "tone": "up",
+                  "title": "The last swing low · 369.43",
+                  "body": "The floor the trend had been standing on, made on 20 July."
+                },
+                {
+                  "id": "wall",
+                  "anchor": {
+                    "at": "band",
+                    "top": 342.11,
+                    "bottom": 341
+                  },
+                  "chip": "341–342",
+                  "name": "The wall",
+                  "tone": "level",
+                  "title": "341.00 to 342.11",
+                  "body": "Where 23 July opened and stopped. Twenty-seven dollars below the low it had just broken."
+                },
+                {
+                  "id": "close",
+                  "anchor": {
+                    "at": "point",
+                    "index": 3,
+                    "price": 319.69
+                  },
+                  "chip": "closed 319.69",
+                  "name": "The close",
+                  "tone": "down",
+                  "title": "Closed 319.69",
+                  "body": "Fifty dollars below the last swing low, in one session."
+                },
+                {
+                  "id": "after",
+                  "anchor": {
+                    "at": "span",
+                    "from": 4,
+                    "to": 9
+                  },
+                  "chip": "six sessions",
+                  "name": "After",
+                  "tone": "down",
+                  "phase": "reveal",
+                  "title": "What followed",
+                  "body": "Six more sessions down to 297.38 on 29 July."
+                },
+                {
+                  "id": "floor",
+                  "anchor": {
+                    "at": "point",
+                    "index": 7,
+                    "price": 297.38
+                  },
+                  "chip": "297.38",
+                  "name": "The bottom",
+                  "tone": "down",
+                  "phase": "reveal",
+                  "title": "297.38",
+                  "body": "Where the selling finally stopped."
+                }
+              ]
             }
           },
           {
