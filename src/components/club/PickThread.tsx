@@ -11,7 +11,7 @@ import { Chip, MemberAvatar, ScreenHeader, StanceTag, dots } from "./club-shared
 import { BeltChip } from "@/components/ui/belt";
 import { RingedAvatar } from "@/components/belts/identity";
 import { useBeltOf } from "@/components/belts/identity-context";
-import { beltFor } from "@/lib/belts";
+import { beltAtLevel } from "@/lib/belts";
 import { newId, read, useStored } from "./storage";
 import { clubApi, isUuid, signedOut } from "@/lib/live/client-club";
 
@@ -41,7 +41,7 @@ export function PickThread({ pick: initial, club, id, identities }: { pick?: Pic
   if (!pick) return <div className="pt-16 text-center text-[13px] font-bold text-ink-3">{live ? "This pick isn't in your club." : "This pick isn't on this device."}</div>;
   const beltFor2 = (idOrName: string): Belt | null => {
     const hit = identities?.find((i) => i.memberId === idOrName || i.name === idOrName);
-    return hit ? beltFor(hit.lifetimeXp) : beltOf(idOrName);
+    return hit ? beltAtLevel(hit.awardedLevel) : beltOf(idOrName);
   };
   const reaction = live ? serverReaction : localReaction;
   const replies = [...pick.replies, ...(live ? sentReplies : localReplies)];

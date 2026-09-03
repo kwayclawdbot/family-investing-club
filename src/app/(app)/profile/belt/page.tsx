@@ -1,10 +1,28 @@
-import { getPromotion, beltFor, nextBelt } from "@/lib/data-live";
+import { getPromotion, beltStatus } from "@/lib/data-live";
 import { Promotion } from "@/components/belts/Promotion";
 
-/** Belt promotion ceremony (prototype v2: Purple Belt · 2,640 lifetime XP · level 6 of 7 · 560 to Black). */
+/**
+ * The belt page — what you hold, and what stands between you and the next one.
+ *
+ * XP does not promote anyone. It unlocks the right to SIT the next belt test; passing it is what
+ * awards the belt (`fic_belt_awards`). So this page shows one of two things: a test that is ready to
+ * sit, or the XP still to earn before one is.
+ */
 export default async function BeltPromotionPage() {
   const p = await getPromotion();
   const xp = p.lifetimeXp ?? p.belt.minXp;
-  const belt = beltFor(xp); const next = nextBelt(xp);
-  return <Promotion p={{ ...p, belt, lifetimeXp: xp, toNext: next ? next.minXp - xp : undefined, nextLabel: next?.short }} />;
+  const status = beltStatus(xp, p.belt.level);
+  const goal = status.testReady ?? status.working;
+  return (
+    <Promotion
+      p={{
+        ...p,
+        belt: status.belt,
+        lifetimeXp: xp,
+        toNext: status.testReady ? 0 : status.xpToGo || undefined,
+        nextLabel: goal?.short,
+        testReady: !!status.testReady,
+      }}
+    />
+  );
 }

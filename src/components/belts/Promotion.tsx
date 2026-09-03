@@ -11,7 +11,7 @@ const COLOR: Record<PromotionSummary["belt"]["color"], { main: string; shadow: s
 };
 
 /** Belt promotion — the ceremonial moment (canvas v8, artboard 02). One restrained fade/scale on mount, motion-safe only. */
-export function Promotion({ p }: { p: PromotionSummary & { lifetimeXp?: number; toNext?: number; nextLabel?: string } }) {
+export function Promotion({ p }: { p: PromotionSummary & { lifetimeXp?: number; toNext?: number; nextLabel?: string; testReady?: boolean } }) {
   const c = COLOR[p.belt.color];
   const stats: [number, string][] = [
     [p.lessons, "LESSONS MASTERED"],
@@ -33,7 +33,15 @@ export function Promotion({ p }: { p: PromotionSummary & { lifetimeXp?: number; 
         </div>
         <div className="mt-6 text-[14px] font-black text-ink-3 tracking-[1px]">YOU EARNED</div>
         <div className="mt-[2px] text-[34px] font-black leading-tight" style={{ color: c.main }}>{p.belt.label}</div>
-        <div className="mt-[6px] text-[12.5px] font-bold text-ink-3">{(p.lifetimeXp ?? p.belt.minXp).toLocaleString()} lifetime XP · level {p.belt.level} of 7{p.toNext ? ` · ${p.toNext} to ${p.nextLabel}` : ""}</div>
+        <div className="mt-[6px] text-[12.5px] font-bold text-ink-3">{(p.lifetimeXp ?? p.belt.minXp).toLocaleString()} lifetime XP · level {p.belt.level} of 7{!p.testReady && p.toNext ? ` · ${p.toNext.toLocaleString()} XP to unlock the ${p.nextLabel} test` : ""}</div>
+      {/* XP unlocks the test; the test awards the belt. Say so plainly rather than counting down to
+          a promotion that will not arrive on its own. */}
+      {p.testReady && p.nextLabel && (
+        <div className="mt-3 rounded-[16px] border-2 border-green-2 bg-green-tint px-4 py-[13px] text-center">
+          <div className="text-[13.5px] font-black text-green">You&apos;ve qualified for the {p.nextLabel} Belt test</div>
+          <div className="mt-[3px] text-[12px] font-bold text-ink-2">Pass it and the belt is yours. XP got you to the door.</div>
+        </div>
+      )}
         <div className="mt-[18px] grid grid-cols-2 gap-2 w-full">
           {stats.map(([n, l]) => (
             <div key={l} className="bg-[#FFFDF7] border border-line rounded-[13px] p-[10px] text-left">

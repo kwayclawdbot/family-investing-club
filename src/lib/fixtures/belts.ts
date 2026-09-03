@@ -1,13 +1,13 @@
 import type { XpEvent, Reputation, MemberIdentity, ClubXpGoal, XpLeaderboard, PromotionSummary } from "@/lib/types";
 import { BELTS } from "@/lib/belts";
 
-/** Kway: 2,640 lifetime XP → Purple Belt, 560 XP to Black (canvas v9/v10). */
+/** Kway: 2,640 lifetime XP, Blue Belt passed — 560 XP short of even sitting the Black test. */
 export const identities: MemberIdentity[] = [
-  { memberId: "kway", name: "Kway", initial: "K", color: "bg-green-3", lifetimeXp: 2640, weekXp: 430 },
-  { memberId: "dad", name: "Dad", initial: "D", color: "bg-purple", lifetimeXp: 910, weekXp: 80 },
-  { memberId: "andwele", name: "Andwele", initial: "A", color: "bg-green-2", lifetimeXp: 830, weekXp: 150 },
-  { memberId: "mom", name: "Mom", initial: "M", color: "bg-coral", lifetimeXp: 260, weekXp: 95 },
-  { memberId: "arielle", name: "Arielle", initial: "A", color: "bg-gold", lifetimeXp: 310, weekXp: 240 },
+  { memberId: "kway", name: "Kway", initial: "K", color: "bg-green-3", lifetimeXp: 2640, weekXp: 430, awardedLevel: 6 },
+  { memberId: "dad", name: "Dad", initial: "D", color: "bg-purple", lifetimeXp: 910, weekXp: 80, awardedLevel: 4 },
+  { memberId: "andwele", name: "Andwele", initial: "A", color: "bg-green-2", lifetimeXp: 830, weekXp: 150, awardedLevel: 4 },
+  { memberId: "mom", name: "Mom", initial: "M", color: "bg-coral", lifetimeXp: 260, weekXp: 95, awardedLevel: 2 },
+  { memberId: "arielle", name: "Arielle", initial: "A", color: "bg-gold", lifetimeXp: 310, weekXp: 240, awardedLevel: 2 },
 ];
 export const identityOf = (memberId: string) => identities.find((i) => i.memberId === memberId);
 
@@ -29,11 +29,11 @@ export const xpLeaderboard: XpLeaderboard = {
   windows: ["7 days", "30 days", "All-time"],
   scopes: ["Family", "Class"],
   rows: [
-    { rank: 1, memberId: "arielle", name: "Arielle", initial: "A", color: "bg-gold", lifetimeXp: 310, deltaXp: 240 },
-    { rank: 2, memberId: "kway", name: "Kway (you)", initial: "K", color: "bg-green-3", lifetimeXp: 980, deltaXp: 185, isYou: true },
-    { rank: 3, memberId: "andwele", name: "Andwele", initial: "A", color: "bg-green-2", lifetimeXp: 520, deltaXp: 150 },
-    { rank: 4, memberId: "mom", name: "Mom", initial: "M", color: "bg-coral", lifetimeXp: 260, deltaXp: 95 },
-    { rank: 5, memberId: "dad", name: "Dad", initial: "D", color: "bg-purple", lifetimeXp: 910, deltaXp: 80 },
+    { rank: 1, memberId: "arielle", name: "Arielle", initial: "A", color: "bg-gold", lifetimeXp: 310, deltaXp: 240 , awardedLevel: 2},
+    { rank: 2, memberId: "kway", name: "Kway (you)", initial: "K", color: "bg-green-3", lifetimeXp: 980, deltaXp: 185, isYou: true , awardedLevel: 4},
+    { rank: 3, memberId: "andwele", name: "Andwele", initial: "A", color: "bg-green-2", lifetimeXp: 520, deltaXp: 150 , awardedLevel: 3},
+    { rank: 4, memberId: "mom", name: "Mom", initial: "M", color: "bg-coral", lifetimeXp: 260, deltaXp: 95 , awardedLevel: 2},
+    { rank: 5, memberId: "dad", name: "Dad", initial: "D", color: "bg-purple", lifetimeXp: 910, deltaXp: 80 , awardedLevel: 4},
   ],
   callout: "A White Belt leading the XP board is the system working — Arielle out-learned everyone this week. Pick accuracy is a different board.",
   otherBoards: [

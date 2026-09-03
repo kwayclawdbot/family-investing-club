@@ -1,6 +1,6 @@
 import "server-only";
 import type { Badge, Mastery, MemberIdentity, PromotionSummary, Reputation, User, XpEvent } from "@/lib/types";
-import { beltFor } from "@/lib/belts";
+import { beltAtLevel, eligibleBeltFor } from "@/lib/belts";
 import { getSession, levelOf } from "./session";
 import { quotesSafe } from "./market-bridge";
 import { colorFor, firstName, initialOf, must, safe, userClient } from "./supa";
@@ -55,7 +55,8 @@ export async function getUser(): Promise<User | null> {
       supa.from("lesson_progress").select("id", { count: "exact", head: true }).eq("user_id", s.user.id).eq("status", "completed"),
     ]);
     const lifetime = xp?.lifetime ?? 0;
-    const belt = beltFor(lifetime);
+    const awarded = (await awardedLevels([s.user.id]))[s.user.id] ?? 1;
+    const belt = eligibleBeltFor(lifetime);
     const next = [150, 400, 800, 1400, 2200, 3200].find((m) => m > lifetime) ?? lifetime;
     const name = s.profile?.display_name ?? "";
     const parts = name.trim().split(/\s+/);
@@ -64,6 +65,7 @@ export async function getUser(): Promise<User | null> {
       firstName: firstName(name, s.user.email),
       lastName: parts.length > 1 ? parts.slice(1).join(" ") : "",
       level: belt.level,
+      awardedLevel: awarded,
       levelXp: lifetime,
       levelXpMax: next,
       weekXp: xp?.week ?? 0,
@@ -76,13 +78,26 @@ export async function getUser(): Promise<User | null> {
   });
 }
 
+/** Highest belt level passed, per user. No row = level 1, the belt everyone starts at. */
+async function awardedLevels(ids: string[]): Promise<Record<string, number>> {
+  const out: Record<string, number> = {};
+  if (!ids.length) return out;
+  const supa = await userClient();
+  const res = await supa.from("fic_belt_awards").select("user_id, belt_level").in("user_id", ids);
+  for (const r of (res.data ?? []) as { user_id: string; belt_level: number }[]) {
+    out[r.user_id] = Math.max(out[r.user_id] ?? 1, r.belt_level);
+  }
+  return out;
+}
+
 export async function getIdentity(): Promise<MemberIdentity | null> {
   const s = await getSession();
   if (!s) return null;
   const xp = await xpTotals(s.user.id);
   if (!xp) return null;
   const name = firstName(s.profile?.display_name, s.user.email);
-  return { memberId: s.user.id, name, initial: initialOf(name), color: colorFor(s.user.id), lifetimeXp: xp.lifetime, weekXp: xp.week };
+  const awarded = await awardedLevels([s.user.id]);
+  return { memberId: s.user.id, name, initial: initialOf(name), color: colorFor(s.user.id), lifetimeXp: xp.lifetime, weekXp: xp.week, awardedLevel: awarded[s.user.id] ?? 1 };
 }
 
 /** Identities for a set of users (club members). Uses the member's own visibility (RLS on xp_events may limit to self). */
@@ -91,6 +106,7 @@ export async function identitiesFor(members: { id: string; name: string }[]): Pr
     const supa = await userClient();
     const ids = members.map((m) => m.id);
     const rows = must(await supa.from("xp_events").select("user_id, amount, created_at").in("user_id", ids)) as XpRow[];
+    const awarded = await awardedLevels(ids);
     const week = Date.now() - 7 * 86400000;
     return members.map((m) => {
       const mine = rows.filter((r) => r.user_id === m.id);
@@ -98,6 +114,7 @@ export async function identitiesFor(members: { id: string; name: string }[]): Pr
         memberId: m.id, name: m.name, initial: initialOf(m.name), color: colorFor(m.id),
         lifetimeXp: mine.reduce((a, r) => a + (r.amount ?? 0), 0),
         weekXp: mine.filter((r) => new Date(r.created_at).getTime() >= week).reduce((a, r) => a + (r.amount ?? 0), 0),
+        awardedLevel: awarded[m.id] ?? 1,
       };
     });
   });
@@ -213,7 +230,7 @@ export async function getPromotion(): Promise<PromotionSummary & { lifetimeXp: n
     ]);
     const lifetime = xp?.lifetime ?? 0;
     return {
-      belt: beltFor(lifetime), lifetimeXp: lifetime,
+      belt: beltAtLevel((await awardedLevels([s.user.id]))[s.user.id] ?? 1), lifetimeXp: lifetime,
       lessons: lessons.count ?? 0,
       research: research.count ?? 0,
       drills: games.count ?? 0,

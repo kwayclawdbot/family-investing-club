@@ -124,7 +124,7 @@ export async function getXpLeaderboard(): Promise<XpLeaderboard> {
   return pick(async () => {
     const [ids, s] = await Promise.all([live.getIdentities(), getSession()]);
     if (!ids || !s) return null;
-    const rows = [...ids].sort((a, b) => b.weekXp - a.weekXp).map((i, n) => ({ rank: n + 1, memberId: i.memberId, name: i.memberId === s.user.id ? `${i.name} (you)` : i.name, initial: i.initial, color: i.color, lifetimeXp: i.lifetimeXp, deltaXp: i.weekXp, isYou: i.memberId === s.user.id }));
+    const rows = [...ids].sort((a, b) => b.weekXp - a.weekXp).map((i, n) => ({ rank: n + 1, memberId: i.memberId, name: i.memberId === s.user.id ? `${i.name} (you)` : i.name, initial: i.initial, color: i.color, lifetimeXp: i.lifetimeXp, deltaXp: i.weekXp, awardedLevel: i.awardedLevel, isYou: i.memberId === s.user.id }));
     return { ...fb.xpLeaderboard, rows, callout: rows[0] ? `${rows[0].name} leads this week on participation — XP is separate from investment performance.` : fb.xpLeaderboard.callout };
   }, () => fb.xpLeaderboard);
 }

@@ -48,6 +48,13 @@ The edit is two lines in `src/lib/belts.ts` plus dropping `"purple"` from `BeltC
 | 6 | Blue | 2,200 | **Blue Belt** | 16 |
 | 7 | Black | 3,200 | **Black Belt** | 12 + exam |
 
+**XP does not promote anyone.** Lifetime XP unlocks the *right to sit* the next belt test; passing
+the test is what awards the belt (`fic_belt_awards`, added 2026-09-03). A member on 3,000 XP who has
+not sat the Green test is still a Yellow Belt, and the app tells them a test is waiting rather than
+quietly moving them up. Belts are sat in order — only ever one test offered at a time — and the pass
+mark is the platform's usual 70%. Members holding a belt under the old XP-derived model were
+grandfathered, so nobody lost a belt they were already wearing.
+
 **59 lessons.** At the shipped XP rates (`LESSON 50`, `QUIZ_PASS 30`, `QUIZ_PERFECT_BONUS 20`) a
 lesson pays 50–100 XP, so the ladder tops out around 4,000–5,000 XP earned against a 3,200 XP black
 belt — a member can miss a few quizzes and still arrive. That headroom is deliberate: the belt should

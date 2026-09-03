@@ -5,7 +5,7 @@ import type {
 } from "@/lib/types";
 import * as fx from "@/lib/fixtures/club";
 import * as ws from "@/lib/fixtures/workspace";
-import { beltFor } from "@/lib/belts";
+import { beltAtLevel } from "@/lib/belts";
 import { cache } from "react";
 import { getSession, levelOf, type ProfileRow } from "./session";
 import { identitiesFor } from "./identity";
@@ -248,7 +248,7 @@ export async function getClubActivity(): Promise<ClubActivity[] | null> {
 /* ── composed views ────────────────────────────────────────────────── */
 export async function memberIdentities(ctx: ClubContext): Promise<MemberIdentity[]> {
   const ids = await identitiesFor(ctx.members.map((m) => ({ id: m.user_id, name: nameOf(ctx, m.user_id) })));
-  return ids ?? ctx.members.map((m) => { const n = nameOf(ctx, m.user_id); return { memberId: m.user_id, name: n, initial: initialOf(n), color: colorFor(m.user_id), lifetimeXp: 0, weekXp: 0 }; });
+  return ids ?? ctx.members.map((m) => { const n = nameOf(ctx, m.user_id); return { memberId: m.user_id, name: n, initial: initialOf(n), color: colorFor(m.user_id), lifetimeXp: 0, weekXp: 0, awardedLevel: 1 }; });
 }
 
 export async function getClubOverview(): Promise<ClubOverview | null> {
@@ -373,7 +373,7 @@ export async function getIdentities(): Promise<MemberIdentity[] | null> {
   return safe("club.getIdentities", () => memberIdentities(ctx));
 }
 
-export function beltLabelFor(xp: number) { return beltFor(xp).short; }
+export function beltLabelForLevel(level: number) { return beltAtLevel(level).short; }
 
 /* ── vote gate (Phase 2): one predicate, used by /api/club/vote and the smoke ── */
 /** Why this member may not vote right now, or null when they can. `vote_gated` is set on fic_club_members (mini-lesson gate); `rules.kidsCanVote=false` blocks the child role. */
@@ -426,8 +426,7 @@ export async function getClubChat(limit = 60): Promise<ClubChatMessage[] | null>
     const ms = (must(rows) as FamilyMsgRow[]).slice().reverse();
     return ms.map((m) => {
       const name = m.author_id ? nameOf(ctx, m.author_id) : "Club";
-      const xp = ids.find((i) => i.memberId === m.author_id)?.lifetimeXp ?? 0;
-      const belt = m.author_id ? beltFor(xp) : null;
+      const belt = m.author_id ? beltAtLevel(ids.find((i) => i.memberId === m.author_id)?.awardedLevel ?? 1) : null;
       const member = ctx.members.find((x) => x.user_id === m.author_id);
       return { id: m.id, kind: m.kind, authorId: m.author_id, author: name, initial: initialOf(name), color: m.author_id ? colorFor(m.author_id) : "bg-ink-4", belt: belt?.color ?? null, beltLabel: belt?.short, child: member?.role === "child", text: m.body, at: m.created_at, time: clock(m.created_at), mine: m.author_id === ctx.me };
     });

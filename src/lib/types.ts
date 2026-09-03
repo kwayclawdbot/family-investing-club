@@ -5,7 +5,10 @@ export type User = {
   id: string;
   firstName: string;
   lastName: string;
+  /** XP level (1-7). What their participation has UNLOCKED — not the belt they hold. */
   level: number;
+  /** Highest belt test PASSED. This is the belt they wear. 1 = the starting belt. */
+  awardedLevel: number;
   levelXp: number;
   levelXpMax: number;
   weekXp: number;
@@ -225,9 +228,11 @@ export type BeltColor = "white" | "yellow" | "green" | "blue" | "black";
 export type Belt = { level: 1 | 2 | 3 | 4 | 5 | 6 | 7; color: BeltColor; label: string; short: string; minXp: number };
 export type XpEvent = { id: string; emoji: string; text: string; xp: number; ago?: string; kind: "learn" | "research" | "club" | "practice" | "family" };
 export type Reputation = { pickPositivePct: number; resolvedPicks: number };
-export type MemberIdentity = { memberId: string; name: string; initial: string; color: string; lifetimeXp: number; weekXp: number };
+export type MemberIdentity = { memberId: string; name: string; initial: string; color: string; lifetimeXp: number; weekXp: number;
+  /** Highest belt LEVEL passed (fic_belt_awards). 1 = the starting belt. XP only unlocks the test. */
+  awardedLevel: number };
 export type ClubXpGoal = { current: number; goal: number; window: string; milestone: string };
-export type XpBoardRow = { rank: number; memberId: string; name: string; initial: string; color: string; lifetimeXp: number; deltaXp: number; isYou?: boolean };
+export type XpBoardRow = { rank: number; memberId: string; name: string; initial: string; color: string; lifetimeXp: number; deltaXp: number; awardedLevel: number; isYou?: boolean };
 export type XpLeaderboard = { windows: string[]; scopes: string[]; rows: XpBoardRow[]; callout: string; otherBoards: { emoji: string; label: string; href: string }[] };
 export type PromotionSummary = { belt: Belt; lessons: number; research: number; drills: number; clubActions: number };
 

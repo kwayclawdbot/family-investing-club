@@ -1,6 +1,6 @@
 import "server-only";
 import type { BeltColor, CommunityChat, CommunityClub, CommunityPost, PickStance } from "@/lib/types";
-import { beltFor } from "@/lib/belts";
+import { beltAtLevel } from "@/lib/belts";
 import { getSession } from "./session";
 import { identitiesFor } from "./identity";
 import { quoteSafe } from "./market-bridge";
@@ -18,8 +18,7 @@ export async function people(ids: (string | null | undefined)[]): Promise<Map<st
   const named = uniq.map((id) => { const p = profs.find((x) => x.id === id); return { id, p, name: p ? firstName(p.display_name, p.email) : "Member" }; });
   const xp = (await identitiesFor(named.map((n) => ({ id: n.id, name: n.name })))) ?? [];
   return new Map(named.map((n) => {
-    const life = xp.find((i) => i.memberId === n.id)?.lifetimeXp ?? 0;
-    const b = life > 0 ? beltFor(life) : null;
+    const b = beltAtLevel(xp.find((i) => i.memberId === n.id)?.awardedLevel ?? 1);
     const child = n.p?.role === "child" || n.p?.age_group === "kids" || n.p?.age_group === "teens";
     return [n.id, { id: n.id, name: n.name, initial: initialOf(n.name), color: colorFor(n.id), belt: b?.color ?? null, beltLabel: b?.short, child }];
   }));

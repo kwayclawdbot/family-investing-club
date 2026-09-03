@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getUser, getReputation, beltFor, nextBelt, getSpecialistBadges, getAchievementsCount, getResearchCount, getMyPicksSummary } from "@/lib/data-live";
+import { getUser, getReputation, beltAtLevel, beltStatus, getSpecialistBadges, getAchievementsCount, getResearchCount, getMyPicksSummary } from "@/lib/data-live";
 import { BeltRing } from "@/components/ui/belt";
 import { VerificationRow } from "@/components/belts/VerificationRow";
 
@@ -11,7 +11,7 @@ export default async function ProfilePage() {
     getUser(), getReputation(), getSpecialistBadges(), getAchievementsCount(), getResearchCount(), getMyPicksSummary(),
   ]);
   const xp = user.levelXp;
-  const belt = beltFor(xp); const next = nextBelt(xp);
+  const status = beltStatus(xp, user.awardedLevel); const belt = status.belt; const next = status.testReady ?? status.working;
   const toNext = next ? next.minXp - xp : 0;
     const row = "flex justify-between items-center py-[11px] border-b border-paper-2 text-[13px] font-extrabold text-ink";
   return (

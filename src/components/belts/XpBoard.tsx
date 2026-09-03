@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import type { XpLeaderboard } from "@/lib/types";
-import { beltFor } from "@/lib/data";
+import { beltAtLevel } from "@/lib/data";
 import { cx } from "@/components/ui";
 import { EmptyState } from "@/components/ui/extras";
 import { BeltChip, BeltRing } from "@/components/ui/belt";
@@ -21,7 +21,7 @@ export function XpBoard({ lb }: { lb: XpLeaderboard }) {
     </button>
   );
   const leader = rows[0];
-  const leaderBelt = beltFor(leader.lifetimeXp);
+  const leaderBelt = beltAtLevel(leader.awardedLevel ?? 1);
 
   return (
     <div className="pb-6">
@@ -39,7 +39,7 @@ export function XpBoard({ lb }: { lb: XpLeaderboard }) {
         <>
           <div className="mt-[11px] bg-card border border-line rounded-[16px] px-[15px] py-1">
             {rows.map((r, i) => {
-              const belt = beltFor(r.lifetimeXp);
+              const belt = beltAtLevel(r.awardedLevel ?? 1);
               return (
                 <div key={r.memberId} className={cx("flex items-center gap-[10px] py-[9px]", i < rows.length - 1 && "border-b border-paper-2")}>
                   <span className="w-5 text-center text-[12px] font-black text-ink-3" aria-label={`Rank ${r.rank}`}>{MEDAL[r.rank - 1] ?? r.rank}</span>
