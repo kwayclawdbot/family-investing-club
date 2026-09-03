@@ -13,7 +13,8 @@ export function ExplainerStep({ spec, onResolve }: StepComponentProps<ExplainerS
   const last = !beats || beat >= beats.length - 1;
   return (
     <div className="flex-1 flex flex-col">
-      {spec.heading && <h1 className="text-[22px] font-black text-ink leading-[1.3] text-pretty">{spec.heading}</h1>}
+      {spec.label && <Eyebrow>{spec.label}</Eyebrow>}
+      {spec.heading && <h1 className={cx("text-[22px] font-black text-ink leading-[1.3] text-pretty", spec.label && "mt-[6px]")}>{spec.heading}</h1>}
       {spec.figure && (
         <div className="mt-3 rounded-[16px] border border-gold/60 bg-gold-tint px-4 py-3">
           <div className="text-[18px] font-black text-ink">{spec.figure.kind === "quote" ? `“${spec.figure.value}”` : spec.figure.value}</div>
@@ -104,7 +105,8 @@ function ChoiceCore({ options, correctIndex, explanation, reinforce, register, o
 export function MultipleChoiceStep({ spec, register, onResolve, xpNote }: StepComponentProps<McSpec>) {
   return (
     <div className="flex-1 flex flex-col">
-      <h1 className="text-[22px] font-black text-ink leading-[1.3] text-pretty">{spec.question}</h1>
+      {spec.label && <Eyebrow tone="purple">{spec.label}</Eyebrow>}
+      <h1 className={cx("text-[22px] font-black text-ink leading-[1.3] text-pretty", spec.label && "mt-[6px]")}>{spec.question}</h1>
       <ChoiceCore options={spec.options} correctIndex={spec.correctIndex} explanation={spec.explanation} reinforce={spec.reinforce} register={register} onResolve={onResolve} feedbackFor={(i) => spec.wrongFeedback?.[i] ?? null} xpNote={xpNote} seed={spec.question.length * 7 + spec.options.length} />
     </div>
   );

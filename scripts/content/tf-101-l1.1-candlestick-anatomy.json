@@ -1,0 +1,211 @@
+{
+  "schema": 1,
+  "title": "Candlestick Anatomy (OHLC)",
+  "skills": ["technical_analysis"],
+  "difficulty": 1,
+  "audience": ["adult", "teen"],
+  "duration_minutes": 12,
+  "xp": 50,
+  "guide": {
+    "intro": "Four numbers build every candle you will ever look at. By the end of this you will read them off the shape without thinking.",
+    "outro": "You can now read a single candle. Next we put them side by side."
+  },
+  "steps": [
+    {
+      "id": "concept",
+      "type": "explainer",
+      "label": "CORE CONCEPT",
+      "skill": "technical_analysis",
+      "heading": "The building block of every chart",
+      "figure": { "kind": "stat", "value": "4 prices", "caption": "Every candle · every timeframe · no exceptions" },
+      "body": [
+        "A candlestick is one bar of price history. It covers a fixed slice of time — a day, an hour, five minutes — and records four prices from that slice: where trading opened, the highest price reached, the lowest price reached, and where it closed.",
+        "Those four are called OHLC: open, high, low, close. Change the timeframe and the slice gets longer or shorter, but the four numbers stay exactly the same.",
+        "The shape is not decoration. The rectangle spans the open and the close. The thin lines above and below reach out to the high and the low. Once you can read the shape, you are reading the four numbers without anyone telling you what they are."
+      ]
+    },
+    {
+      "id": "anatomy",
+      "type": "anatomy",
+      "label": "INTERACTIVE",
+      "skill": "technical_analysis",
+      "heading": "Candlestick anatomy explorer",
+      "caption": "Tap each point on the candle to see what that price is telling you.",
+      "candle": { "open": 112, "high": 130, "low": 106, "close": 124 },
+      "hotspots": [
+        { "part": "open", "title": "Open — where it started", "body": "The first price traded in the slice. On a daily candle, that is the first trade after the opening bell." },
+        { "part": "high", "title": "High — the ceiling it reached", "body": "The highest price anyone paid at any point. It marks how far buyers pushed before they ran out of sellers willing to meet them." },
+        { "part": "low", "title": "Low — the floor it found", "body": "The lowest price anyone accepted. It marks how far sellers pushed before buyers stepped back in." },
+        { "part": "close", "title": "Close — where it ended", "body": "The last price traded before the slice ran out. Of the four this one carries the most weight: it is the price both sides were willing to live with when the clock stopped." },
+        { "part": "body", "title": "The body — open to close", "body": "The rectangle between the open and the close. Its height is the net move. A tall body means one side finished clearly ahead; a short one means the period ended near where it began." }
+      ]
+    },
+    {
+      "id": "distinction",
+      "type": "compare",
+      "label": "KEY DISTINCTION",
+      "skill": "technical_analysis",
+      "heading": "Bullish and bearish candles",
+      "intro": "Every candle is one or the other, and one comparison decides it.",
+      "columns": [
+        {
+          "title": "Bullish — closed higher",
+          "tone": "green",
+          "candle": { "open": 110, "high": 126, "low": 107, "close": 123 },
+          "points": ["Close sits above the open", "Body fills from the open up to the close", "Buyers finished the period in control", "Drawn green on most charts"]
+        },
+        {
+          "title": "Bearish — closed lower",
+          "tone": "red",
+          "candle": { "open": 123, "high": 126, "low": 107, "close": 110 },
+          "points": ["Close sits below the open", "Body fills from the open down to the close", "Sellers finished the period in control", "Drawn red on most charts"]
+        }
+      ],
+      "note": "Colour is a convention, not a rule — plenty of charts use white and black, and you can change it in any platform. The test that never changes is the close against the open."
+    },
+    {
+      "id": "process",
+      "type": "process",
+      "label": "PROCESS",
+      "skill": "technical_analysis",
+      "heading": "Read any candlestick in four steps",
+      "intro": "Run these in order every time. Within a few weeks you stop running them consciously and simply see the answer.",
+      "moves": [
+        { "title": "Find the close, then the open", "body": "Is the close above or below the open? That one comparison tells you who won the period, before you look at anything else." },
+        { "title": "Measure the body", "body": "How much ground did price actually cover from open to close? A tall body is conviction. A short body means the period ended near where it began, whatever happened in between." },
+        { "title": "Read the wicks", "body": "A long wick is a price that was reached and then given back. The side it sticks out of is the side that tried and failed." },
+        { "title": "Put it in context", "body": "Ask where the candle sits — after a long run, at a level price has respected before, or in the middle of nowhere." }
+      ],
+      "closing": "Steps one and two take a second each. Step four is the one beginners skip, and it is the one that decides whether the candle means anything at all."
+    },
+    {
+      "id": "live-example",
+      "type": "annotated_values",
+      "label": "LIVE EXAMPLE",
+      "skill": "technical_analysis",
+      "heading": "A real session, read four ways",
+      "subject": "Apple · Daily · 28 August 2026",
+      "caption": "Real prices from a real day. Tap each number.",
+      "candle": { "open": 316.85, "high": 322.37, "low": 315.45, "close": 319.70 },
+      "values": [
+        { "part": "open", "label": "Open", "value": "$316.85", "meaning": "Where the day began — the first trade after the opening bell." },
+        { "part": "high", "label": "High", "value": "$322.37", "meaning": "The furthest buyers pushed: $5.52 above the open, before sellers met them there." },
+        { "part": "low", "label": "Low", "value": "$315.45", "meaning": "The furthest price fell — only $1.40 under the open. Sellers never got much traction all day." },
+        { "part": "close", "label": "Close", "value": "$319.70", "meaning": "The day finished $2.85 above the open, so this is a bullish candle. But it closed $2.67 below the high, so buyers gave a little back into the bell." }
+      ]
+    },
+    {
+      "id": "practice",
+      "type": "flip_cards",
+      "label": "PRACTICE",
+      "skill": "technical_analysis",
+      "heading": "OHLC quick reference",
+      "intro": "Say the answer to yourself first, then flip.",
+      "cards": [
+        { "front": "Open", "back": "The first price traded in the period." },
+        { "front": "High", "back": "The highest price reached at any point in the period." },
+        { "front": "Low", "back": "The lowest price reached at any point in the period." },
+        { "front": "Close", "back": "The last price traded before the period ended — the one that carries the most weight." },
+        { "front": "Body", "back": "The rectangle between open and close. Its height is the net move." },
+        { "front": "Wick", "back": "The thin line past the body, reaching to the high or the low. It marks a price that was reached and then rejected." }
+      ]
+    },
+    {
+      "id": "exercise",
+      "type": "build_candle",
+      "label": "EXERCISE",
+      "skill": "technical_analysis",
+      "heading": "Build the candlestick",
+      "prompt": "Set the four prices so this becomes a bullish candle that opened at 112, ran as high as 130, dipped to 108, and closed at 124.",
+      "target": { "open": 112, "high": 130, "low": 108, "close": 124 },
+      "tolerance": 0,
+      "hint": "The high has to sit at or above both the open and the close, and the low at or below both — otherwise it is not a candle.",
+      "success": "That is it. The close is above the open, so the body is bullish. The upper wick runs from 124 up to 130, and the lower wick from 112 down to 108."
+    },
+    {
+      "id": "insight",
+      "type": "explainer",
+      "label": "DEEPER INSIGHT",
+      "skill": "technical_analysis",
+      "heading": "What the wicks really tell you",
+      "body": [
+        "A wick is a price that was reached and then given back. Someone traded there, and by the time the period ended nobody was willing to stay.",
+        "That makes wicks a record of rejection. A long upper wick says buyers pushed price up and could not hold it. A long lower wick says sellers drove price down and could not keep it there.",
+        "It is why two candles with the same close can mean very different things. One that closed at its high finished with buyers still in control. One that closed in the middle after spiking much higher finished with buyers who lost their grip.",
+        "If the body is the result, the wicks are the argument that produced it."
+      ]
+    },
+    {
+      "id": "ratio",
+      "type": "ratio_explorer",
+      "label": "INTERACTIVE",
+      "skill": "technical_analysis",
+      "heading": "Body-to-wick ratio",
+      "intro": "Slide from a candle that is almost all wick to one that is almost all body, and read what each shape is saying.",
+      "bands": [
+        { "upTo": 20, "tone": "neutral", "title": "Almost all wick — indecision", "body": "Price travelled a long way in both directions and finished close to where it started. Neither side could hold ground. Candles like this tend to show up where a move is running out of fuel." },
+        { "upTo": 45, "tone": "neutral", "title": "Wick-heavy — a fight with no winner", "body": "There was real range, but the close landed near the open. Someone tried in both directions and got rejected both times." },
+        { "upTo": 70, "tone": "green", "title": "Balanced — an ordinary candle", "body": "A clear net move with some rejection at the edges. This is what most candles look like, and on its own it is unremarkable." },
+        { "upTo": 100, "tone": "green", "title": "Almost all body — conviction", "body": "Price opened, moved one way, and closed at the extreme with barely any pushback. One side was in control from bell to bell. These are the ones worth noticing." }
+      ]
+    },
+    {
+      "id": "check-1",
+      "type": "multiple_choice",
+      "label": "KNOWLEDGE CHECK",
+      "skill": "technical_analysis",
+      "question": "A daily candle opens at $50, reaches $54, drops to $48, and closes at $49. Bullish or bearish?",
+      "options": [
+        "Bullish — it reached $54, which is above the open",
+        "Bearish — the close ($49) is below the open ($50)",
+        "Bullish — the low ($48) held above the open's range",
+        "Neither — the high and the low cancel each other out"
+      ],
+      "correctIndex": 1,
+      "explanation": "Only the close against the open decides it. The high tells you how far buyers got at one moment, not who finished ahead.",
+      "wrongFeedback": [
+        { "text": "The high is how far price reached at some point, not where it finished. Compare the close to the open.", "kai": true },
+        null,
+        { "text": "Where the low sits does not set direction. The comparison is always close against open.", "kai": true },
+        { "text": "They do not cancel out. One comparison decides it: close against open.", "kai": true }
+      ],
+      "reinforce": "Close above open is bullish. Close below open is bearish. Nothing else votes."
+    },
+    {
+      "id": "check-2",
+      "type": "multiple_choice",
+      "label": "KNOWLEDGE CHECK",
+      "skill": "technical_analysis",
+      "question": "A candle has a small body near the top and a long lower wick. What happened during that period?",
+      "options": [
+        "Price rose steadily the whole period with no pullback",
+        "Sellers pushed price down, then buyers brought it back before the close",
+        "Almost no trading happened in the lower range",
+        "The open and the close were identical"
+      ],
+      "correctIndex": 1,
+      "explanation": "A long lower wick is price that was reached and then rejected — sellers got it down there, and buyers took it back before the period ended.",
+      "wrongFeedback": [
+        { "text": "A steady rise with no pullback would leave almost no lower wick at all. That long wick is the pullback.", "kai": true },
+        null,
+        { "text": "The opposite — the wick exists because price did trade down there. It just did not stay.", "kai": true },
+        { "text": "Identical open and close would leave no body at all. This one has a small body sitting high.", "kai": true }
+      ],
+      "reinforce": "A wick is rejection. The side it sticks out of is the side that tried and failed."
+    },
+    {
+      "id": "wrap",
+      "type": "takeaways",
+      "label": "WRAP UP",
+      "heading": "Key takeaways",
+      "points": [
+        "A candlestick records four prices from one slice of time: open, high, low and close.",
+        "The body runs from the open to the close. The wicks reach out to the high and the low.",
+        "Close above open is bullish, close below open is bearish. Colour is only a convention — the comparison is the rule.",
+        "A wick marks a price that was reached and then rejected. The side it sticks out of is the side that failed.",
+        "One candle rarely means much alone. Where it sits is what gives it meaning."
+      ],
+      "closing": "Next lesson puts several of these side by side — which is where reading a chart actually begins."
+    }
+  ]
+}

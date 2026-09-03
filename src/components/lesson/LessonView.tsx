@@ -10,6 +10,7 @@ import { learnApi } from "@/lib/live/client-learn";
 import { cx } from "@/components/ui";
 import { FeedbackNote, KaiRow, LessonHeader, OptionButton, PrimaryButton } from "./engine-ui";
 import { ExplainerStep, MatchPairsStep, MultipleChoiceStep, PredictionStep, RealWorldStep, TrueFalseStep } from "./steps";
+import { AnatomyStep, AnnotatedValuesStep, BuildCandleStep, CompareStep, FlipCardsStep, ProcessStep, RatioExplorerStep, TakeawaysStep } from "./sections";
 
 /**
  * The lesson player: the real FTA content, in FIC's shell.
@@ -128,6 +129,15 @@ function StepHost({ spec, register, xpNote, onResolve }: { spec: StepSpec; regis
     case "match_pairs": return <MatchPairsStep spec={spec} {...p} />;
     case "prediction": return <PredictionStep spec={spec} {...p} />;
     case "real_world": return <RealWorldStep spec={spec} {...p} />;
+    // FTA University section vocabulary — see components/lesson/sections.tsx
+    case "anatomy": return <AnatomyStep spec={spec} {...p} />;
+    case "compare": return <CompareStep spec={spec} {...p} />;
+    case "process": return <ProcessStep spec={spec} {...p} />;
+    case "annotated_values": return <AnnotatedValuesStep spec={spec} {...p} />;
+    case "flip_cards": return <FlipCardsStep spec={spec} {...p} />;
+    case "build_candle": return <BuildCandleStep spec={spec} {...p} />;
+    case "ratio_explorer": return <RatioExplorerStep spec={spec} {...p} />;
+    case "takeaways": return <TakeawaysStep spec={spec} {...p} />;
     default: return <div className="flex-1 flex items-center justify-center text-[12.5px] font-bold text-ink-3">This step type isn&apos;t supported yet.</div>;
   }
 }

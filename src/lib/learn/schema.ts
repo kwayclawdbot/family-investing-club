@@ -27,7 +27,93 @@ export interface ExplainerBeat {
   audio?: AudioAsset;
 }
 
-export interface BaseStep { id: string; type: string; skill?: SkillId; audio?: StepAudio }
+/**
+ * The eyebrow above a section — the teaching move it is making, in the member's words.
+ * Ported from the FTA University lesson format, where the label is what gives a long lesson
+ * its rhythm: the reader always knows whether they are being told, shown, or tested.
+ */
+export type SectionLabel =
+  | "CORE CONCEPT" | "INTERACTIVE" | "KEY DISTINCTION" | "PROCESS" | "LIVE EXAMPLE"
+  | "DATA VISUALIZATION" | "PRACTICE" | "EXERCISE" | "DEEPER INSIGHT" | "KNOWLEDGE CHECK" | "WRAP UP";
+
+export interface BaseStep { id: string; type: string; skill?: SkillId; audio?: StepAudio; label?: SectionLabel }
+
+/** One candle, in prices. Every candle-shaped section draws from this. */
+export interface CandleSpec { open: number; high: number; low: number; close: number }
+export type CandlePart = "open" | "high" | "low" | "close" | "body" | "upper_wick" | "lower_wick";
+
+/* ── INTERACTIVE — tap each labelled part of a candle to learn what it is ── */
+export interface AnatomyStep extends BaseStep {
+  type: "anatomy";
+  heading: string;
+  caption?: string;
+  candle: CandleSpec;
+  hotspots: { part: CandlePart; title: string; body: string }[];
+}
+
+/* ── KEY DISTINCTION — two things held side by side ── */
+export interface CompareStep extends BaseStep {
+  type: "compare";
+  heading: string;
+  intro?: string;
+  columns: { title: string; tone: "green" | "red" | "neutral"; candle?: CandleSpec; points: string[] }[];
+  note?: string;
+}
+
+/* ── PROCESS — a sequence you run every time, revealed one move at a time ── */
+export interface ProcessStep extends BaseStep {
+  type: "process";
+  heading: string;
+  intro?: string;
+  moves: { title: string; body: string }[];
+  closing?: string;
+}
+
+/* ── LIVE EXAMPLE — a real quote, each number tappable for what it means ── */
+export interface AnnotatedValuesStep extends BaseStep {
+  type: "annotated_values";
+  heading: string;
+  subject: string;
+  candle: CandleSpec;
+  values: { part: CandlePart; label: string; value: string; meaning: string }[];
+  caption?: string;
+}
+
+/* ── PRACTICE — flip to learn ── */
+export interface FlipCardsStep extends BaseStep {
+  type: "flip_cards";
+  heading: string;
+  intro?: string;
+  cards: { front: string; back: string }[];
+}
+
+/* ── EXERCISE — build a candle to a spec, hands on the controls ── */
+export interface BuildCandleStep extends BaseStep {
+  type: "build_candle";
+  heading: string;
+  prompt: string;
+  target: CandleSpec;
+  tolerance?: number;
+  hint?: string;
+  success: string;
+}
+
+/* ── DEEPER INSIGHT — a slider that moves through a spectrum, commentary following it ── */
+export interface RatioExplorerStep extends BaseStep {
+  type: "ratio_explorer";
+  heading: string;
+  intro?: string;
+  /** Bands are read in order; the first whose `upTo` is >= the current body share wins. */
+  bands: { upTo: number; title: string; body: string; tone: "green" | "red" | "neutral" }[];
+}
+
+/* ── WRAP UP — what to carry out of the lesson ── */
+export interface TakeawaysStep extends BaseStep {
+  type: "takeaways";
+  heading: string;
+  points: string[];
+  closing?: string;
+}
 
 export interface ExplainerStep extends BaseStep {
   type: "explainer";
@@ -113,7 +199,10 @@ export interface RealWorldStep extends BaseStep {
   successText: string;
 }
 
-export type StepSpec = ExplainerStep | MultipleChoiceStep | TrueFalseStep | MatchPairsStep | PredictionStep | RealWorldStep;
+export type StepSpec =
+  | ExplainerStep | MultipleChoiceStep | TrueFalseStep | MatchPairsStep | PredictionStep | RealWorldStep
+  | AnatomyStep | CompareStep | ProcessStep | AnnotatedValuesStep | FlipCardsStep | BuildCandleStep
+  | RatioExplorerStep | TakeawaysStep;
 export type StepType = StepSpec["type"];
 
 export interface LessonJSON {
