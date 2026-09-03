@@ -1,0 +1,264 @@
+{
+  "lessons": [
+    {
+      "match": { "course": "fta-trade-ready", "title": "Live Class: Market Structure & Who Moves Price" },
+      "json": {
+        "schema": 1,
+        "title": "Market structure — who really moves the price",
+        "skills": ["technical_analysis"],
+        "difficulty": 4,
+        "audience": ["adult", "teen"],
+        "duration_minutes": 16,
+        "xp": 50,
+        "guide": {
+          "intro": "You can read a chart. This week you find out who wrote it.",
+          "outro": "Structure is the record. Next week, the zones that make it."
+        },
+        "steps": [
+          {
+            "id": "concept",
+            "type": "explainer",
+            "label": "CORE CONCEPT",
+            "skill": "technical_analysis",
+            "heading": "Price moves because someone has to fill an order",
+            "figure": { "kind": "stat", "value": "One buyer, many prices", "caption": "The reason a chart has a shape at all" },
+            "body": [
+              "A fund that wants two million shares cannot buy two million shares at one price. There is nobody on the other side offering that much at any single number. So the order gets worked — filled in pieces, at whatever prices there are sellers, over hours or days.",
+              "Every one of those fills moves the price a little further away from where they started. That is what you have been looking at for five belts: the track left behind by orders too large to fill in one go.",
+              "Market structure is how you read that track. It is not a pattern or an indicator. It is the sequence of highs and lows the market has actually made, in order, and it tells you which side has been getting filled."
+            ]
+          },
+          {
+            "id": "swings",
+            "type": "anatomy",
+            "label": "INTERACTIVE",
+            "skill": "technical_analysis",
+            "heading": "The four points that define structure",
+            "caption": "Tap each part. Structure is only ever these, in sequence.",
+            "candle": { "open": 112, "high": 130, "low": 106, "close": 124 },
+            "hotspots": [
+              { "part": "high", "title": "A swing high", "body": "A point price reached and then turned away from. It matters because the sellers who stopped it there are on record — and the buyers who bought under it left stop orders below." },
+              { "part": "low", "title": "A swing low", "body": "A point price fell to and then turned up from. Buyers stepped in here once. Until price closes below it, that is still the last place they defended." },
+              { "part": "body", "title": "The move between them", "body": "The distance from one swing to the next is the part that was filled in a hurry. A long body means the order ran out of willing sellers on the way." },
+              { "part": "open", "title": "Where the leg began", "body": "Structure is read leg by leg. The start of a leg is the last point the other side had control." },
+              { "part": "close", "title": "Where the leg ended", "body": "The close is what confirms a leg finished. A wick past a level is an attempt; a close past it is a result. This distinction decides every read in this course." }
+            ]
+          },
+          {
+            "id": "distinction",
+            "type": "compare",
+            "label": "KEY DISTINCTION",
+            "skill": "technical_analysis",
+            "heading": "A pullback, or a break of structure",
+            "intro": "Both look like price going the wrong way. Only one changes what you should do.",
+            "columns": [
+              {
+                "title": "Pullback — trend intact",
+                "tone": "green",
+                "candle": { "open": 118, "high": 128, "low": 114, "close": 125 },
+                "points": ["Price dips but holds above the last swing low", "The higher low is still higher", "The order being filled is still being filled", "You are looking for a place to join, not to leave"]
+              },
+              {
+                "title": "Break — trend in question",
+                "tone": "red",
+                "candle": { "open": 124, "high": 126, "low": 108, "close": 111 },
+                "points": ["Price CLOSES below the last swing low", "The sequence of higher lows is broken", "Whoever was being filled has stopped, or reversed", "The prior read is void until new structure forms"]
+              }
+            ],
+            "note": "The test is a close, never a wick. A wick below the low is an attempt that failed; a close below it is the attempt succeeding. Every rule in this course rests on that one distinction."
+          },
+          {
+            "id": "process",
+            "type": "process",
+            "label": "PROCESS",
+            "skill": "technical_analysis",
+            "heading": "Mapping structure, in four moves",
+            "intro": "Do this before anything else on a chart. It takes under a minute once it is habit.",
+            "moves": [
+              { "title": "Zoom out first", "body": "Start on the daily, whatever you intend to trade. The biggest clock has the biggest crowd behind it, and the bigger crowd outranks the smaller one when they disagree." },
+              { "title": "Mark the obvious swings only", "body": "The turns you would point at from across the room. If you have to squint to justify a swing, it is not one — you are drawing your opinion, not the market's record." },
+              { "title": "Read the sequence out loud", "body": "Higher high, higher low, higher high — that is an uptrend and you say so. The moment you cannot say it cleanly, the market is in a range, and a range is a different game." },
+              { "title": "Find the last decision point", "body": "The most recent swing low in an uptrend, or swing high in a downtrend. That single level is what would have to give way for your read to be wrong. Everything else is commentary." }
+            ],
+            "closing": "You now have a direction and the one price that would break it. That pair is the whole output of structure work, and it is what the next four weeks are built on."
+          },
+          {
+            "id": "live",
+            "type": "annotated_values",
+            "label": "LIVE EXAMPLE",
+            "skill": "technical_analysis",
+            "heading": "Tesla's wall, and the recovery under it",
+            "subject": "Tesla · Daily · 23 July 2026",
+            "caption": "The day that built the level. Tap each number.",
+            "candle": { "open": 341.0, "high": 342.11, "low": 319.0, "close": 319.69 },
+            "values": [
+              { "part": "open", "label": "Open", "value": "$341.00", "meaning": "The day opened right at the top of the prior range — the highest anyone had been willing to pay." },
+              { "part": "high", "label": "High", "value": "$342.11", "meaning": "Buyers got just over a dollar further, and stopped. This is where the selling was waiting, and it is why 341–342 became a wall the market kept respecting for weeks." },
+              { "part": "low", "label": "Low", "value": "$319.00", "meaning": "The distance from 342 to 319 in one session is the shape of an order that had to be worked through every bid on the way down." },
+              { "part": "close", "label": "Close", "value": "$319.69", "meaning": "Closing at the low is a break of structure, not a pullback. Everything after this day was a recovery underneath a known ceiling." }
+            ]
+          },
+          {
+            "id": "insight",
+            "type": "explainer",
+            "label": "DEEPER INSIGHT",
+            "skill": "technical_analysis",
+            "heading": "Why a level is a level",
+            "body": [
+              "A price becomes important because of what happened there, not because of the number. At 341 a large seller was filled. That is a fact about supply, and it does not evaporate when the day ends.",
+              "It matters twice. Anyone who sold there and was right will sell there again. And anyone who bought just under it and got hurt will take the first chance to get out at break-even — which is more selling, at the same price, for a different reason.",
+              "So a level is not a line on your screen. It is a queue of resting orders, and it holds until that queue is used up. When you hear that price is 'respecting' a level, this is the whole mechanism.",
+              "Read a chart as a map of where the orders are, and it stops being a picture of the past."
+            ]
+          },
+          {
+            "id": "check-1",
+            "type": "multiple_choice",
+            "label": "KNOWLEDGE CHECK",
+            "skill": "technical_analysis",
+            "question": "In an uptrend, price wicks below the last swing low and closes back above it. What has happened to the structure?",
+            "options": [
+              "The uptrend is broken — a new low was made",
+              "The uptrend is intact — the low held on a closing basis",
+              "Nothing can be said until the next daily candle",
+              "The trend becomes a range automatically"
+            ],
+            "correctIndex": 1,
+            "explanation": "A wick is an attempt; a close is a result. Price reached below the low and was rejected, which is the low doing its job.",
+            "wrongFeedback": [
+              { "text": "A low is broken by a CLOSE below it, not by a wick reaching under it. The wick is the attempt failing.", "kai": true },
+              null,
+              { "text": "The candle in question has already closed — that is the information. Waiting for another one is a different decision.", "kai": true },
+              { "text": "A trend becomes a range when the sequence of higher highs and higher lows stops, which has not happened here.", "kai": true }
+            ],
+            "reinforce": "Closes, never wicks. This single rule decides more calls than anything else in the course."
+          },
+          {
+            "id": "check-2",
+            "type": "multiple_choice",
+            "label": "KNOWLEDGE CHECK",
+            "skill": "technical_analysis",
+            "question": "The daily says uptrend and the five-minute says downtrend. Which one sets your direction?",
+            "options": [
+              "The five-minute — it is the most recent information",
+              "The daily — the bigger clock carries the bigger crowd",
+              "Neither, they cancel out and you stand aside",
+              "Whichever agrees with your existing position"
+            ],
+            "correctIndex": 1,
+            "explanation": "A daily candle is every large participant voting across a full session; a five-minute candle is a few thousand fast traders. The big clock sets direction, the small clock sets timing.",
+            "wrongFeedback": [
+              { "text": "Most recent is not the same as most important. The five-minute is where you time an entry, not where you decide which way to face.", "kai": true },
+              null,
+              { "text": "They do not cancel. A pullback on a small clock inside an uptrend on a big one is the most ordinary thing on a chart — and often the opportunity.", "kai": true },
+              { "text": "That is the position talking, not the chart. The ladder is read top-down regardless of what you already hold.", "kai": true }
+            ],
+            "reinforce": "Top-down, every time. Big clocks set direction, small clocks set timing."
+          },
+          {
+            "id": "wrap",
+            "type": "takeaways",
+            "label": "WRAP UP",
+            "heading": "Key takeaways",
+            "points": [
+              "Price moves because orders too large to fill at one price get worked through the book. The chart is the track they leave.",
+              "Structure is the sequence of swing highs and lows, read in order — not a pattern and not an indicator.",
+              "A pullback holds the last swing; a break closes through it. The test is always a close, never a wick.",
+              "A level matters because of the orders filled there, and because of the traders trapped just under it.",
+              "The output of structure work is two things: a direction, and the one price that would prove it wrong."
+            ],
+            "closing": "Next: the zones those big orders were filled in, and why price keeps coming back to them."
+          }
+        ]
+      }
+    },
+    {
+      "match": { "course": "fta-trade-ready", "title": "Drill: Map the Structure on 3 Charts" },
+      "json": {
+        "schema": 1,
+        "title": "Drill — map the structure on three charts",
+        "skills": ["technical_analysis"],
+        "difficulty": 4,
+        "audience": ["adult", "teen"],
+        "duration_minutes": 8,
+        "xp": 50,
+        "guide": { "intro": "Three charts. Call the structure before you read the answer." },
+        "steps": [
+          {
+            "id": "brief",
+            "type": "explainer",
+            "label": "PROCESS",
+            "heading": "How this drill is graded",
+            "body": [
+              "Three charts, one question each. Decide before you tap — a call you revise after seeing the options is not a call.",
+              "You are not being asked to predict anything. You are being asked to say what the market has already done, which is the only thing structure can tell you."
+            ]
+          },
+          {
+            "id": "d1",
+            "type": "prediction",
+            "label": "EXERCISE",
+            "skill": "technical_analysis",
+            "question": "Price makes 100, pulls to 94, runs to 112, pulls to 103, runs to 121. What is the structure?",
+            "options": [
+              { "label": "Uptrend — higher highs and higher lows", "value": "up" },
+              { "label": "Range — no clear sequence", "value": "range" },
+              { "label": "Downtrend", "value": "down" }
+            ],
+            "outcomeValue": "up",
+            "reveal": {
+              "headline": "Uptrend, cleanly",
+              "body": "Highs 100 → 112 → 121, lows 94 → 103. Both sequences rising, so you can say it out loud without squinting. That is the test."
+            }
+          },
+          {
+            "id": "d2",
+            "type": "prediction",
+            "label": "EXERCISE",
+            "skill": "technical_analysis",
+            "question": "An uptrend has its last swing low at 103. Price now trades to 101 intraday but the daily candle closes at 106. Broken?",
+            "options": [
+              { "label": "Broken — price traded below 103", "value": "broken" },
+              { "label": "Intact — the close held above 103", "value": "intact" },
+              { "label": "Cannot tell without volume", "value": "volume" }
+            ],
+            "outcomeValue": "intact",
+            "reveal": {
+              "headline": "Intact — and this is the whole rule",
+              "body": "The wick to 101 is the attempt. The close at 106 is the result. Traders who called this broken sold the low of the pullback, which is exactly what the wick was there to collect."
+            }
+          },
+          {
+            "id": "d3",
+            "type": "prediction",
+            "label": "EXERCISE",
+            "skill": "technical_analysis",
+            "question": "Tesla closed at 319.69 on 23 July after opening at 341.00 — its low of the day, and below the prior swing low. What is the read the next morning?",
+            "options": [
+              { "label": "Uptrend continues, this was a pullback", "value": "up" },
+              { "label": "Structure is broken; 341–342 is now a ceiling above", "value": "broken" },
+              { "label": "Buy it, that is a discount", "value": "buy" }
+            ],
+            "outcomeValue": "broken",
+            "reveal": {
+              "headline": "Broken — and the wall is now overhead",
+              "body": "A close at the low, through the prior swing low, is a break of structure. Everything Tesla did for the next three weeks happened underneath 341–342, and it took until 13 August to get back within a dollar of it. Real session, real numbers."
+            }
+          },
+          {
+            "id": "wrap",
+            "type": "takeaways",
+            "label": "WRAP UP",
+            "heading": "What the drill was testing",
+            "points": [
+              "Say the sequence out loud. If you cannot, it is a range, not a trend you are being clever about.",
+              "Wick below, close above: the level held. That is not a technicality, it is the level working.",
+              "A break of structure changes the map — the broken level becomes the ceiling you now trade beneath."
+            ],
+            "closing": "Three for three, or go back to the class and re-read the four moves. There is no shame in the second option and a lot of cost in skipping it."
+          }
+        ]
+      }
+    }
+  ]
+}

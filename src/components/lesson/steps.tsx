@@ -176,7 +176,7 @@ export function PredictionStep({ spec, register, onResolve }: StepComponentProps
   const paras = spec.reveal.body.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
   return (
     <div className="fic-section flex-1 flex flex-col">
-      <Eyebrow tone="purple">Make a prediction</Eyebrow>
+      <Eyebrow tone="purple">{spec.label ?? "Make a prediction"}</Eyebrow>
       <h1 className="mt-2 text-[22px] font-black text-ink leading-[1.3] text-pretty">{spec.question}</h1>
       <div className="mt-[18px] flex flex-col gap-[10px]" role="radiogroup" aria-label="Predictions">
         {spec.options.map((o, i) => (

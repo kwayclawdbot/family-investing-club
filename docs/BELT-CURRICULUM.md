@@ -11,10 +11,15 @@ supplying the kid voice. Page references are given so an author can open the boo
 
 ---
 
-## 0. One thing to settle first: the ladder says Purple, not Green
+## 0. The ladder — settled 2026-09-03
 
-The shipped ladder in `src/lib/belts.ts` is **7 levels across 5 colours**, and the fifth colour is
-purple, not green:
+Done. Level 5 is Green and level 6 is Blue; purple is retired (it is Kai's colour everywhere else in
+the app, so a purple belt put the assistant's identity on a member). No threshold moved, so nobody's
+level changed. A second belt module on the server had drifted onto a *different* mapping of the same
+thresholds — a member on 400 XP read as Yellow I in the app and Blue I in Kai's replies and the drip
+emails — and both now resolve identically at every level.
+
+The ladder as it stood before the change:
 
 | Level | Shipped today | Min XP |
 |---:|---|---:|
@@ -30,13 +35,7 @@ You asked for White → Yellow → **Green** → **Blue** → Black. That is not
 same seven levels with two colours changed and swapped: level 5 becomes **Green**, level 6 becomes
 **Blue**. The XP thresholds do not move and nobody's belt is taken away.
 
-**Recommendation: make the change.** Beyond matching what you asked for, purple is already spoken
-for — it is Kai's colour everywhere in the app (`--purple` is the assistant and club accent, used on
-the Kai spark, the guide line, and every Kai surface). A purple belt puts the assistant's identity on
-a member's chest. Green is free, and it already reads as "growing" in this palette.
-
-The edit is two lines in `src/lib/belts.ts` plus dropping `"purple"` from `BeltColor` in
-`src/lib/types.ts`. **This document is written against the corrected ladder.**
+**The ladder now in force:**
 
 | Level | Belt | Min XP | Course | Lessons |
 |---:|---|---:|---|---:|
@@ -277,7 +276,26 @@ after it resolves. Graded on the process, not the outcome.
 
 ---
 
-## 6. BLACK BELT — *Trade Ready*
+## 6. BLACK BELT — *Trade Ready* ✅ BUILT 2026-09-03
+
+**Black Belt is the first tier of FTA, not the end of the road.** Reaching it means you can run the
+model. What comes after it is not more theory — it is implementable strategies, and in a martial art
+that structure already has a name: degrees. Black Belt gets you into the academy; the degrees are
+where you are handed playbooks you can actually run.
+
+| | What it certifies | Shape |
+|---|---|---|
+| **Black Belt** | You can execute the model on a chart you have never seen | The 6-week Trade Ready programme below — built |
+| **Black Belt, 1st degree** | One complete strategy, run to a written record | A single playbook: entry, management, exit, expectancy |
+| **2nd degree** | A second strategy, and knowing which one today is for | Two playbooks and the judgement to pick between them |
+| **3rd degree** | Your own | A strategy you built, backtested and defended |
+
+Degrees sit above level 7 and are not XP-gated — XP has done its job by then. Each is earned by
+submitting a graded record, not by finishing lessons. **Not built; the tier structure is the
+decision, the playbooks are the next scope.**
+
+---
+
 
 **The promise:** you can execute a defined model on a live chart, and you have proved it on a fresh
 one under observation.

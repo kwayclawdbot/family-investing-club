@@ -1,0 +1,474 @@
+{
+  "lessons": [
+    {
+      "match": { "course": "fta-trade-ready", "title": "Live Class: Supply & Demand Zones" },
+      "json": {
+        "schema": 1,
+        "title": "Supply and demand zones",
+        "skills": ["technical_analysis"],
+        "difficulty": 4,
+        "audience": ["adult", "teen"],
+        "duration_minutes": 16,
+        "xp": 50,
+        "guide": { "intro": "Last week: the track. This week: the places the track was made.", "outro": "You can find where the orders were. Next: what happens when the market goes hunting for yours." },
+        "steps": [
+          {
+            "id": "concept",
+            "type": "explainer",
+            "label": "CORE CONCEPT",
+            "skill": "technical_analysis",
+            "heading": "A zone is where an order was filled",
+            "body": [
+              "Before price makes a sharp move it usually does very little — a few small candles in a tight area. That quiet patch is not indecision. It is a large order being accumulated quietly, before the move that shows everyone it exists.",
+              "The area of those small candles is the zone. It is drawn from the last quiet candle before the impulse: the top and bottom of that candle's range, extended forward as a band.",
+              "It is a band and not a line because the order was filled across a range of prices, not at one. Drawing it as a single line is the most common way beginners make a good idea unusable — price misses their line by twelve cents and they conclude the method does not work."
+            ]
+          },
+          {
+            "id": "distinction",
+            "type": "compare",
+            "label": "KEY DISTINCTION",
+            "skill": "technical_analysis",
+            "heading": "A level and a zone are not the same thing",
+            "intro": "You have used levels since Yellow Belt. A zone is a different object with a different rule.",
+            "columns": [
+              {
+                "title": "Level — one price",
+                "tone": "neutral",
+                "points": ["Drawn where price turned before", "Matters because of memory and round numbers", "Either respected or broken, cleanly", "Fine on a daily chart, useless at execution zoom"]
+              },
+              {
+                "title": "Zone — a band",
+                "tone": "green",
+                "points": ["Drawn from the base before an impulse", "Matters because orders were actually filled there", "Has an edge you enter at and an edge that invalidates", "Survives the noise a line cannot"]
+              }
+            ],
+            "note": "The practical difference: a level gives you a price. A zone gives you a price to act at AND a price to be wrong at — which is what you need to size a position at Blue Belt."
+          },
+          {
+            "id": "drawing",
+            "type": "anatomy",
+            "label": "INTERACTIVE",
+            "skill": "technical_analysis",
+            "heading": "Drawing the zone off the base candle",
+            "caption": "The last quiet candle before the move. Tap each part to see what it becomes.",
+            "candle": { "open": 118, "high": 121, "low": 116, "close": 119 },
+            "hotspots": [
+              { "part": "high", "title": "The top of the zone", "body": "The high of the base candle. For a demand zone below price this is the first edge price touches on its way back — the proximal edge, where you act." },
+              { "part": "low", "title": "The bottom of the zone", "body": "The low of the base candle. This is the distal edge: the price that says the zone has failed. Your invalidation lives here, not one tick under it." },
+              { "part": "body", "title": "The quiet body", "body": "Small, because nothing was resolved yet. A big body here means the move already happened and you are drawing a zone around the result instead of the cause." },
+              { "part": "open", "title": "Why it was quiet", "body": "A large buyer working an order does not want to move the price against themselves. Quiet is the point — the calm is the accumulation." },
+              { "part": "close", "title": "What comes next", "body": "The candle after this one leaves the area fast. That impulse is what proves the base was a base, and you can only draw the zone in hindsight because of it." }
+            ]
+          },
+          {
+            "id": "process",
+            "type": "process",
+            "label": "PROCESS",
+            "skill": "technical_analysis",
+            "heading": "Drawing a zone you can actually trade",
+            "intro": "Four moves, in this order. Skipping the first is how people end up with forty zones on a chart and no decisions.",
+            "moves": [
+              { "title": "Find the impulse first", "body": "Look for the move that broke structure — the leg that went somewhere in a hurry. No impulse, no zone. You are looking backwards from a result, not scanning for shapes." },
+              { "title": "Walk back to the last quiet candle", "body": "From the start of the impulse, step back until the candles go small. That final small candle before the run is the base." },
+              { "title": "Mark its high and low, extend right", "body": "Two lines from one candle, drawn forward. Not the whole consolidation, not the wick of the impulse — one candle." },
+              { "title": "Mark it used once price returns", "body": "A zone is spent when price has traded back into it and left again. The orders that made it have been filled. A used zone is history; only unmitigated zones are live." }
+            ],
+            "closing": "Three or four live zones on a chart is a working map. Twenty is a wall, and a wall tells you nothing."
+          },
+          {
+            "id": "insight",
+            "type": "explainer",
+            "label": "DEEPER INSIGHT",
+            "skill": "technical_analysis",
+            "heading": "Why price comes back at all",
+            "body": [
+              "The obvious question is why price would return to a zone rather than simply carry on. The answer is in the first lesson of this belt: the order was never fully filled.",
+              "A buyer who wanted two million shares and got six hundred thousand before price ran away still wants the rest. They will not chase — chasing costs them the price advantage they were working for. They leave the balance resting where they were filling, and wait.",
+              "That is what an unmitigated zone is: unfinished business. Price returns, the rest of the order fills, and the move continues. Once it has been filled, the reason for the zone is gone — which is why a zone that has already been traded back into is not a zone any more.",
+              "Everything in this week reduces to one sentence: find the unfinished business, and stand where it is."
+            ]
+          },
+          {
+            "id": "check-1",
+            "type": "multiple_choice",
+            "label": "KNOWLEDGE CHECK",
+            "skill": "technical_analysis",
+            "question": "Price has already returned into a demand zone, bounced, and moved away. What is that zone now?",
+            "options": [
+              "Stronger — it has been proven to work",
+              "Spent — the order that made it has been filled",
+              "Unchanged — zones do not expire",
+              "Inverted — it becomes a supply zone"
+            ],
+            "correctIndex": 1,
+            "explanation": "The zone existed because an order was unfinished. Once price has traded back in, the balance is filled and the reason is gone. Second visits are much weaker than first ones.",
+            "wrongFeedback": [
+              { "text": "It worked precisely once, and that is what used it up. A zone is fuel, not a wall.", "kai": true },
+              null,
+              { "text": "They expire by being used. That is the whole mechanism — unfinished business, then finished.", "kai": true },
+              { "text": "That is a role flip, which is about a broken level. A mitigated zone is simply spent, not reversed.", "kai": true }
+            ],
+            "reinforce": "Unmitigated means untouched since it was formed. Only those are live."
+          },
+          {
+            "id": "check-2",
+            "type": "multiple_choice",
+            "label": "KNOWLEDGE CHECK",
+            "skill": "technical_analysis",
+            "question": "Where does the invalidation for a demand-zone entry belong?",
+            "options": [
+              "A fixed percentage below the entry",
+              "Below the bottom edge of the zone",
+              "At the top edge, to keep the loss small",
+              "Wherever the position size requires"
+            ],
+            "correctIndex": 1,
+            "explanation": "The bottom edge is the price at which the idea is wrong — the order clearly was not there. A stop above it is inside the noise the zone exists to absorb.",
+            "wrongFeedback": [
+              { "text": "A percentage knows nothing about this chart. The stop belongs where the idea fails, and the chart says where that is.", "kai": true },
+              null,
+              { "text": "That puts the stop inside the zone, so ordinary movement within the band takes you out. Small stops are not the same as good stops.", "kai": true },
+              { "text": "Backwards, and this is the most expensive habit in trading. The chart sets the stop; the stop sets the size. Never the other way round." , "kai": true }
+            ],
+            "reinforce": "The chart decides where you are wrong. Your account decides how much that costs."
+          },
+          {
+            "id": "wrap",
+            "type": "takeaways",
+            "label": "WRAP UP",
+            "heading": "Key takeaways",
+            "points": [
+              "A zone is the quiet base before an impulse — where a large order was being filled.",
+              "Draw it from one candle: its high and low, extended forward. A band, never a line.",
+              "Price returns because the order was never finished. That unfinished balance is the whole reason the method works.",
+              "A zone that price has already traded back into is spent. Only unmitigated zones are live.",
+              "The far edge of the zone is where the idea is wrong — which makes it the stop."
+            ],
+            "closing": "Next week: what happens when the market goes looking for the stops everyone put in the obvious place."
+          }
+        ]
+      }
+    },
+    {
+      "match": { "course": "fta-trade-ready", "title": "Drill: Draw 3 Zones on Real Charts" },
+      "json": {
+        "schema": 1,
+        "title": "Drill — draw three zones",
+        "skills": ["technical_analysis"],
+        "difficulty": 4,
+        "audience": ["adult", "teen"],
+        "duration_minutes": 8,
+        "xp": 50,
+        "steps": [
+          {
+            "id": "brief",
+            "type": "explainer",
+            "label": "PROCESS",
+            "heading": "Three zones, three decisions",
+            "body": ["Each one asks where the zone is, or whether there is one at all. The second option is right more often than people expect."]
+          },
+          {
+            "id": "d1",
+            "type": "prediction",
+            "label": "EXERCISE",
+            "skill": "technical_analysis",
+            "question": "Price drifts sideways between 118 and 121 for four candles, then runs from 121 to 138 in two. Where is the demand zone?",
+            "options": [
+              { "label": "116–121, the whole sideways patch", "value": "all" },
+              { "label": "The high and low of the last quiet candle before the run", "value": "last" },
+              { "label": "121–138, the impulse itself", "value": "impulse" }
+            ],
+            "outcomeValue": "last",
+            "reveal": {
+              "headline": "The last quiet candle, and only that one",
+              "body": "The whole patch is too wide to trade — a stop under 116 on an entry at 121 is a loss you did not need to take. The impulse is the result, not the cause. One candle, its high and its low."
+            }
+          },
+          {
+            "id": "d2",
+            "type": "prediction",
+            "label": "EXERCISE",
+            "skill": "technical_analysis",
+            "question": "A zone formed three weeks ago. Price has been back into it twice since and bounced both times. You are looking at it now. Is it tradeable?",
+            "options": [
+              { "label": "Yes — twice proven makes it the strongest zone on the chart", "value": "strong" },
+              { "label": "No — it has been mitigated, twice over", "value": "spent" },
+              { "label": "Only with a wider stop", "value": "wider" }
+            ],
+            "outcomeValue": "spent",
+            "reveal": {
+              "headline": "Spent — and the bounces are why",
+              "body": "Every visit fills more of what was resting there. A zone is not a wall that gets stronger with each hit; it is fuel that gets used. The third visit is where beginners buy and the order that made the zone is no longer there to catch them."
+            }
+          },
+          {
+            "id": "d3",
+            "type": "prediction",
+            "label": "EXERCISE",
+            "skill": "technical_analysis",
+            "question": "Tesla sold from 341–342 on 23 July and did not trade back to it until 13 August. What was that band for those three weeks?",
+            "options": [
+              { "label": "An unmitigated supply zone overhead", "value": "unmitigated" },
+              { "label": "A spent zone with no further meaning", "value": "spent" },
+              { "label": "A demand zone, because price rose toward it", "value": "demand" }
+            ],
+            "outcomeValue": "unmitigated",
+            "reveal": {
+              "headline": "Unmitigated supply — and it held on the retest",
+              "body": "Untouched for three weeks means the selling that made it was never finished. When Tesla finally got there on 13 August it stopped at 341.64 — sixty cents short — and closed at 339.96. Real session. The band did exactly what an unmitigated zone is supposed to do."
+            }
+          },
+          {
+            "id": "wrap",
+            "type": "takeaways",
+            "label": "WRAP UP",
+            "heading": "What the drill was testing",
+            "points": [
+              "One candle makes the zone, not the whole consolidation and not the impulse.",
+              "Visits use a zone up. Twice-tested is not twice as strong, it is twice as spent.",
+              "Untouched since it formed is the only thing that makes a zone live."
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "match": { "course": "fta-trade-ready", "title": "Live Class: Liquidity Sweeps (The Bait & the Grab)" },
+      "json": {
+        "schema": 1,
+        "title": "Liquidity sweeps — the bait and the grab",
+        "skills": ["technical_analysis"],
+        "difficulty": 5,
+        "audience": ["adult", "teen"],
+        "duration_minutes": 17,
+        "xp": 50,
+        "guide": { "intro": "The move that makes people quit trading, explained.", "outro": "You now know why you got stopped out and then watched it go." },
+        "steps": [
+          {
+            "id": "concept",
+            "type": "explainer",
+            "label": "CORE CONCEPT",
+            "skill": "technical_analysis",
+            "heading": "Your stop is somebody else's fill",
+            "figure": { "kind": "quote", "value": "A stop loss is a market order with a trigger price.", "caption": "Which is exactly what a large buyer is looking for" },
+            "body": [
+              "When you place a stop below a swing low, you have left a resting sell order at that price. So has everyone else who read the same chart the same way. A shelf of equal lows is therefore a shelf of stop orders, sitting in a known place.",
+              "A large buyer needs sellers. Below that shelf is a pile of guaranteed sellers, and the only thing standing between them is a few cents of price. Pushing price down into that shelf is not manipulation in any mysterious sense — it is going where the supply is.",
+              "The stops trigger, they sell, the large buyer takes the other side, and then price leaves in the opposite direction. That is the sweep: a move below an obvious low that reverses almost immediately.",
+              "It feels personal. It is not. It is arithmetic about where orders are resting."
+            ]
+          },
+          {
+            "id": "shape",
+            "type": "anatomy",
+            "label": "INTERACTIVE",
+            "skill": "technical_analysis",
+            "heading": "The shape a sweep leaves behind",
+            "caption": "Tap the parts. A swept low has a signature you can name.",
+            "candle": { "open": 121, "high": 124, "low": 108, "close": 122 },
+            "hotspots": [
+              { "part": "low", "title": "The grab", "body": "A long spike below the shelf of equal lows. This is where the resting stop orders were triggered and filled. The further it goes, the more it collected." },
+              { "part": "lower_wick", "title": "The rejection", "body": "The wick is the whole story: price went there and could not stay. Everything sold into that spike was bought by someone who wanted it." },
+              { "part": "close", "title": "Back inside", "body": "The close returns above the level that was broken. A sweep is defined by this — break below, close back above. Break and STAY below is not a sweep, it is a genuine break." },
+              { "part": "body", "title": "Small body, high in the range", "body": "The classic signature. Almost all range, almost no net move, finishing near the top. If you had to describe the candle in one word it would be rejection." },
+              { "part": "high", "title": "What comes after", "body": "The move that follows a sweep is often fast, because the sellers who would have resisted it were just cleared out at the bottom." }
+            ]
+          },
+          {
+            "id": "distinction",
+            "type": "compare",
+            "label": "KEY DISTINCTION",
+            "skill": "technical_analysis",
+            "heading": "A sweep, or an actual break",
+            "intro": "Same first half. Completely opposite second half. Getting this wrong is expensive in both directions.",
+            "columns": [
+              {
+                "title": "Sweep — the trap",
+                "tone": "green",
+                "candle": { "open": 121, "high": 124, "low": 108, "close": 122 },
+                "points": ["Spikes through the low, closes back above", "Long wick, small body", "Sellers below were the fuel", "The reversal is the trade"]
+              },
+              {
+                "title": "Break — the real thing",
+                "tone": "red",
+                "candle": { "open": 121, "high": 122, "low": 107, "close": 109 },
+                "points": ["Trades through the low and CLOSES below", "Body carries the move, wick is small", "The level genuinely failed", "The continuation is the trade"]
+              }
+            ],
+            "note": "The distinction is the close, exactly as it has been since White Belt. What changes here is what you do with it: a close back above a swept low is not just 'the level held', it is a signal that the other side has been cleared out."
+          },
+          {
+            "id": "process",
+            "type": "process",
+            "label": "PROCESS",
+            "skill": "technical_analysis",
+            "heading": "Trading the sweep, not the bait",
+            "intro": "The order of these matters more than usual — the first two happen before anything interesting is on the screen.",
+            "moves": [
+              { "title": "Find the obvious low, before the event", "body": "Equal lows, a well-defined swing, the level everyone would draw. The more obvious it is, the more stops are resting under it, and the more attractive it is to sweep." },
+              { "title": "Wait. Do not pre-position", "body": "There is no way to know in advance whether the level holds, is swept, or genuinely breaks. Anyone who tells you otherwise is selling something. You are waiting for the market to declare." },
+              { "title": "Require the close back inside", "body": "The candle must close back above the level. Not trade back above — close. Until then, the more likely reading is a genuine break." },
+              { "title": "Enter on the reclaim, invalidate at the spike low", "body": "Your idea is that the sweep collected the sellers. If price returns below the spike low, it clearly did not, and you are out with a defined loss." }
+            ],
+            "closing": "The reason this works is not that you have found a secret. It is that you waited for the one piece of information — the close — that everyone who got stopped out did not wait for."
+          },
+          {
+            "id": "insight",
+            "type": "explainer",
+            "label": "DEEPER INSIGHT",
+            "skill": "technical_analysis",
+            "heading": "What changes right after a sweep",
+            "body": [
+              "The sweep is only half the signal. What makes it tradeable is what the market does next, and there is a specific thing to look for: a change of character.",
+              "In a downtrend, price has been making lower highs. After a sweep of the lows, watch the first push up. If it takes out the most recent lower high — closing above it — the sequence that defined the downtrend has just been broken for the first time.",
+              "That is the change of character. The sweep says the sellers were collected; the break of the last lower high says the buyers have taken control. One without the other is a guess.",
+              "This is also why the entry is not at the bottom of the spike. You are not trying to catch the low. You are waiting for the market to prove that the low was the low."
+            ]
+          },
+          {
+            "id": "check-1",
+            "type": "multiple_choice",
+            "label": "KNOWLEDGE CHECK",
+            "skill": "technical_analysis",
+            "question": "Price spikes 40 cents below a shelf of equal lows and closes 30 cents above it. What is the most likely reading?",
+            "options": [
+              "A genuine breakdown — the lows have gone",
+              "A sweep — the stops under the shelf were filled and price rejected",
+              "Nothing, the level is unchanged",
+              "A supply zone has formed at the spike low"
+            ],
+            "correctIndex": 1,
+            "explanation": "Below and back above within one candle is the signature. The sellers resting under the shelf were collected and the price would not stay down there.",
+            "wrongFeedback": [
+              { "text": "A breakdown requires a close below. This one closed above the level it broke.", "kai": true },
+              null,
+              { "text": "A great deal changed: everyone with a stop under that shelf is now flat, and their sell orders have been absorbed.", "kai": true },
+              { "text": "Zones form from a quiet base before an impulse, not from a rejection wick.", "kai": true }
+            ],
+            "reinforce": "Below and back above in one candle. That is the shape."
+          },
+          {
+            "id": "check-2",
+            "type": "multiple_choice",
+            "label": "KNOWLEDGE CHECK",
+            "skill": "technical_analysis",
+            "question": "You spot a beautiful shelf of equal lows. What is the correct action right now?",
+            "options": [
+              "Buy just above the lows, ahead of the sweep",
+              "Sell short — equal lows usually break",
+              "Nothing yet — wait for the market to declare",
+              "Place a buy order under the lows to catch the spike"
+            ],
+            "correctIndex": 2,
+            "explanation": "A shelf of equal lows can be swept, can break for real, or can simply hold. You cannot know which, and every version of guessing early costs money.",
+            "wrongFeedback": [
+              { "text": "That is buying the bait. If it is a genuine break you are long into it with your stop in the pile that gets collected.", "kai": true },
+              { "text": "Sometimes they do. Trading on 'usually', with no confirmation, is the definition of the gambler in this program.", "kai": true },
+              null,
+              { "text": "That order fills in the middle of the spike with no idea yet whether price is coming back. You would be catching the knife on purpose.", "kai": true }
+            ],
+            "reinforce": "The gambler hopes. The trader waits for the close."
+          },
+          {
+            "id": "wrap",
+            "type": "takeaways",
+            "label": "WRAP UP",
+            "heading": "Key takeaways",
+            "points": [
+              "A shelf of equal lows is a shelf of resting stop orders — a known pile of sellers.",
+              "A sweep goes below the shelf and CLOSES back above it. A break closes below and stays.",
+              "The signature candle is long wick, small body, closing high in its range.",
+              "Wait for the close. Pre-positioning either side of an obvious level is guessing with money.",
+              "Sweep plus a break of the last lower high is the confirmation. Sweep alone is half a signal."
+            ],
+            "closing": "Next: the gaps price leaves behind when it moves too fast, and why it comes back to fill them."
+          }
+        ]
+      }
+    },
+    {
+      "match": { "course": "fta-trade-ready", "title": "Drill: Find 3 Equal-Lows Charts & Predict the Sweep" },
+      "json": {
+        "schema": 1,
+        "title": "Drill — find equal lows, predict the sweep",
+        "skills": ["technical_analysis"],
+        "difficulty": 5,
+        "audience": ["adult", "teen"],
+        "duration_minutes": 8,
+        "xp": 50,
+        "steps": [
+          {
+            "id": "brief",
+            "type": "explainer",
+            "label": "PROCESS",
+            "heading": "Three setups, one question each",
+            "body": ["Two of these are about telling a sweep from a break. The third is about doing nothing, which is a skill and is graded like one."]
+          },
+          {
+            "id": "d1",
+            "type": "prediction",
+            "label": "EXERCISE",
+            "skill": "technical_analysis",
+            "question": "Equal lows at 218.40. A candle trades to 217.85 and closes at 217.90. Sweep or break?",
+            "options": [
+              { "label": "Sweep — it went below the shelf", "value": "sweep" },
+              { "label": "Break — it closed below and stayed", "value": "break" },
+              { "label": "Neither, too close to call", "value": "none" }
+            ],
+            "outcomeValue": "break",
+            "reveal": {
+              "headline": "Break — the close is below",
+              "body": "Going below the shelf is not what makes a sweep; coming back is. Closing at 217.90, beneath a level at 218.40, is the level failing. Long here on 'it must be a sweep' is how a small loss becomes a large one."
+            }
+          },
+          {
+            "id": "d2",
+            "type": "prediction",
+            "label": "EXERCISE",
+            "skill": "technical_analysis",
+            "question": "Same shelf at 218.40. The candle trades to 217.60 and closes at 219.10, with almost no body and a long lower wick. Then the next candle closes above the most recent lower high. What have you got?",
+            "options": [
+              { "label": "A sweep, unconfirmed — wait for more", "value": "unconfirmed" },
+              { "label": "A sweep plus a change of character — the setup is complete", "value": "confirmed" },
+              { "label": "A supply zone at 217.60", "value": "zone" }
+            ],
+            "outcomeValue": "confirmed",
+            "reveal": {
+              "headline": "Both halves are present",
+              "body": "The spike below with a close back above collected the sellers. The close above the last lower high says the downtrend sequence has broken for the first time. Sweep plus change of character is the whole signal — waiting past this point is waiting for comfort, not information."
+            }
+          },
+          {
+            "id": "d3",
+            "type": "prediction",
+            "label": "EXERCISE",
+            "skill": "technical_analysis",
+            "question": "Tesla opens 14 August at 342.33, above the 341–342 wall. It runs to 350.35, then at 10:10 closes at 347.03 — back inside the opening range. By 11:25 it is at 335.33. What was the 350.35 high?",
+            "options": [
+              { "label": "A breakout that simply failed on low volume", "value": "failed" },
+              { "label": "Liquidity above the wall being taken, with the trapped buyers becoming the fuel down", "value": "trap" },
+              { "label": "An unmitigated demand zone", "value": "demand" }
+            ],
+            "outcomeValue": "trap",
+            "reveal": {
+              "headline": "The bait, the grab, and the bill",
+              "body": "Opening above a three-week wall put every breakout buyer in at once, with stops beneath. The run to 350.35 took the resting orders above; the 10:10 close back inside the range trapped everyone who bought the break. Fifteen minutes of relief, then 335.33 by 11:25 — a twelve-dollar unwind. Real session, 14 August 2026."
+            }
+          },
+          {
+            "id": "wrap",
+            "type": "takeaways",
+            "label": "WRAP UP",
+            "heading": "What the drill was testing",
+            "points": [
+              "Below the shelf is not a sweep. Below and back above, on the close, is a sweep.",
+              "The confirmation is the change of character — the first break of the opposing sequence.",
+              "Trapped traders are fuel. When a break fails, the people who took it have to get out, and their exit is the next move."
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,677 @@
+{
+  "lessons": [
+    {
+      "match": { "course": "fta-trade-ready", "title": "Live Class: Fair Value Gaps" },
+      "json": {
+        "schema": 1,
+        "title": "Fair value gaps",
+        "skills": ["technical_analysis"],
+        "difficulty": 5,
+        "audience": ["adult", "teen"],
+        "duration_minutes": 15,
+        "xp": 50,
+        "guide": { "intro": "When price moves too fast, it leaves a hole. Holes get filled.", "outro": "You have the zones, the sweeps and the gaps. Next week they become one play." },
+        "steps": [
+          {
+            "id": "concept",
+            "type": "explainer",
+            "label": "CORE CONCEPT",
+            "skill": "technical_analysis",
+            "heading": "A gap is a price range that never traded properly",
+            "figure": { "kind": "stat", "value": "3 candles", "caption": "The smallest unit that can show an imbalance" },
+            "body": [
+              "Normal trading is two-sided: buyers and sellers meet at every price on the way up or down. When one side overwhelms the other, price jumps through a range so quickly that almost nobody transacts there.",
+              "You can see it in three candles. Take any candle with a large body, and look at the candle before it and the candle after it. If the high of the first candle is below the low of the third, there is a band of prices in the middle that the neighbours never touched. That band is the fair value gap.",
+              "It is called an imbalance because it is exactly that — a price range where the market never found a fair two-sided price. It got skipped.",
+              "Markets tend to come back and trade those ranges properly. Not always, not on a schedule, but often enough that an unfilled gap is one of the better places to expect a reaction."
+            ]
+          },
+          {
+            "id": "shape",
+            "type": "anatomy",
+            "label": "INTERACTIVE",
+            "skill": "technical_analysis",
+            "heading": "The three-candle gap",
+            "caption": "The middle candle is the impulse. Tap its parts.",
+            "candle": { "open": 112, "high": 134, "low": 111, "close": 132 },
+            "hotspots": [
+              { "part": "body", "title": "The impulse candle", "body": "The middle of the three. Large body, little hesitation. This is the move that was too fast for the other side to keep up with." },
+              { "part": "high", "title": "The top of the run", "body": "Where the impulse ran out. The gap is not measured from here — it is measured from the candles on either side of this one." },
+              { "part": "open", "title": "The gap's lower edge", "body": "The HIGH of the candle before the impulse. Below this, the market traded normally. Above it, for a stretch, it did not." },
+              { "part": "close", "title": "The gap's upper edge", "body": "The LOW of the candle after the impulse. Between this and the lower edge is the band nobody properly traded — the gap itself." },
+              { "part": "low", "title": "Where it started", "body": "The impulse began here. Note that the gap has nothing to do with this candle's own range — it is defined entirely by its neighbours." }
+            ]
+          },
+          {
+            "id": "distinction",
+            "type": "compare",
+            "label": "KEY DISTINCTION",
+            "skill": "technical_analysis",
+            "heading": "Filled, or still open",
+            "intro": "Only one of these is worth anything to you.",
+            "columns": [
+              {
+                "title": "Open — untraded",
+                "tone": "green",
+                "points": ["Price has not returned into the band", "The imbalance is still there", "A live place to expect a reaction", "The far edge is your invalidation"]
+              },
+              {
+                "title": "Filled — traded through",
+                "tone": "red",
+                "points": ["Price has traded back through the band", "Two-sided trade has happened at those prices", "No longer a reason for anything", "Marking it clutters the chart"]
+              }
+            ],
+            "note": "Same rule as a zone, for the same reason: the thing that made it interesting was unfinished business, and returning finishes it. Clear filled gaps off your chart or you will end up trading a map of the past."
+          },
+          {
+            "id": "process",
+            "type": "process",
+            "label": "PROCESS",
+            "skill": "technical_analysis",
+            "heading": "Marking a gap you can use",
+            "moves": [
+              { "title": "Find an impulse that broke structure", "body": "Not any big candle — one that did something. A gap inside a range is a curiosity; a gap inside the move that broke structure is where price is likely to come back to before continuing." },
+              { "title": "Check the two neighbours", "body": "High of the candle before, low of the candle after. If they overlap there is no gap, however impressive the middle candle looked." },
+              { "title": "Draw the band, not a line", "body": "Two edges. The near edge is where a reaction can start; the far edge is where the idea is wrong." },
+              { "title": "Prefer gaps that agree with something else", "body": "A gap sitting inside an unmitigated zone, or right where a sweep just happened, is worth far more than a gap on its own. Alone, it is a coin-flip with a nice name." }
+            ],
+            "closing": "That last move is the one that separates this from pattern-spotting. Confluence is not a bonus — it is the filter."
+          },
+          {
+            "id": "insight",
+            "type": "explainer",
+            "label": "DEEPER INSIGHT",
+            "skill": "technical_analysis",
+            "heading": "Why gaps get filled",
+            "body": [
+              "There is nothing mystical about it. The participants who wanted to transact in that band never got the chance — price went past them. They did not stop wanting to.",
+              "Sellers who would have sold at those prices still have stock. Buyers who wanted in cheaper still have cash. Both leave orders in the band, and the band becomes a magnet in the same way an unmitigated zone does.",
+              "Which is why the two ideas so often mark the same place. A zone is the base an order was worked from; a gap is the hole the resulting impulse left. They are two views of the same event, and when they overlap you are looking at the strongest thing this course teaches you to find.",
+              "The market skipped a set of stairs. Sooner or later somebody rebuilds them."
+            ]
+          },
+          {
+            "id": "check-1",
+            "type": "multiple_choice",
+            "label": "KNOWLEDGE CHECK",
+            "skill": "technical_analysis",
+            "question": "Candle 1 has a high of 120. Candle 2 is a large green body. Candle 3 has a low of 118. Is there a gap?",
+            "options": [
+              "Yes — from 118 to 120",
+              "No — candle 3's low is below candle 1's high, so they overlap",
+              "Yes — the whole of candle 2's body",
+              "Only if candle 2 closed at its high"
+            ],
+            "correctIndex": 1,
+            "explanation": "A gap needs clean air: the third candle's low must sit ABOVE the first candle's high. At 118 against 120 the neighbours overlap, so every price in between was traded.",
+            "wrongFeedback": [
+              { "text": "That band was traded by both neighbours — the opposite of a gap. Check which number is higher.", "kai": true },
+              null,
+              { "text": "The impulse candle's own body is never the gap. The gap is defined by the candles either side of it.", "kai": true },
+              { "text": "Where candle 2 closed does not enter into it. The test is only candle 1's high against candle 3's low.", "kai": true }
+            ],
+            "reinforce": "Third candle's low above first candle's high. No overlap, no gap."
+          },
+          {
+            "id": "check-2",
+            "type": "true_false",
+            "label": "KNOWLEDGE CHECK",
+            "skill": "technical_analysis",
+            "statement": "A fair value gap on its own, with nothing else at that price, is a strong enough reason to take a trade.",
+            "answer": false,
+            "explanation": "Gaps are common and most of them mean very little. What makes one worth acting on is agreement — a gap inside an unmitigated zone, or at the level a sweep just cleared. On its own it is a shape with a good name.",
+            "reinforce": "Confluence is the filter, not the garnish."
+          },
+          {
+            "id": "wrap",
+            "type": "takeaways",
+            "label": "WRAP UP",
+            "heading": "Key takeaways",
+            "points": [
+              "A fair value gap is a band of prices the market skipped when one side overwhelmed the other.",
+              "Three candles define it: the high of the first must sit below the low of the third.",
+              "It is drawn as a band with two edges — near edge to act at, far edge to be wrong at.",
+              "Price returns because the people who wanted to trade in that band never got to.",
+              "A gap alone is weak. A gap inside a zone, or where a sweep just happened, is the real signal."
+            ],
+            "closing": "Next week the five weeks become one play, at one time of day, with rules."
+          }
+        ]
+      }
+    },
+    {
+      "match": { "course": "fta-trade-ready", "title": "Drill: Mark 3 FVGs & Watch the Fill" },
+      "json": {
+        "schema": 1,
+        "title": "Drill — mark three gaps and watch the fill",
+        "skills": ["technical_analysis"],
+        "difficulty": 5,
+        "audience": ["adult", "teen"],
+        "duration_minutes": 8,
+        "xp": 50,
+        "steps": [
+          {
+            "id": "brief",
+            "type": "explainer",
+            "label": "PROCESS",
+            "heading": "Three gaps, or not",
+            "body": ["Two of these are arithmetic. The third asks whether a real gap is worth trading, which is the harder question."]
+          },
+          {
+            "id": "d1",
+            "type": "prediction",
+            "label": "EXERCISE",
+            "skill": "technical_analysis",
+            "question": "Candle 1 high 46.20 · candle 2 a large green body · candle 3 low 47.10. Where is the gap?",
+            "options": [
+              { "label": "46.20 to 47.10", "value": "right" },
+              { "label": "There is no gap", "value": "none" },
+              { "label": "The full range of candle 2", "value": "body" }
+            ],
+            "outcomeValue": "right",
+            "reveal": {
+              "headline": "46.20 to 47.10 — ninety cents of untraded air",
+              "body": "Candle 3's low sits above candle 1's high, so the band between them was skipped. Near edge 47.10 on the way back down, far edge 46.20 as invalidation."
+            }
+          },
+          {
+            "id": "d2",
+            "type": "prediction",
+            "label": "EXERCISE",
+            "skill": "technical_analysis",
+            "question": "A gap formed at 46.20–47.10. Price later traded down to 46.05 and rallied. Is the gap still live?",
+            "options": [
+              { "label": "Yes — it only touched the edge", "value": "live" },
+              { "label": "No — price traded through the whole band", "value": "filled" },
+              { "label": "Half — the top half is spent", "value": "half" }
+            ],
+            "outcomeValue": "filled",
+            "reveal": {
+              "headline": "Filled, and then some",
+              "body": "Trading to 46.05 means price passed through every price from 47.10 down to 46.20 on the way. The imbalance has been resolved — everyone who wanted to trade in that band has had the chance. Take it off the chart."
+            }
+          },
+          {
+            "id": "d3",
+            "type": "prediction",
+            "label": "EXERCISE",
+            "skill": "technical_analysis",
+            "question": "You find a clean, unfilled gap in the middle of a three-week sideways range, with no zone and no swept level near it. What do you do?",
+            "options": [
+              { "label": "Trade it — an unfilled gap is an unfilled gap", "value": "trade" },
+              { "label": "Nothing — a gap with no confluence is not a setup", "value": "pass" },
+              { "label": "Trade it with a smaller size", "value": "small" }
+            ],
+            "outcomeValue": "pass",
+            "reveal": {
+              "headline": "Pass, and this is the lesson of the week",
+              "body": "Ranges are full of gaps and most of them resolve without ceremony. What makes a gap tradeable is agreement with something else — a zone, a sweep, a level that matters. Trading it smaller is not risk management, it is taking a bad trade quietly."
+            }
+          },
+          {
+            "id": "wrap",
+            "type": "takeaways",
+            "label": "WRAP UP",
+            "heading": "What the drill was testing",
+            "points": [
+              "The gap is candle 1's high to candle 3's low. Nothing to do with the impulse candle's own range.",
+              "Trading past the band fills it. A filled gap is chart clutter.",
+              "A gap with nothing else at that price is not a setup, and a smaller size does not make it one."
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "match": { "course": "fta-trade-ready", "title": "Live Class: The Opening Range Breakout" },
+      "json": {
+        "schema": 1,
+        "title": "The opening range breakout",
+        "skills": ["technical_analysis"],
+        "difficulty": 5,
+        "audience": ["adult", "teen"],
+        "duration_minutes": 18,
+        "xp": 50,
+        "guide": { "intro": "Five weeks of reading, one time of day, four beats.", "outro": "You have the play. Next week it becomes a routine you can repeat." },
+        "steps": [
+          {
+            "id": "concept",
+            "type": "explainer",
+            "label": "CORE CONCEPT",
+            "skill": "technical_analysis",
+            "heading": "The first half hour is not like the rest of the day",
+            "figure": { "kind": "stat", "value": "9:30–10:00", "caption": "Where the day's argument gets had" },
+            "body": [
+              "Everything that happened while the market was shut — earnings, news, overnight moves in other markets — has to be priced in at once when it opens. Orders that queued for sixteen hours all arrive together.",
+              "So the opening range, the high and low of the first fifteen or thirty minutes, is not an arbitrary box. It is the range within which the day's competing views fought to a standstill before anyone had the upper hand.",
+              "When price leaves that range and stays out, the argument has been settled, and the rest of the session tends to travel in that direction. That is the whole idea. The work is in the word 'stays'.",
+              "Everything you have learned in this belt shows up inside that first hour, faster and more clearly than anywhere else on a chart."
+            ]
+          },
+          {
+            "id": "process",
+            "type": "process",
+            "label": "PROCESS",
+            "skill": "technical_analysis",
+            "heading": "Range, break, retest, go",
+            "intro": "Four beats. You have met all four already; this is where they run on a clock.",
+            "moves": [
+              { "title": "RANGE — mark the box and then leave it alone", "body": "The high and the low of the first fifteen or thirty minutes. Pick one window and keep it for every session — changing it after the fact is how you end up justifying whatever just happened." },
+              { "title": "BREAK — a CLOSE outside, never a wick", "body": "A five-minute candle must close beyond the box. A wick through the top that closes back inside is not a break; it is a sweep of everyone who bought the wick." },
+              { "title": "RETEST — the professional moment", "body": "Price comes back to the broken edge. The old ceiling should now act as a floor: the role flip you learned at Yellow Belt. Holding it is the confirmation, and it is where the entry belongs." },
+              { "title": "GO — with the invalidation already decided", "body": "If the retest fails and price closes back inside the box, the break was a fakeout and you are out. That is decided before you enter, not while you are watching." }
+            ],
+            "closing": "The retest is the beat beginners skip. Entering on the break itself means being in before the market has confirmed anything — and being the fuel when it has not."
+          },
+          {
+            "id": "live",
+            "type": "annotated_values",
+            "label": "LIVE EXAMPLE",
+            "skill": "technical_analysis",
+            "heading": "The morning it worked",
+            "subject": "Tesla · 5-minute · 13 August 2026",
+            "caption": "Real session, real prices. Tap each number.",
+            "candle": { "open": 327.2, "high": 341.64, "low": 325.24, "close": 339.96 },
+            "values": [
+              { "part": "low", "label": "OR low", "value": "$325.24", "meaning": "The bottom of the opening range, and the low of the entire day. Once price left the box upward it never came back to test this." },
+              { "part": "open", "label": "OR high", "value": "$331.69", "meaning": "The top of the opening range. This is the line that had to be closed above — and then had to hold as support on the way back." },
+              { "part": "close", "label": "Break + retest", "value": "$332.45", "meaning": "The 9:50 candle closed at 332.45, above the box. Five minutes later price came back to 331.62 — sixty-seven cents into the old ceiling — and rejected. That is the role flip, on the clock." },
+              { "part": "high", "label": "Day high", "value": "$341.64", "meaning": "By 15:10 it had run to 341.64, stopping sixty cents under the 341–342 wall from 23 July. Closed 339.96. The week-one level and the week-five play, on the same chart." }
+            ]
+          },
+          {
+            "id": "distinction",
+            "type": "compare",
+            "label": "KEY DISTINCTION",
+            "skill": "technical_analysis",
+            "heading": "Wednesday held. Thursday did not.",
+            "intro": "Two consecutive sessions in the same stock. The difference is one candle's close.",
+            "columns": [
+              {
+                "title": "13 Aug — confirmed",
+                "tone": "green",
+                "points": ["OR 325.24–331.69", "9:50 closes 332.45, outside", "Retest holds at 331.62", "Runs to 341.64, closes 339.96"]
+              },
+              {
+                "title": "14 Aug — fakeout",
+                "tone": "red",
+                "points": ["Opens 342.33, above the wall", "OR 342.01–347.80", "9:45 breaks, runs 350.35", "10:10 closes 347.03 — back INSIDE"]
+              }
+            ],
+            "note": "Thursday's 10:10 close back inside the range is the entire signal. Everyone long from the break was trapped at that moment, and their exit took it to 335.33 by 11:25 — a twelve-dollar unwind. The rule that saved you was the one you already knew: a close, never a wick."
+          },
+          {
+            "id": "insight",
+            "type": "explainer",
+            "label": "DEEPER INSIGHT",
+            "skill": "technical_analysis",
+            "heading": "Why the retest is where the money is",
+            "body": [
+              "At the moment of the break, nobody knows anything. Price is outside the box, which it does on plenty of mornings that end up going nowhere. Buying there is buying a maybe.",
+              "At the retest, something has been established: price left the range, came back to the edge, and could not get back in. The sellers who would have pushed it back inside had their chance and did not take it.",
+              "That is also why the invalidation is so clean. If it does close back inside, the premise is simply gone. You are not deciding whether to hold and hope — the condition that made this a trade has failed.",
+              "Beginners chase the break because it feels like the move is leaving without them. The move that leaves without you costs you nothing. The break you chased that closes back inside costs you twelve dollars in ninety minutes."
+            ]
+          },
+          {
+            "id": "check-1",
+            "type": "multiple_choice",
+            "label": "KNOWLEDGE CHECK",
+            "skill": "technical_analysis",
+            "question": "The opening range is 100.00–102.00. A five-minute candle wicks to 102.60 and closes at 101.80. What is that?",
+            "options": [
+              "A valid break — price exceeded the range",
+              "Not a break — the candle closed back inside the box",
+              "A retest of the range high",
+              "A fair value gap above the range"
+            ],
+            "correctIndex": 1,
+            "explanation": "A wick outside with a close inside is the range holding. It has also just collected everyone who bought the wick — which makes it a sweep, not a breakout.",
+            "wrongFeedback": [
+              { "text": "Exceeding the range is not the test. Closing outside it is, and this candle closed at 101.80 — inside.", "kai": true },
+              null,
+              { "text": "A retest requires a break first. There has not been one.", "kai": true },
+              { "text": "A gap needs three candles with no overlap between the outer two. One wick is not a gap.", "kai": true }
+            ],
+            "reinforce": "Closes, never wicks — the same rule that has run through every week of this belt."
+          },
+          {
+            "id": "check-2",
+            "type": "multiple_choice",
+            "label": "KNOWLEDGE CHECK",
+            "skill": "technical_analysis",
+            "question": "On 14 August, at what moment did the Tesla long become invalid?",
+            "options": [
+              "At 350.35, the high of the run",
+              "At the 10:10 close of 347.03, back inside the opening range",
+              "At 335.33, when the loss was obvious",
+              "At the open, because it gapped above the wall"
+            ],
+            "correctIndex": 1,
+            "explanation": "The premise was that price had left the range and would stay out. The 10:10 close back inside ended that premise. Everything after it is a loss getting larger.",
+            "wrongFeedback": [
+              { "text": "A high is not an exit signal. Nothing had failed yet — it was still outside the range.", "kai": true },
+              null,
+              { "text": "By 335.33 the trade had been wrong for over an hour. The rule fired at 10:10; obvious is not the same as timely.", "kai": true },
+              { "text": "Opening above the wall was a warning worth respecting, but the trade itself was invalidated by a specific candle at a specific time.", "kai": true }
+            ],
+            "reinforce": "The invalidation is a price and a condition, decided before entry. It is not a feeling you arrive at later."
+          },
+          {
+            "id": "wrap",
+            "type": "takeaways",
+            "label": "WRAP UP",
+            "heading": "Key takeaways",
+            "points": [
+              "The opening range is the first 15 or 30 minutes — where the overnight argument gets settled.",
+              "Range, break, retest, go. Pick your window and keep it for every session.",
+              "The break is a CLOSE outside the box. A wick outside that closes back in is a sweep of the people who chased.",
+              "The retest is the entry, because it is the first moment the market has confirmed anything.",
+              "A close back inside the range ends the trade. Decided before entry, not during."
+            ],
+            "closing": "One week left: the five layers become a single routine, and then a fresh chart you have never seen."
+          }
+        ]
+      }
+    },
+    {
+      "match": { "course": "fta-trade-ready", "title": "Drill: Replay 3 ORB Days" },
+      "json": {
+        "schema": 1,
+        "title": "Drill — replay three ORB days",
+        "skills": ["technical_analysis"],
+        "difficulty": 5,
+        "audience": ["adult", "teen"],
+        "duration_minutes": 9,
+        "xp": 50,
+        "steps": [
+          {
+            "id": "brief",
+            "type": "explainer",
+            "label": "PROCESS",
+            "heading": "Three mornings, in real time",
+            "body": ["Each question stops at a specific minute. Answer with only what a trader had on the screen at that moment — not with what you know happened next."]
+          },
+          {
+            "id": "d1",
+            "type": "prediction",
+            "label": "EXERCISE",
+            "skill": "technical_analysis",
+            "question": "13 August, 9:50. The opening range is 325.24–331.69 and this candle just closed at 332.45. What now?",
+            "options": [
+              { "label": "Buy immediately — the break is confirmed", "value": "chase" },
+              { "label": "Wait for the retest of 331.69 to hold", "value": "wait" },
+              { "label": "Short it — extended above the range", "value": "short" }
+            ],
+            "outcomeValue": "wait",
+            "reveal": {
+              "headline": "Wait — and five minutes later you were paid for waiting",
+              "body": "The 9:55 candle came back to 331.62, sixty-seven cents into the old ceiling, and rejected. That is the retest holding and the entry. Buying at 332.45 got the same trade with a worse price and no confirmation."
+            }
+          },
+          {
+            "id": "d2",
+            "type": "prediction",
+            "label": "EXERCISE",
+            "skill": "technical_analysis",
+            "question": "14 August, 10:10. You are long from the 9:45 break at 348.29. This candle closes at 347.03 — back inside the 342.01–347.80 range. What do you do?",
+            "options": [
+              { "label": "Hold — it is only just back inside", "value": "hold" },
+              { "label": "Out. The premise failed", "value": "out" },
+              { "label": "Add — better price than the break", "value": "add" }
+            ],
+            "outcomeValue": "out",
+            "reveal": {
+              "headline": "Out, at 347.03",
+              "body": "By 11:25 it was 335.33. Holding cost twelve dollars a share, adding cost more. The rule fired at 10:10 and it fired cleanly — the only difficulty is doing it while it still feels early."
+            }
+          },
+          {
+            "id": "d3",
+            "type": "prediction",
+            "label": "EXERCISE",
+            "skill": "technical_analysis",
+            "question": "A morning opens and the first thirty minutes are a two-dollar box. By 11:00 price has not closed outside it once. What is the play?",
+            "options": [
+              { "label": "Take the next touch of the range high", "value": "touch" },
+              { "label": "No trade — the setup never appeared", "value": "none" },
+              { "label": "Widen the box until something qualifies", "value": "widen" }
+            ],
+            "outcomeValue": "none",
+            "reveal": {
+              "headline": "No trade, and this is a result",
+              "body": "Most mornings do not produce this setup. A trader with a rule sits out; a trader without one finds something. Widening the box after the fact is the purest version of that mistake — you would be changing the test until the market passes it."
+            }
+          },
+          {
+            "id": "wrap",
+            "type": "takeaways",
+            "label": "WRAP UP",
+            "heading": "What the drill was testing",
+            "points": [
+              "The retest is the entry. Chasing the break is the same trade at a worse price with no confirmation.",
+              "A close back inside ends it, at the moment it happens, not when the loss becomes obvious.",
+              "No setup is a valid outcome. The box does not move to accommodate you."
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "match": { "course": "fta-trade-ready", "title": "Live Class: The Full Execution Model" },
+      "json": {
+        "schema": 1,
+        "title": "The full execution model",
+        "skills": ["technical_analysis"],
+        "difficulty": 5,
+        "audience": ["adult", "teen"],
+        "duration_minutes": 16,
+        "xp": 50,
+        "guide": { "intro": "Five layers, one routine, in an order that never changes.", "outro": "That is the model. The exam is a chart you have not seen." },
+        "steps": [
+          {
+            "id": "concept",
+            "type": "explainer",
+            "label": "CORE CONCEPT",
+            "skill": "technical_analysis",
+            "heading": "One routine, run the same way every time",
+            "body": [
+              "You now have five layers: structure, zones, sweeps, gaps, and the opening range. Taken separately each is a way of being occasionally right. Run in a fixed order, they are a filter that removes most of the trades that lose money.",
+              "The order is not decoration. It goes from the biggest clock to the smallest, from context to trigger, so that by the time you are looking at a five-minute candle you already know which way you are facing and what would prove you wrong.",
+              "A routine also does something a collection of ideas cannot: it produces the same answer on Tuesday that it produced on Monday. That consistency is what makes a record worth keeping, and a record is the only thing that will ever tell you whether any of this works for you."
+            ]
+          },
+          {
+            "id": "process",
+            "type": "process",
+            "label": "PROCESS",
+            "skill": "technical_analysis",
+            "heading": "The model, top to bottom",
+            "intro": "Every step can end the session. Most mornings end at step three, and that is the model working.",
+            "moves": [
+              { "title": "Context — the daily", "body": "Structure first. Direction, and the one level that would break it. If the daily is a range with no clear read, you are done for the day. No context, no trade." },
+              { "title": "Location — where the orders are", "body": "Mark the unmitigated zones and the open gaps in the direction of the context. If price is nowhere near any of them, you are done. A good trigger in a bad location is a bad trade." },
+              { "title": "The opening range", "body": "Mark the box on the five-minute. Note whether it sits at one of your locations — if it opened right inside an unmitigated zone in the direction of the daily, the morning has your attention." },
+              { "title": "Trigger — break, then retest", "body": "A close outside the box, then a hold of the flipped edge. A sweep of the opposite side first makes it stronger, not weaker: the fuel was collected before the move." },
+              { "title": "Risk — decided before the click", "body": "Invalidation at the far edge of the structure you entered against. Position size from the account, never from conviction. If the stop distance makes the size uncomfortable, the trade is too big, not the stop too wide." },
+              { "title": "Record — while it is still fresh", "body": "Thesis, entry, invalidation, size, and what you expected. Written before the outcome, or it is not a record, it is a story about a result." }
+            ],
+            "closing": "Six steps, four of which are permission to do nothing. That ratio is the job."
+          },
+          {
+            "id": "distinction",
+            "type": "compare",
+            "label": "KEY DISTINCTION",
+            "skill": "technical_analysis",
+            "heading": "A setup, and a trade you talked yourself into",
+            "columns": [
+              {
+                "title": "The model said yes",
+                "tone": "green",
+                "points": ["Daily direction is clear", "Price is at an unmitigated location", "Break closed outside the box", "Retest held the flipped edge", "Invalidation written before entry"]
+              },
+              {
+                "title": "You wanted a trade",
+                "tone": "red",
+                "points": ["Daily is a range you called a trend", "Nearest zone is 'close enough'", "Entered on the wick, not the close", "No retest — it was 'moving too fast'", "Stop set to make the size feel right"]
+              }
+            ],
+            "note": "Every line on the right is a rule from an earlier week, broken. Nobody breaks them out of ignorance by this point in the course — they break them because there was no trade and they wanted one."
+          },
+          {
+            "id": "insight",
+            "type": "explainer",
+            "label": "DEEPER INSIGHT",
+            "skill": "technical_analysis",
+            "heading": "What the model cannot do",
+            "body": [
+              "It cannot tell you a trade will work. Nothing can. Every setup in this course is a situation where the odds are better than random, run enough times that the edge shows up in the record rather than in any single morning.",
+              "This matters because the most dangerous outcome for a new trader is not a loss — it is a win taken by breaking the rules. That teaches exactly the wrong lesson, and it is why the exam grades your process and ignores your result.",
+              "It also cannot make you sit out. On a morning with no setup the model produces silence, and silence is uncomfortable in a way that a small loss is not. Most of the money lost by people who have completed a course like this one is lost on days the course told them to do nothing.",
+              "The model is not a way to be right. It is a way to be consistent enough that being right occasionally adds up."
+            ]
+          },
+          {
+            "id": "check-1",
+            "type": "multiple_choice",
+            "label": "KNOWLEDGE CHECK",
+            "skill": "technical_analysis",
+            "question": "The daily is a clean uptrend, price is at an unmitigated demand zone, and there is an open gap inside it. The opening range breaks DOWNWARD and holds its retest. What does the model say?",
+            "options": [
+              "Take the short — the trigger fired",
+              "No trade — the trigger disagrees with the context",
+              "Take the short with a smaller size",
+              "Wait for it to break upward instead and take that"
+            ],
+            "correctIndex": 1,
+            "explanation": "Context comes first and never gets overruled by a trigger. A five-minute break against a daily uptrend at demand is exactly the sweep this course spent week three on.",
+            "wrongFeedback": [
+              { "text": "The trigger is the last filter, not the first. It cannot promote itself above the context.", "kai": true },
+              null,
+              { "text": "Smaller size does not repair a trade the model rejected. It just loses less, more often.", "kai": true },
+              { "text": "Sitting and waiting for the chart to produce the answer you wanted is not the model running — that is you running.", "kai": true }
+            ],
+            "reinforce": "Context, location, trigger — in that order, always. The order is the method."
+          },
+          {
+            "id": "check-2",
+            "type": "true_false",
+            "label": "KNOWLEDGE CHECK",
+            "skill": "technical_analysis",
+            "statement": "A morning that produces no trade means the routine failed.",
+            "answer": false,
+            "explanation": "Four of the six steps exist to end the session. A morning with no setup is the model doing its main job, which is keeping you out of the trades that would have cost you.",
+            "reinforce": "Most mornings are a no. Being able to sit through them is the skill this belt is actually testing."
+          },
+          {
+            "id": "wrap",
+            "type": "takeaways",
+            "label": "WRAP UP",
+            "heading": "The model, in one screen",
+            "points": [
+              "Context on the daily — direction, and the level that breaks it. No read, no day.",
+              "Location — unmitigated zones and open gaps in that direction. Not near one, no trade.",
+              "Opening range on the five-minute, noting whether it sits at a location.",
+              "Trigger — a close outside the box, then a retest that holds. A sweep first is a bonus.",
+              "Risk before the click: invalidation from the chart, size from the account.",
+              "Write it down before the outcome exists."
+            ],
+            "closing": "Next: a chart you have never seen, and a plan you submit before you know how it ends."
+          }
+        ]
+      }
+    },
+    {
+      "match": { "course": "fta-trade-ready", "title": "Trade Ready Exam: Fresh Chart + Paper Trade" },
+      "json": {
+        "schema": 1,
+        "title": "Trade Ready exam — fresh chart, paper trade",
+        "skills": ["technical_analysis"],
+        "difficulty": 5,
+        "audience": ["adult", "teen"],
+        "duration_minutes": 30,
+        "xp": 50,
+        "guide": { "intro": "One chart you have not seen. One plan, written before the outcome." },
+        "steps": [
+          {
+            "id": "brief",
+            "type": "explainer",
+            "label": "PROCESS",
+            "heading": "What this exam actually grades",
+            "figure": { "kind": "quote", "value": "The result is not on the rubric.", "caption": "Your process is" },
+            "body": [
+              "You will be given a chart you have not worked before, and you will submit a plan for it: the context, the location, the trigger you would require, the invalidation, and the size — written before you know how the session ended.",
+              "It is graded on the process. A losing trade that followed the model passes. A winning trade that skipped the retest, or set the stop to fit the size, fails — because that habit is the one that eventually takes an account apart.",
+              "This is the last thing standing between you and the Black Belt, and it is deliberately the only assessment in the whole programme that a lucky guess cannot pass."
+            ]
+          },
+          {
+            "id": "recall",
+            "type": "process",
+            "label": "PROCESS",
+            "skill": "technical_analysis",
+            "heading": "What a passing submission contains",
+            "intro": "Six parts, in the model's order. Missing any one is an automatic re-sit.",
+            "moves": [
+              { "title": "Context", "body": "The daily read in one sentence, and the exact level that would break it." },
+              { "title": "Location", "body": "The zone or gap you are trading at, with both edges as prices — near edge and far edge." },
+              { "title": "Trigger", "body": "The specific condition you require. Not 'a breakout' — which candle, closing where, relative to which level." },
+              { "title": "Invalidation", "body": "One price, and the reason it is that price. If it comes from your account balance rather than the chart, it is wrong." },
+              { "title": "Size", "body": "Derived from the account and the stop distance, at 1–2% risk. Show the arithmetic." },
+              { "title": "The sentence you would regret", "body": "One line on what would have to happen for this idea to be wrong in a way you did not anticipate. Traders who can write this one are the ones who survive." }
+            ],
+            "closing": "Submit before the session resolves. A plan written after the fact is not a plan, and it is visible from a mile away."
+          },
+          {
+            "id": "check",
+            "type": "multiple_choice",
+            "label": "KNOWLEDGE CHECK",
+            "skill": "technical_analysis",
+            "question": "Your submitted plan loses. The trade followed every step of the model. What happens?",
+            "options": [
+              "Fail — the trade lost money",
+              "Pass — the exam grades the process, and the process was sound",
+              "Re-sit with a different chart",
+              "Pass, but only at a reduced grade"
+            ],
+            "correctIndex": 1,
+            "explanation": "Every setup in this course is an edge over many repetitions, not a promise about one morning. Grading the outcome would teach you to judge decisions by their luck.",
+            "wrongFeedback": [
+              { "text": "If losses failed the exam, the exam would be teaching you that good decisions always pay — which is the belief that ends accounts.", "kai": true },
+              null,
+              { "text": "There is nothing to re-sit. The plan was sound and the market did what markets do.", "kai": true },
+              { "text": "There is no partial credit for an outcome nobody controls. The process either held or it did not.", "kai": true }
+            ],
+            "reinforce": "Judge the decision by what you knew when you made it. That is the whole discipline."
+          },
+          {
+            "id": "submit",
+            "type": "real_world",
+            "label": "EXERCISE",
+            "skill": "technical_analysis",
+            "action": "research_ticker",
+            "ticker": "TSLA",
+            "company": "Tesla",
+            "prompt": "Open the chart, run the model top to bottom, and write your six-part plan in the research note. Submit it before you look at how the session resolved.",
+            "cta": "Start my exam submission",
+            "successText": "Submitted. Your coach grades the process against the rubric — context, location, trigger, invalidation, size, and the sentence you would regret. Pass and the Black Belt test unlocks."
+          },
+          {
+            "id": "wrap",
+            "type": "takeaways",
+            "label": "WRAP UP",
+            "heading": "Trade Ready",
+            "points": [
+              "Context, location, trigger, invalidation, size, record. In that order, every session.",
+              "A close, never a wick — the rule that has run through all six weeks.",
+              "Most mornings are a no, and sitting through them is the skill.",
+              "The chart decides where you are wrong. The account decides what that costs.",
+              "A plan written before the outcome is the only kind that counts."
+            ],
+            "closing": "Black Belt is where the model stops being a course and starts being a habit. What comes after it is not more theory — it is strategies you can run."
+          }
+        ]
+      }
+    }
+  ]
+}
