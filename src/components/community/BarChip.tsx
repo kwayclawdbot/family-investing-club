@@ -4,8 +4,8 @@ import { cx } from "@/components/ui";
 const BAR: Record<BeltColor | "public" | "verified", string> = {
   white: "bg-[#F5F0E4] border border-[#C9BC9E]",
   yellow: "bg-[#E9C46A]",
+  green: "bg-[#4C8A52]",
   blue: "bg-[#4E7DA6]",
-  purple: "bg-[#8B7BC7]",
   black: "bg-[#2E2A21]",
   public: "bg-[#F5F0E4] border border-[#C9BC9E]",
   verified: "bg-[#4E7DA6]",
@@ -21,7 +21,7 @@ export function BarChip({ color, label, className }: { color: keyof typeof BAR; 
   );
 }
 
-const RING: Record<BeltColor, string> = { white: "#C9BC9E", yellow: "#E9C46A", blue: "#4E7DA6", purple: "#8B7BC7", black: "#2E2A21" };
+const RING: Record<BeltColor, string> = { white: "#C9BC9E", yellow: "#E9C46A", green: "#4C8A52", blue: "#4E7DA6", black: "#2E2A21" };
 
 /** 26–44px avatar with the v9 ring treatment (2.5px belt colour + 2px cream). `ring` null = no ring. */
 export function RingAvatar({ initial, bg, ring, size = 26, className }: { initial: string; bg: string; ring: BeltColor | null; size?: number; className?: string }) {

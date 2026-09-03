@@ -5,8 +5,8 @@ import type { PromotionSummary } from "@/lib/types";
 const COLOR: Record<PromotionSummary["belt"]["color"], { main: string; shadow: string; glow: string }> = {
   white: { main: "#C9BC9E", shadow: "#A89F8D", glow: "rgba(201,188,158,0.25)" },
   yellow: { main: "#E9C46A", shadow: "#B8912E", glow: "rgba(233,196,106,0.3)" },
+  green: { main: "#4C8A52", shadow: "#37693C", glow: "rgba(76,138,82,0.25)" },
   blue: { main: "#4E7DA6", shadow: "#3A5F82", glow: "rgba(78,125,166,0.25)" },
-  purple: { main: "#7B5CC7", shadow: "#5B46A8", glow: "rgba(123,92,199,0.25)" },
   black: { main: "#2E2A21", shadow: "#111", glow: "rgba(46,42,33,0.25)" },
 };
 

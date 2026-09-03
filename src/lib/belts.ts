@@ -1,5 +1,10 @@
 /**
  * The belt ladder — real product config, not a fixture: 7 levels, 5 colours, no rank names.
+ *
+ * White · Yellow · Green · Blue · Black, one course per colour (docs/BELT-CURRICULUM.md). Purple was
+ * retired 2026-09-03: it is Kai's colour everywhere else in the app, so a purple belt put the
+ * assistant's identity on a member. Only the two colours moved — every threshold is unchanged, so no
+ * member's level shifted.
  * The belt IS the rank. Pure and client-safe; XP comes from `xp_events` (see `lib/live/identity.ts`).
  */
 import type { Belt, MemberIdentity } from "@/lib/types";
@@ -9,8 +14,8 @@ export const BELTS: Belt[] = [
   { level: 2, color: "white", label: "White Belt II", short: "White II", minXp: 150 },
   { level: 3, color: "yellow", label: "Yellow Belt I", short: "Yellow I", minXp: 400 },
   { level: 4, color: "yellow", label: "Yellow Belt II", short: "Yellow II", minXp: 800 },
-  { level: 5, color: "blue", label: "Blue Belt", short: "Blue", minXp: 1400 },
-  { level: 6, color: "purple", label: "Purple Belt", short: "Purple", minXp: 2200 },
+  { level: 5, color: "green", label: "Green Belt", short: "Green", minXp: 1400 },
+  { level: 6, color: "blue", label: "Blue Belt", short: "Blue", minXp: 2200 },
   { level: 7, color: "black", label: "Black Belt", short: "Black", minXp: 3200 },
 ];
 

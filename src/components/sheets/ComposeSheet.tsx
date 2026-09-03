@@ -18,7 +18,7 @@ const ARTIFACTS = [
   { id: "kai", label: "✦ Ask Kai", cls: "bg-[#F5F0E4] text-ink-2" },
   { id: "ticker", label: "🏷 $Ticker", cls: "bg-[#F5F0E4] text-ink-2" },
 ];
-const DEMO_ME: Me = { id: "kway", name: "Kway", initial: "K", color: "bg-green-2", belt: "purple", beltLabel: "Purple", lifetimeXp: 2640 };
+const DEMO_ME: Me = { id: "kway", name: "Kway", initial: "K", color: "bg-green-2", belt: "blue", beltLabel: "Blue", lifetimeXp: 2640 };
 
 /** Compose modal (canvas v11, board 13) — opens from ✎ Share; audience picker inside; artifacts attach.
  *  Signed in: Main Feed → POST /api/community/post (FTA feed_posts) · club → /api/club/chat · circle → /api/community/circle/note ·

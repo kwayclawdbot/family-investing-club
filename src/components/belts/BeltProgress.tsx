@@ -1,8 +1,8 @@
 import Link from "next/link";
 import type { Belt } from "@/lib/types";
 
-const BAR: Record<Belt["color"], string> = { white: "#C9BC9E", yellow: "#E9C46A", blue: "#4E7DA6", purple: "#7B5CC7", black: "#2E2A21" };
-const TEXT: Record<Belt["color"], string> = { white: "#6E6654", yellow: "#8A6A10", blue: "#4E7DA6", purple: "#5B46A8", black: "#2E2A21" };
+const BAR: Record<Belt["color"], string> = { white: "#C9BC9E", yellow: "#E9C46A", green: "#4C8A52", blue: "#4E7DA6", black: "#2E2A21" };
+const TEXT: Record<Belt["color"], string> = { white: "#6E6654", yellow: "#8A6A10", green: "#2C5A31", blue: "#4E7DA6", black: "#2E2A21" };
 
 /** "Progress to Blue Belt · 420 XP to go" card — belt colours are identity, so the bar blends current → next belt. */
 export function BeltProgress({ xp, belt, next, href }: { xp: number; belt: Belt; next: Belt | null; href?: string }) {

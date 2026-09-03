@@ -8,22 +8,22 @@ import { cx } from "./index";
 const RING: Record<BeltColor, string> = {
   white: "ring-[#E6DFCF]",   // border keeps it visible on cream
   yellow: "ring-[#E9B949]",
+  green: "ring-[#4C8A52]",
   blue: "ring-[#3E7BC7]",
-  purple: "ring-[#7B5CC7]",
   black: "ring-[#2E2A21]",
 };
 const CHIP: Record<BeltColor, string> = {
   white: "bg-white text-ink-2 border border-[#E6DFCF]",
   yellow: "bg-[#FBEFC9] text-[#7A5A00] border border-[#E9B949]",
+  green: "bg-[#E4F0E4] text-[#2C5A31] border border-[#4C8A52]",
   blue: "bg-[#E1ECFA] text-[#1F4F8F] border border-[#3E7BC7]",
-  purple: "bg-[#EBE4F8] text-[#4B3690] border border-[#7B5CC7]",
   black: "bg-[#2E2A21] text-cream-text border border-[#2E2A21]",
 };
 const SWATCH: Record<BeltColor, string> = {
   white: "bg-white border border-[#E6DFCF]",
   yellow: "bg-[#E9B949]",
+  green: "bg-[#4C8A52]",
   blue: "bg-[#3E7BC7]",
-  purple: "bg-[#7B5CC7]",
   black: "bg-[#2E2A21]",
 };
 

@@ -38,7 +38,7 @@ export type PrivateMsg = { id: string; who: "dad" | "mom" | "kway" | "arielle"; 
 export const privateFeed: PrivateMsg[] = [
   { id: "h1", who: "dad", name: "Dad", initial: "D", bg: "bg-[#B08968]", belt: "yellow", time: "9:12", text: "Everyone see the $CEG contract news? Thesis is playing out fast 👀" },
   { id: "h2", who: "mom", name: "Mom", initial: "M", bg: "bg-coral", belt: "white", time: "9:31", text: "Finished the $COST write-up — renewals are the whole moat.", artifact: { symbol: "COST", title: "Costco research", sub: "4 sources · ready to propose", href: "/club?tab=decisions" } },
-  { id: "h3", who: "kway", name: "Kway", initial: "K", bg: "bg-green-2", belt: "purple", time: "9:40", text: "Reading it now — if margins held I'm a yes", mine: true },
+  { id: "h3", who: "kway", name: "Kway", initial: "K", bg: "bg-green-2", belt: "blue", time: "9:40", text: "Reading it now — if margins held I'm a yes", mine: true },
   { id: "h4", who: "arielle", name: "Arielle", initial: "A", bg: "bg-gold", belt: "white", time: "11:05", text: "Passed the energy quiz 10/10 — I can vote now! 🎓", grad: true },
 ];
 
@@ -48,7 +48,7 @@ export type CircleMessage =
   | { kind: "kai"; id: string; text: string; detail: string };
 export const circleMessages: Record<string, CircleMessage[]> = {
   "nvda-earnings": [
-    { kind: "msg", id: "m1", author: { name: "Miguel", initial: "M", bg: "bg-[#B08968]", belt: "purple", beltLabel: "Purple" }, text: "Whisper numbers are way above guidance. Data-center backlog is the whole story." },
+    { kind: "msg", id: "m1", author: { name: "Miguel", initial: "M", bg: "bg-[#B08968]", belt: "blue", beltLabel: "Blue" }, text: "Whisper numbers are way above guidance. Data-center backlog is the whole story." },
     { kind: "msg", id: "m2", author: { name: "Jen", initial: "J", bg: "bg-coral", belt: "yellow", beltLabel: "Yellow II" }, text: "@Miguel at 60× earnings the beat is already priced in, no?", chart: { label: "P/E vs 5-yr avg", points: [4, 7, 5, 10, 9, 13], color: "#C96A57" } },
     { kind: "mine", id: "m3", text: "Our club trimmed at 15% → 12% in July exactly for this reason. Decision journal says review after earnings." },
     { kind: "kai", id: "m4", text: "247 messages today · 58% lean bullish · top risk cited: valuation · 3 research notes shared.", detail: "Bull case (58%): data-center backlog through 2027, whisper numbers above guidance. Bear case (42%): 60× P/E already prices the beat; hyperscalers designing their own chips. Most-shared research: Sarah's valuation note, Miguel's backlog tracker, the Mensah Club decision journal. Watch: guidance for next quarter, gross margin." },
@@ -63,7 +63,7 @@ export type ClubChat = { id: string; author: { name: string; initial: string; bg
 export const clubChat: ClubChat[] = [
   { id: "c1", author: { name: "Dad", initial: "D", bg: "bg-[#B08968]", belt: "yellow" }, text: "Everyone see the CEG contract news? Thesis is playing out faster than I hoped 👀" },
   { id: "c2", author: { name: "Andwele", initial: "A", bg: "bg-green-3", belt: "yellow" }, text: "Called it 🔥 voting yes tonight", artifact: { symbol: "CEG", line: "+18% since we bought" } },
-  { id: "c3", author: { name: "Kway", initial: "K", bg: "bg-green-2", belt: "purple" }, text: "Arielle finishes the energy lesson tonight — then it's 4/4. Full family vote 🎉", readBy: 3 },
+  { id: "c3", author: { name: "Kway", initial: "K", bg: "bg-green-2", belt: "blue" }, text: "Arielle finishes the energy lesson tonight — then it's 4/4. Full family vote 🎉", readBy: 3 },
   { id: "c4", author: { name: "Arielle 🎓", initial: "A", bg: "bg-gold", belt: "white", child: true }, text: "Done!! Quiz 10/10 ⭐ voting after dinner", system: "⭐ Arielle earned voting rights on this proposal · +20 XP" },
 ];
 

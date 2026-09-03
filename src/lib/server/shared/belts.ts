@@ -4,12 +4,20 @@ import { LEVELS, levelForXp, levelProgress, nextLevel, type Level } from "@/lib/
 /**
  * Belt layer — a PRESENTATION skin over the earned XP level ladder (src/lib/xp.ts).
  *
- * The owner-set ladder (2026-07-23) is five belts: White → Yellow → Blue →
- * Purple → Black. The XP thresholds and award amounts in xp.ts are the single
- * source of truth and are NOT changed here; belts are purely a way to display
- * the same levels. Because there are more levels (7) than belts (5), belts carry
- * DEGREES within them (e.g. "Blue Belt II"). Black is deliberately the apex — a
- * single top level at the hardest threshold.
+ * The ladder is five belts: White → Yellow → Green → Blue → Black. The XP
+ * thresholds and award amounts in xp.ts are the single source of truth and are
+ * NOT changed here; belts are purely a way to display the same levels. Because
+ * there are more levels (7) than belts (5), the two lowest belts carry DEGREES
+ * (e.g. "Yellow Belt II"). Black is deliberately the apex — a single top level
+ * at the hardest threshold.
+ *
+ * 2026-09-03: this file and `src/lib/belts.ts` had DRIFTED. Both mapped the same
+ * seven thresholds, but to different belts — a member on 400 XP read as "Yellow
+ * Belt I" in the app and "Blue Belt I" in Kai's replies and the drip emails.
+ * The client ladder won (it is what members see, and what the belt curriculum in
+ * docs/BELT-CURRICULUM.md is built around) and this file was moved onto it.
+ * Purple was retired in the same pass: it is Kai's colour everywhere else, so a
+ * purple belt put the assistant's identity on a member. KEEP THE TWO IN STEP.
  *
  * Colors are INTRINSIC to the belt (a blue belt is blue in every theme), so the
  * swatch/dot/bar render from fixed hex values via inline styles rather than
@@ -18,7 +26,7 @@ import { LEVELS, levelForXp, levelProgress, nextLevel, type Level } from "@/lib/
  * dark avatar. The BeltBadge / Avatar helpers below encapsulate that.
  */
 
-export type BeltKey = "white" | "yellow" | "blue" | "purple" | "black";
+export type BeltKey = "white" | "yellow" | "green" | "blue" | "black";
 
 export interface Belt {
   key: BeltKey;
@@ -40,26 +48,26 @@ export const BELTS: Record<BeltKey, Belt> = {
   // distinct from the FTA tier's metallic gold ring/chip so an earned yellow
   // belt never reads as a purchased premium badge.
   yellow: { key: "yellow", name: "Yellow", order: 1, hex: "#E39A2B", onHex: "#3A2905", borderHex: "#B9781A" },
-  blue: { key: "blue", name: "Blue", order: 2, hex: "#3B82F6", onHex: "#FFFFFF", borderHex: "#2563EB" },
-  purple: { key: "purple", name: "Purple", order: 3, hex: "#8B5CF6", onHex: "#FFFFFF", borderHex: "#7C3AED" },
+  green: { key: "green", name: "Green", order: 2, hex: "#3FA34D", onHex: "#FFFFFF", borderHex: "#2F7D3B" },
+  blue: { key: "blue", name: "Blue", order: 3, hex: "#3B82F6", onHex: "#FFFFFF", borderHex: "#2563EB" },
   black: { key: "black", name: "Black", order: 4, hex: "#1F2430", onHex: "#FFFFFF", borderHex: "#6B7280" },
 };
 
-export const BELT_ORDER: BeltKey[] = ["white", "yellow", "blue", "purple", "black"];
+export const BELT_ORDER: BeltKey[] = ["white", "yellow", "green", "blue", "black"];
 
 /**
  * Dark-background-safe username colors for the FTA (true-dark) Traders chat,
  * keyed by belt. Each was measured against the night-950 (#04060C) channel
- * surface and clears WCAG AA (~4.5:1): white 16.8, yellow 8.6, blue 8.0,
- * purple 7.4, black 14.3. Blue and Purple are LIFTED from their swatch hex
- * (#3B82F6 / #8B5CF6 read too dim as small text), and Black — which can never be
+ * surface and clears WCAG AA (~4.5:1): white 16.8, yellow 8.6, green 9.9,
+ * blue 8.0, black 14.3. Green and Blue are LIFTED from their swatch hex
+ * (#3FA34D / #3B82F6 read too dim as small text), and Black — which can never be
  * black-on-black — renders as champagne/metallic gold for the prestige read.
  */
 export const BELT_NAME_ON_DARK: Record<BeltKey, string> = {
   white: "#E8EAF0",
   yellow: "#E39A2B",
+  green: "#5DD47E",
   blue: "#60A5FA",
-  purple: "#A78BFA",
   black: "#EAD8A0",
 };
 
@@ -82,28 +90,31 @@ export function beltNameStyleOnDark(xp: number): BeltNameStyle {
  * maps to exactly one belt degree; belts with a single level render no degree
  * numeral. Black = level 7 only (top threshold, 3200 XP) so it stays hard.
  *
- *   L1 Explorer      → White
- *   L2 Money Mapper  → Yellow
- *   L3 Chart Reader  → Blue I
- *   L4 Zone Hunter   → Blue II
- *   L5 Sweep Spotter → Purple I
- *   L6 Trade Ready   → Purple II
+ *   L1 Explorer      → White I
+ *   L2 Money Mapper  → White II
+ *   L3 Chart Reader  → Yellow I
+ *   L4 Zone Hunter   → Yellow II
+ *   L5 Sweep Spotter → Green
+ *   L6 Trade Ready   → Blue
  *   L7 Playbook Pro  → Black
+ *
+ * One belt per curriculum course, and the two belts carrying degrees are the two
+ * with the most levels behind them. Matches `src/lib/belts.ts` exactly.
  */
 const LEVEL_BELT: Record<number, BeltKey> = {
   1: "white",
-  2: "yellow",
-  3: "blue",
-  4: "blue",
-  5: "purple",
-  6: "purple",
+  2: "white",
+  3: "yellow",
+  4: "yellow",
+  5: "green",
+  6: "blue",
   7: "black",
 };
 
 // How many levels sit in each belt, and the sorted level list per belt — used to
 // compute the degree (1-based) and whether a numeral is shown at all.
 const LEVELS_IN_BELT: Record<BeltKey, number[]> = (() => {
-  const map: Record<BeltKey, number[]> = { white: [], yellow: [], blue: [], purple: [], black: [] };
+  const map: Record<BeltKey, number[]> = { white: [], yellow: [], green: [], blue: [], black: [] };
   for (const l of LEVELS) {
     const key = LEVEL_BELT[l.level];
     if (key) map[key].push(l.level);

@@ -221,7 +221,7 @@ export type Leaderboards = {
 /** Five identity systems, kept separate: Belt (lifetime XP & participation) · Reputation (resolved pick accuracy) ·
  *  Specialist badges (domain strength) · Verification (ownership, not skill) · Achievements (milestones).
  *  XP never comes from trade count, account size, risk or short-term returns. */
-export type BeltColor = "white" | "yellow" | "blue" | "purple" | "black";
+export type BeltColor = "white" | "yellow" | "green" | "blue" | "black";
 export type Belt = { level: 1 | 2 | 3 | 4 | 5 | 6 | 7; color: BeltColor; label: string; short: string; minXp: number };
 export type XpEvent = { id: string; emoji: string; text: string; xp: number; ago?: string; kind: "learn" | "research" | "club" | "practice" | "family" };
 export type Reputation = { pickPositivePct: number; resolvedPicks: number };

@@ -1,16 +1,16 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import type { CommunityPost } from "@/lib/types";
+import type { BeltColor, CommunityPost } from "@/lib/types";
 import { cx } from "@/components/ui";
 import { BarChip, RingAvatar } from "./BarChip";
 import { useBeltOf } from "@/components/belts/identity-context";
 
-const GUEST_RING: Record<string, "blue" | "purple" | "yellow" | "white" | null> = { "Sarah J.": "blue", "Jordan P.": "yellow", "Coach Tia": "purple" };
+const GUEST_RING: Record<string, BeltColor | null> = { "Sarah J.": "green", "Jordan P.": "yellow", "Coach Tia": "blue" };
 const GUEST_BG: Record<string, string> = { "Sarah J.": "bg-coral", "Jordan P.": "bg-purple", "Coach Tia": "bg-green-3" };
-const beltColorFromLabel = (l?: string): "blue" | "purple" | "yellow" | "white" | "black" => {
+const beltColorFromLabel = (l?: string): BeltColor => {
   const s = (l ?? "").toLowerCase();
-  return s.startsWith("blue") ? "blue" : s.startsWith("purple") ? "purple" : s.startsWith("yellow") ? "yellow" : s.startsWith("black") ? "black" : "white";
+  return s.startsWith("green") ? "green" : s.startsWith("blue") ? "blue" : s.startsWith("yellow") ? "yellow" : s.startsWith("black") ? "black" : "white";
 };
 
 function Head({ author, authorId, belt, ago, square, chip: chipOverride }: { author: string; authorId?: string; belt?: string; ago: string; square?: boolean; chip?: { color: "public" | "verified"; label: string } }) {
