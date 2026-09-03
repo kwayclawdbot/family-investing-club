@@ -118,3 +118,65 @@ body {
 .club-b-stack > * + * { margin-top: 10px; }
 .text-soft { color: var(--ink-3); }
 .text-gold-700, .text-gold-600 { color: #BC9227; }
+
+/* ── Lesson player motion ───────────────────────────────────────────────────
+   Every value here is seen a handful of times per lesson, never hundreds — so
+   it earns animation. Built as CSS (off the main thread) rather than JS, and
+   all of it is switched off by the reduced-motion rule above.
+   Curve is the strong ease-out; the built-in one is too weak to read as
+   intentional at these durations. */
+:root {
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* A section arriving. Short and shallow — the reader is here to read, not to
+   watch the page assemble itself. */
+@keyframes fic-section-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fic-section { animation: fic-section-in 260ms var(--ease-out-strong) both; }
+
+/* Children cascading in behind their section. Delays stay under 200ms total so
+   the last item never feels like it is waiting its turn. */
+@keyframes fic-rise {
+  from { opacity: 0; transform: translateY(7px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fic-stagger > * { animation: fic-rise 240ms var(--ease-out-strong) both; }
+.fic-stagger > *:nth-child(1) { animation-delay: 40ms; }
+.fic-stagger > *:nth-child(2) { animation-delay: 80ms; }
+.fic-stagger > *:nth-child(3) { animation-delay: 120ms; }
+.fic-stagger > *:nth-child(4) { animation-delay: 160ms; }
+.fic-stagger > *:nth-child(5) { animation-delay: 200ms; }
+.fic-stagger > *:nth-child(6) { animation-delay: 240ms; }
+
+/* Anything you can press answers the press. */
+.fic-press { transition: transform 160ms var(--ease-out-strong), background-color 160ms ease, border-color 160ms ease; }
+.fic-press:active { transform: scale(0.97); }
+
+/* The definition panel swapping its text: a crossfade alone shows two strings
+   overlapping, so it rises a few pixels instead. */
+@keyframes fic-swap { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+.fic-swap { animation: fic-swap 200ms var(--ease-out-strong) both; }
+
+/* Flip cards, actually flipped — a card turning over reads as one object,
+   where a crossfade reads as two. */
+.fic-flip { perspective: 900px; }
+.fic-flip-inner { position: relative; transform-style: preserve-3d; transition: transform 320ms var(--ease-out-strong); }
+.fic-flip[data-on="true"] .fic-flip-inner { transform: rotateY(180deg); }
+.fic-flip-face { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.fic-flip-back { position: absolute; inset: 0; transform: rotateY(180deg); }
+
+/* The candle drawing itself: wicks grow out of the body, body grows from its
+   own centre. Nothing starts from scale(0) — a flat line is still a candle. */
+@keyframes fic-candle-body { from { transform: scaleY(0.12); opacity: 0.4; } to { transform: scaleY(1); opacity: 1; } }
+@keyframes fic-candle-wick { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes fic-dot-in { from { opacity: 0; transform: scale(0.4); } to { opacity: 1; transform: scale(1); } }
+.fic-candle-body { animation: fic-candle-body 420ms var(--ease-out-strong) both; }
+.fic-candle-wick { animation: fic-candle-wick 300ms var(--ease-out-strong) 120ms both; }
+.fic-candle-dot  { animation: fic-dot-in 220ms var(--ease-out-strong) 300ms both; }
+
+/* A correct answer deserves one beat of acknowledgement, and only one. */
+@keyframes fic-pop { 0% { transform: scale(0.96); } 60% { transform: scale(1.02); } 100% { transform: scale(1); } }
+.fic-pop { animation: fic-pop 280ms var(--ease-out-strong) both; }

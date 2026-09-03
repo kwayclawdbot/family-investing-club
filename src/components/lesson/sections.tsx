@@ -42,8 +42,8 @@ function useScale(c: CandleSpec, h: number, pad: number) {
  * apart. Without the labels the comparison reads as "one is green, one is red", which is the
  * misunderstanding the section exists to prevent.
  */
-function Candle({ c, w = 132, h = 208, active, onPart, showAxis = false, bodyWidth = 46, marks = false }: {
-  c: CandleSpec; w?: number; h?: number; active?: CandlePart | null; onPart?: (p: CandlePart) => void; showAxis?: boolean; bodyWidth?: number; marks?: boolean;
+function Candle({ c, w = 132, h = 208, active, onPart, showAxis = false, bodyWidth = 46, marks = false, animate = false }: {
+  c: CandleSpec; w?: number; h?: number; active?: CandlePart | null; onPart?: (p: CandlePart) => void; showAxis?: boolean; bodyWidth?: number; marks?: boolean; animate?: boolean;
 }) {
   const pad = 18;
   const { y } = useScale(c, h, pad);
@@ -62,6 +62,8 @@ function Candle({ c, w = 132, h = 208, active, onPart, showAxis = false, bodyWid
       fill={active === p ? col : "#FFFDF7"} stroke={col} strokeWidth={2} />
   );
 
+  const grow = animate ? { transformBox: "fill-box" as const } : undefined;
+
   return (
     <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="overflow-visible">
       {showAxis && (
@@ -70,18 +72,23 @@ function Candle({ c, w = 132, h = 208, active, onPart, showAxis = false, bodyWid
           <line x1={cx0 - bodyWidth} y1={y(c.low)} x2={cx0 + bodyWidth + 6} y2={y(c.low)} stroke="#E8DFCB" strokeWidth={1} strokeDasharray="3 3" />
         </>
       )}
-      {/* wicks */}
-      <line x1={cx0} y1={y(c.high)} x2={cx0} y2={bodyTop} stroke={col} strokeWidth={active === "upper_wick" ? 5 : 3} strokeLinecap="round" />
-      <line x1={cx0} y1={bodyBot} x2={cx0} y2={y(c.low)} stroke={col} strokeWidth={active === "lower_wick" ? 5 : 3} strokeLinecap="round" />
+      {/* wicks — each grows out of the body it belongs to, not out of nothing */}
+      <line x1={cx0} y1={y(c.high)} x2={cx0} y2={bodyTop} stroke={col} strokeWidth={active === "upper_wick" ? 5 : 3} strokeLinecap="round"
+        className={animate ? "fic-candle-wick" : undefined} style={grow && { ...grow, transformOrigin: "bottom" }} />
+      <line x1={cx0} y1={bodyBot} x2={cx0} y2={y(c.low)} stroke={col} strokeWidth={active === "lower_wick" ? 5 : 3} strokeLinecap="round"
+        className={animate ? "fic-candle-wick" : undefined} style={grow && { ...grow, transformOrigin: "top" }} />
       {/* body */}
       <rect x={cx0 - bodyWidth / 2} y={bodyTop} width={bodyWidth} height={bodyH} rx={4}
-        fill={up ? col : col} opacity={active === "body" ? 1 : 0.92}
-        stroke={active === "body" ? "#2E2A21" : col} strokeWidth={active === "body" ? 2.5 : 1} />
+        fill={col} opacity={active === "body" ? 1 : 0.92}
+        stroke={active === "body" ? "#2E2A21" : col} strokeWidth={active === "body" ? 2.5 : 1}
+        className={animate ? "fic-candle-body" : undefined} style={grow && { ...grow, transformOrigin: "center" }} />
       {/* price dots */}
-      {dot("high", y(c.high))}
-      {dot("low", y(c.low))}
-      {dot("open", y(c.open))}
-      {dot("close", y(c.close))}
+      <g className={animate ? "fic-candle-dot" : undefined} style={grow}>
+        {dot("high", y(c.high))}
+        {dot("low", y(c.low))}
+        {dot("open", y(c.open))}
+        {dot("close", y(c.close))}
+      </g>
       {marks && (
         <>
           <text x={cx0 - bodyWidth / 2 - 7} y={y(c.open) + 4} textAnchor="end" className="fill-ink-3" fontSize={11} fontWeight={800}>open</text>
@@ -121,9 +128,67 @@ function Foot({ children }: { children: React.ReactNode }) {
   return <div className="mt-auto pt-5">{children}</div>;
 }
 
+/**
+ * Where a candle stands. Deliberately NOT a card: a bordered white rectangle
+ * inside the page's own rectangle is a box within a box, and it makes the
+ * candle look like an illustration pasted into a slot. This is ruled ground
+ * with a horizon line — the chart the candle belongs on.
+ */
+function Stage({ children, tall = false }: { children: React.ReactNode; tall?: boolean }) {
+  return (
+    <div className={cx("relative mt-2 flex items-center justify-center", tall ? "py-2" : "py-1")}>
+      <div aria-hidden className="absolute inset-x-[-18px] inset-y-0 pointer-events-none"
+        style={{
+          backgroundImage:
+            "linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.4) 65%, rgba(255,255,255,0) 100%), repeating-linear-gradient(to bottom, rgba(228,218,196,0.45) 0 1px, transparent 1px 30px)",
+          maskImage: "linear-gradient(to right, transparent, #000 12%, #000 88%, transparent)",
+          WebkitMaskImage: "linear-gradient(to right, transparent, #000 12%, #000 88%, transparent)",
+        }} />
+      <div className="relative">{children}</div>
+      <div aria-hidden className="absolute inset-x-0 bottom-0 h-[2px] rounded-full bg-line-3"
+        style={{ maskImage: "linear-gradient(to right, transparent, #000 10%, #000 90%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, #000 10%, #000 90%, transparent)" }} />
+    </div>
+  );
+}
+
+/**
+ * The thing the reader just tapped, explained. A rule in the candle's own
+ * colour rather than a bordered panel — it reads as the same object continuing,
+ * not a second card announcing itself.
+ */
+function Readout({ swapKey, title, body, tone = "#E4DAC4", placeholder }: {
+  swapKey: string | null; title?: string; body?: string; tone?: string; placeholder: string;
+}) {
+  return (
+    <div className="mt-4 min-h-[96px] border-l-[3px] pl-[14px]" style={{ borderColor: swapKey ? tone : "#EBDFC7" }}>
+      {swapKey ? (
+        <div key={swapKey} className="fic-swap">
+          <div className="text-[15px] font-black text-ink leading-[1.3]">{title}</div>
+          <p className="mt-[4px] text-[13.5px] font-semibold text-ink-2 leading-[1.55]">{body}</p>
+        </div>
+      ) : (
+        <p className="text-[13px] font-bold text-ink-3 leading-[1.5]">{placeholder}</p>
+      )}
+    </div>
+  );
+}
+
+/** A tappable pill. Tactile: it has a bottom edge, and it answers the press. */
+function Pill({ on, done, children, onClick }: { on: boolean; done: boolean; children: React.ReactNode; onClick: () => void }) {
+  return (
+    <button type="button" onClick={onClick}
+      className={cx("fic-press rounded-full px-[13px] py-[7px] text-[11.5px] font-extrabold border",
+        on ? "bg-ink text-cream-text border-ink shadow-[0_2px_0_#1C1913]"
+          : done ? "bg-green-tint text-green border-green-line shadow-[0_2px_0_#D8E5CE]"
+            : "bg-card text-ink-2 border-line shadow-[0_2px_0_#EFE4CF]")}>
+      {children}
+    </button>
+  );
+}
+
 const PART_NAME: Record<CandlePart, string> = {
   open: "Open", high: "High", low: "Low", close: "Close",
-  body: "The body", upper_wick: "Upper wick", lower_wick: "Lower wick",
+  body: "Body", upper_wick: "Upper wick", lower_wick: "Lower wick",
 };
 
 /* ────────────────────────── INTERACTIVE · anatomy ────────────────────────── */
@@ -139,31 +204,18 @@ export function AnatomyStep({ spec, onResolve }: StepComponentProps<AnatomySpec>
   const all = spec.hotspots.every((h) => seen.includes(h.part));
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="fic-section flex-1 flex flex-col">
       <SectionHead label={spec.label} heading={spec.heading} intro={spec.caption} />
-      <div className="mt-3 rounded-[18px] border border-line bg-card px-3 py-3 flex items-center justify-center">
-        <Candle c={spec.candle} active={active} onPart={open} showAxis />
-      </div>
-      <div className="mt-3 flex flex-wrap gap-[6px]">
+      <Stage tall><Candle c={spec.candle} w={132} h={172} active={active} onPart={open} showAxis animate /></Stage>
+      <div className="mt-[14px] flex flex-wrap gap-[6px] fic-stagger">
         {spec.hotspots.map((h) => (
-          <button key={h.part} type="button" onClick={() => open(h.part)}
-            className={cx("rounded-[10px] px-[10px] py-[6px] text-[11.5px] font-extrabold border transition motion-reduce:transition-none",
-              active === h.part ? "bg-ink text-cream-text border-ink"
-                : seen.includes(h.part) ? "bg-green-tint text-green border-green-line" : "bg-card text-ink-2 border-line")}>
+          <Pill key={h.part} on={active === h.part} done={seen.includes(h.part)} onClick={() => open(h.part)}>
             {seen.includes(h.part) && active !== h.part ? "✓ " : ""}{PART_NAME[h.part]}
-          </button>
+          </Pill>
         ))}
       </div>
-      <div className="mt-3 min-h-[104px] rounded-[16px] border border-line bg-paper px-4 py-[14px]">
-        {spot ? (
-          <>
-            <div className="text-[15px] font-black text-ink">{spot.title}</div>
-            <p className="mt-1 text-[13.5px] font-semibold text-ink-2 leading-[1.55]">{spot.body}</p>
-          </>
-        ) : (
-          <p className="text-[13px] font-bold text-ink-3 leading-[1.5]">Tap a point on the candle — or a name below it — to find out what that part is telling you.</p>
-        )}
-      </div>
+      <Readout swapKey={active} title={spot?.title} body={spot?.body} tone={spec.candle.close >= spec.candle.open ? UP : DOWN}
+        placeholder="Tap a point on the candle — or a name below it — to find out what that part is telling you." />
       <Foot>
         <PrimaryButton onClick={() => onResolve({})} disabled={!all}>
           {all ? "Got it → Continue" : `Explore all ${spec.hotspots.length} · ${seen.length} seen`}
@@ -177,20 +229,23 @@ export function AnatomyStep({ spec, onResolve }: StepComponentProps<AnatomySpec>
 
 export function CompareStep({ spec, onResolve }: StepComponentProps<CompareSpec>) {
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="fic-section flex-1 flex flex-col">
       <SectionHead label={spec.label} heading={spec.heading} intro={spec.intro} />
-      <div className="mt-3 grid grid-cols-2 gap-[10px]">
+      <div className="mt-3 grid grid-cols-2 gap-[10px] fic-stagger">
         {spec.columns.map((col, i) => {
-          const tone = col.tone === "green" ? "border-green-line bg-green-tint" : col.tone === "red" ? "border-red/30 bg-[#FBE9E4]" : "border-line bg-card";
+          const tone = col.tone === "green" ? "border-green-line bg-green-tint shadow-[0_3px_0_#D8E5CE]"
+            : col.tone === "red" ? "border-[#EDD3CB] bg-[#FBE9E4] shadow-[0_3px_0_#E8C9C1]"
+              : "border-line bg-card shadow-[0_3px_0_#EFE4CF]";
           const tc = col.tone === "green" ? "text-green" : col.tone === "red" ? "text-red" : "text-ink";
           return (
-            <div key={i} className={cx("rounded-[16px] border-2 px-3 py-3 flex flex-col", tone)}>
+            <div key={i} className={cx("rounded-[18px] border px-3 pt-3 pb-[14px] flex flex-col", tone)}>
               <div className={cx("text-[13.5px] font-black leading-[1.2]", tc)}>{col.title}</div>
-              {col.candle && <div className="mt-2 flex justify-center"><Candle c={col.candle} w={140} h={132} bodyWidth={24} marks /></div>}
-              <ul className="mt-2 flex flex-col gap-[6px]">
+              {col.candle && <div className="mt-1 flex justify-center"><Candle c={col.candle} w={140} h={132} bodyWidth={24} marks animate /></div>}
+              <ul className="mt-1 flex flex-col gap-[7px]">
                 {col.points.map((p, k) => (
-                  <li key={k} className="text-[12px] font-bold text-ink-2 leading-[1.45] flex gap-[6px]">
-                    <span className={tc} aria-hidden>·</span><span>{p}</span>
+                  <li key={k} className="text-[12px] font-bold text-ink-2 leading-[1.45] flex gap-[7px]">
+                    <span className={cx("mt-[6px] w-[4px] h-[4px] rounded-full shrink-0", col.tone === "green" ? "bg-green-2" : col.tone === "red" ? "bg-red" : "bg-ink-4")} aria-hidden />
+                    <span>{p}</span>
                   </li>
                 ))}
               </ul>
@@ -198,7 +253,9 @@ export function CompareStep({ spec, onResolve }: StepComponentProps<CompareSpec>
           );
         })}
       </div>
-      {spec.note && <p className="mt-3 rounded-[14px] border border-gold/60 bg-gold-tint px-[14px] py-[11px] text-[13px] font-bold text-ink leading-[1.5]">{spec.note}</p>}
+      {spec.note && (
+        <p className="mt-4 border-l-[3px] border-gold pl-[14px] text-[13px] font-bold text-ink leading-[1.55]">{spec.note}</p>
+      )}
       <Foot><PrimaryButton onClick={() => onResolve({})}>Got it → Continue</PrimaryButton></Foot>
     </div>
   );
@@ -210,18 +267,24 @@ export function ProcessStep({ spec, onResolve }: StepComponentProps<ProcessSpec>
   const [shown, setShown] = useState(1);
   const all = shown >= spec.moves.length;
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="fic-section flex-1 flex flex-col">
       <SectionHead label={spec.label} heading={spec.heading} intro={spec.intro} />
-      <ol className="mt-3 flex flex-col gap-[10px]">
-        {spec.moves.slice(0, shown).map((m, i) => (
-          <li key={i} className="rounded-[16px] border border-line bg-card px-[14px] py-[12px] flex gap-[11px]">
-            <span className="w-[24px] h-[24px] shrink-0 rounded-[8px] bg-orange text-cream-text text-[12.5px] font-black flex items-center justify-center">{i + 1}</span>
-            <div>
-              <div className="text-[14.5px] font-black text-ink leading-[1.25]">{m.title}</div>
-              <p className="mt-[3px] text-[13px] font-semibold text-ink-2 leading-[1.5]">{m.body}</p>
-            </div>
-          </li>
-        ))}
+      {/* A numbered spine rather than a stack of cards: the rule down the left is
+          what makes four steps read as one sequence. */}
+      <ol className="mt-4 flex flex-col">
+        {spec.moves.slice(0, shown).map((m, i) => {
+          const last = i === spec.moves.length - 1;
+          return (
+            <li key={i} className={cx("relative flex gap-[13px] pb-[15px]", i === shown - 1 && "fic-swap")}>
+              {!last && <span aria-hidden className="absolute left-[13px] top-[27px] bottom-0 w-[2px] bg-line-2 rounded-full" />}
+              <span className="relative w-[27px] h-[27px] shrink-0 rounded-full bg-orange text-cream-text text-[12.5px] font-black flex items-center justify-center shadow-[0_2px_0_#C96D25]">{i + 1}</span>
+              <div className="pt-[2px]">
+                <div className="text-[14.5px] font-black text-ink leading-[1.25]">{m.title}</div>
+                <p className="mt-[3px] text-[13px] font-semibold text-ink-2 leading-[1.5]">{m.body}</p>
+              </div>
+            </li>
+          );
+        })}
       </ol>
       {all && spec.closing && <p className="mt-3 text-[13.5px] font-bold text-ink-2 leading-[1.55]">{spec.closing}</p>}
       <Foot>
@@ -242,32 +305,29 @@ export function AnnotatedValuesStep({ spec, onResolve }: StepComponentProps<Anno
   const row = spec.values.find((v) => v.part === active) ?? null;
   const all = spec.values.every((v) => seen.includes(v.part));
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="fic-section flex-1 flex flex-col">
       <SectionHead label={spec.label} heading={spec.heading} intro={spec.caption} />
-      <div className="mt-3 rounded-[18px] border border-line bg-card p-3">
-        <div className="text-[11.5px] font-extrabold text-ink-3 uppercase tracking-[0.3px]">{spec.subject}</div>
-        <div className="mt-1 flex items-center gap-3">
-          <Candle c={spec.candle} w={92} h={148} bodyWidth={32} active={active} />
-          <div className="flex-1 grid grid-cols-2 gap-[6px]">
+      <div className="mt-[10px] text-[11px] font-extrabold text-ink-3 uppercase tracking-[0.4px]">{spec.subject}</div>
+      <Stage>
+        <div className="flex items-center gap-4">
+          <Candle c={spec.candle} w={92} h={138} bodyWidth={30} active={active} animate />
+          <div className="grid grid-cols-2 gap-[7px] fic-stagger">
             {spec.values.map((v) => (
               <button key={v.part} type="button" onClick={() => pick(v.part)}
-                className={cx("rounded-[12px] border px-[10px] py-[8px] text-left transition motion-reduce:transition-none",
-                  active === v.part ? "border-ink bg-paper" : seen.includes(v.part) ? "border-green-line bg-green-tint" : "border-line bg-paper")}>
-                <div className="text-[10px] font-extrabold text-ink-3 uppercase tracking-[0.3px]">{v.label}</div>
-                <div className="text-[15px] font-black text-ink tabular-nums">{v.value}</div>
+                className={cx("fic-press rounded-[13px] border px-[11px] py-[8px] text-left min-w-[86px]",
+                  active === v.part ? "border-ink bg-card shadow-[0_2px_0_#1C1913]"
+                    : seen.includes(v.part) ? "border-green-line bg-green-tint shadow-[0_2px_0_#D8E5CE]"
+                      : "border-line bg-card shadow-[0_2px_0_#EFE4CF]")}>
+                <div className="text-[9.5px] font-extrabold text-ink-3 uppercase tracking-[0.4px]">{v.label}</div>
+                <div className="text-[15.5px] font-black text-ink tabular-nums leading-[1.15]">{v.value}</div>
               </button>
             ))}
           </div>
         </div>
-      </div>
-      <div className="mt-3 min-h-[86px] rounded-[16px] border border-line bg-paper px-4 py-[13px]">
-        {row ? (
-          <>
-            <div className="text-[14.5px] font-black text-ink">{row.label} · {row.value}</div>
-            <p className="mt-1 text-[13.5px] font-semibold text-ink-2 leading-[1.55]">{row.meaning}</p>
-          </>
-        ) : <p className="text-[13px] font-bold text-ink-3 leading-[1.5]">Tap each number to read what it actually tells you about the day.</p>}
-      </div>
+      </Stage>
+      <Readout swapKey={active} title={row ? `${row.label} · ${row.value}` : undefined} body={row?.meaning}
+        tone={spec.candle.close >= spec.candle.open ? UP : DOWN}
+        placeholder="Tap each number to read what it actually tells you about the day." />
       <Foot>
         <PrimaryButton onClick={() => onResolve({})} disabled={!all}>
           {all ? "Got it → Continue" : `Tap all four · ${seen.length} of ${spec.values.length}`}
@@ -283,24 +343,26 @@ export function FlipCardsStep({ spec, onResolve }: StepComponentProps<FlipSpec>)
   const [flipped, setFlipped] = useState<number[]>([]);
   const all = flipped.length >= spec.cards.length;
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="fic-section flex-1 flex flex-col">
       <SectionHead label={spec.label} heading={spec.heading} intro={spec.intro} />
-      <div className="mt-3 grid grid-cols-2 gap-[10px]">
+      <div className="mt-3 grid grid-cols-2 gap-[10px] fic-stagger">
         {spec.cards.map((card, i) => {
           const on = flipped.includes(i);
           return (
-            <button key={i} type="button" aria-pressed={on}
-              onClick={() => setFlipped((f) => (f.includes(i) ? f.filter((x) => x !== i) : [...f, i]))}
-              className={cx("min-h-[104px] rounded-[16px] border-2 px-3 py-3 text-left transition active:scale-[0.99] motion-reduce:transition-none",
-                on ? "border-green-2 bg-green-tint" : "border-line bg-card shadow-[0_2px_0_#EFE4CF]")}>
-              {on ? (
-                <p className="text-[12.5px] font-bold text-ink-2 leading-[1.45]">{card.back}</p>
-              ) : (
-                <>
-                  <div className="text-[14px] font-black text-ink leading-[1.25]">{card.front}</div>
-                  <div className="mt-[6px] text-[10.5px] font-extrabold text-ink-4 uppercase tracking-[0.3px]">Tap to flip</div>
-                </>
-              )}
+            <button key={i} type="button" aria-pressed={on} data-on={on} className="fic-flip fic-press relative h-[124px] text-left"
+              onClick={() => setFlipped((f) => (f.includes(i) ? f.filter((x) => x !== i) : [...f, i]))}>
+              <span className="fic-flip-inner block w-full h-full">
+                <span className="fic-flip-face absolute inset-0 rounded-[16px] border border-line bg-card shadow-[0_3px_0_#EFE4CF] px-3 py-3 flex flex-col justify-between">
+                  <span className="text-[14px] font-black text-ink leading-[1.25]">{card.front}</span>
+                  <span className="text-[10.5px] font-extrabold text-ink-4 uppercase tracking-[0.3px]">Tap to flip</span>
+                </span>
+                {/* The term stays on the back too — six answers with no questions
+                    is not a reference anyone can revise from. */}
+                <span className="fic-flip-face fic-flip-back rounded-[16px] border border-green-line bg-green-tint shadow-[0_3px_0_#D8E5CE] px-3 py-[10px] flex flex-col gap-[5px]">
+                  <span className="text-[9.5px] font-extrabold text-green uppercase tracking-[0.5px]">{card.front}</span>
+                  <span className="text-[12.5px] font-bold text-ink-2 leading-[1.4]">{card.back}</span>
+                </span>
+              </span>
             </button>
           );
         })}
@@ -331,32 +393,37 @@ export function BuildCandleStep({ spec, onResolve }: StepComponentProps<BuildSpe
   const near = (a: number, b: number) => Math.abs(a - b) <= tol;
   const matches = (["open", "high", "low", "close"] as const).filter((k) => near(c[k], spec.target[k]));
 
+  const [firstTry, setFirstTry] = useState(true);
   function check() {
     const ok = valid && matches.length === 4;
     setChecked(ok);
-    if (ok) onResolve({ correct: true, firstTry: checked === null, skill: spec.skill });
+    // Do NOT resolve here. Getting it right is the moment the explanation lands —
+    // resolving on the spot advances the section and the learner never reads it.
+    if (!ok) setFirstTry(false);
   }
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="fic-section flex-1 flex flex-col">
       <SectionHead label={spec.label} heading={spec.heading} intro={spec.prompt} />
-      <div className="mt-3 rounded-[18px] border border-line bg-card px-3 py-3 flex items-center justify-center">
-        <Candle c={c} w={120} h={172} bodyWidth={42} showAxis />
-      </div>
-      <div className="mt-3 flex flex-col gap-[10px]">
-        {(["high", "open", "close", "low"] as const).map((k) => (
-          <label key={k} className="flex items-center gap-3">
-            <span className="w-[46px] text-[11.5px] font-extrabold text-ink-3 uppercase tracking-[0.3px]">{k}</span>
-            <input type="range" min={LIMITS.min} max={LIMITS.max} step={1} value={c[k]} onChange={set(k)}
-              className="flex-1 accent-[#4C8A52]" aria-label={`${k} price`} />
-            <span className={cx("w-[38px] text-right text-[13px] font-black tabular-nums", near(c[k], spec.target[k]) ? "text-green" : "text-ink")}>{c[k]}</span>
-          </label>
-        ))}
+      <Stage><Candle c={c} w={120} h={150} bodyWidth={42} showAxis /></Stage>
+      <div className="mt-[14px] flex flex-col gap-[11px]">
+        {(["high", "open", "close", "low"] as const).map((k) => {
+          const hit = near(c[k], spec.target[k]);
+          return (
+            <label key={k} className="flex items-center gap-3">
+              <span className="w-[42px] text-[11px] font-extrabold text-ink-3 uppercase tracking-[0.4px]">{k}</span>
+              <input type="range" min={LIMITS.min} max={LIMITS.max} step={1} value={c[k]} onChange={set(k)}
+                className="flex-1 accent-[#4C8A52]" aria-label={`${k} price`} />
+              <span className={cx("w-[42px] text-right text-[13px] font-black tabular-nums rounded-[8px] py-[2px] transition-colors",
+                hit ? "text-green bg-green-tint" : "text-ink")}>{c[k]}</span>
+            </label>
+          );
+        })}
       </div>
       {!valid && <p className="mt-2 text-[12.5px] font-bold text-coral leading-[1.45]">The high has to be the highest point and the low the lowest — that is what makes it a candle.</p>}
       <Foot>
         {checked === true ? (
-          <FeedbackNote kind="correct" title="That's the candle" action={<PrimaryButton onClick={() => onResolve({ correct: true })}>Continue</PrimaryButton>}>{spec.success}</FeedbackNote>
+          <FeedbackNote kind="correct" title="That's the candle" action={<PrimaryButton onClick={() => onResolve({ correct: true, firstTry, skill: spec.skill })}>Continue</PrimaryButton>}>{spec.success}</FeedbackNote>
         ) : (
           <div className="flex flex-col gap-3">
             {checked === false && <FeedbackNote kind="wrong" title="Not there yet">{spec.hint ?? `${matches.length} of 4 prices are in place — keep moving the ones still showing dark.`}</FeedbackNote>}
@@ -384,20 +451,20 @@ export function RatioExplorerStep({ spec, onResolve }: StepComponentProps<RatioS
   }, [pct]);
   const tc = band.tone === "green" ? "text-green" : band.tone === "red" ? "text-red" : "text-ink";
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="fic-section flex-1 flex flex-col">
       <SectionHead label={spec.label} heading={spec.heading} intro={spec.intro} />
-      <div className="mt-3 rounded-[18px] border border-line bg-card px-3 py-3 flex items-center justify-center">
-        <Candle c={candle} w={120} h={186} bodyWidth={44} />
-      </div>
-      <label className="mt-3 flex items-center gap-3">
-        <span className="text-[11px] font-extrabold text-ink-3 uppercase tracking-[0.3px]">All wick</span>
+      <Stage tall><Candle c={candle} w={120} h={162} bodyWidth={44} /></Stage>
+      <label className="mt-[14px] flex items-center gap-3">
+        <span className="text-[10.5px] font-extrabold text-ink-3 uppercase tracking-[0.4px]">All wick</span>
         <input type="range" min={4} max={100} step={1} value={pct} aria-label="Body share of the candle"
           onChange={(e) => { setPct(Number(e.target.value)); setTouched(true); }} className="flex-1 accent-[#4C8A52]" />
-        <span className="text-[11px] font-extrabold text-ink-3 uppercase tracking-[0.3px]">All body</span>
+        <span className="text-[10.5px] font-extrabold text-ink-3 uppercase tracking-[0.4px]">All body</span>
       </label>
-      <div className="mt-3 min-h-[96px] rounded-[16px] border border-line bg-paper px-4 py-[13px]">
-        <div className={cx("text-[14.5px] font-black", tc)}>{band.title}</div>
-        <p className="mt-1 text-[13.5px] font-semibold text-ink-2 leading-[1.55]">{band.body}</p>
+      <div className="mt-4 min-h-[96px] border-l-[3px] pl-[14px]" style={{ borderColor: band.tone === "green" ? UP : band.tone === "red" ? DOWN : "#E4DAC4" }}>
+        <div key={band.title} className="fic-swap">
+          <div className={cx("text-[15px] font-black leading-[1.3]", tc)}>{band.title}</div>
+          <p className="mt-[4px] text-[13.5px] font-semibold text-ink-2 leading-[1.55]">{band.body}</p>
+        </div>
       </div>
       <Foot>
         <PrimaryButton onClick={() => onResolve({})} disabled={!touched}>
@@ -412,12 +479,14 @@ export function RatioExplorerStep({ spec, onResolve }: StepComponentProps<RatioS
 
 export function TakeawaysStep({ spec, onResolve }: StepComponentProps<TakeawaysSpec>) {
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="fic-section flex-1 flex flex-col">
       <SectionHead label={spec.label} heading={spec.heading} />
-      <ul className="mt-3 flex flex-col gap-[9px]">
+      {/* Five tinted rectangles in a row is a wall. Ticks on ruled lines let the
+          eye run down the list, which is what a takeaways list is for. */}
+      <ul className="mt-4 flex flex-col fic-stagger">
         {spec.points.map((p, i) => (
-          <li key={i} className="rounded-[14px] border border-green-line bg-green-tint px-[14px] py-[11px] flex gap-[10px]">
-            <span className="text-green text-[13px] font-black mt-[1px]" aria-hidden>✓</span>
+          <li key={i} className={cx("flex gap-[11px] py-[11px]", i > 0 && "border-t border-line-2")}>
+            <span className="mt-[1px] w-[19px] h-[19px] shrink-0 rounded-full bg-green-2 text-cream-text text-[10.5px] font-black flex items-center justify-center" aria-hidden>✓</span>
             <span className="text-[13.5px] font-bold text-ink leading-[1.5]">{p}</span>
           </li>
         ))}

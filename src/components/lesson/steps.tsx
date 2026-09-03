@@ -12,7 +12,7 @@ export function ExplainerStep({ spec, onResolve }: StepComponentProps<ExplainerS
   const [beat, setBeat] = useState(0);
   const last = !beats || beat >= beats.length - 1;
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="fic-section flex-1 flex flex-col">
       {spec.label && <Eyebrow>{spec.label}</Eyebrow>}
       {spec.heading && <h1 className={cx("text-[22px] font-black text-ink leading-[1.3] text-pretty", spec.label && "mt-[6px]")}>{spec.heading}</h1>}
       {spec.figure && (
@@ -104,7 +104,7 @@ function ChoiceCore({ options, correctIndex, explanation, reinforce, register, o
 
 export function MultipleChoiceStep({ spec, register, onResolve, xpNote }: StepComponentProps<McSpec>) {
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="fic-section flex-1 flex flex-col">
       {spec.label && <Eyebrow tone="purple">{spec.label}</Eyebrow>}
       <h1 className={cx("text-[22px] font-black text-ink leading-[1.3] text-pretty", spec.label && "mt-[6px]")}>{spec.question}</h1>
       <ChoiceCore options={spec.options} correctIndex={spec.correctIndex} explanation={spec.explanation} reinforce={spec.reinforce} register={register} onResolve={onResolve} feedbackFor={(i) => spec.wrongFeedback?.[i] ?? null} xpNote={xpNote} seed={spec.question.length * 7 + spec.options.length} />
@@ -115,7 +115,7 @@ export function MultipleChoiceStep({ spec, register, onResolve, xpNote }: StepCo
 export function TrueFalseStep({ spec, register, onResolve, xpNote }: StepComponentProps<TfSpec>) {
   const options = [spec.trueLabel ?? "True", spec.falseLabel ?? "False"];
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="fic-section flex-1 flex flex-col">
       <Eyebrow tone="purple">True or false?</Eyebrow>
       <h1 className="mt-2 text-[22px] font-black text-ink leading-[1.3] text-pretty">{spec.statement}</h1>
       <ChoiceCore options={options} correctIndex={spec.answer ? 0 : 1} explanation={spec.explanation} reinforce={spec.reinforce} register={register} onResolve={onResolve} reaskLabel="Read it once more, then decide." letters={false} xpNote={xpNote} seed={spec.statement.length} />
@@ -141,7 +141,7 @@ export function MatchPairsStep({ spec, register, onResolve, xpNote }: StepCompon
   }
   const cell = "rounded-[14px] border-[1.5px] px-3 py-[11px] text-left text-[13.5px] font-extrabold leading-[1.3] transition motion-reduce:transition-none";
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="fic-section flex-1 flex flex-col">
       <Eyebrow tone="purple">Match the pairs</Eyebrow>
       <h1 className="mt-2 text-[20px] font-black text-ink leading-[1.3] text-pretty">{spec.prompt}</h1>
       <div className="mt-4 grid grid-cols-2 gap-[8px]">
@@ -175,7 +175,7 @@ export function PredictionStep({ spec, register, onResolve }: StepComponentProps
   const guide = spec.guideOn && picked === spec.guideOn.value ? spec.guideOn.line : correct ? "You called it." : "Good call to think it through — here's what really happened.";
   const paras = spec.reveal.body.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="fic-section flex-1 flex flex-col">
       <Eyebrow tone="purple">Make a prediction</Eyebrow>
       <h1 className="mt-2 text-[22px] font-black text-ink leading-[1.3] text-pretty">{spec.question}</h1>
       <div className="mt-[18px] flex flex-col gap-[10px]" role="radiogroup" aria-label="Predictions">
@@ -221,7 +221,7 @@ export function RealWorldStep({ spec, register, onResolve }: StepComponentProps<
     return () => document.removeEventListener("visibilitychange", onVis);
   }, [check, confirmed]);
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="fic-section flex-1 flex flex-col">
       <Eyebrow tone="green">Real world · {spec.company} ({ticker})</Eyebrow>
       <h1 className="mt-2 text-[21px] font-black text-ink leading-[1.3] text-pretty">{spec.prompt}</h1>
       <div className="mt-4 rounded-[16px] border border-line bg-card px-4 py-[14px]">

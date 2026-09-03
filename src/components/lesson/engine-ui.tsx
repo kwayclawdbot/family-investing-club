@@ -24,7 +24,7 @@ export function LessonHeader({ backHref, pct, right }: { backHref: string; pct: 
 export function PrimaryButton({ children, onClick, disabled, tone = "green", className }: { children: ReactNode; onClick?: () => void; disabled?: boolean; tone?: "green" | "orange" | "red"; className?: string }) {
   const t = tone === "green" ? "bg-green-2 shadow-[0_3px_0_#3A6B3E]" : tone === "orange" ? "bg-orange shadow-[0_3px_0_#C96D25]" : "bg-red shadow-[0_3px_0_#A8503F]";
   return (
-    <button type="button" onClick={onClick} disabled={disabled} className={cx("w-full rounded-[16px] py-[15px] text-center text-[15.5px] font-black text-cream-text disabled:opacity-50 disabled:shadow-none active:translate-y-[2px] active:shadow-none transition motion-reduce:transition-none", t, className)}>
+    <button type="button" onClick={onClick} disabled={disabled} className={cx("w-full rounded-[16px] py-[15px] text-center text-[15.5px] font-black text-cream-text disabled:opacity-50 disabled:shadow-none active:translate-y-[2px] active:shadow-none transition-[transform,box-shadow,opacity] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none", t, className)}>
       {children}
     </button>
   );
@@ -50,7 +50,7 @@ export function GuideLine({ children, register }: { children: ReactNode; registe
 }
 
 export function FeedbackNote({ kind, title, children, action }: { kind: "correct" | "wrong" | "info"; title?: string; children?: ReactNode; action?: ReactNode }) {
-  const cls = kind === "correct" ? "bg-green-tint border-green-2" : kind === "wrong" ? "bg-[#FBE9E4] border-red" : "bg-card border-line";
+  const cls = kind === "correct" ? "bg-green-tint border-green-2 fic-pop" : kind === "wrong" ? "bg-[#FBE9E4] border-red" : "bg-card border-line";
   const tc = kind === "correct" ? "text-green" : kind === "wrong" ? "text-red" : "text-ink";
   return (
     <div className={cx("rounded-[18px] border-2 p-4", cls)}>
@@ -70,7 +70,7 @@ export function OptionButton({ label, index, state, disabled, onClick, letter = 
   if (state === "wrong") { cls = "bg-[#FBE9E4] border-2 border-red shadow-[0_2px_0_#E8C9C1]"; badge = "bg-red text-white"; }
   if (state === "dim") cls += " opacity-60";
   return (
-    <button type="button" role="radio" aria-checked={state === "selected"} disabled={disabled} onClick={onClick} className={cx("text-left rounded-[16px] px-4 py-[14px] flex items-center gap-3 transition active:scale-[0.99] motion-reduce:transition-none", cls)}>
+    <button type="button" role="radio" aria-checked={state === "selected"} disabled={disabled} onClick={onClick} className={cx("fic-press text-left rounded-[16px] px-4 py-[14px] flex items-center gap-3", cls)}>
       {letter && <span className={cx("w-[26px] h-[26px] rounded-[8px] flex items-center justify-center text-[13px] font-black shrink-0", badge)}>{LETTERS[index] ?? index + 1}</span>}
       <span className="text-[15px] font-extrabold text-ink leading-[1.35]">{label}</span>
     </button>
