@@ -161,12 +161,53 @@ body {
 .fic-swap { animation: fic-swap 200ms var(--ease-out-strong) both; }
 
 /* Flip cards, actually flipped — a card turning over reads as one object,
-   where a crossfade reads as two. */
+   where a crossfade reads as two.
+
+   The two faces share ONE grid cell instead of the back being absolutely
+   positioned inside a fixed-height box. That is the whole fix for the defect
+   both belt-white reviews found: the cell is as tall as the taller face, so a
+   long definition makes the card taller instead of spilling its last two lines
+   onto the page — and because grid rows stretch, the card beside it grows to
+   match. No authored length can break it, in this lesson or any later one. */
 .fic-flip { perspective: 900px; }
-.fic-flip-inner { position: relative; transform-style: preserve-3d; transition: transform 320ms var(--ease-out-strong); }
+.fic-flip-inner { display: grid; transform-style: preserve-3d; transition: transform 320ms var(--ease-out-strong); }
 .fic-flip[data-on="true"] .fic-flip-inner { transform: rotateY(180deg); }
-.fic-flip-face { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-.fic-flip-back { position: absolute; inset: 0; transform: rotateY(180deg); }
+.fic-flip-face { grid-area: 1 / 1; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.fic-flip-back { transform: rotateY(180deg); }
+
+/* Scroll edges. Where the step scrolls under the header or behind the voice bar, the content
+   should dissolve rather than be guillotined by a hard line. Two composited gradients over the
+   scroller, faded in only when there is actually something hidden on that side — a permanent
+   fade would dim a section that fits, and a permanent rule would be a divider where none is
+   needed. Opacity only, so reduced motion loses the transition and keeps the effect. */
+.fic-edge { transition: opacity 180ms ease; opacity: 0; }
+[data-top="1"] ~ .fic-edge-top, [data-bottom="1"] ~ .fic-edge-bottom { opacity: 1; }
+
+/* ── Narration ──────────────────────────────────────────────────────────────
+   A voice needs exactly two pieces of motion: proof that it is speaking, and a
+   caption that does not snap. Both are cheap, and both survive reduced motion
+   as legible static states rather than disappearing. */
+@keyframes fic-level { 0%, 100% { transform: scaleY(0.28); } 50% { transform: scaleY(1); } }
+.fic-level { height: 14px; transform-origin: bottom; transform: scaleY(0.28); }
+.fic-level-1 { animation: fic-level 620ms ease-in-out infinite; }
+.fic-level-2 { animation: fic-level 480ms ease-in-out 90ms infinite; }
+.fic-level-3 { animation: fic-level 720ms ease-in-out 40ms infinite; }
+@keyframes fic-caption { from { opacity: 0; } to { opacity: 1; } }
+.fic-caption { animation: fic-caption 220ms ease both; }
+.fic-caption[data-more="1"] {
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 18px), transparent);
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 18px), transparent);
+}
+
+/* A photograph arriving. It reveals from the top rather than fading, so the
+   image reads as being uncovered in place — a fade at this size looks like a
+   loading state. Clip-path animates on the compositor. */
+@keyframes fic-cover-in {
+  from { clip-path: inset(0 0 100% 0); opacity: 0.5; }
+  to   { clip-path: inset(0 0 0 0); opacity: 1; }
+}
+.fic-cover { overflow: hidden; animation: fic-cover-in 460ms var(--ease-out-strong) both; }
+.fic-cover img { display: block; background: var(--paper-2); }
 
 /* The candle drawing itself: wicks grow out of the body, body grows from its
    own centre. Nothing starts from scale(0) — a flat line is still a candle. */

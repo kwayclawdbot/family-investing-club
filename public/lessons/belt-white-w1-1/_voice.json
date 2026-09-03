@@ -1,0 +1,132 @@
+{
+  "model": "gpt-4o-mini-tts",
+  "voice": "coral",
+  "cues": {
+    "intro": {
+      "hash": "f524516ecc986b1a",
+      "durationMs": 23352,
+      "bytes": 140637,
+      "chars": 347
+    },
+    "outro": {
+      "hash": "18d1f905104c39f3",
+      "durationMs": 10056,
+      "bytes": 60861,
+      "chars": 150
+    },
+    "concept-main": {
+      "hash": "78628bb5210548eb",
+      "durationMs": 40848,
+      "bytes": 245613,
+      "chars": 614
+    },
+    "four-main": {
+      "hash": "09969f71a6c6f090",
+      "durationMs": 24912,
+      "bytes": 149997,
+      "chars": 375
+    },
+    "check-1-main": {
+      "hash": "c1720da827be20cc",
+      "durationMs": 11448,
+      "bytes": 69213,
+      "chars": 168
+    },
+    "check-1-wrong-0": {
+      "hash": "9e9bb79681d97182",
+      "durationMs": 8448,
+      "bytes": 51213,
+      "chars": 119
+    },
+    "check-1-wrong-2": {
+      "hash": "4bacfe587ce6e861",
+      "durationMs": 8952,
+      "bytes": 54237,
+      "chars": 131
+    },
+    "check-1-wrong-3": {
+      "hash": "16825a606620290b",
+      "durationMs": 8304,
+      "bytes": 50349,
+      "chars": 103
+    },
+    "check-1-reask": {
+      "hash": "9bfb7432c5d8190b",
+      "durationMs": 4152,
+      "bytes": 25437,
+      "chars": 47
+    },
+    "check-1-explanation": {
+      "hash": "39fae3bcd63ef141",
+      "durationMs": 13056,
+      "bytes": 78861,
+      "chars": 200
+    },
+    "check-1-reinforce": {
+      "hash": "fd74bfe90e2ccc20",
+      "durationMs": 6960,
+      "bytes": 42285,
+      "chars": 103
+    },
+    "insight-main": {
+      "hash": "2141782e7bf1c8d4",
+      "durationMs": 92016,
+      "bytes": 552621,
+      "chars": 1467
+    },
+    "practice-main": {
+      "hash": "3bb64f251374d7bd",
+      "durationMs": 16152,
+      "bytes": 97437,
+      "chars": 211
+    },
+    "check-2-main": {
+      "hash": "52ecbaa75dab98d7",
+      "durationMs": 6912,
+      "bytes": 41997,
+      "chars": 87
+    },
+    "check-2-wrong-0": {
+      "hash": "30aaab4d04825d62",
+      "durationMs": 11712,
+      "bytes": 70797,
+      "chars": 131
+    },
+    "check-2-wrong-1": {
+      "hash": "d478003697135fa3",
+      "durationMs": 10656,
+      "bytes": 64461,
+      "chars": 117
+    },
+    "check-2-wrong-3": {
+      "hash": "411d13ccfad51e6e",
+      "durationMs": 7512,
+      "bytes": 45597,
+      "chars": 110
+    },
+    "check-2-reask": {
+      "hash": "9bfb7432c5d8190b",
+      "durationMs": 4848,
+      "bytes": 29613,
+      "chars": 47
+    },
+    "check-2-explanation": {
+      "hash": "cec91b5213318dae",
+      "durationMs": 10248,
+      "bytes": 62013,
+      "chars": 167
+    },
+    "check-2-reinforce": {
+      "hash": "c45532a2111a0970",
+      "durationMs": 8160,
+      "bytes": 49485,
+      "chars": 91
+    },
+    "wrap-main": {
+      "hash": "41f95a3195eac5e8",
+      "durationMs": 32352,
+      "bytes": 194637,
+      "chars": 408
+    }
+  }
+}

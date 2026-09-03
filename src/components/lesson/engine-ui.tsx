@@ -62,6 +62,10 @@ export function FeedbackNote({ kind, title, children, action }: { kind: "correct
 }
 
 export type OptionState = "idle" | "selected" | "correct" | "wrong" | "dim";
+/**
+ * `index` is the option's POSITION on screen, not its index in the authored array. The two differ the moment a re-ask reshuffles the options, and taking the letter from the authored
+ * index is what made a second attempt label its options D, C, B, A.
+ */
 export function OptionButton({ label, index, state, disabled, onClick, letter = true }: { label: string; index: number; state: OptionState; disabled?: boolean; onClick: () => void; letter?: boolean }) {
   let cls = "bg-card border-[1.5px] border-line shadow-[0_2px_0_#EFE4CF]";
   let badge = "bg-line-2 text-ink-3";

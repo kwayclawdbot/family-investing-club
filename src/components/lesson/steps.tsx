@@ -1,11 +1,12 @@
 "use client";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import type { ExplainerStep as ExplainerSpec, MatchPairsStep as MatchSpec, MultipleChoiceStep as McSpec, PredictionStep as PredictSpec, RealWorldStep as RealSpec, Register, StepComponentProps, StepResult, TrueFalseStep as TfSpec } from "@/lib/learn/schema";
+import type { StepAudio, ExplainerStep as ExplainerSpec, MatchPairsStep as MatchSpec, MultipleChoiceStep as McSpec, PredictionStep as PredictSpec, RealWorldStep as RealSpec, Register, StepComponentProps, StepResult, TrueFalseStep as TfSpec } from "@/lib/learn/schema";
 import { learnApi } from "@/lib/live/client-learn";
 import { cx } from "@/components/ui";
 import { Eyebrow, FeedbackNote, GuideLine, OptionButton, PrimaryButton, shuffled, type OptionState } from "./engine-ui";
 import { DrillChart } from "./chart";
+import { SectionMedia, useCue } from "./narration";
 
 /* ── Explainer — Continue to advance; beats render as headline + spoken line ── */
 export function ExplainerStep({ spec, onResolve }: StepComponentProps<ExplainerSpec>) {
@@ -15,7 +16,8 @@ export function ExplainerStep({ spec, onResolve }: StepComponentProps<ExplainerS
   return (
     <div className="fic-section flex-1 flex flex-col">
       {spec.label && <Eyebrow>{spec.label}</Eyebrow>}
-      {spec.heading && <h1 className={cx("text-[22px] font-black text-ink leading-[1.3] text-pretty", spec.label && "mt-[6px]")}>{spec.heading}</h1>}
+      {spec.heading && <h1 className={cx("text-[22px] font-black text-ink leading-[1.3] tracking-[-0.015em] text-pretty", spec.label && "mt-[6px]")}>{spec.heading}</h1>}
+      {spec.media && <SectionMedia media={spec.media} />}
       {spec.figure && (
         <div className="mt-3 rounded-[16px] border border-gold/60 bg-gold-tint px-4 py-3">
           <div className="text-[18px] font-black text-ink">{spec.figure.kind === "quote" ? `“${spec.figure.value}”` : spec.figure.value}</div>
@@ -44,9 +46,10 @@ export function ExplainerStep({ spec, onResolve }: StepComponentProps<ExplainerS
 /* ── ChoiceCore — mastery loop shared by multiple_choice + true_false ──
    wrong → Kai explains → re-ask a reshuffled variant → resolve only once corrected (or revealed). */
 type Phase = "first" | "explaining" | "reask" | "revealed" | "done";
-function ChoiceCore({ options, correctIndex, explanation, reinforce, register, onResolve, feedbackFor, reaskLabel = "Let's try that again.", letters = true, xpNote, seed }: {
+function ChoiceCore({ options, correctIndex, explanation, reinforce, register, onResolve, feedbackFor, reaskLabel = "Let's try that again.", letters = true, xpNote, seed, audio }: {
   options: string[]; correctIndex: number; explanation?: string; reinforce?: string; register: Register; onResolve: (r: StepResult) => void;
   feedbackFor?: (i: number) => { text: string; kai?: boolean } | null; reaskLabel?: string; letters?: boolean; xpNote?: string; seed: number;
+  audio?: StepAudio;
 }) {
   const [phase, setPhase] = useState<Phase>("first");
   const [selected, setSelected] = useState<number | null>(null);
@@ -64,6 +67,14 @@ function ChoiceCore({ options, correctIndex, explanation, reinforce, register, o
     if (phase === "first") setPhase("explaining"); else setPhase("revealed");
   }
   const wrongNote = lastWrong !== null ? feedbackFor?.(lastWrong) ?? null : null;
+  /* The voice follows the state machine, so the member hears the note that is on screen and
+     never a stale one: the specific wrong-answer recording, the re-ask, then the explanation
+     or the reinforcement. This is where the FTA lessons put their best teaching. */
+  const cue = phase === "explaining" ? (lastWrong !== null && audio?.[`wrong-${lastWrong}`] ? `wrong-${lastWrong}` : "explanation")
+    : phase === "reask" ? "reask"
+      : phase === "revealed" ? "explanation"
+        : phase === "done" ? (firstTry ? "reinforce" : "explanation") : null;
+  useCue(audio, cue);
   const stateFor = (i: number): OptionState => {
     if (answering) return selected === i ? "selected" : "idle";
     if (i === correctIndex && (phase === "done" || phase === "revealed")) return "correct";
@@ -74,7 +85,7 @@ function ChoiceCore({ options, correctIndex, explanation, reinforce, register, o
   return (
     <>
       <div className="flex flex-col gap-[10px] mt-[18px]" role="radiogroup" aria-label="Answers">
-        {order.map((optIdx) => <OptionButton key={`${phase}-${optIdx}`} label={options[optIdx]} index={optIdx} letter={letters} state={stateFor(optIdx)} disabled={!answering} onClick={() => setSelected(optIdx)} />)}
+        {order.map((optIdx, position) => <OptionButton key={`${phase}-${optIdx}`} label={options[optIdx]} index={position} letter={letters} state={stateFor(optIdx)} disabled={!answering} onClick={() => setSelected(optIdx)} />)}
       </div>
       <div className="mt-auto pt-5 flex flex-col gap-3">
         {answering && (
@@ -84,9 +95,20 @@ function ChoiceCore({ options, correctIndex, explanation, reinforce, register, o
           </>
         )}
         {phase === "explaining" && (
-          <FeedbackNote kind="wrong" title="Not quite" action={<PrimaryButton tone="red" onClick={() => { setSelected(null); setPhase("reask"); }}>Try again</PrimaryButton>}>
-            {wrongNote?.text ?? explanation ?? "Read the question once more — the answer is in the wording."}
-          </FeedbackNote>
+          /* An author who wrote `kai: true` meant Kai catches you when you are wrong. That flag
+             was parsed and dropped, and the note spoke in the app's voice inside a red panel.
+             When Kai is the one talking he gets the line and the button, not a second panel
+             underneath repeating that something went wrong. */
+          wrongNote?.kai ? (
+            <>
+              <GuideLine register={register}>{wrongNote.text}</GuideLine>
+              <PrimaryButton tone="red" onClick={() => { setSelected(null); setPhase("reask"); }}>Try again</PrimaryButton>
+            </>
+          ) : (
+            <FeedbackNote kind="wrong" title="Not quite" action={<PrimaryButton tone="red" onClick={() => { setSelected(null); setPhase("reask"); }}>Try again</PrimaryButton>}>
+              {wrongNote?.text ?? explanation ?? "Read the question once more — the answer is in the wording."}
+            </FeedbackNote>
+          )
         )}
         {phase === "revealed" && (
           <FeedbackNote kind="info" title={`The answer: ${options[correctIndex]}`} action={<PrimaryButton onClick={() => onResolve({ correct: true, firstTry: false })}>Got it → Continue</PrimaryButton>}>
@@ -107,8 +129,8 @@ export function MultipleChoiceStep({ spec, register, onResolve, xpNote }: StepCo
   return (
     <div className="fic-section flex-1 flex flex-col">
       {spec.label && <Eyebrow tone="purple">{spec.label}</Eyebrow>}
-      <h1 className={cx("text-[22px] font-black text-ink leading-[1.3] text-pretty", spec.label && "mt-[6px]")}>{spec.question}</h1>
-      <ChoiceCore options={spec.options} correctIndex={spec.correctIndex} explanation={spec.explanation} reinforce={spec.reinforce} register={register} onResolve={onResolve} feedbackFor={(i) => spec.wrongFeedback?.[i] ?? null} xpNote={xpNote} seed={spec.question.length * 7 + spec.options.length} />
+      <h1 className={cx("text-[22px] font-black text-ink leading-[1.3] tracking-[-0.015em] text-pretty", spec.label && "mt-[6px]")}>{spec.question}</h1>
+      <ChoiceCore options={spec.options} correctIndex={spec.correctIndex} explanation={spec.explanation} reinforce={spec.reinforce} register={register} onResolve={onResolve} feedbackFor={(i) => spec.wrongFeedback?.[i] ?? null} xpNote={xpNote} seed={spec.question.length * 7 + spec.options.length} audio={spec.audio} />
     </div>
   );
 }
@@ -119,7 +141,7 @@ export function TrueFalseStep({ spec, register, onResolve, xpNote }: StepCompone
     <div className="fic-section flex-1 flex flex-col">
       <Eyebrow tone="purple">True or false?</Eyebrow>
       <h1 className="mt-2 text-[22px] font-black text-ink leading-[1.3] text-pretty">{spec.statement}</h1>
-      <ChoiceCore options={options} correctIndex={spec.answer ? 0 : 1} explanation={spec.explanation} reinforce={spec.reinforce} register={register} onResolve={onResolve} reaskLabel="Read it once more, then decide." letters={false} xpNote={xpNote} seed={spec.statement.length} />
+      <ChoiceCore options={options} correctIndex={spec.answer ? 0 : 1} explanation={spec.explanation} reinforce={spec.reinforce} register={register} onResolve={onResolve} reaskLabel="Read it once more, then decide." letters={false} xpNote={xpNote} seed={spec.statement.length} audio={spec.audio} />
     </div>
   );
 }

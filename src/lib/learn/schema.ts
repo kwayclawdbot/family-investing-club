@@ -3,8 +3,15 @@
  *
  * `lessons.steps` (jsonb) holds either the full envelope `{ schema, title, steps, … }` or a bare
  * step array. Non-null → the stepped engine; null → the legacy video/html viewer. Every string is
- * authored content — there is no LLM in this flow. Audio fields are carried through untouched so a
- * lesson authored with narration still parses; FIC renders them as captions only.
+ * authored content — there is no LLM in this flow.
+ *
+ * Audio is real narration, not decoration. Every `AudioAsset` is a committed static MP3 generated
+ * ahead of time by `scripts/voice-lessons.mjs` from its own `say` line, so a lesson speaks the same
+ * words every time and a copy edit re-renders one clip rather than the whole lesson. Cue ids are a
+ * convention, not a schema: `main` is the section, `wrong-<i>` / `explanation` / `reinforce` /
+ * `reask` are the question's own voice, and the lesson-level map carries `intro` and `outro`.
+ * Narration is always optional — a lesson with no audio, or a member with the sound off, plays
+ * exactly the same.
  */
 
 export const LESSON_SCHEMA_VERSION = 1 as const;
@@ -16,6 +23,13 @@ export type SkillId = string;
 
 export interface AudioAsset { url: string; durationMs: number; say: string }
 export type StepAudio = Record<string, AudioAsset>;
+
+/**
+ * A photograph that carries the idea, not decoration. Art-directed per lesson and committed
+ * under `public/lessons/<key>/`. `alt` is required because the picture is teaching: a member
+ * on a screen reader has to get what the sighted member gets.
+ */
+export interface LessonMedia { src: string; alt: string; caption?: string }
 
 export interface ExplainerBeat {
   id: string;
@@ -37,7 +51,7 @@ export type SectionLabel =
   | "DATA VISUALIZATION" | "PRACTICE" | "EXERCISE" | "DEEPER INSIGHT" | "KNOWLEDGE CHECK" | "WRAP UP"
   | "ON THE CHART";
 
-export interface BaseStep { id: string; type: string; skill?: SkillId; audio?: StepAudio; label?: SectionLabel }
+export interface BaseStep { id: string; type: string; skill?: SkillId; audio?: StepAudio; label?: SectionLabel; media?: LessonMedia }
 
 /** One candle, in prices. Every candle-shaped section draws from this. */
 export interface CandleSpec { open: number; high: number; low: number; close: number }
@@ -254,7 +268,7 @@ export interface CompareStep extends BaseStep {
   type: "compare";
   heading: string;
   intro?: string;
-  columns: { title: string; tone: "green" | "red" | "neutral"; candle?: CandleSpec; points: string[] }[];
+  columns: { title: string; tone: "green" | "red" | "neutral"; candle?: CandleSpec; points: string[]; media?: LessonMedia }[];
   note?: string;
 }
 
@@ -423,6 +437,8 @@ export interface LessonJSON {
   duration_minutes: number;
   xp: number;
   guide?: { intro?: string; outro?: string };
+  /** The lesson's own photograph, shown on the opening screen with `guide.intro`. */
+  cover?: LessonMedia;
   audio?: StepAudio;
   steps: StepSpec[];
 }
@@ -462,6 +478,7 @@ export function parseLessonSteps(raw: unknown, fallback: { title: string; xp: nu
       duration_minutes: env.duration_minutes ?? 4,
       xp: env.xp ?? fallback.xp,
       guide: env.guide,
+      cover: env.cover,
       audio: env.audio,
       steps: env.steps,
     };

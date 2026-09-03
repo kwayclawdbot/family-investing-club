@@ -1,18 +1,47 @@
 {
   "lessons": [
     {
-      "match": { "course": "belt-white", "title": "The Four Ways to Make Money" },
+      "match": {
+        "course": "belt-white",
+        "title": "The Four Ways to Make Money"
+      },
+      "voice": {
+        "key": "belt-white-w1-1",
+        "voice": "coral",
+        "instructions": "A warm, confident adult talking across a kitchen table to another adult. Unhurried and grounded. Plain speech, real contractions, full stops landed rather than rushed. No brightness, no salesmanship, no upspeak, no announcer energy. Slow slightly on the numbers."
+      },
       "json": {
         "schema": 1,
         "title": "The Four Ways to Make Money",
-        "skills": ["market_basics"],
+        "skills": [
+          "market_basics"
+        ],
         "difficulty": 1,
-        "audience": ["adult", "teen"],
+        "audience": [
+          "adult",
+          "teen"
+        ],
         "duration_minutes": 10,
         "xp": 50,
         "guide": {
           "intro": "Before anything about stocks, one question: where does money actually come from? There is a short list, and everything you have ever been paid is on it.",
-          "outro": "You can name all four and say which ones you are using. Next: why the fourth one gets stronger the longer you leave it alone."
+          "outro": "You can name all four now, and say which ones you are using. Next: why ownership gets stronger the longer you leave it alone."
+        },
+        "cover": {
+          "src": "/lessons/belt-white-w1-1/hero.jpg",
+          "alt": "Four objects laid in a row on a bare oak table: worn leather work gloves, a brass shop bell, a ring of keys on a leather fob, and a folded sheet of heavy cream paper."
+        },
+        "audio": {
+          "intro": {
+            "url": "/lessons/belt-white-w1-1/intro.mp3",
+            "durationMs": 23352,
+            "say": "Before anything about stocks, before a single chart, one question. Where does money actually come from? Not the philosophy of it. The mechanics. There's a short list, and everything you have ever been paid is on it. Four items. Give me ten minutes and you'll be able to name all four, and say out loud which ones your household is using right now."
+          },
+          "outro": {
+            "url": "/lessons/belt-white-w1-1/outro.mp3",
+            "durationMs": 10056,
+            "say": "That's the whole list. You can name all four now, and say which ones you're using. Next up: why ownership gets stronger the longer you leave it alone."
+          }
         },
         "steps": [
           {
@@ -21,13 +50,24 @@
             "label": "CORE CONCEPT",
             "skill": "market_basics",
             "heading": "Money arrives in four ways",
-            "figure": { "kind": "stat", "value": "Four", "caption": "Every dollar you have ever been paid came through one of them" },
+            "figure": {
+              "kind": "stat",
+              "value": "Four",
+              "caption": "Every dollar you have ever been paid came through one of them"
+            },
             "body": [
               "Money reaches a household through a small number of routes. You can sell your own time and skill. You can build something that uses other people's time and skill. You can buy a piece of something that earns money without you. Or you can buy something and sell it later for more than you paid.",
               "That is the whole list: work, business, investing, trading. Most families use one of them. Every family can use more than one.",
               "The reason this comes first, before a single chart or ticker, is that the four are not four flavours of the same thing. They behave differently when you stop showing up. Work and business pay you for effort — yours or someone else's. Investing and trading pay you for owning something. Once you can hear which one someone is describing, financial talk stops being noise.",
               "The textbook opens the same way on page 5: money sitting still does not grow, so you give it a job. Giving your money a job is the second half of this list, and it is the half most people never start."
-            ]
+            ],
+            "audio": {
+              "main": {
+                "url": "/lessons/belt-white-w1-1/concept-main.mp3",
+                "durationMs": 40848,
+                "say": "Money reaches a household through a small number of routes. You can sell your own time and skill. You can build something that uses other people's time and skill as well as your own. You can buy a piece of something that earns money without you. Or you can buy something and sell it on later for more than you paid. Work, business, investing, trading. That's the whole list. Most families use one of them. Every family can use more than one. And the reason this comes before any chart or any ticker is that those four are not four flavours of the same thing. They behave differently the moment you stop showing up."
+              }
+            }
           },
           {
             "id": "four",
@@ -40,16 +80,24 @@
               {
                 "title": "1 · Work",
                 "tone": "neutral",
+                "media": {
+                  "src": "/lessons/belt-white-w1-1/work.jpg",
+                  "alt": "A barber's clippers and comb resting on a folded apron on a worn timber counter at the end of the day."
+                },
                 "points": [
                   "You sell your own hours and skill",
                   "Pay stops when the hours stop",
-                  "The safest of the four, and the most capped",
+                  "The most predictable of the four, and the most capped",
                   "A wage, a salary, a shift, a commission"
                 ]
               },
               {
                 "title": "2 · Business",
                 "tone": "neutral",
+                "media": {
+                  "src": "/lessons/belt-white-w1-1/business.jpg",
+                  "alt": "Four worn canvas aprons hanging on iron hooks by the back door of an empty salon."
+                },
                 "points": [
                   "You sell other people's hours and skill as well as your own",
                   "It can grow past the hours in your day",
@@ -60,6 +108,10 @@
               {
                 "title": "3 · Investing",
                 "tone": "green",
+                "media": {
+                  "src": "/lessons/belt-white-w1-1/investing.jpg",
+                  "alt": "An engraved paper share certificate lying on a walnut desk with a pair of reading glasses folded on its corner."
+                },
                 "points": [
                   "You buy a piece of something that earns",
                   "It pays while you are asleep or at your job",
@@ -70,6 +122,10 @@
               {
                 "title": "4 · Trading",
                 "tone": "green",
+                "media": {
+                  "src": "/lessons/belt-white-w1-1/trading.jpg",
+                  "alt": "A wooden crate of second-hand records on a trestle table at an outdoor market stall."
+                },
                 "points": [
                   "You buy something to sell it on at a higher price",
                   "The gain is the price change, not the earnings",
@@ -78,36 +134,14 @@
                 ]
               }
             ],
-            "note": "The Learn 2 Earn workshop puts the same idea in three buckets: your time and skills, other people's time and skills, and your money making money. We split that last bucket in two, because owning something that earns and flipping something for a profit are not the same job."
-          },
-          {
-            "id": "insight",
-            "type": "explainer",
-            "label": "DEEPER INSIGHT",
-            "skill": "market_basics",
-            "heading": "The test: does it stop when you stop?",
-            "body": [
-              "Work stops when you stop. That is not a criticism of work — it pays for almost everything in most households, and it is where the money to invest comes from in the first place. It is simply a fact about the shape of it.",
-              "Ownership does not stop when you stop. On 2 September 2026, Costco Wholesale had 443,478,804 shares in existence. Anyone holding one of them owned that fraction of the company on a Tuesday night, on a public holiday, and while they were on the school run. In July 2026 it declared $1.47 a share for the quarter. Nobody had to be at work for that to arrive.",
-              "This is the entire reason a club like this exists. Not to replace work, and not to promise anything about how much ownership pays — that changes, and sometimes it is negative. The point is narrower and more useful: there is a second route, it does not depend on your hours, and the only way onto it is to own something.",
-              "Which is where the rest of White Belt goes. What exactly is the thing you own, and what makes its price move?"
-            ]
-          },
-          {
-            "id": "practice",
-            "type": "flip_cards",
-            "label": "PRACTICE",
-            "skill": "market_basics",
-            "heading": "Say it before you flip",
-            "intro": "Six terms you will use in every lesson after this one.",
-            "cards": [
-              { "front": "Work income", "back": "Money paid for your own time and skill. It stops when the hours stop." },
-              { "front": "Business income", "back": "Money from an operation that uses other people's time and skill as well as your own. It can grow past the hours in your day." },
-              { "front": "Investing", "back": "Buying a piece of something that earns money, and holding it while it does. Measured in years." },
-              { "front": "Trading", "back": "Buying something to sell it on at a higher price. The gain comes from the price change, not from the earnings." },
-              { "front": "Owner", "back": "Anyone who holds a piece of a company. Buy one share and that is what you become — a part owner, with a claim on the company's assets and earnings." },
-              { "front": "Return", "back": "What an investment gives back, as a percentage of what you put in. It can be negative, and saying so out loud is part of doing this properly." }
-            ]
+            "note": "The Learn 2 Earn workshop puts the same idea in three buckets: your time and skills, other people's time and skills, and your money making money. We split that last bucket in two, because owning something that earns and flipping something for a profit are not the same job.",
+            "audio": {
+              "main": {
+                "url": "/lessons/belt-white-w1-1/four-main.mp3",
+                "durationMs": 24912,
+                "say": "Here they are side by side. Read the top row first. Work and business. Both of those are paid for time — your own hours in the first one, other people's hours in the second. Now the bottom row, the green pair. Investing and trading. Neither of those is paid for time. They're paid for ownership. That's the split that matters, and it's the one thing to carry off this screen."
+              }
+            }
           },
           {
             "id": "check-1",
@@ -124,12 +158,134 @@
             "correctIndex": 1,
             "explanation": "The salon is business income: it uses four other people's hours as well as her own. The Nike shares are investing: she owns a piece of a company that earns whether or not she opens the salon that day.",
             "wrongFeedback": [
-              { "text": "If she employs four people, the income is not capped by her own hours. That is what makes it business rather than work.", "kai": true },
+              {
+                "text": "If she employs four people, the income is not capped by her own hours. That is what makes it business rather than work.",
+                "kai": true
+              },
               null,
-              { "text": "Trading means buying something in order to sell it on at a higher price. Holding shares to own a piece of the company is investing.", "kai": true },
-              { "text": "The salon counts. It is the second of the four ways — other people's time and skill, not only your own.", "kai": true }
+              {
+                "text": "Trading means buying something in order to sell it on at a higher price. Holding shares to own a piece of the company is investing.",
+                "kai": true
+              },
+              {
+                "text": "The salon counts. It is the second of the four ways — other people's time and skill, not only your own.",
+                "kai": true
+              }
             ],
-            "reinforce": "Most people who build wealth run more than one of the four at once. Naming which is which is the skill."
+            "reinforce": "Most people who build wealth run more than one of the four at once. Naming which is which is the skill.",
+            "audio": {
+              "main": {
+                "url": "/lessons/belt-white-w1-1/check-1-main.mp3",
+                "durationMs": 11448,
+                "say": "Your turn, before we go any further. Read it once, then pick. I'll say one thing: there's a household in this question doing more than one of the four at the same time."
+              },
+              "wrong-0": {
+                "url": "/lessons/belt-white-w1-1/check-1-wrong-0.mp3",
+                "durationMs": 8448,
+                "say": "If she employs four people, the income is not capped by her own hours. That is what makes it business rather than work."
+              },
+              "wrong-2": {
+                "url": "/lessons/belt-white-w1-1/check-1-wrong-2.mp3",
+                "durationMs": 8952,
+                "say": "Trading means buying something in order to sell it on at a higher price. Holding shares to own a piece of the company is investing."
+              },
+              "wrong-3": {
+                "url": "/lessons/belt-white-w1-1/check-1-wrong-3.mp3",
+                "durationMs": 8304,
+                "say": "The salon counts. It is the second of the four ways — other people's time and skill, not only your own."
+              },
+              "reask": {
+                "url": "/lessons/belt-white-w1-1/check-1-reask.mp3",
+                "durationMs": 4152,
+                "say": "Have another go — you have everything you need."
+              },
+              "explanation": {
+                "url": "/lessons/belt-white-w1-1/check-1-explanation.mp3",
+                "durationMs": 13056,
+                "say": "The salon is business income: it uses four other people's hours as well as her own. The Nike shares are investing: she owns a piece of a company that earns whether or not she opens the salon that day."
+              },
+              "reinforce": {
+                "url": "/lessons/belt-white-w1-1/check-1-reinforce.mp3",
+                "durationMs": 6960,
+                "say": "Most people who build wealth run more than one of the four at once. Naming which is which is the skill."
+              }
+            }
+          },
+          {
+            "id": "insight",
+            "type": "explainer",
+            "label": "DEEPER INSIGHT",
+            "skill": "market_basics",
+            "heading": "The test: does it stop when you stop?",
+            "media": {
+              "src": "/lessons/belt-white-w1-1/closed.jpg",
+              "alt": "A small salon seen from the street at night, lights off, chairs empty, the window reflecting a streetlamp.",
+              "caption": "Work stopped at closing time. Ownership did not."
+            },
+            "figure": {
+              "kind": "stat",
+              "value": "443,478,804",
+              "caption": "Costco shares in existence, as of its latest filing"
+            },
+            "body": [
+              "Work stops when you stop. That is not a criticism of work — it pays for almost everything in most households, and it is where the money to invest comes from in the first place. It is simply a fact about the shape of it.",
+              "Ownership does not stop when you stop. Costco Wholesale is divided into about 443 million shares. Anyone holding one of them owned that fraction of the company on any Tuesday night, on a public holiday, and while they were on the school run.",
+              "In July 2026 Costco declared a dividend of $1.47 a share for the quarter — a dividend is cash out of the company's own profit, paid to everyone who owns a share. Size it honestly before it sounds like a windfall: one share cost $928.48 on 2 September 2026, and $1.47 four times a year at that rate is about $5.88, or roughly 0.63% a year. Small. But it arrived whatever the owner was doing that day.",
+              "This is the entire reason a club like this exists. Not to replace work, and not to promise anything about how much ownership pays — that changes, dividends get cut, and sometimes the return is negative. The point is narrower and more useful: there is a second route, it does not depend on your hours, and the only way onto it is to own something.",
+              "Which is where the rest of White Belt goes. What exactly is the thing you own, and what makes its price move?"
+            ],
+            "audio": {
+              "main": {
+                "url": "/lessons/belt-white-w1-1/insight-main.mp3",
+                "durationMs": 92016,
+                "say": "Here's the test that separates them, and it's one sentence long. Does it stop when you stop? Work stops when you stop. That's not a criticism of work. It pays for almost everything in most homes, and it's where the money to invest comes from in the first place. It's just a fact about the shape of it. Ownership doesn't stop when you stop. Costco Wholesale is divided into about four hundred and forty-three million shares. Hold one of them, and you owned that fraction of the company on any Tuesday night, on a public holiday, and while you were on the school run. In July twenty twenty-six, Costco declared a dividend of one dollar forty-seven a share for the quarter. A dividend is cash out of the company's own profit, paid to everyone who owns a share. Now size that honestly, before it starts to sound like a windfall. One share cost nine hundred and twenty-eight dollars and forty-eight cents that September. One dollar forty-seven, four times a year at that rate, is about five dollars eighty-eight. Roughly six tenths of one percent. Small. But it arrived whatever the owner was doing that day. And that's the whole reason a club like this exists. Not to replace work. Not to promise you anything about how much ownership pays, because that changes, dividends get cut, and sometimes the return is negative. The point is narrower and more useful than that. There's a second route, it doesn't depend on your hours, and the only way onto it is to own something."
+              }
+            }
+          },
+          {
+            "id": "practice",
+            "type": "flip_cards",
+            "label": "PRACTICE",
+            "skill": "market_basics",
+            "heading": "Say it before you flip",
+            "intro": "Seven words to have ready before the rest of this belt.",
+            "cards": [
+              {
+                "front": "Work income",
+                "back": "Money paid for your own time and skill. It stops when the hours stop."
+              },
+              {
+                "front": "Business income",
+                "back": "Money from an operation that uses other people's time and skill as well as your own. It can grow past the hours in your day."
+              },
+              {
+                "front": "Investing",
+                "back": "Buying a piece of something that earns money, and holding it while it does. Measured in years."
+              },
+              {
+                "front": "Trading",
+                "back": "Buying something to sell it on at a higher price. The gain comes from the price change, not from the earnings."
+              },
+              {
+                "front": "Owner",
+                "back": "Anyone who holds a piece of a company. Buy one share and that is what you become — a part owner, with a claim on the company's assets and earnings."
+              },
+              {
+                "front": "Dividend",
+                "back": "Cash paid out of a company's profit to everyone who owns a share, usually four times a year. It is never guaranteed, and a company can cut it."
+              },
+              {
+                "front": "Return",
+                "back": "What an investment gives back, as a percentage of what you put in. It can be negative, and saying so out loud is part of doing this properly."
+              }
+            ],
+            "audio": {
+              "main": {
+                "url": "/lessons/belt-white-w1-1/practice-main.mp3",
+                "durationMs": 16152,
+                "say": "Seven words. Say each one out loud before you turn the card over. If you can already say it, the card is confirming you, not teaching you — and that's the fastest way to find the two you don't actually have yet."
+              }
+            }
           },
           {
             "id": "check-2",
@@ -146,12 +302,58 @@
             "correctIndex": 2,
             "explanation": "Both involve buying. The difference is where the money comes from: earnings and ownership on one side, the gap between your buy price and your sell price on the other.",
             "wrongFeedback": [
-              { "text": "Investing is not safe. Companies fail and share prices fall. The difference is what you are being paid for, not how risky it feels.", "kai": true },
-              { "text": "Age is not the line, and neither is a job title. Both are open to anyone. What differs is where the money comes from.", "kai": true },
+              {
+                "text": "Investing is not safe. Companies fail and share prices fall. The difference is what you are being paid for, not how risky it feels.",
+                "kai": true
+              },
+              {
+                "text": "Age is not the line, and neither is a job title. Both are open to anyone. What differs is where the money comes from.",
+                "kai": true
+              },
               null,
-              { "text": "They are genuinely different jobs. One holds a thing that earns; the other sells a thing on at a higher price.", "kai": true }
+              {
+                "text": "They are genuinely different jobs. One holds a thing that earns; the other sells a thing on at a higher price.",
+                "kai": true
+              }
             ],
-            "reinforce": "Investor: paid by the business. Trader: paid by the price. Same market, different question."
+            "reinforce": "Investor: paid by the business. Trader: paid by the price. Same market, different question.",
+            "audio": {
+              "main": {
+                "url": "/lessons/belt-white-w1-1/check-2-main.mp3",
+                "durationMs": 6912,
+                "say": "Last one. This is the distinction people get wrong for years, so take a second with it."
+              },
+              "wrong-0": {
+                "url": "/lessons/belt-white-w1-1/check-2-wrong-0.mp3",
+                "durationMs": 11712,
+                "say": "Investing is not safe. Companies fail and share prices fall. The difference is what you are being paid for, not how risky it feels."
+              },
+              "wrong-1": {
+                "url": "/lessons/belt-white-w1-1/check-2-wrong-1.mp3",
+                "durationMs": 10656,
+                "say": "Age is not the line, and neither is a job title. Both are open to anyone. What differs is where the money comes from."
+              },
+              "wrong-3": {
+                "url": "/lessons/belt-white-w1-1/check-2-wrong-3.mp3",
+                "durationMs": 7512,
+                "say": "They are genuinely different jobs. One holds a thing that earns; the other sells a thing on at a higher price."
+              },
+              "reask": {
+                "url": "/lessons/belt-white-w1-1/check-2-reask.mp3",
+                "durationMs": 4848,
+                "say": "Have another go — you have everything you need."
+              },
+              "explanation": {
+                "url": "/lessons/belt-white-w1-1/check-2-explanation.mp3",
+                "durationMs": 10248,
+                "say": "Both involve buying. The difference is where the money comes from: earnings and ownership on one side, the gap between your buy price and your sell price on the other."
+              },
+              "reinforce": {
+                "url": "/lessons/belt-white-w1-1/check-2-reinforce.mp3",
+                "durationMs": 8160,
+                "say": "Investor: paid by the business. Trader: paid by the price. Same market, different question."
+              }
+            }
           },
           {
             "id": "wrap",
@@ -161,23 +363,39 @@
             "points": [
               "Money reaches you four ways: work, business, investing, trading.",
               "Work and business pay for time — yours, or other people's. Investing and trading pay for ownership.",
-              "Work stops when you stop. Ownership does not — Costco declared $1.47 a share for its owners in July 2026, whatever they were doing that day.",
+              "Work stops when you stop. Ownership does not — Costco paid its owners a dividend of $1.47 a share in July 2026, whatever they were doing that day.",
               "An investor is paid by the business. A trader is paid by the change in the price.",
-              "None of the four is safe by default, and none of them is free money. They are four different jobs."
+              "None of the four is risk-free — work included — and none of them is free money. They are four different jobs.",
+              "Tonight, name which of the four your household is using. Most families find they are on one."
             ],
-            "closing": "Next: why the same amount of money is worth far more to a family that starts it early."
+            "closing": "Next: why the same amount of money is worth far more to a family that starts it early.",
+            "audio": {
+              "main": {
+                "url": "/lessons/belt-white-w1-1/wrap-main.mp3",
+                "durationMs": 32352,
+                "say": "Carry these out with you. Money reaches you four ways. Work and business pay for time. Investing and trading pay for ownership. Work stops when you stop; ownership doesn't. An investor is paid by the business, a trader is paid by the price. And none of the four is risk-free — work included. One thing to do tonight. Name which of the four your household is actually using. Most families find they're on one."
+              }
+            }
           }
         ]
       }
     },
     {
-      "match": { "course": "belt-white", "title": "Compounding — Why Starting Early Beats Starting Big" },
+      "match": {
+        "course": "belt-white",
+        "title": "Compounding — Why Starting Early Beats Starting Big"
+      },
       "json": {
         "schema": 1,
         "title": "Compounding — Why Starting Early Beats Starting Big",
-        "skills": ["market_basics"],
+        "skills": [
+          "market_basics"
+        ],
         "difficulty": 1,
-        "audience": ["adult", "teen"],
+        "audience": [
+          "adult",
+          "teen"
+        ],
         "duration_minutes": 11,
         "xp": 50,
         "guide": {
@@ -191,7 +409,11 @@
             "label": "CORE CONCEPT",
             "skill": "market_basics",
             "heading": "Growth on top of growth",
-            "figure": { "kind": "stat", "value": "$1,000 → $2,158.92", "caption": "Ten years at 8% a year, nothing added" },
+            "figure": {
+              "kind": "stat",
+              "value": "$1,000 → $2,158.92",
+              "caption": "Ten years at 8% a year, nothing added"
+            },
             "body": [
               "Compounding means the growth itself starts earning. Put $1,000 somewhere that grows 8% in a year and you finish the year with $1,080. In the second year the 8% is charged on $1,080, not on $1,000, so you earn $86.40 instead of $80. The extra $6.40 is money your money made, working for you the way you work for your employer.",
               "Repeat that and the gap widens every year, because every year starts from a bigger base. After ten years the $1,000 has become $2,158.92 — and $158.92 of that came purely from growth earning growth.",
@@ -207,10 +429,22 @@
             "heading": "How one year feeds the next",
             "intro": "$1,000, growing 8% a year, nothing added. Watch what the growth itself does.",
             "moves": [
-              { "title": "Year 1 — you earn $80.00", "body": "8% of $1,000. The balance ends at $1,080.00. Ordinary so far, and identical to simple interest." },
-              { "title": "Year 2 — you earn $86.40", "body": "8% of $1,080, not of $1,000. That is $6.40 more than last year, and you did nothing to get it. The $80 from year one has started earning." },
-              { "title": "Year 3 — you earn $93.31", "body": "The balance passes $1,259.71. Each year's gain is bigger than the last because each year starts from a bigger number." },
-              { "title": "Year 10 — the balance is $2,158.92", "body": "You put in $1,000 and added nothing. Simple interest at 8% would have paid $800 in total. Compounding paid $1,158.92, and the $358.92 difference is entirely growth earning growth." }
+              {
+                "title": "Year 1 — you earn $80.00",
+                "body": "8% of $1,000. The balance ends at $1,080.00. Ordinary so far, and identical to simple interest."
+              },
+              {
+                "title": "Year 2 — you earn $86.40",
+                "body": "8% of $1,080, not of $1,000. That is $6.40 more than last year, and you did nothing to get it. The $80 from year one has started earning."
+              },
+              {
+                "title": "Year 3 — you earn $93.31",
+                "body": "The balance passes $1,259.71. Each year's gain is bigger than the last because each year starts from a bigger number."
+              },
+              {
+                "title": "Year 10 — the balance is $2,158.92",
+                "body": "You put in $1,000 and added nothing. Simple interest at 8% would have paid $800 in total. Compounding paid $1,158.92, and the $358.92 difference is entirely growth earning growth."
+              }
             ],
             "closing": "Nothing clever happened here. The only ingredient that changed between year one and year ten was time."
           },
@@ -275,10 +509,19 @@
             "correctIndex": 1,
             "explanation": "The rate never changed. The balance did. That is the whole of compounding: this year's growth joins the pile and earns alongside everything else next year.",
             "wrongFeedback": [
-              { "text": "The rate is 8% in both years. What changed is the amount it is charged on.", "kai": true },
+              {
+                "text": "The rate is 8% in both years. What changed is the amount it is charged on.",
+                "kai": true
+              },
               null,
-              { "text": "There are no fees in this example. The extra $6.40 is 8% of the $80 earned in year one.", "kai": true },
-              { "text": "$6.40 is exactly 8% of $80 — the growth from year one, now earning on its own.", "kai": true }
+              {
+                "text": "There are no fees in this example. The extra $6.40 is 8% of the $80 earned in year one.",
+                "kai": true
+              },
+              {
+                "text": "$6.40 is exactly 8% of $80 — the growth from year one, now earning on its own.",
+                "kai": true
+              }
             ],
             "reinforce": "Growth joins the pile. Next year it earns too. That is the entire idea."
           },
@@ -297,10 +540,19 @@
             "correctIndex": 1,
             "explanation": "Same $200 a month, same 8%, same finish line. Alex's early dollars simply had forty years to work instead of thirty, and the last ten years of compounding are the biggest ten.",
             "wrongFeedback": [
-              { "text": "Both grew at 8% a year. The rate is identical in the two columns — only the start date differs.", "kai": true },
+              {
+                "text": "Both grew at 8% a year. The rate is identical in the two columns — only the start date differs.",
+                "kai": true
+              },
               null,
-              { "text": "Both put away $200 a month. Sam actually contributed three times as much in total.", "kai": true },
-              { "text": "Tax is not in this example at all. The only difference between the two columns is when they started.", "kai": true }
+              {
+                "text": "Both put away $200 a month. Sam actually contributed three times as much in total.",
+                "kai": true
+              },
+              {
+                "text": "Tax is not in this example at all. The only difference between the two columns is when they started.",
+                "kai": true
+              }
             ],
             "reinforce": "Time is the ingredient you cannot buy later. It is also the one a fourteen-year-old has most of."
           },
@@ -322,13 +574,21 @@
       }
     },
     {
-      "match": { "course": "belt-white", "title": "Inflation — The Reason Saving Alone Loses" },
+      "match": {
+        "course": "belt-white",
+        "title": "Inflation — The Reason Saving Alone Loses"
+      },
       "json": {
         "schema": 1,
         "title": "Inflation — The Reason Saving Alone Loses",
-        "skills": ["risk"],
+        "skills": [
+          "risk"
+        ],
         "difficulty": 1,
-        "audience": ["adult", "teen"],
+        "audience": [
+          "adult",
+          "teen"
+        ],
         "duration_minutes": 10,
         "xp": 50,
         "guide": {
@@ -342,7 +602,11 @@
             "label": "CORE CONCEPT",
             "skill": "risk",
             "heading": "The number stays. What it buys shrinks.",
-            "figure": { "kind": "stat", "value": "$100 → $72.14", "caption": "What $100 of July 2016 money buys in July 2026" },
+            "figure": {
+              "kind": "stat",
+              "value": "$100 → $72.14",
+              "caption": "What $100 of July 2016 money buys in July 2026"
+            },
             "body": [
               "Inflation is the rate at which prices rise, and therefore the rate at which each dollar buys less. The textbook puts it plainly on page 62: if inflation is 2%, things cost 2% more than they did a year ago, and money in a jar at home buys less of them.",
               "The trap is that nothing appears to happen. Put $1,000 in a drawer and in ten years it is still $1,000. Nobody took anything. The account statement is correct. But the shop is charging more, so the same $1,000 walks out with less in the bag.",
@@ -404,10 +668,22 @@
             "heading": "Four words that get used loosely",
             "intro": "Say the answer to yourself before you flip.",
             "cards": [
-              { "front": "Inflation", "back": "The rate at which prices rise. 3.3% a year means a basket that cost $100 last year costs $103.30 this year." },
-              { "front": "Purchasing power", "back": "What your money can actually buy. It falls when prices rise, even though the number in the account has not changed." },
-              { "front": "Nominal return", "back": "The growth on your money before inflation is taken off. The number the bank or the broker shows you." },
-              { "front": "Real return", "back": "The growth after inflation. Earn 3% while prices rise 3.3% and your real return is negative — you are slightly poorer in what you can buy." }
+              {
+                "front": "Inflation",
+                "back": "The rate at which prices rise. 3.3% a year means a basket that cost $100 last year costs $103.30 this year."
+              },
+              {
+                "front": "Purchasing power",
+                "back": "What your money can actually buy. It falls when prices rise, even though the number in the account has not changed."
+              },
+              {
+                "front": "Nominal return",
+                "back": "The growth on your money before inflation is taken off. The number the bank or the broker shows you."
+              },
+              {
+                "front": "Real return",
+                "back": "The growth after inflation. Earn 3% while prices rise 3.3% and your real return is negative — you are slightly poorer in what you can buy."
+              }
             ]
           },
           {
@@ -435,10 +711,19 @@
             "correctIndex": 1,
             "explanation": "The balance grows 1.5% while the price of everything grows 3.3%. The gap, roughly 1.8% a year, is the ground lost. It is a real loss even though the statement shows a gain.",
             "wrongFeedback": [
-              { "text": "1.5% is the growth in the number. It has to beat 3.3% before any of it is a gain in what you can buy.", "kai": true },
+              {
+                "text": "1.5% is the growth in the number. It has to beat 3.3% before any of it is a gain in what you can buy.",
+                "kai": true
+              },
               null,
-              { "text": "They only cancel if the two rates are equal. Here inflation is more than double the interest.", "kai": true },
-              { "text": "The balance is going up more slowly than prices are. That is the definition of going backwards in real terms.", "kai": true }
+              {
+                "text": "They only cancel if the two rates are equal. Here inflation is more than double the interest.",
+                "kai": true
+              },
+              {
+                "text": "The balance is going up more slowly than prices are. That is the definition of going backwards in real terms.",
+                "kai": true
+              }
             ],
             "reinforce": "Growth minus inflation is the only figure that tells you whether you got richer."
           },
@@ -460,13 +745,21 @@
       }
     },
     {
-      "match": { "course": "belt-white", "title": "What a Stock Actually Is" },
+      "match": {
+        "course": "belt-white",
+        "title": "What a Stock Actually Is"
+      },
       "json": {
         "schema": 1,
         "title": "What a Stock Actually Is",
-        "skills": ["stock_ownership"],
+        "skills": [
+          "stock_ownership"
+        ],
         "difficulty": 1,
-        "audience": ["adult", "teen"],
+        "audience": [
+          "adult",
+          "teen"
+        ],
         "duration_minutes": 11,
         "xp": 50,
         "guide": {
@@ -480,7 +773,11 @@
             "label": "CORE CONCEPT",
             "skill": "stock_ownership",
             "heading": "A share is a piece of the company",
-            "figure": { "kind": "stat", "value": "1 of 443,478,804", "caption": "What one share of Costco Wholesale was, on 2 September 2026" },
+            "figure": {
+              "kind": "stat",
+              "value": "1 of 443,478,804",
+              "caption": "What one share of Costco Wholesale was, on 2 September 2026"
+            },
             "body": [
               "A stock represents ownership in a company, and a claim on that company's assets and earnings. That is the textbook definition on page 22, and it is worth reading twice, because most of what people believe about stocks falls apart against it.",
               "A company divides itself into a fixed number of pieces, called shares. On 2 September 2026, Costco Wholesale was divided into 443,478,804 of them. Buy one and you own that fraction of the whole business — the warehouses, the stock on the shelves, the brand, and a claim on the profit. You are a shareholder, which the book also calls a part owner, and you have rights: common shareholders can vote at shareholders' meetings.",
@@ -529,12 +826,30 @@
             "heading": "The four words on the wall",
             "intro": "Straight from the textbook's key terms, pages 6 and 7. Answer first, then flip.",
             "cards": [
-              { "front": "Share", "back": "One unit of ownership in a company. Hold one and you own that fraction of the business and a claim on its earnings." },
-              { "front": "Dividend", "back": "A payment a company makes to its shareholders out of profit, usually cash and usually on a regular schedule. Not every company pays one." },
-              { "front": "Bond", "back": "A loan to a company or a government. They pay you interest and return the money on the maturity date. You are a lender, not an owner." },
-              { "front": "ETF", "back": "Exchange-traded fund. A single holding that contains a basket of others — often every company in an index — and trades on an exchange like an ordinary share." },
-              { "front": "Shareholder", "back": "Anyone who owns at least one share. Common shareholders can vote at shareholders' meetings." },
-              { "front": "Capital gain", "back": "The profit when you sell something for more than you paid. Sell for less and it is a capital loss." }
+              {
+                "front": "Share",
+                "back": "One unit of ownership in a company. Hold one and you own that fraction of the business and a claim on its earnings."
+              },
+              {
+                "front": "Dividend",
+                "back": "A payment a company makes to its shareholders out of profit, usually cash and usually on a regular schedule. Not every company pays one."
+              },
+              {
+                "front": "Bond",
+                "back": "A loan to a company or a government. They pay you interest and return the money on the maturity date. You are a lender, not an owner."
+              },
+              {
+                "front": "ETF",
+                "back": "Exchange-traded fund. A single holding that contains a basket of others — often every company in an index — and trades on an exchange like an ordinary share."
+              },
+              {
+                "front": "Shareholder",
+                "back": "Anyone who owns at least one share. Common shareholders can vote at shareholders' meetings."
+              },
+              {
+                "front": "Capital gain",
+                "back": "The profit when you sell something for more than you paid. Sell for less and it is a capital loss."
+              }
             ]
           },
           {
@@ -565,10 +880,19 @@
             "correctIndex": 1,
             "explanation": "A share is ownership. One share out of 443,478,804 is a real, if small, piece of the business, and it carries a claim on the assets and the earnings.",
             "wrongFeedback": [
-              { "text": "The price may well go up or down, but that is not what you bought. You bought a piece of a company.", "kai": true },
+              {
+                "text": "The price may well go up or down, but that is not what you bought. You bought a piece of a company.",
+                "kai": true
+              },
               null,
-              { "text": "There is no minimum. The textbook makes this point on page 8: one share makes you a shareholder.", "kai": true },
-              { "text": "That would be a bond. A bond is money lent and repaid; a share is a piece owned.", "kai": true }
+              {
+                "text": "There is no minimum. The textbook makes this point on page 8: one share makes you a shareholder.",
+                "kai": true
+              },
+              {
+                "text": "That would be a bond. A bond is money lent and repaid; a share is a piece owned.",
+                "kai": true
+              }
             ],
             "reinforce": "A share is ownership, not a ticket. Everything else in this course follows from that."
           },
@@ -587,10 +911,19 @@
             "correctIndex": 1,
             "explanation": "Owners have the claim on the earnings. A lender is owed a fixed amount whatever kind of year it was — a great year does not raise the interest, and a poor one does not lower it.",
             "wrongFeedback": [
-              { "text": "A bond pays a set amount on a set date. A brilliant year does not increase it; it only makes repayment more certain.", "kai": true },
+              {
+                "text": "A bond pays a set amount on a set date. A brilliant year does not increase it; it only makes repayment more certain.",
+                "kai": true
+              },
               null,
-              { "text": "Not equally. The lender's payment is fixed by the loan. The owner's claim is on whatever the business earns.", "kai": true },
-              { "text": "Profits can be paid out as dividends, and often are. Costco declared $1.47 a share for the quarter, ex-dividend 24 July 2026.", "kai": true }
+              {
+                "text": "Not equally. The lender's payment is fixed by the loan. The owner's claim is on whatever the business earns.",
+                "kai": true
+              },
+              {
+                "text": "Profits can be paid out as dividends, and often are. Costco declared $1.47 a share for the quarter, ex-dividend 24 July 2026.",
+                "kai": true
+              }
             ],
             "reinforce": "Upside belongs to the owners. That is what you buy when you buy a share, and it is why the price moves."
           },

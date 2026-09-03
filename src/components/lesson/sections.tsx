@@ -3,10 +3,11 @@ import { useCallback, useMemo, useState } from "react";
 import type {
   AnatomyStep as AnatomySpec, AnnotatedValuesStep as AnnotatedSpec, BuildCandleStep as BuildSpec,
   CandlePart, CandleSpec, CompareStep as CompareSpec, FlipCardsStep as FlipSpec, ProcessStep as ProcessSpec,
-  RatioExplorerStep as RatioSpec, StepComponentProps, TakeawaysStep as TakeawaysSpec,
+  RatioExplorerStep as RatioSpec, StepComponentProps, TakeawaysStep as TakeawaysSpec, LessonMedia,
 } from "@/lib/learn/schema";
 import { cx } from "@/components/ui";
 import { Eyebrow, FeedbackNote, PrimaryButton } from "./engine-ui";
+import { SectionMedia } from "./narration";
 
 /**
  * The FTA University section vocabulary, rebuilt as app-native steps.
@@ -113,11 +114,13 @@ function Candle({ c, w = 132, h = 208, active, onPart, showAxis = false, bodyWid
   );
 }
 
-export function SectionHead({ label, heading, intro }: { label?: string; heading: string; intro?: string }) {
+export function SectionHead({ label, heading, intro, media }: { label?: string; heading: string; intro?: string; media?: LessonMedia }) {
   return (
     <div>
       {label && <Eyebrow tone={label === "KNOWLEDGE CHECK" || label === "EXERCISE" ? "purple" : label === "WRAP UP" ? "green" : "orange"}>{label}</Eyebrow>}
-      <h1 className="mt-[6px] text-[21px] font-black text-ink leading-[1.28] text-pretty">{heading}</h1>
+      {/* Tracking tightens as the heading grows — 21px display type reads too loose at 0. */}
+      <h1 className="mt-[6px] text-[21px] font-black text-ink leading-[1.28] tracking-[-0.015em] text-pretty">{heading}</h1>
+      {media && <SectionMedia media={media} />}
       {intro && <p className="mt-2 text-[14px] font-semibold text-ink-2 leading-[1.55]">{intro}</p>}
     </div>
   );
@@ -205,7 +208,7 @@ export function AnatomyStep({ spec, onResolve }: StepComponentProps<AnatomySpec>
 
   return (
     <div className="fic-section flex-1 flex flex-col">
-      <SectionHead label={spec.label} heading={spec.heading} intro={spec.caption} />
+      <SectionHead label={spec.label} heading={spec.heading} intro={spec.caption} media={spec.media} />
       <Stage tall><Candle c={spec.candle} w={132} h={172} active={active} onPart={open} showAxis animate /></Stage>
       <div className="mt-[14px] flex flex-wrap gap-[6px] fic-stagger">
         {spec.hotspots.map((h) => (
@@ -230,7 +233,7 @@ export function AnatomyStep({ spec, onResolve }: StepComponentProps<AnatomySpec>
 export function CompareStep({ spec, onResolve }: StepComponentProps<CompareSpec>) {
   return (
     <div className="fic-section flex-1 flex flex-col">
-      <SectionHead label={spec.label} heading={spec.heading} intro={spec.intro} />
+      <SectionHead label={spec.label} heading={spec.heading} intro={spec.intro} media={spec.media} />
       <div className="mt-3 grid grid-cols-2 gap-[10px] fic-stagger">
         {spec.columns.map((col, i) => {
           const tone = col.tone === "green" ? "border-green-line bg-green-tint shadow-[0_3px_0_#D8E5CE]"
@@ -240,6 +243,14 @@ export function CompareStep({ spec, onResolve }: StepComponentProps<CompareSpec>
           return (
             <div key={i} className={cx("rounded-[18px] border px-3 pt-3 pb-[14px] flex flex-col", tone)}>
               <div className={cx("text-[13.5px] font-black leading-[1.2]", tc)}>{col.title}</div>
+              {col.media && (
+                // Bleeds to the column's own edges under its heading — a picture inside a
+                // padded box inside a column is three frames deep and reads as clip art.
+                <span className="fic-cover -mx-3 mt-2 mb-[2px] block rounded-none">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={col.media.src} alt={col.media.alt} width={600} height={600} className="w-full h-[84px] object-cover" />
+                </span>
+              )}
               {col.candle && <div className="mt-1 flex justify-center"><Candle c={col.candle} w={140} h={132} bodyWidth={24} marks animate /></div>}
               <ul className="mt-1 flex flex-col gap-[7px]">
                 {col.points.map((p, k) => (
@@ -268,7 +279,7 @@ export function ProcessStep({ spec, onResolve }: StepComponentProps<ProcessSpec>
   const all = shown >= spec.moves.length;
   return (
     <div className="fic-section flex-1 flex flex-col">
-      <SectionHead label={spec.label} heading={spec.heading} intro={spec.intro} />
+      <SectionHead label={spec.label} heading={spec.heading} intro={spec.intro} media={spec.media} />
       {/* A numbered spine rather than a stack of cards: the rule down the left is
           what makes four steps read as one sequence. */}
       <ol className="mt-4 flex flex-col">
@@ -306,7 +317,7 @@ export function AnnotatedValuesStep({ spec, onResolve }: StepComponentProps<Anno
   const all = spec.values.every((v) => seen.includes(v.part));
   return (
     <div className="fic-section flex-1 flex flex-col">
-      <SectionHead label={spec.label} heading={spec.heading} intro={spec.caption} />
+      <SectionHead label={spec.label} heading={spec.heading} intro={spec.caption} media={spec.media} />
       <div className="mt-[10px] text-[11px] font-extrabold text-ink-3 uppercase tracking-[0.4px]">{spec.subject}</div>
       <Stage>
         <div className="flex items-center gap-4">
@@ -344,19 +355,23 @@ export function FlipCardsStep({ spec, onResolve }: StepComponentProps<FlipSpec>)
   const all = flipped.length >= spec.cards.length;
   return (
     <div className="fic-section flex-1 flex flex-col">
-      <SectionHead label={spec.label} heading={spec.heading} intro={spec.intro} />
-      <div className="mt-3 grid grid-cols-2 gap-[10px] fic-stagger">
+      <SectionHead label={spec.label} heading={spec.heading} intro={spec.intro} media={spec.media} />
+      {/* Grid rows stretch, and each card's two faces share one grid cell, so a card is as
+          tall as its own longest face and its neighbour matches it. Nothing here is sized to
+          a number: the previous fixed `h-[124px]` is what put three of this lesson's six
+          definitions outside their cards, and twelve of the belt's twenty-six overall. */}
+      <div className="mt-3 grid grid-cols-2 gap-[10px] items-stretch fic-stagger">
         {spec.cards.map((card, i) => {
           const on = flipped.includes(i);
           return (
-            <button key={i} type="button" aria-pressed={on} data-on={on} className="fic-flip fic-press relative h-[124px] text-left"
+            <button key={i} type="button" aria-pressed={on} data-on={on} className="fic-flip fic-press grid min-h-[124px] text-left"
               onClick={() => setFlipped((f) => (f.includes(i) ? f.filter((x) => x !== i) : [...f, i]))}>
-              <span className="fic-flip-inner block w-full h-full">
-                <span className="fic-flip-face absolute inset-0 rounded-[16px] border border-line bg-card shadow-[0_3px_0_#EFE4CF] px-3 py-3 flex flex-col justify-between">
+              <span className="fic-flip-inner">
+                <span className="fic-flip-face rounded-[16px] border border-line bg-card shadow-[0_3px_0_#EFE4CF] px-3 py-3 flex flex-col justify-between gap-2">
                   <span className="text-[14px] font-black text-ink leading-[1.25]">{card.front}</span>
                   <span className="text-[10.5px] font-extrabold text-ink-4 uppercase tracking-[0.3px]">Tap to flip</span>
                 </span>
-                {/* The term stays on the back too — six answers with no questions
+                {/* The term stays on the back too — a stack of answers with no questions
                     is not a reference anyone can revise from. */}
                 <span className="fic-flip-face fic-flip-back rounded-[16px] border border-green-line bg-green-tint shadow-[0_3px_0_#D8E5CE] px-3 py-[10px] flex flex-col gap-[5px]">
                   <span className="text-[9.5px] font-extrabold text-green uppercase tracking-[0.5px]">{card.front}</span>
@@ -404,7 +419,7 @@ export function BuildCandleStep({ spec, onResolve }: StepComponentProps<BuildSpe
 
   return (
     <div className="fic-section flex-1 flex flex-col">
-      <SectionHead label={spec.label} heading={spec.heading} intro={spec.prompt} />
+      <SectionHead label={spec.label} heading={spec.heading} intro={spec.prompt} media={spec.media} />
       <Stage><Candle c={c} w={120} h={150} bodyWidth={42} showAxis /></Stage>
       <div className="mt-[14px] flex flex-col gap-[11px]">
         {(["high", "open", "close", "low"] as const).map((k) => {
@@ -452,7 +467,7 @@ export function RatioExplorerStep({ spec, onResolve }: StepComponentProps<RatioS
   const tc = band.tone === "green" ? "text-green" : band.tone === "red" ? "text-red" : "text-ink";
   return (
     <div className="fic-section flex-1 flex flex-col">
-      <SectionHead label={spec.label} heading={spec.heading} intro={spec.intro} />
+      <SectionHead label={spec.label} heading={spec.heading} intro={spec.intro} media={spec.media} />
       <Stage tall><Candle c={candle} w={120} h={162} bodyWidth={44} /></Stage>
       <label className="mt-[14px] flex items-center gap-3">
         <span className="text-[10.5px] font-extrabold text-ink-3 uppercase tracking-[0.4px]">All wick</span>
@@ -480,7 +495,7 @@ export function RatioExplorerStep({ spec, onResolve }: StepComponentProps<RatioS
 export function TakeawaysStep({ spec, onResolve }: StepComponentProps<TakeawaysSpec>) {
   return (
     <div className="fic-section flex-1 flex flex-col">
-      <SectionHead label={spec.label} heading={spec.heading} />
+      <SectionHead label={spec.label} heading={spec.heading} media={spec.media} />
       {/* Five tinted rectangles in a row is a wall. Ticks on ruled lines let the
           eye run down the list, which is what a takeaways list is for. */}
       <ul className="mt-4 flex flex-col fic-stagger">

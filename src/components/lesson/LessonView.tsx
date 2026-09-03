@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { LessonData } from "@/lib/learn/types";
 import type { StepSpec, StepResult } from "@/lib/learn/schema";
-import { LEARN_XP, SCORED_TYPES, isGradedStep } from "@/lib/learn/schema";
+import { SCORED_TYPES, isGradedStep } from "@/lib/learn/schema";
 import { isAllowedLessonOrigin, isBridgeMessage } from "@/lib/learn/legacy";
 import { learnApi } from "@/lib/live/client-learn";
 import { cx } from "@/components/ui";
@@ -12,6 +12,7 @@ import { FeedbackNote, KaiRow, LessonHeader, OptionButton, PrimaryButton } from 
 import { ExplainerStep, MatchPairsStep, MultipleChoiceStep, PredictionStep, RealWorldStep, TrueFalseStep } from "./steps";
 import { AnatomyStep, AnnotatedValuesStep, BuildCandleStep, CompareStep, FlipCardsStep, ProcessStep, RatioExplorerStep, TakeawaysStep } from "./sections";
 import { ChartStep } from "./chart";
+import { LessonPrologue, NarrationBar, NarrationProvider, useNarration } from "./narration";
 
 /**
  * The lesson player: the real FTA content, in FIC's shell.
@@ -21,15 +22,32 @@ import { ChartStep } from "./chart";
  * left off. Everything else is a legacy video (`video_provider`), where an `html` bundle talks back
  * over FTA's postMessage bridge. Both finish the same way: the lesson's quiz, then `/api/learn/complete`
  * banks the XP once.
+ *
+ * Four things the FTA University lessons had that this shell did not, added here for every lesson
+ * rather than for one:
+ *
+ *  · **An opening.** `guide.intro` has been authored on sixteen lessons across White Belt and
+ *    rendered on none of them. It is the question the lesson answers, so it now opens the lesson,
+ *    with the start gate the FTA bundles used — "press play, I'll narrate the whole way".
+ *  · **A close.** `guide.outro` is the only call to action a lesson has; it lands on the done screen.
+ *  · **A voice.** The section on screen plays its own recording; see `narration.tsx`.
+ *  · **Somewhere to scroll.** The screen is `overflow-hidden`, and a section taller than 874px used
+ *    to be cut off with no way to reach the rest. The step is now its own scroll region.
  */
-type Phase = "content" | "quiz" | "done";
+type Phase = "intro" | "content" | "quiz" | "done";
 
 export function LessonView({ lesson }: { lesson: LessonData }) {
+  return <NarrationProvider><LessonPlayer lesson={lesson} /></NarrationProvider>;
+}
+
+function LessonPlayer({ lesson }: { lesson: LessonData }) {
   const router = useRouter();
   const steps = lesson.stepped?.steps ?? null;
   const total = steps?.length ?? 0;
   const [i, setI] = useState(() => Math.min(lesson.resumeStep, Math.max(0, total - 1)));
-  const [phase, setPhase] = useState<Phase>("content");
+  const guide = lesson.stepped?.guide;
+  // The opening screen is for opening: a member resuming mid-lesson goes straight back to their step.
+  const [phase, setPhase] = useState<Phase>(() => (steps && guide?.intro && lesson.resumeStep === 0 ? "intro" : "content"));
   const [score, setScore] = useState({ correct: 0, scored: 0 });
   const [xp, setXp] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -38,7 +56,18 @@ export function LessonView({ lesson }: { lesson: LessonData }) {
   // 16:9 well. Everything else keeps the padded reading column.
   const fullBleed = phase === "content" && !steps && lesson.videoProvider === "html";
 
-  const pct = phase === "done" ? 100 : total ? Math.round((i / total) * 100) : lesson.progress.pct;
+  const pct = phase === "done" ? 100 : phase === "intro" ? 0 : total ? Math.round((i / total) * 100) : lesson.progress.pct;
+
+  const { play, register } = useNarration();
+  const lessonAudio = lesson.stepped?.audio;
+  const stepAudio = steps?.[i]?.audio;
+  // The bar only exists for a lesson that actually has a voice.
+  useEffect(() => {
+    register(!!lessonAudio?.intro || !!steps?.some((st) => st.audio && Object.keys(st.audio).length > 0));
+  }, [register, lessonAudio, steps]);
+  // Each section speaks itself as it arrives. Nothing awaits it and nothing depends on it.
+  useEffect(() => { if (phase === "content") play(stepAudio?.main); }, [phase, i, stepAudio, play]);
+  useEffect(() => { if (phase === "done") play(lessonAudio?.outro); }, [phase, lessonAudio, play]);
 
   /** Bank the lesson once the content (and quiz, if any) is behind us. */
   const finish = useCallback(async () => {
@@ -69,6 +98,17 @@ export function LessonView({ lesson }: { lesson: LessonData }) {
     afterContent();
   }, [i, total, lesson.id, afterContent]);
 
+  /* Which edges are hiding something, measured rather than assumed. Written straight to the
+     DOM: a scroll handler that sets React state re-renders the whole step on every frame. */
+  const scroller = useRef<HTMLDivElement>(null);
+  const edges = useCallback(() => {
+    const el = scroller.current;
+    if (!el) return;
+    el.dataset.top = el.scrollTop > 4 ? "1" : "0";
+    el.dataset.bottom = el.scrollHeight - el.scrollTop - el.clientHeight > 4 ? "1" : "0";
+  }, []);
+  useEffect(() => { const t = setTimeout(edges, 60); return () => clearTimeout(t); }, [edges, phase, i]);
+
   if (lesson.locked) {
     return (
       <div className="min-h-full flex flex-col px-[18px] pt-[14px] pb-6">
@@ -83,40 +123,93 @@ export function LessonView({ lesson }: { lesson: LessonData }) {
     );
   }
 
+  const header = <LessonHeader backHref={backHref} pct={pct} right={<span className="text-[10.5px] font-extrabold text-ink-3">{lesson.courseTitle} · {lesson.lessonNo}/{lesson.lessonTotal}</span>} />;
+
+  // An FTA html bundle owns the screen and brings its own chrome; nothing below applies to it.
+  if (fullBleed) {
+    return (
+      <div className="flex flex-col h-full pt-[14px]">
+        <div className="px-[18px]">{header}</div>
+        <VideoLesson lesson={lesson} onDone={afterContent} fullBleed />
+      </div>
+    );
+  }
+
+  const barLabel = phase === "intro" ? lesson.title : phase === "done" ? "Lesson complete" : phase === "quiz" ? "Quiz" : stepLabel(steps?.[i]) ?? lesson.title;
+
   return (
-    <div className={cx("flex flex-col", fullBleed ? "h-full pt-[14px]" : "min-h-full px-[18px] pt-[14px] pb-6")}>
-      <div className={fullBleed ? "px-[18px]" : undefined}><LessonHeader backHref={backHref} pct={pct} right={<span className="text-[10.5px] font-extrabold text-ink-3">{lesson.courseTitle} · {lesson.lessonNo}/{lesson.lessonTotal}</span>} /></div>
+    <div className="flex-1 min-h-0 flex flex-col pt-[14px]">
+      <div className="shrink-0 px-[18px]">{header}</div>
 
-      {phase === "content" && (steps ? (
-        <StepHost key={steps[i]?.id ?? i} spec={steps[i]} register={lesson.register} xpNote={i === 0 ? `+${lesson.xp} XP` : undefined} onResolve={onResolve} />
-      ) : (
-        <VideoLesson lesson={lesson} onDone={afterContent} fullBleed={fullBleed} />
-      ))}
+      {/* The step scrolls; the header and the voice do not. Before this the screen was
+          `overflow-hidden` with no scroll region inside it, so a section taller than the phone
+          was simply cut off — which is what a photograph or a seventh flip card would have done. */}
+      <div className="relative flex-1 min-h-0">
+      <div ref={scroller} onScroll={edges} className="h-full overflow-y-auto no-scrollbar">
+        <div className="min-h-full flex flex-col px-[18px] pb-6">
+          {phase === "intro" && steps && (
+            <LessonPrologue
+              title={lesson.title}
+              intro={guide?.intro}
+              sections={steps.map((st) => ({ label: st.label, heading: stepLabel(st) ?? "" }))}
+              cover={lesson.stepped?.cover ?? null}
+              minutes={lesson.estMinutes}
+              xp={lesson.xp}
+              cue={lessonAudio?.intro}
+              onStart={() => setPhase("content")}
+            />
+          )}
 
-      {phase === "quiz" && lesson.quiz && (
-        <QuizRunner quiz={lesson.quiz} engine={score.scored ? score : null} onDone={() => void finish()} />
-      )}
+          {phase === "content" && (steps ? (
+            <StepHost key={steps[i]?.id ?? i} spec={steps[i]} register={lesson.register} xpNote={i === 0 ? `+${lesson.xp} XP` : undefined} onResolve={onResolve} />
+          ) : (
+            <VideoLesson lesson={lesson} onDone={afterContent} />
+          ))}
 
-      {phase === "done" && (
-        <div className="flex-1 flex flex-col">
-          <div className="mt-6 rounded-[18px] border border-green-line bg-green-tint px-5 py-7 text-center">
-            <div className="text-[30px]">🎉</div>
-            <div className="mt-2 text-[18px] font-black text-ink">{lesson.title} — done</div>
-            {xp !== null && <div className="mt-1 text-[13px] font-black text-green">{xp > 0 ? `+${xp} XP banked` : "Already banked — no double XP"}</div>}
-            {error && <div role="alert" className="mt-1 text-[12px] font-bold text-coral">{error}</div>}
-            {score.scored > 0 && <div className="mt-1 text-[11.5px] font-bold text-ink-3">{score.correct} of {score.scored} first try</div>}
-          </div>
-          {!!lesson.resources.length && <Resources lesson={lesson} />}
-          <div className="mt-auto pt-6 flex flex-col gap-2">
-            {lesson.next
-              ? <PrimaryButton onClick={() => router.push(`/lesson/${lesson.next!.id}`)}>Next: {lesson.next.title}</PrimaryButton>
-              : <PrimaryButton onClick={() => router.push(backHref)}>Back to the course</PrimaryButton>}
-            <Link href="/learn" className="text-center text-[13px] font-extrabold text-ink-3">Learn home</Link>
-          </div>
+          {phase === "quiz" && lesson.quiz && (
+            <QuizRunner quiz={lesson.quiz} engine={score.scored ? score : null} onDone={() => void finish()} />
+          )}
+
+          {phase === "done" && (
+            <div className="fic-section flex-1 flex flex-col">
+              <div className="mt-6 rounded-[18px] border border-green-line bg-green-tint px-5 py-7 text-center">
+                <div className="text-[30px]">🎉</div>
+                <div className="mt-2 text-[18px] font-black text-ink">{lesson.title} — done</div>
+                {/* Say what is happening while it happens: the round trip can take a second and
+                    an empty space where the XP goes reads as "it did not count". */}
+                {xp === null && !error && <div className="mt-1 text-[13px] font-black text-ink-3">Banking your XP…</div>}
+                {xp !== null && <div className="mt-1 text-[13px] font-black text-green">{xp > 0 ? `+${xp} XP banked` : "Already banked — no double XP"}</div>}
+                {error && <div role="alert" className="mt-1 text-[12px] font-bold text-coral">{error}</div>}
+                {score.scored > 0 && <div className="mt-1 text-[11.5px] font-bold text-ink-3">{score.correct} of {score.scored} first try</div>}
+              </div>
+              {/* The author's own close. It is the only instruction in the lesson that asks the
+                  member to do something after they put the phone down. */}
+              {guide?.outro && <p className="mt-4 border-l-[3px] border-orange pl-[14px] text-[14px] font-bold text-ink leading-[1.55]">{guide.outro}</p>}
+              {!!lesson.resources.length && <Resources lesson={lesson} />}
+              <div className="mt-auto pt-6 flex flex-col gap-2">
+                {lesson.next
+                  ? <PrimaryButton onClick={() => router.push(`/lesson/${lesson.next!.id}`)}>Next: {lesson.next.title}</PrimaryButton>
+                  : <PrimaryButton onClick={() => router.push(backHref)}>Back to the course</PrimaryButton>}
+                <Link href="/learn" className="text-center text-[13px] font-extrabold text-ink-3">Learn home</Link>
+              </div>
+            </div>
+          )}
         </div>
-      )}
+      </div>
+        <span aria-hidden className="fic-edge fic-edge-top pointer-events-none absolute inset-x-0 top-0 h-[20px] bg-gradient-to-b from-paper to-transparent" />
+        <span aria-hidden className="fic-edge fic-edge-bottom pointer-events-none absolute inset-x-0 bottom-0 h-[26px] bg-gradient-to-t from-paper to-transparent" />
+      </div>
+
+      <NarrationBar label={barLabel} />
     </div>
   );
+}
+
+/** What the narration bar calls the section it is speaking. Every step type, one place. */
+function stepLabel(spec: StepSpec | undefined): string | null {
+  if (!spec) return null;
+  const s = spec as Partial<{ heading: string; question: string; statement: string; prompt: string }>;
+  return s.heading ?? s.question ?? s.statement ?? s.prompt ?? null;
 }
 
 /** One step, routed to its component. */
