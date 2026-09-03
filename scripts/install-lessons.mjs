@@ -12,6 +12,7 @@
  */
 import fs from "node:fs";
 import { execSync } from "node:child_process";
+import { validateChartFigure } from "../src/lib/learn/schema.ts";
 
 const REF = "zvkercqohmmeyofycbgr";
 let tok = execSync('security find-generic-password -s "Supabase CLI" -w', { encoding: "utf8" }).trim();
@@ -33,6 +34,31 @@ const file = process.argv[2];
 const clear = process.argv.includes("--clear");
 if (!file) { console.error("usage: install-lessons <file.json> [--clear]"); process.exit(2); }
 const batch = JSON.parse(fs.readFileSync(file, "utf8")).lessons;
+
+/* Every chart figure is checked BEFORE anything is resolved or written.
+   This is the gate that stops the defect that produced this file's rewrite: a section
+   about a three-candle gap being handed one candle, a span naming a single bar, a swing
+   marked at a price its candle never traded, or a marked object so small in the frame it
+   reads as a sliver at 402px. A bad figure does not render badly — it does not install. */
+{
+  const problems = [];
+  for (const entry of batch) {
+    for (const step of entry.json.steps ?? []) {
+      // A ChartFigure lives in exactly two places: `figure` on a `chart` step, and `chart` on a
+      // `prediction` step. An `explainer` ALSO has a `figure`, but it is the {kind:"stat"|"quote"}
+      // card the FTA vocabulary has always had, and running the chart validator over it rejects
+      // every lesson that uses one — which is every Black Belt class. Hence the type check first.
+      const fig = step.type === "chart" ? step.figure : step.type === "prediction" ? step.chart : null;
+      if (!fig) continue;
+      for (const p of validateChartFigure(fig, `${entry.match.title} · ${step.id}`)) problems.push(p);
+    }
+  }
+  if (problems.length) {
+    console.error(`ABORT — ${problems.length} chart problem(s); nothing written:`);
+    for (const p of problems) console.error(`  · ${p}`);
+    process.exit(1);
+  }
+}
 
 // Resolve every row FIRST. Nothing is written until all of them match.
 const resolved = [];

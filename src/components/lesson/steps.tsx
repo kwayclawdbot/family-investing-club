@@ -5,6 +5,7 @@ import type { ExplainerStep as ExplainerSpec, MatchPairsStep as MatchSpec, Multi
 import { learnApi } from "@/lib/live/client-learn";
 import { cx } from "@/components/ui";
 import { Eyebrow, FeedbackNote, GuideLine, OptionButton, PrimaryButton, shuffled, type OptionState } from "./engine-ui";
+import { DrillChart } from "./chart";
 
 /* ── Explainer — Continue to advance; beats render as headline + spoken line ── */
 export function ExplainerStep({ spec, onResolve }: StepComponentProps<ExplainerSpec>) {
@@ -167,7 +168,10 @@ export function MatchPairsStep({ spec, register, onResolve, xpNote }: StepCompon
   );
 }
 
-/* ── Prediction → reveal (never punished; the reveal teaches) ── */
+/* ── Prediction → reveal (never punished; the reveal teaches) ──
+   `figure` is what makes a chart drill answerable: the setup is on screen while the call is
+   open, and locking in draws the rest of the session plus every mark held back for it. The
+   grading contract is untouched — nothing here is scored, and a wrong call costs nothing. */
 export function PredictionStep({ spec, register, onResolve }: StepComponentProps<PredictSpec>) {
   const [picked, setPicked] = useState<string | null>(null);
   const [revealed, setRevealed] = useState(false);
@@ -177,8 +181,9 @@ export function PredictionStep({ spec, register, onResolve }: StepComponentProps
   return (
     <div className="fic-section flex-1 flex flex-col">
       <Eyebrow tone="purple">{spec.label ?? "Make a prediction"}</Eyebrow>
-      <h1 className="mt-2 text-[22px] font-black text-ink leading-[1.3] text-pretty">{spec.question}</h1>
-      <div className="mt-[18px] flex flex-col gap-[10px]" role="radiogroup" aria-label="Predictions">
+      <h1 className={cx("mt-2 font-black text-ink leading-[1.3] text-pretty", spec.chart ? "text-[17.5px]" : "text-[22px]")}>{spec.question}</h1>
+      {spec.chart && <DrillChart figure={spec.chart} revealed={revealed} />}
+      <div className={cx("flex flex-col gap-[10px]", spec.chart ? "mt-[14px]" : "mt-[18px]")} role="radiogroup" aria-label="Predictions">
         {spec.options.map((o, i) => (
           <OptionButton key={o.value} label={o.label} index={i} disabled={revealed} state={revealed ? (o.value === spec.outcomeValue ? "correct" : o.value === picked ? "wrong" : "dim") : picked === o.value ? "selected" : "idle"} onClick={() => setPicked(o.value)} />
         ))}

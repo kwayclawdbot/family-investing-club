@@ -21,8 +21,8 @@ import { Eyebrow, FeedbackNote, PrimaryButton } from "./engine-ui";
 
 /* ────────────────────────── shared candle drawing ────────────────────────── */
 
-const UP = "#4C8A52";      // green-2
-const DOWN = "#C4604A";    // red
+export const UP = "#4C8A52";      // green-2
+export const DOWN = "#C4604A";    // red
 
 function useScale(c: CandleSpec, h: number, pad: number) {
   return useMemo(() => {
@@ -113,7 +113,7 @@ function Candle({ c, w = 132, h = 208, active, onPart, showAxis = false, bodyWid
   );
 }
 
-function SectionHead({ label, heading, intro }: { label?: string; heading: string; intro?: string }) {
+export function SectionHead({ label, heading, intro }: { label?: string; heading: string; intro?: string }) {
   return (
     <div>
       {label && <Eyebrow tone={label === "KNOWLEDGE CHECK" || label === "EXERCISE" ? "purple" : label === "WRAP UP" ? "green" : "orange"}>{label}</Eyebrow>}
@@ -124,7 +124,7 @@ function SectionHead({ label, heading, intro }: { label?: string; heading: strin
 }
 
 /** Every section ends the same way: one action, pinned to the bottom of the phone. */
-function Foot({ children }: { children: React.ReactNode }) {
+export function Foot({ children }: { children: React.ReactNode }) {
   return <div className="mt-auto pt-5">{children}</div>;
 }
 
@@ -134,7 +134,7 @@ function Foot({ children }: { children: React.ReactNode }) {
  * candle look like an illustration pasted into a slot. This is ruled ground
  * with a horizon line — the chart the candle belongs on.
  */
-function Stage({ children, tall = false }: { children: React.ReactNode; tall?: boolean }) {
+export function Stage({ children, tall = false }: { children: React.ReactNode; tall?: boolean }) {
   return (
     <div className={cx("relative mt-2 flex items-center justify-center", tall ? "py-2" : "py-1")}>
       <div aria-hidden className="absolute inset-x-[-18px] inset-y-0 pointer-events-none"
@@ -156,7 +156,7 @@ function Stage({ children, tall = false }: { children: React.ReactNode; tall?: b
  * colour rather than a bordered panel — it reads as the same object continuing,
  * not a second card announcing itself.
  */
-function Readout({ swapKey, title, body, tone = "#E4DAC4", placeholder }: {
+export function Readout({ swapKey, title, body, tone = "#E4DAC4", placeholder }: {
   swapKey: string | null; title?: string; body?: string; tone?: string; placeholder: string;
 }) {
   return (
@@ -174,7 +174,7 @@ function Readout({ swapKey, title, body, tone = "#E4DAC4", placeholder }: {
 }
 
 /** A tappable pill. Tactile: it has a bottom edge, and it answers the press. */
-function Pill({ on, done, children, onClick }: { on: boolean; done: boolean; children: React.ReactNode; onClick: () => void }) {
+export function Pill({ on, done, children, onClick }: { on: boolean; done: boolean; children: React.ReactNode; onClick: () => void }) {
   return (
     <button type="button" onClick={onClick}
       className={cx("fic-press rounded-full px-[13px] py-[7px] text-[11.5px] font-extrabold border",

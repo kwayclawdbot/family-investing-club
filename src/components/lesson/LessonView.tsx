@@ -11,6 +11,7 @@ import { cx } from "@/components/ui";
 import { FeedbackNote, KaiRow, LessonHeader, OptionButton, PrimaryButton } from "./engine-ui";
 import { ExplainerStep, MatchPairsStep, MultipleChoiceStep, PredictionStep, RealWorldStep, TrueFalseStep } from "./steps";
 import { AnatomyStep, AnnotatedValuesStep, BuildCandleStep, CompareStep, FlipCardsStep, ProcessStep, RatioExplorerStep, TakeawaysStep } from "./sections";
+import { ChartStep } from "./chart";
 
 /**
  * The lesson player: the real FTA content, in FIC's shell.
@@ -138,6 +139,8 @@ function StepHost({ spec, register, xpNote, onResolve }: { spec: StepSpec; regis
     case "build_candle": return <BuildCandleStep spec={spec} {...p} />;
     case "ratio_explorer": return <RatioExplorerStep spec={spec} {...p} />;
     case "takeaways": return <TakeawaysStep spec={spec} {...p} />;
+    // A real captured series with named objects on it — see components/lesson/chart.tsx
+    case "chart": return <ChartStep spec={spec} {...p} />;
     default: return <div className="flex-1 flex items-center justify-center text-[12.5px] font-bold text-ink-3">This step type isn&apos;t supported yet.</div>;
   }
 }

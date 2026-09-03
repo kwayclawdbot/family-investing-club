@@ -34,7 +34,8 @@ export interface ExplainerBeat {
  */
 export type SectionLabel =
   | "CORE CONCEPT" | "INTERACTIVE" | "KEY DISTINCTION" | "PROCESS" | "LIVE EXAMPLE"
-  | "DATA VISUALIZATION" | "PRACTICE" | "EXERCISE" | "DEEPER INSIGHT" | "KNOWLEDGE CHECK" | "WRAP UP";
+  | "DATA VISUALIZATION" | "PRACTICE" | "EXERCISE" | "DEEPER INSIGHT" | "KNOWLEDGE CHECK" | "WRAP UP"
+  | "ON THE CHART";
 
 export interface BaseStep { id: string; type: string; skill?: SkillId; audio?: StepAudio; label?: SectionLabel }
 
@@ -49,6 +50,203 @@ export interface AnatomyStep extends BaseStep {
   caption?: string;
   candle: CandleSpec;
   hotspots: { part: CandlePart; title: string; body: string }[];
+}
+
+/* ────────────────────────── a teaching chart ──────────────────────────
+ *
+ * Structure, zones, sweeps, gaps and opening ranges do not exist on one candle.
+ * They exist ACROSS bars, and every one of them is a named OBJECT on the chart:
+ * a swing that sits on a particular bar at a particular price, a zone with a top
+ * and a bottom, a run of bars called out as one thing, a level that other days
+ * respected. So a chart figure carries a real captured series plus annotations
+ * that can address a BAR, a PRICE, a RANGE OF PRICES or a SPAN OF BARS — never a
+ * part of a single candle.
+ *
+ * `validateChartFigure` is the gate, and `scripts/install-lessons.mjs` runs it
+ * over every figure before it writes anything. A three-candle gap authored onto
+ * one candle does not render badly; it does not install.
+ */
+
+/** One captured bar. Real historical prices, written into the lesson and frozen there. */
+export interface ChartBar {
+  /** Bar time as the member should read it — "09:50", "23 Jul". Drawn on the axis. */
+  t: string;
+  o: number; h: number; l: number; c: number;
+}
+
+/**
+ * What an annotation points at.
+ *  bar    — this candle
+ *  span   — this run of candles, called out as one object (two or more, always)
+ *  price  — this level
+ *  band   — this range of prices: a zone, a gap, an opening range
+ *  point  — this price ON this candle: a swing high, a swing low, a close
+ */
+export type ChartAnchor =
+  | { at: "bar"; index: number }
+  | { at: "span"; from: number; to: number }
+  | { at: "price"; price: number }
+  | { at: "band"; top: number; bottom: number; from?: number; to?: number }
+  | { at: "point"; index: number; price: number };
+
+/** Colour role, not colour. `up`/`down` are the candle greens and reds; the rest are annotation ink. */
+export type ChartTone = "up" | "down" | "level" | "zone" | "note";
+
+export interface ChartMark {
+  id: string;
+  anchor: ChartAnchor;
+  /** Drawn on the chart itself. Short — it has to read at 402px. */
+  chip: string;
+  /** The pill under the chart. */
+  name: string;
+  /** The readout, once tapped. */
+  title: string;
+  body: string;
+  tone?: ChartTone;
+  /** Drills only: `reveal` marks stay hidden until the member has locked their call in. */
+  phase?: "setup" | "reveal";
+}
+
+export interface ChartFigure {
+  /** Always labelled. A member must know which company and which session they are reading. */
+  ticker: string;
+  /** "23 July 2026 · 5-minute" */
+  session: string;
+  bars: ChartBar[];
+  marks: ChartMark[];
+  /** Drills: bars from this index on are the resolution — drawn only after the call is locked. */
+  revealFrom?: number;
+  /** Extra price room the annotations need but the bars do not reach. */
+  focus?: { top: number; bottom: number };
+}
+
+/* ── INTERACTIVE / LIVE EXAMPLE — step through the objects on a real chart ── */
+export interface ChartStep extends BaseStep {
+  type: "chart";
+  heading: string;
+  intro?: string;
+  figure: ChartFigure;
+  /** What to do before anything has been tapped. Authored per section — never assumed. */
+  prompt: string;
+  /** Continue label once every mark has been read. */
+  done?: string;
+}
+
+/** The share of the frame the marked object must occupy before a figure is legible. */
+export const CHART_MIN_OCCUPANCY = 0.2;
+
+/**
+ * Everything wrong with a figure, in plain sentences. Empty array = usable.
+ *
+ * The rules are the ones that were broken: a chart is a series (three bars minimum,
+ * because the smallest thing taught here is a three-candle gap), a span is more than
+ * one bar, a marked swing has to actually sit on the candle it names, a band has a
+ * top above its bottom, and the object being taught has to be big enough in the frame
+ * to look like the thing the heading calls it.
+ */
+export function validateChartFigure(f: ChartFigure, where = "figure"): string[] {
+  const out: string[] = [];
+  const at = (m: string) => out.push(`${where}: ${m}`);
+  if (!f || typeof f !== "object") return [`${where}: missing`];
+  if (!f.ticker) at("no ticker — every teaching chart is labelled");
+  if (!f.session) at("no session label — every teaching chart says which day and timeframe");
+  const bars = Array.isArray(f.bars) ? f.bars : [];
+  if (bars.length < 3) at(`${bars.length} bar(s) — a teaching chart is a series; the smallest concept here (a fair value gap) needs three`);
+  bars.forEach((b, i) => {
+    const nums = [b.o, b.h, b.l, b.c];
+    if (nums.some((n) => typeof n !== "number" || !Number.isFinite(n) || n <= 0)) { at(`bar ${i} has a price that is not a positive number`); return; }
+    if (b.h < Math.max(b.o, b.c) || b.l > Math.min(b.o, b.c)) at(`bar ${i} is not a candle — the high must be the highest price and the low the lowest`);
+    if (!b.t) at(`bar ${i} has no time label`);
+  });
+  if (!bars.length) return out;
+
+  const lo = Math.min(...bars.map((b) => b.l));
+  const hi = Math.max(...bars.map((b) => b.h));
+  const range = hi - lo || 1;
+  const marks = Array.isArray(f.marks) ? f.marks : [];
+  if (!marks.length) at("no marks — a teaching chart with nothing named on it is decoration");
+  const ids = new Set<string>();
+  let mLo = Infinity, mHi = -Infinity;
+  const see = (v: number) => { if (v < mLo) mLo = v; if (v > mHi) mHi = v; };
+
+  for (const m of marks) {
+    if (!m.id || ids.has(m.id)) at(`mark id "${m.id ?? ""}" is missing or repeated`);
+    ids.add(m.id);
+    if (!m.chip || !m.name || !m.title || !m.body) at(`mark "${m.id}" is missing chip/name/title/body`);
+    const a = m.anchor;
+    if (!a || typeof a !== "object") { at(`mark "${m.id}" has no anchor`); continue; }
+    const inRange = (i: number) => Number.isInteger(i) && i >= 0 && i < bars.length;
+    if (a.at === "bar") {
+      if (!inRange(a.index)) at(`mark "${m.id}" points at bar ${a.index}, which is not in a ${bars.length}-bar series`);
+      else { see(bars[a.index].l); see(bars[a.index].h); }
+    } else if (a.at === "span") {
+      if (!inRange(a.from) || !inRange(a.to)) at(`mark "${m.id}" spans bars ${a.from}–${a.to}, outside a ${bars.length}-bar series`);
+      else if (a.to <= a.from) at(`mark "${m.id}" is a span of one bar — a span names a run of candles, so it needs at least two`);
+      else for (let i = a.from; i <= a.to; i++) { see(bars[i].l); see(bars[i].h); }
+    } else if (a.at === "price") {
+      if (typeof a.price !== "number" || !Number.isFinite(a.price)) at(`mark "${m.id}" has no price`);
+      else if (a.price < lo - range || a.price > hi + range) at(`mark "${m.id}" sits at ${a.price}, far outside the ${lo}–${hi} the bars cover`);
+      else see(a.price);
+    } else if (a.at === "band") {
+      if (typeof a.top !== "number" || typeof a.bottom !== "number") at(`mark "${m.id}" needs a top and a bottom`);
+      else if (a.top <= a.bottom) at(`mark "${m.id}" has a top (${a.top}) that is not above its bottom (${a.bottom})`);
+      else { see(a.top); see(a.bottom); }
+      if (a.from != null && !inRange(a.from)) at(`mark "${m.id}" starts at bar ${a.from}, outside the series`);
+      if (a.to != null && !inRange(a.to)) at(`mark "${m.id}" ends at bar ${a.to}, outside the series`);
+    } else if (a.at === "point") {
+      if (!inRange(a.index)) at(`mark "${m.id}" points at bar ${a.index}, outside the series`);
+      else {
+        const b = bars[a.index];
+        const slack = (b.h - b.l) * 0.02 + range * 0.002;
+        if (a.price < b.l - slack || a.price > b.h + slack) at(`mark "${m.id}" marks ${a.price} on bar ${a.index}, but that candle only traded ${b.l}–${b.h} — a swing has to sit on the candle it names`);
+        else see(a.price);
+      }
+    } else {
+      at(`mark "${m.id}" has an anchor type this renderer does not draw`);
+    }
+  }
+
+  if (f.focus) {
+    if (f.focus.top <= f.focus.bottom) at("focus has a top that is not above its bottom");
+    else { see(f.focus.top); see(f.focus.bottom); }
+  }
+
+  if (f.revealFrom != null) {
+    if (!Number.isInteger(f.revealFrom) || f.revealFrom < 2 || f.revealFrom >= bars.length) {
+      at(`revealFrom ${f.revealFrom} leaves no setup or no resolution in a ${bars.length}-bar series`);
+    } else {
+      for (const m of marks) {
+        if (m.phase === "reveal") continue;
+        const a = m.anchor;
+        // A band's `to` is only how far the author extended a drawn zone to the right, which is
+        // an act of drawing rather than knowledge of what price did. Its `from` is the bar it
+        // was read off, and that is what has to sit inside the setup.
+        const last = a.at === "bar" ? a.index : a.at === "span" ? a.to : a.at === "point" ? a.index : a.at === "band" ? (a.from ?? -1) : -1;
+        if (last >= f.revealFrom) at(`mark "${m.id}" is part of the setup but reads off bar ${last}, which is behind the reveal — it would give the answer away`);
+      }
+    }
+  }
+
+  if (f.revealFrom != null && f.revealFrom >= 2 && f.revealFrom < bars.length) {
+    // A drill draws one frame for both halves so the setup never changes shape under the reader.
+    // That only works if the setup is big enough in that frame to be read while the call is open.
+    const setup = bars.slice(0, f.revealFrom);
+    const sLo = Math.min(...setup.map((b) => b.l)), sHi = Math.max(...setup.map((b) => b.h));
+    const frame = Math.max(hi, mHi, f.focus?.top ?? -Infinity) - Math.min(lo, mLo, f.focus?.bottom ?? Infinity) || 1;
+    const share = (sHi - sLo) / frame;
+    if (share < 0.25) at(`the setup covers only ${(share * 100).toFixed(0)}% of the frame, so it will be a sliver while the call is open — give it more bars, or cut the resolution shorter`);
+  }
+
+  if (Number.isFinite(mLo) && Number.isFinite(mHi)) {
+    const framedLo = Math.min(lo, mLo, f.focus?.bottom ?? Infinity);
+    const framedHi = Math.max(hi, mHi, f.focus?.top ?? -Infinity);
+    const frame = framedHi - framedLo || 1;
+    const occ = (mHi - mLo) / frame;
+    if (occ < CHART_MIN_OCCUPANCY) {
+      at(`what is marked covers only ${(occ * 100).toFixed(0)}% of the frame — at 402px it will read as a sliver, not as the thing the heading names. Trim the bar window.`);
+    }
+  }
+  return out;
 }
 
 /* ── KEY DISTINCTION — two things held side by side ── */
@@ -177,12 +375,23 @@ export interface MatchPairsStep extends BaseStep {
   reinforce?: string;
 }
 
+/**
+ * PREDICTION — a call, then the reveal. Never punished, never scored (see SCORED_TYPES);
+ * the reveal is the teaching.
+ *
+ * `figure` is what makes a drill answerable: a member cannot read a chart they cannot see.
+ * Its `revealFrom` splits the series — the setup is on screen while the call is open, the
+ * resolution is drawn only once the call is locked in, and every mark tagged `reveal` is
+ * held back with it.
+ */
 export interface PredictionStep extends BaseStep {
   type: "prediction";
   question: string;
   options: { label: string; value: string }[];
   outcomeValue: string;
   illustration?: LessonIllustration;
+  /** Named `chart`, not `figure` — `figure` on an explainer is a stat/quote card and the two must never be confused. */
+  chart?: ChartFigure;
   reveal: { headline: string; body: string; scene?: LessonSceneSpec };
   guideOn?: { value: string; line: string };
 }
@@ -202,7 +411,7 @@ export interface RealWorldStep extends BaseStep {
 export type StepSpec =
   | ExplainerStep | MultipleChoiceStep | TrueFalseStep | MatchPairsStep | PredictionStep | RealWorldStep
   | AnatomyStep | CompareStep | ProcessStep | AnnotatedValuesStep | FlipCardsStep | BuildCandleStep
-  | RatioExplorerStep | TakeawaysStep;
+  | RatioExplorerStep | TakeawaysStep | ChartStep;
 export type StepType = StepSpec["type"];
 
 export interface LessonJSON {
