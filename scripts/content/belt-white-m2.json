@@ -1,0 +1,522 @@
+{
+  "lessons": [
+    {
+      "match": { "course": "belt-white", "title": "How the Market Works" },
+      "json": {
+        "schema": 1,
+        "title": "How the Market Works",
+        "skills": ["market_basics"],
+        "difficulty": 1,
+        "audience": ["adult", "teen"],
+        "duration_minutes": 11,
+        "xp": 50,
+        "guide": {
+          "intro": "You press buy. Somewhere a stranger presses sell. This lesson is about what happens in between, and why there is always somebody on the other side.",
+          "outro": "You know how a share changes hands. Next: why the price it changes hands at keeps moving."
+        },
+        "steps": [
+          {
+            "id": "concept",
+            "type": "explainer",
+            "label": "CORE CONCEPT",
+            "skill": "market_basics",
+            "heading": "A market is a matching machine",
+            "figure": { "kind": "stat", "value": "116,246 trades", "caption": "Costco Wholesale, one ordinary Wednesday — 2 September 2026" },
+            "body": [
+              "The stock market is a public marketplace where shares of listed companies are bought and sold. It is not a building. As the textbook puts it on page 12, it is a network of exchanges and brokers whose entire job is to bring a buyer and a seller together and let them agree a price.",
+              "The two names you will hear most are the New York Stock Exchange and the Nasdaq. Every company that lists on one is given a short code called a ticker symbol — Microsoft is MSFT on the Nasdaq, Costco Wholesale is COST on the same exchange, Nike is NKE on the New York Stock Exchange. Orders are placed against the ticker, so there is never a question of which company you meant.",
+              "Two things make this work. First, you are not buying from the company. Costco sold its shares once, years ago; since then those same shares have been passing between investors. When you buy, you are buying from another owner who has decided to sell. Second, nothing happens until two people agree. Your order sits there until somebody meets it.",
+              "The scale is easy to miss. On 2 September 2026, 2,166,373 Costco shares changed hands across 116,246 separate trades — an average of about 19 shares at a time. That is what the machine is doing all day: matching small orders from people who have never met and never will."
+            ]
+          },
+          {
+            "id": "match",
+            "type": "process",
+            "label": "PROCESS",
+            "skill": "market_basics",
+            "heading": "How one order finds a match",
+            "intro": "This is what happens between the moment you tap buy and the moment the share is yours.",
+            "moves": [
+              { "title": "You send an order to your broker", "body": "You name the company by its ticker, say how many shares, and say whether you will take whatever price is available or only a price you name. Your broker is your way in; you are not allowed to walk onto an exchange yourself." },
+              { "title": "The order reaches the exchange", "body": "The exchange keeps a running list of every unfilled order in that ticker — everyone willing to buy, with the price they will pay, and everyone willing to sell, with the price they want. Yours joins the list." },
+              { "title": "The exchange looks for the other side", "body": "It matches the highest price a buyer will pay against the lowest price a seller will take. If your order overlaps with somebody's, the two are matched on the spot. If it does not, it waits in the list until somebody's does." },
+              { "title": "The trade prints, and that becomes the price", "body": "The matched trade is published within a second: the ticker, the number of shares, and the price they agreed. That last figure is now the price of the company, until the next trade prints. There were 116,246 of those in Costco on 2 September 2026." }
+            ],
+            "closing": "So the price on your screen is not a valuation anybody calculated. It is the price of the most recent trade between two strangers who both agreed to it."
+          },
+          {
+            "id": "two-sides",
+            "type": "compare",
+            "label": "KEY DISTINCTION",
+            "skill": "market_basics",
+            "heading": "The same trade, from both chairs",
+            "intro": "Every trade has two people in it, and both of them think they are doing the sensible thing. Neither is being tricked.",
+            "columns": [
+              {
+                "title": "The buyer's chair",
+                "tone": "green",
+                "points": [
+                  "Thinks this price is fair or cheap",
+                  "Wants the piece more than the cash",
+                  "May be starting a position, or adding to one",
+                  "Will pay a little more if nobody is selling at their price"
+                ]
+              },
+              {
+                "title": "The seller's chair",
+                "tone": "red",
+                "points": [
+                  "Thinks this price is fair or dear",
+                  "Wants the cash more than the piece",
+                  "May be taking a profit, cutting a loss, or paying a bill",
+                  "Will accept a little less if nobody is buying at their price"
+                ]
+              }
+            ],
+            "note": "Both can be right. A seller paying for a new roof and a buyer starting a twenty-year holding are answering different questions, so they can disagree about nothing at all and still trade happily at the same price."
+          },
+          {
+            "id": "spread",
+            "type": "explainer",
+            "label": "DEEPER INSIGHT",
+            "skill": "market_basics",
+            "heading": "Bid, ask, and the gap between them",
+            "body": [
+              "At any moment there are two prices, not one. The bid is the highest price anyone in the market is currently willing to pay. The ask is the lowest price anyone is currently willing to accept. The textbook covers both on page 69, in the list of what a stock quote contains.",
+              "The distance between them is the bid-ask spread, and it exists because the two sides have not agreed yet. Nothing trades in that gap. A trade happens when a buyer decides to pay the ask, or a seller decides to take the bid, or the two sides move towards each other until they meet.",
+              "A company that thousands of people trade all day has a narrow spread — there is always somebody close behind on both sides. A company almost nobody trades has a wide one, and buying it costs you a little more than the last printed price suggested. That is the practical reason the number of shares traded matters, and it is why volume sits on every quote screen.",
+              "It also explains something beginners find strange. You can buy at $100.02 and see the price described as $100.00 a second later, without anything going wrong. You paid the ask; the last trade before you printed at the bid."
+            ]
+          },
+          {
+            "id": "check-1",
+            "type": "multiple_choice",
+            "label": "KNOWLEDGE CHECK",
+            "skill": "market_basics",
+            "question": "You buy 10 shares of Nike. Where do those shares come from?",
+            "options": [
+              "Nike creates 10 new shares and sells them to you",
+              "Another investor who wanted to sell 10 shares at that price",
+              "The New York Stock Exchange, which holds a reserve of every company",
+              "Your broker, out of its own inventory, always"
+            ],
+            "correctIndex": 1,
+            "explanation": "The company sold its shares to the public once. After that, the same shares pass between investors. Your buy was somebody else's sell.",
+            "wrongFeedback": [
+              { "text": "New shares are only created in specific corporate events, not when you place an order. Ordinary trading moves existing shares between owners.", "kai": true },
+              null,
+              { "text": "The exchange holds no shares. It is the matching machine — it introduces a buyer to a seller and publishes the price they agreed.", "kai": true },
+              { "text": "A broker is your route to the exchange. Some do hold inventory, but the shares in an ordinary trade come from another investor.", "kai": true }
+            ],
+            "reinforce": "There is always somebody on the other side, and they think they are being sensible too."
+          },
+          {
+            "id": "check-2",
+            "type": "multiple_choice",
+            "label": "KNOWLEDGE CHECK",
+            "skill": "market_basics",
+            "question": "What is the price shown next to a company's name on your screen?",
+            "options": [
+              "What the company is worth, worked out by the exchange",
+              "The price of the most recent trade between a buyer and a seller",
+              "The average of everything traded that day",
+              "The price the company would like its shares to be"
+            ],
+            "correctIndex": 1,
+            "explanation": "It is the last traded price, and nothing more. Two people agreed it a moment ago. The next two people may agree something different.",
+            "wrongFeedback": [
+              { "text": "Nobody calculates it. The exchange matches orders and publishes what the two sides agreed.", "kai": true },
+              null,
+              { "text": "The day's average is a separate figure. The price on the screen is the most recent trade, on its own.", "kai": true },
+              { "text": "The company has no say. It cannot set the price of shares that other people own.", "kai": true }
+            ],
+            "reinforce": "Last trade, not valuation. That distinction removes most of the mystery from a moving price."
+          },
+          {
+            "id": "wrap",
+            "type": "takeaways",
+            "label": "WRAP UP",
+            "heading": "Key takeaways",
+            "points": [
+              "The market is a network of exchanges and brokers whose job is to match a buyer with a seller.",
+              "You buy from another investor, not from the company. The company sold those shares once, long ago.",
+              "Every company has a ticker so orders are unambiguous — COST, NKE, MSFT.",
+              "The bid is the best price anyone will pay; the ask is the lowest anyone will accept; the gap between them is the spread.",
+              "The price on the screen is the last trade that printed. Costco printed 116,246 of them on 2 September 2026."
+            ],
+            "closing": "Next: why the price the two sides agree on keeps changing."
+          }
+        ]
+      }
+    },
+    {
+      "match": { "course": "belt-white", "title": "What Moves a Price" },
+      "json": {
+        "schema": 1,
+        "title": "What Moves a Price",
+        "skills": ["market_basics"],
+        "difficulty": 1,
+        "audience": ["adult", "teen"],
+        "duration_minutes": 11,
+        "xp": 50,
+        "guide": {
+          "intro": "Why did it go up today? There is one mechanical answer, and it is the same answer every time.",
+          "outro": "You can now say what a price is and why it moves. One lesson to go: reading the numbers on the screen."
+        },
+        "steps": [
+          {
+            "id": "concept",
+            "type": "explainer",
+            "label": "CORE CONCEPT",
+            "skill": "market_basics",
+            "heading": "Prices move on eagerness, not on headcount",
+            "figure": { "kind": "stat", "value": "$218.79 → $224.41", "caption": "Nvidia, 2 September 2026 · 157 million shares changed hands" },
+            "body": [
+              "The textbook gives the rule on page 12: price changes are driven by supply and demand. When more people want to buy than to sell, the price rises; when more want to sell than to buy, it falls.",
+              "That is right, and it is worth stating more precisely, because the loose version misleads people for years. Every single trade has a buyer and a seller of exactly the same number of shares. It is never true that more shares were bought than sold. The two are always equal, by definition.",
+              "What changes is willingness. If the people who want in are impatient and the people holding are not keen to let go, buyers have to reach up to the seller's price to get filled. Each trade prints a little higher than the last, and that is a price rising. Reverse it and each trade prints a little lower.",
+              "So a rising price does not mean a crowd bought. It means the buyers were the ones in a hurry. On 2 September 2026, Nvidia opened at $218.79 and closed at $224.41 on 157,104,683 shares. Every one of those shares was sold by somebody. The buyers were simply the side willing to move."
+            ]
+          },
+          {
+            "id": "pressure",
+            "type": "ratio_explorer",
+            "label": "INTERACTIVE",
+            "skill": "market_basics",
+            "heading": "One day of buying pressure, from a standstill to a runaway",
+            "intro": "The shape below is one full day of trading. The thin line covers every price the day touched, top to bottom; the thick block covers only the distance from where it opened to where it closed. Charting calls those two parts the wick and the body — the words on the slider — and Yellow Belt takes them apart properly. Slide it and read what each day was saying.",
+            "bands": [
+              {
+                "upTo": 20,
+                "tone": "neutral",
+                "title": "Evenly matched — the day went nowhere",
+                "body": "Price travelled in both directions and finished within pennies of where it opened. Buyers reached up, sellers came down, and neither side would go far enough to shift the level. Most days in a quiet market look roughly like this, and there is usually nothing to explain."
+              },
+              {
+                "upTo": 45,
+                "tone": "neutral",
+                "title": "Buyers slightly ahead",
+                "body": "The day closed higher than it opened, but it gave a lot of that back on the way. The block is smaller than the ground price covered, which tells you sellers were meeting the buying whenever it got going. A rise that looks like this is not the same as a rise that goes straight up."
+              },
+              {
+                "upTo": 70,
+                "tone": "green",
+                "title": "Buyers clearly ahead",
+                "body": "This is roughly Nvidia on 2 September 2026. It opened at $218.79, never traded more than about thirty cents below that all day, reached $227.95 and closed at $224.41. The block — open to close — is about six-tenths of the whole day's range. Buyers had to reach for it, and mostly held what they took."
+              },
+              {
+                "upTo": 100,
+                "tone": "green",
+                "title": "Buyers in control from the bell",
+                "body": "Almost the entire day is the move from open to close, with barely any ground given back in either direction. Nobody holding was willing to sell without being paid more, all session. Days shaped like this are rare, and they are the ones worth going back to look at."
+              }
+            ]
+          },
+          {
+            "id": "why",
+            "type": "explainer",
+            "label": "DEEPER INSIGHT",
+            "skill": "market_basics",
+            "heading": "What makes a person willing",
+            "body": [
+              "Supply and demand is the mechanism. It is not the reason. The reason sits behind it: something changed what people think the company is worth, or what they need their money for.",
+              "Company news is the obvious one. Profits came in above what people expected, or below. A big customer signed, or left. A product launched, or was pulled. Any of these changes the number people are prepared to pay for a claim on future earnings.",
+              "Then there is everything outside the company. Interest rates, the price of oil, an election, a war, a bad month for the whole industry. A company can have a perfectly good week and still fall because everything fell.",
+              "And there are reasons that are nothing to do with value at all. A fund is closing and has to sell whatever it holds. A member of this club is buying a car. None of that is a judgement about Costco or Nvidia; it is somebody who needed cash more than they needed the shares.",
+              "This is why nobody can tell you with certainty why a price moved on a given day. What you can always say is the mechanical part: one side was more willing to move than the other."
+            ]
+          },
+          {
+            "id": "predict",
+            "type": "prediction",
+            "label": "EXERCISE",
+            "skill": "market_basics",
+            "question": "Nvidia opened at $218.79 on 2 September 2026 and closed at $224.41, with 157,104,683 shares traded. Which of these is definitely true?",
+            "options": [
+              { "label": "More shares were bought than were sold that day", "value": "more-bought" },
+              { "label": "Buyers were the side willing to pay up, and holders had to be offered more to let go", "value": "willing" },
+              { "label": "The company issued new shares, which pushed the price up", "value": "issued" }
+            ],
+            "outcomeValue": "willing",
+            "guideOn": { "value": "more-bought", "line": "That is the version almost everyone starts with, and it is the one worth breaking on day one." },
+            "reveal": {
+              "headline": "157,104,683 shares bought — and 157,104,683 sold",
+              "body": "Every share that was bought that day was sold by somebody at the same instant, at the same price. The two totals are identical and always will be, so a day can never have more buying than selling in the literal sense.\n\nWhat the numbers do show is who was reaching. Nvidia barely traded below its opening price at all — the low was $218.48, about thirty cents under the open — and finished $5.63 above it. Buyers kept meeting the sellers' price instead of waiting for a better one, so each successive trade printed higher. That is what a rise is, mechanically, on every chart you will ever look at."
+            }
+          },
+          {
+            "id": "check",
+            "type": "multiple_choice",
+            "label": "KNOWLEDGE CHECK",
+            "skill": "market_basics",
+            "question": "A company reports good profits and the share price falls that day. What is the most likely explanation?",
+            "options": [
+              "The report must have been wrong",
+              "People expected even better, so holders were the side willing to move on price",
+              "Good news always makes a price fall in the short term",
+              "The exchange adjusted the price to keep it fair"
+            ],
+            "correctIndex": 1,
+            "explanation": "The price already contained what people expected. If the result is good but short of that expectation, the people holding become keener to sell than the people watching are to buy, and each trade prints a little lower.",
+            "wrongFeedback": [
+              { "text": "The report can be perfectly accurate. What matters is how it compares with what people had already priced in.", "kai": true },
+              null,
+              { "text": "There is no such rule. Good news often lifts a price. It fell here because of what was expected, not because the news was good.", "kai": true },
+              { "text": "The exchange never sets or adjusts a price. It matches orders and publishes what the two sides agreed.", "kai": true }
+            ],
+            "reinforce": "The price already holds what people expect. News moves it by the distance between the expectation and the fact."
+          },
+          {
+            "id": "wrap",
+            "type": "takeaways",
+            "label": "WRAP UP",
+            "heading": "Key takeaways",
+            "points": [
+              "Every trade has equal buying and selling. It is never literally true that more was bought than sold.",
+              "A price rises when buyers are the side willing to move up to the seller's price, so each trade prints higher.",
+              "Nvidia went from $218.79 to $224.41 on 2 September 2026 on 157,104,683 shares — every one of them sold by somebody.",
+              "The reasons behind the willingness are company news, the wider world, and people who simply need their money back.",
+              "A price already contains what people expect. News moves it by the gap between expectation and fact."
+            ],
+            "closing": "Next: the shorthand the whole market uses to name companies, exchanges and the market as a whole."
+          }
+        ]
+      }
+    },
+    {
+      "match": { "course": "belt-white", "title": "Tickers, Exchanges and Indices" },
+      "json": {
+        "schema": 1,
+        "title": "Tickers, Exchanges and Indices",
+        "skills": ["market_basics"],
+        "difficulty": 1,
+        "audience": ["adult", "teen"],
+        "duration_minutes": 10,
+        "xp": 50,
+        "guide": {
+          "intro": "Every evening someone on the news says the S&P 500 closed up. This lesson is what those words mean.",
+          "outro": "The vocabulary is yours. Last lesson of the belt: reading a real quote, number by number."
+        },
+        "steps": [
+          {
+            "id": "concept",
+            "type": "explainer",
+            "label": "CORE CONCEPT",
+            "skill": "market_basics",
+            "heading": "Three words that get used as if they were one",
+            "figure": { "kind": "stat", "value": "COST · Nasdaq · S&P 500", "caption": "A ticker, an exchange, an index — three different things" },
+            "body": [
+              "A ticker is a company's short code. Costco Wholesale is COST, Nike is NKE, Apple is AAPL. The textbook explains on page 13 why they exist: they are unambiguous. There is only one COST, so an order can never reach the wrong company by mistake.",
+              "An exchange is the place the trading happens. The two large American ones are the New York Stock Exchange and the Nasdaq. A company lists on one of them, and its ticker belongs to that listing — Nike trades on the New York Stock Exchange, Costco and Apple on the Nasdaq.",
+              "An index is neither of those. It is a measurement. It takes a defined group of companies and turns their combined value into a single number, so that people can talk about how a whole market did without listing five hundred prices. Page 14 calls it a snapshot of a portion of the market, which is exactly right.",
+              "So a ticker names a company, an exchange hosts the trading, and an index measures a group. When someone says the market was up, they mean an index was up — and it is worth knowing which one."
+            ]
+          },
+          {
+            "id": "terms",
+            "type": "flip_cards",
+            "label": "PRACTICE",
+            "skill": "market_basics",
+            "heading": "Four words, four different jobs",
+            "intro": "Answer each one to yourself before you flip it.",
+            "cards": [
+              { "front": "Ticker", "back": "A company's short code on an exchange — COST, NKE, AAPL. Orders are placed against it so there is never any doubt which company you meant." },
+              { "front": "Exchange", "back": "The venue that matches buyers with sellers and publishes the price they agreed. The New York Stock Exchange and the Nasdaq are the two large American ones." },
+              { "front": "Index", "back": "A number that measures a defined group of companies as one. It is a measurement, not something you can buy." },
+              { "front": "ETF", "back": "A fund holding a basket of companies, which itself trades on an exchange like a share. This is how you buy an index — you buy a fund that tracks it." }
+            ]
+          },
+          {
+            "id": "big-three",
+            "type": "explainer",
+            "label": "DEEPER INSIGHT",
+            "skill": "market_basics",
+            "heading": "The three indices people quote",
+            "body": [
+              "The Dow Jones Industrial Average is the oldest, set up in 1896 by Charles Dow with twelve companies in it. Today it holds thirty large American companies and covers about a quarter of the total value of the American market. It is price-weighted, which means a company with a high share price pushes the number around more than a company with a low one — a quirk of its age, not a judgement about importance.",
+              "The S&P 500, established in 1957, holds the five hundred largest listed American companies and covers roughly 80% of the market's total value. It is weighted by size, so the biggest companies move it most. That combination is why it is the one most people mean when they say the market.",
+              "The Nasdaq Composite, from 1971, includes companies listed on the Nasdaq — American and international — and leans heavily towards technology.",
+              "You cannot buy an index, because it is a measurement. What you can buy is a fund that holds the same companies in the same proportions. SPY is the best known of those for the S&P 500, and it closed at $765.16 on 2 September 2026 — one share of it, a slice of five hundred companies."
+            ]
+          },
+          {
+            "id": "pairs",
+            "type": "match_pairs",
+            "label": "KNOWLEDGE CHECK",
+            "skill": "market_basics",
+            "prompt": "Match each company to the ticker it actually trades under.",
+            "pairs": [
+              { "left": "Apple", "right": "AAPL" },
+              { "left": "Costco Wholesale", "right": "COST" },
+              { "left": "Nike", "right": "NKE" },
+              { "left": "Roblox", "right": "RBLX" },
+              { "left": "Alphabet, which owns Google", "right": "GOOGL" }
+            ],
+            "explanation": "Not that pair. Tickers are usually an abbreviation of the name, but not always — the company behind Google is listed as Alphabet.",
+            "reinforce": "All five are real listings you can look up today. Alphabet is the one that catches people: you search on Google, you buy GOOGL."
+          },
+          {
+            "id": "check",
+            "type": "multiple_choice",
+            "label": "KNOWLEDGE CHECK",
+            "skill": "market_basics",
+            "question": "Someone tells you they bought the S&P 500. What did they actually buy?",
+            "options": [
+              "The index itself, directly from the exchange",
+              "A fund that holds the same five hundred companies, which trades like a share",
+              "Five hundred separate share purchases, one per company",
+              "Nothing — you cannot invest in the American market from outside a bank"
+            ],
+            "correctIndex": 1,
+            "explanation": "An index is a measurement, so there is nothing to buy. Funds exist that hold the same companies in the same proportions, and those trade on an exchange under their own ticker.",
+            "wrongFeedback": [
+              { "text": "There is nothing there to buy. The index is a number calculated from the companies in it.", "kai": true },
+              null,
+              { "text": "You could do that, and almost nobody does. One share of a tracking fund gives you the same exposure in a single trade.", "kai": true },
+              { "text": "Ordinary brokerage accounts hold these funds. The reason you cannot buy the index is that it is a measurement, not a company.", "kai": true }
+            ],
+            "reinforce": "Index: the measurement. Fund: the thing you can own. Ticker: what you type."
+          },
+          {
+            "id": "wrap",
+            "type": "takeaways",
+            "label": "WRAP UP",
+            "heading": "Key takeaways",
+            "points": [
+              "A ticker names a company, an exchange hosts the trading, an index measures a group. Three jobs, three words.",
+              "Nike trades on the New York Stock Exchange as NKE. Costco and Apple trade on the Nasdaq as COST and AAPL.",
+              "The Dow holds 30 companies and dates from 1896; the S&P 500 holds 500 and covers about 80% of the American market's value; the Nasdaq Composite leans towards technology.",
+              "An index cannot be bought. A fund that tracks it can — SPY closed at $765.16 on 2 September 2026.",
+              "Alphabet is the company behind Google, and it lists as GOOGL."
+            ],
+            "closing": "One lesson left. Time to read a real quote, number by number."
+          }
+        ]
+      }
+    },
+    {
+      "match": { "course": "belt-white", "title": "Reading a Stock Quote" },
+      "json": {
+        "schema": 1,
+        "title": "Reading a Stock Quote",
+        "skills": ["stock_ownership"],
+        "difficulty": 1,
+        "audience": ["adult", "teen"],
+        "duration_minutes": 12,
+        "xp": 50,
+        "guide": {
+          "intro": "A screen full of numbers, and most people read one of them. By the end of this you will read the lot, on a real day, on a real company.",
+          "outro": "That is the White Belt. You can say what you own, why anyone buys it, and what moves the price — and there is a company on your watchlist to prove it."
+        },
+        "steps": [
+          {
+            "id": "concept",
+            "type": "explainer",
+            "label": "CORE CONCEPT",
+            "skill": "stock_ownership",
+            "heading": "What a quote is actually reporting",
+            "figure": { "kind": "stat", "value": "Costco · 2 Sep 2026", "caption": "One real session, read end to end" },
+            "body": [
+              "A stock quote is the summary of a company's trading, and the textbook lists its parts on page 69: the ticker, the price, the bid and ask, the volume, the market capitalisation, the 52-week high and low, the dividend yield, earnings per share and the price-to-earnings ratio.",
+              "Four of those numbers describe the session itself, and they are the four to learn first. Where trading opened, the highest price anyone paid, the lowest price anyone accepted, and where it finished. Between them they tell you the whole shape of a day without you having watched a minute of it.",
+              "The one that carries the most weight is the last. It is where the two sides finished up agreeing after a full session of arguing, and it is the figure every report quotes at the end of the day.",
+              "The example on the next screen is Costco Wholesale on Wednesday 2 September 2026 — an ordinary day, chosen for that reason. The shape beside the numbers is the standard way a session is drawn: the block spans the open and the close, and the thin lines reach out to the high and the low. Yellow Belt takes that drawing apart; here it is simply a picture of the same four numbers. Tap each one."
+            ]
+          },
+          {
+            "id": "quote",
+            "type": "annotated_values",
+            "label": "LIVE EXAMPLE",
+            "skill": "stock_ownership",
+            "heading": "A real session, number by number",
+            "subject": "Costco Wholesale (COST) · Nasdaq · 2 September 2026",
+            "caption": "Real prices from a real day. Tap each number to read what it says.",
+            "candle": { "open": 938.49, "high": 938.88, "low": 920.31, "close": 928.48 },
+            "values": [
+              { "part": "open", "label": "Open", "value": "$938.49", "meaning": "The first price traded after the opening bell. It is where the market picked up from the night before, and everything else in the day is measured against it." },
+              { "part": "high", "label": "High", "value": "$938.88", "meaning": "The most anyone paid all day — and only 39 cents above the open. The best price of the whole session came in the first minutes, and it was never seen again." },
+              { "part": "low", "label": "Low", "value": "$920.31", "meaning": "The least anyone accepted: $18.18 below the open. Somewhere down here the selling ran out of people willing to keep hitting lower prices." },
+              { "part": "close", "label": "Close", "value": "$928.48", "meaning": "The last price traded before the bell, and the one the evening reports quote. It sits $10.01 below the open, so this was a down day — but $8.17 above the low, so the selling did not hold all the way to the end." }
+            ]
+          },
+          {
+            "id": "rest",
+            "type": "explainer",
+            "label": "DEEPER INSIGHT",
+            "skill": "stock_ownership",
+            "heading": "The rest of the screen, on the same day",
+            "body": [
+              "Volume is the number of shares that changed hands. Costco traded 2,166,373 shares that day, across 116,246 separate trades. Volume tells you how much interest there was, which is why a big move on heavy volume is treated differently from the same move on almost none.",
+              "Market capitalisation is the price multiplied by the number of shares in existence. Costco has 443,478,804 shares, so at $928.48 the whole company was valued at about $411.8 billion. It is the figure that answers how big is this, and it is the only honest way to compare two companies — a $928 share price does not make Costco expensive next to a $38 one.",
+              "The 52-week high and low give you the last year at a glance. Costco's high over the previous year was $1,096.50, reached on 19 May 2026, and its low was $844.06 on 16 December 2025. So the $928.48 close sits nearer the bottom of its year than the top, which is a fact worth knowing before anyone tells you a story about it.",
+              "Dividend yield is the annual dividend as a percentage of the price. Costco's last four quarterly dividends came to $5.54 a share, which against $928.48 is 0.60% a year. And the price-to-earnings ratio is the price divided by the profit per share — a way of asking how much you are paying for each dollar the company earns. Both of those are Green Belt work; here it is enough to know which line on the screen they are."
+            ]
+          },
+          {
+            "id": "fields",
+            "type": "flip_cards",
+            "label": "PRACTICE",
+            "skill": "stock_ownership",
+            "heading": "The quote screen, term by term",
+            "intro": "Six of the lines from page 69. Say what each one means, then flip.",
+            "cards": [
+              { "front": "Last price", "back": "The price of the most recent trade. Not a valuation — just what the last two people agreed." },
+              { "front": "Bid and ask", "back": "The highest price anyone will currently pay, and the lowest anyone will currently accept. The gap between them is the spread." },
+              { "front": "Volume", "back": "How many shares changed hands in the period. Costco traded 2,166,373 on 2 September 2026." },
+              { "front": "Market cap", "back": "Price times the number of shares in existence — what the whole company is worth at today's price. Costco: about $411.8 billion." },
+              { "front": "52-week high and low", "back": "The highest and lowest prices of the past year. Costco's were $1,096.50 and $844.06." },
+              { "front": "Dividend yield", "back": "The annual dividend as a percentage of the share price. Costco's was 0.60% at that close." }
+            ]
+          },
+          {
+            "id": "check",
+            "type": "multiple_choice",
+            "label": "KNOWLEDGE CHECK",
+            "skill": "stock_ownership",
+            "question": "Costco closed at $928.48 and Nike closed at $38.24 on the same day. Which company is bigger?",
+            "options": [
+              "Costco — its shares cost more than twenty times as much",
+              "You cannot tell from the share price; you need the market capitalisation",
+              "Nike — a lower price means more shares in existence, which means a bigger company",
+              "They are the same size, since both are large well-known companies"
+            ],
+            "correctIndex": 1,
+            "explanation": "A share price on its own says nothing about size, because companies are divided into whatever number of pieces they chose. Size is price times the number of shares — the market capitalisation.",
+            "wrongFeedback": [
+              { "text": "The price of one slice tells you nothing about the size of the pie. It depends entirely on how many slices there are.", "kai": true },
+              null,
+              { "text": "A low price does not imply a lot of shares. You still have to multiply the two to get anywhere.", "kai": true },
+              { "text": "Both are well known, and that is not a measure of size. On 2 September 2026 Costco was valued at roughly $411.8 billion and Nike at roughly $56.7 billion.", "kai": true }
+            ],
+            "reinforce": "Share price is the size of the slice. Market cap is the size of the pie. Only one of them is a fact about the company."
+          },
+          {
+            "id": "do-it",
+            "type": "real_world",
+            "skill": "stock_ownership",
+            "action": "save_watchlist",
+            "ticker": "COST",
+            "company": "Costco Wholesale",
+            "prompt": "Put a real company on your family watchlist",
+            "cta": "Open Costco Wholesale",
+            "successText": "Costco Wholesale is on your family watchlist. From here you can open it any day and read the same four numbers you just read — on that day's session rather than a printed one. That is the belt: you own the vocabulary now, and there is a real company in the app to use it on."
+          },
+          {
+            "id": "wrap",
+            "type": "takeaways",
+            "label": "WRAP UP",
+            "heading": "Key takeaways",
+            "points": [
+              "Four numbers describe a session: where it opened, the highest paid, the lowest accepted, and where it closed.",
+              "Costco opened at $938.49 on 2 September 2026, set its high at $938.88, fell to $920.31 and closed at $928.48.",
+              "The close carries the most weight. It is where both sides finished up agreeing after a full day.",
+              "Volume is shares traded; market cap is price times shares in existence, and it is the only fair way to compare two companies.",
+              "The 52-week high and low put today in the context of a year — Costco's were $1,096.50 and $844.06."
+            ],
+            "closing": "That is White Belt. You can say what a stock is, why anyone buys one, and what makes the price move — in your own words, to someone else. The belt test is ten mixed questions and the watchlist entry you have already made."
+          }
+        ]
+      }
+    }
+  ]
+}

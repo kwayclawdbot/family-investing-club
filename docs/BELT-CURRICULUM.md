@@ -82,7 +82,7 @@ closes. The tug-of-war, the pizza slice and the green team are *closers*, never 
 
 ---
 
-## 2. WHITE BELT — *"You know what you own."*
+## 2. WHITE BELT — *"You know what you own."* ✅ BUILT 2026-09-03 (adult/teen)
 
 **The promise:** by the end you can say what a stock is, why anyone buys one, and what makes the
 price move — in your own words, to someone else.
@@ -93,13 +93,26 @@ price move — in your own words, to someone else.
 Indices p14), Ch3 (What Is a Stock p21–24; Reading a Stock Quote p69).
 **Kids source:** Learn 2 Earn deck; workbook Ch1–3; PTG Quick Reference; lesson plans Unit 1.
 
+> **Built.** `belt-white`, 2 modules, 8 lessons, 54 sections — `scripts/create-belt-white.mjs` makes
+> the rows, `scripts/content/belt-white-m1.json` and `-m2.json` carry the content. The kid track is
+> still to come, per the build order. Two corrections to the plan below, made while writing it:
+>
+> - **W1.2 cannot use `annotated_values`.** That section type draws exactly one candlestick and its
+>   fields are locked to `open|high|low|close`, so "a balance over 10 years" would have rendered as a
+>   single candle — the Black Belt defect again. It ships as a `compare` of two savers instead: Alex
+>   contributes $24,000 from 25, Sam $72,000 from 35, and Alex finishes $102,058 ahead. The same
+>   caution applies to every other row in this document that asks `annotated_values` for something
+>   that is not one candle or one set of four prices (Y3.1, G1.2, G1.3, G3.1, B2.2, B2.4, B3.4).
+> - **W1.3's source is p62, not p5–7.** Chapter 1 never mentions inflation; the book defines it in
+>   §3.6, "Inflation – What's That?", on page 62, and that is where the lesson draws from.
+
 ### Module 1 — Money that works (White I · 4 lessons · 0→150 XP)
 
 | # | Lesson | The one question | Section plan | Source |
 |---|---|---|---|---|
 | W1.1 | The four ways to make money | Where does money actually come from? | explainer → compare (work vs business vs investing vs trading) → flip_cards → multiple_choice → takeaways | Ch1 p5; L2E; orientation ACT 1 |
-| W1.2 | Compounding — why starting early beats starting big | Why does time matter more than the amount? | explainer → process (how one year feeds the next) → annotated_values (a balance over 10 years) → multiple_choice → takeaways | Ch1 p5 |
-| W1.3 | Inflation — the reason saving alone loses | If my money is safe in the bank, what is the problem? | explainer → compare (same money, two years) → true_false → takeaways | Ch1 p5–7 |
+| W1.2 | Compounding — why starting early beats starting big | Why does time matter more than the amount? | explainer → process (how one year feeds the next) → compare (two savers, ten years apart) → explainer → multiple_choice ×2 → takeaways | Ch1 p5 |
+| W1.3 | Inflation — the reason saving alone loses | If my money is safe in the bank, what is the problem? | explainer → compare (same money, two years) → explainer → flip_cards → true_false → multiple_choice → takeaways | Ch3 p62 |
 | W1.4 | What a stock actually is | What am I buying when I buy a share? | explainer → compare (own a slice vs lend money) → flip_cards (share, dividend, ETF, bond) → multiple_choice → takeaways | Ch3 p21–24 |
 
 *Kids:* W1.1 four-ways with the job/lemonade-stand/slice/tug-of-war set · W1.2 the money tree ·
