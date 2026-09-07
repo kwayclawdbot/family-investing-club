@@ -80,6 +80,7 @@
               {
                 "title": "1 · Work",
                 "tone": "neutral",
+                "group": "Paid for time",
                 "media": {
                   "src": "/lessons/belt-white-w1-1/work.jpg",
                   "alt": "A barber's clippers and comb resting on a folded apron on a worn timber counter at the end of the day."
@@ -94,6 +95,7 @@
               {
                 "title": "2 · Business",
                 "tone": "neutral",
+                "group": "Paid for time",
                 "media": {
                   "src": "/lessons/belt-white-w1-1/business.jpg",
                   "alt": "Four worn canvas aprons hanging on iron hooks by the back door of an empty salon."
@@ -108,6 +110,7 @@
               {
                 "title": "3 · Investing",
                 "tone": "green",
+                "group": "Paid for ownership",
                 "media": {
                   "src": "/lessons/belt-white-w1-1/investing.jpg",
                   "alt": "An engraved paper share certificate lying on a walnut desk with a pair of reading glasses folded on its corner."
@@ -122,6 +125,7 @@
               {
                 "title": "4 · Trading",
                 "tone": "green",
+                "group": "Paid for ownership",
                 "media": {
                   "src": "/lessons/belt-white-w1-1/trading.jpg",
                   "alt": "A wooden crate of second-hand records on a trestle table at an outdoor market stall."

@@ -231,43 +231,111 @@ export function AnatomyStep({ spec, onResolve }: StepComponentProps<AnatomySpec>
 /* ────────────────────────── KEY DISTINCTION · compare ────────────────────────── */
 
 export function CompareStep({ spec, onResolve }: StepComponentProps<CompareSpec>) {
+  // Two things get compared side by side; more than two get compared down a page. A 2×2 of
+  // bordered, tinted, drop-shadowed rectangles is the pattern this system does not use — see
+  // `Stage` and `ProcessStep` for why. The comparison is carried by rules, type scale and the
+  // photographs themselves, which are objects with identity; nothing here is a container.
+  const ledger = spec.columns.length > 2 || spec.columns.some((c) => c.media);
   return (
     <div className="fic-section flex-1 flex flex-col">
       <SectionHead label={spec.label} heading={spec.heading} intro={spec.intro} media={spec.media} />
-      <div className="mt-3 grid grid-cols-2 gap-[10px] fic-stagger">
-        {spec.columns.map((col, i) => {
-          const tone = col.tone === "green" ? "border-green-line bg-green-tint shadow-[0_3px_0_#D8E5CE]"
-            : col.tone === "red" ? "border-[#EDD3CB] bg-[#FBE9E4] shadow-[0_3px_0_#E8C9C1]"
-              : "border-line bg-card shadow-[0_3px_0_#EFE4CF]";
-          const tc = col.tone === "green" ? "text-green" : col.tone === "red" ? "text-red" : "text-ink";
-          return (
-            <div key={i} className={cx("rounded-[18px] border px-3 pt-3 pb-[14px] flex flex-col", tone)}>
-              <div className={cx("text-[13.5px] font-black leading-[1.2]", tc)}>{col.title}</div>
-              {col.media && (
-                // Bleeds to the column's own edges under its heading — a picture inside a
-                // padded box inside a column is three frames deep and reads as clip art.
-                <span className="fic-cover -mx-3 mt-2 mb-[2px] block rounded-none">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={col.media.src} alt={col.media.alt} width={600} height={600} className="w-full h-[84px] object-cover" />
-                </span>
-              )}
-              {col.candle && <div className="mt-1 flex justify-center"><Candle c={col.candle} w={140} h={132} bodyWidth={24} marks animate /></div>}
-              <ul className="mt-1 flex flex-col gap-[7px]">
-                {col.points.map((p, k) => (
-                  <li key={k} className="text-[12px] font-bold text-ink-2 leading-[1.45] flex gap-[7px]">
-                    <span className={cx("mt-[6px] w-[4px] h-[4px] rounded-full shrink-0", col.tone === "green" ? "bg-green-2" : col.tone === "red" ? "bg-red" : "bg-ink-4")} aria-hidden />
-                    <span>{p}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          );
-        })}
-      </div>
+      {ledger ? <CompareLedger columns={spec.columns} /> : <CompareSplit columns={spec.columns} />}
       {spec.note && (
         <p className="mt-4 border-l-[3px] border-gold pl-[14px] text-[13px] font-bold text-ink leading-[1.55]">{spec.note}</p>
       )}
       <Foot><PrimaryButton onClick={() => onResolve({})}>Got it → Continue</PrimaryButton></Foot>
+    </div>
+  );
+}
+
+type CompareColumn = CompareSpec["columns"][number];
+
+const toneInk = (t: CompareColumn["tone"]) => t === "green" ? "text-green" : t === "red" ? "text-red" : "text-ink";
+const toneDot = (t: CompareColumn["tone"]) => t === "green" ? "bg-green-2" : t === "red" ? "bg-red" : "bg-ink-4";
+
+/**
+ * Titles are authored "1 · Work". The numeral is set as a small tabular figure and the word as
+ * the term, so a list of four reads as an index rather than four sentences that happen to start
+ * with a digit. Titles without a numeral pass through untouched.
+ */
+function splitTitle(title: string): { n?: string; name: string } {
+  const m = /^(\d+)\s*·\s*(.+)$/.exec(title);
+  return m ? { n: m[1], name: m[2] } : { name: title };
+}
+
+/** A label with a rule running out to the edge — what separates the pairs without boxing them. */
+function GroupRule({ label, tone }: { label: string; tone: CompareColumn["tone"] }) {
+  return (
+    <div className="mt-[18px] mb-[2px] flex items-center gap-[10px]">
+      <span className={cx("text-[9.5px] font-black uppercase tracking-[0.55px]", tone === "green" ? "text-green" : "text-ink-3")}>{label}</span>
+      <span aria-hidden className={cx("h-[1.5px] flex-1 rounded-full", tone === "green" ? "bg-green-line" : "bg-line-2")} />
+    </div>
+  );
+}
+
+/** Three or more, or anything with a photograph: entries down the page, hairline between. */
+function CompareLedger({ columns }: { columns: CompareColumn[] }) {
+  return (
+    <div className="mt-1 fic-stagger">
+      {columns.map((col, i) => {
+        const { n, name } = splitTitle(col.title);
+        const group = col.group && col.group !== columns[i - 1]?.group ? col.group : null;
+        return (
+          <div key={i}>
+            {group && <GroupRule label={group} tone={col.tone} />}
+            <div className={cx("flex gap-[13px] py-[13px]", !group && i > 0 && "border-t border-line-2")}>
+              {col.media && (
+                // A square plate, flush, unframed. A photograph is already an object; a border
+                // and a radius would make it a thumbnail sitting in a slot.
+                <span className="fic-cover shrink-0 w-[86px] h-[86px] rounded-none">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={col.media.src} alt={col.media.alt} width={600} height={600} className="w-full h-full object-cover" />
+                </span>
+              )}
+              <div className="min-w-0 flex-1">
+                <div className="flex items-baseline gap-[7px]">
+                  {n && <span className="text-[10.5px] font-black tabular-nums text-ink-4">{n}</span>}
+                  <h3 className={cx("text-[15px] font-black leading-[1.18] tracking-[-0.01em]", toneInk(col.tone))}>{name}</h3>
+                </div>
+                {col.candle && <div className="mt-1 flex"><Candle c={col.candle} w={120} h={120} bodyWidth={22} marks animate /></div>}
+                <ul className="mt-[5px] flex flex-col gap-[5px]">
+                  {col.points.map((p, k) => (
+                    <li key={k} className={cx("flex gap-[7px] leading-[1.42]",
+                      k === 0 ? "text-[13px] font-bold text-ink" : "text-[12px] font-semibold text-ink-2")}>
+                      <span className={cx("mt-[6px] w-[3px] h-[3px] rounded-full shrink-0", toneDot(col.tone))} aria-hidden />
+                      <span>{p}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/** Two: halves of one page, divided by a single hairline. The tone is a mark, not a fill. */
+function CompareSplit({ columns }: { columns: CompareColumn[] }) {
+  return (
+    <div className="mt-4 grid grid-cols-2 fic-stagger">
+      {columns.map((col, i) => (
+        <div key={i} className={cx("min-w-0", i > 0 ? "border-l border-line-2 pl-[13px]" : "pr-[13px]")}>
+          <span aria-hidden className={cx("block h-[3px] w-[24px] rounded-full",
+            col.tone === "green" ? "bg-green-2" : col.tone === "red" ? "bg-red" : "bg-line-3")} />
+          <div className={cx("mt-[8px] text-[13.5px] font-black leading-[1.2]", toneInk(col.tone))}>{col.title}</div>
+          {col.candle && <div className="mt-1 flex justify-center"><Candle c={col.candle} w={140} h={132} bodyWidth={24} marks animate /></div>}
+          <ul className="mt-[7px] flex flex-col gap-[7px]">
+            {col.points.map((p, k) => (
+              <li key={k} className="text-[12px] font-bold text-ink-2 leading-[1.45] flex gap-[7px]">
+                <span className={cx("mt-[6px] w-[4px] h-[4px] rounded-full shrink-0", toneDot(col.tone))} aria-hidden />
+                <span>{p}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
     </div>
   );
 }

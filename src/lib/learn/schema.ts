@@ -268,7 +268,8 @@ export interface CompareStep extends BaseStep {
   type: "compare";
   heading: string;
   intro?: string;
-  columns: { title: string; tone: "green" | "red" | "neutral"; candle?: CandleSpec; points: string[]; media?: LessonMedia }[];
+  /** `group` labels a run of adjacent columns — the rule that says which of them belong together. */
+  columns: { title: string; tone: "green" | "red" | "neutral"; group?: string; candle?: CandleSpec; points: string[]; media?: LessonMedia }[];
   note?: string;
 }
 
