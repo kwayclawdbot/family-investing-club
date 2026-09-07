@@ -6,9 +6,21 @@
  * is a ruled ledger, not four cards. `Rule` and `Row` are what a card would have been.
  */
 import { View, type ViewProps } from "react-native";
-import { SafeAreaView, type Edge } from "react-native-safe-area-context";
+import { SafeAreaView as RawSafeAreaView, type Edge } from "react-native-safe-area-context";
+import { withUniwind } from "uniwind";
 import { Display, Eyebrow, T } from "./type";
 import { cx } from "./cx";
+
+/**
+ * UniWind rewrites `react-native` imports to its own className-aware components, so `className` on
+ * a View or a Text just works. It does NOT touch third-party packages — and SafeAreaView is one.
+ *
+ * Left unwrapped it silently ignored `flex-1`, so every screen in the app collapsed to zero height
+ * and rendered blank while the tab bar, which is styled with inline objects, carried on looking
+ * fine. `withUniwind` is the supported way to opt a third-party component in. Any other library
+ * component that needs a className has to be wrapped the same way.
+ */
+const SafeAreaView = withUniwind(RawSafeAreaView);
 
 export function Screen({ children, className, edges = ["top"], ...rest }: ViewProps & { edges?: Edge[] }) {
   return (

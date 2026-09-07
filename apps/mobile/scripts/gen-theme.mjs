@@ -90,9 +90,27 @@ const fontBlock = `@theme inline {
   --font-nunito-black: Nunito_900Black;
 }`;
 
+/**
+ * The whole file is generated, header included.
+ *
+ * gluestack's init wrote NativeWind's layered imports (tailwindcss/theme.css, preflight.css,
+ * utilities.css). UniWind wants the two-line form, and with the layered version Tailwind emitted no
+ * utilities at all — which on web looked fine, because react-native-web loads the real stylesheet,
+ * and on device left every screen blank, because native has nothing to compile classes from.
+ *
+ * `@source` matters just as much: Tailwind v4 scans for class names relative to this file, and
+ * without pointing it at the three source roots it generates nothing for them.
+ */
+const head = `@import "tailwindcss";
+@import "uniwind";
+
+@source "./app";
+@source "./src";
+@source "./components";
+
+`;
+
 const css = fs.readFileSync(CSS, "utf8");
-const head = css.slice(0, css.indexOf("@layer theme {"));
-if (!head) { console.error("could not find @layer theme in global.css"); process.exit(1); }
 const out = `${head}${block}\n\n${inlineBlock}\n\n${fontBlock}\n`;
 
 if (process.argv.includes("--check")) {

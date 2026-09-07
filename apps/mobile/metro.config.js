@@ -10,4 +10,7 @@ const { withUniwindConfig } = require("uniwind/metro");
  * keeps the same Tailwind v4 CSS-first theme, so global.css and the palette bridge are unchanged.
  * Revisit NativeWind when v5 leaves preview.
  */
-module.exports = withUniwindConfig(getDefaultConfig(__dirname), { cssEntryFile: "./global.css" });
+module.exports = withUniwindConfig(getDefaultConfig(__dirname), {
+  cssEntryFile: "./global.css",
+  dtsFile: "./uniwind-types.d.ts",
+});

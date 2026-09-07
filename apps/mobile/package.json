@@ -52,7 +52,7 @@
     "tokens": "node scripts/gen-tokens.mjs",
     "theme": "node --experimental-strip-types --no-warnings scripts/gen-theme.mjs",
     "palette": "npm run tokens && npm run theme",
-    "check": "node scripts/gen-tokens.mjs --check && node --experimental-strip-types --no-warnings scripts/gen-theme.mjs --check && tsc --noEmit"
+    "check": "node scripts/gen-tokens.mjs --check && node --experimental-strip-types --no-warnings scripts/gen-theme.mjs --check && node scripts/check-classnames.mjs && tsc --noEmit"
   },
   "private": true,
   "overrides": {

@@ -28,11 +28,13 @@ export default function SignIn() {
 
   return (
     <Screen edges={["top", "bottom"]}>
-      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} className="flex-1 justify-center px-[26px]">
-        <Display size={30}>Family Investing Club</Display>
-        <T size={14.5} className="mt-[8px]">Learn it together, then decide together.</T>
+      {/* Anchored below the top rather than floated dead-centre: on a phone, centring a short form
+          in a tall screen leaves a void above it and drops the fields under the thumb line. */}
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} className="flex-1 px-[26px] pt-[96px]">
+        <Display size={34} style={{ maxWidth: 280 }}>Family Investing Club</Display>
+        <T size={15} className="mt-[10px]">Learn it together, then decide together.</T>
 
-        <FormControl isInvalid={!!error} className="mt-[28px]">
+        <FormControl isInvalid={!!error} className="mt-[36px]">
           <Input>
             <InputField
               placeholder="Email"
@@ -44,7 +46,7 @@ export default function SignIn() {
               inputMode="email"
             />
           </Input>
-          <Input className="mt-[10px]">
+          <Input className="mt-[12px]">
             <InputField
               placeholder="Password"
               value={password}
@@ -59,7 +61,7 @@ export default function SignIn() {
           </FormControlError>
         </FormControl>
 
-        <Button size="lg" className="mt-[16px]" isDisabled={busy || !email || !password} onPress={submit}>
+        <Button size="lg" className="mt-[20px]" isDisabled={busy || !email || !password} onPress={submit}>
           <ButtonText>{busy ? "Signing in…" : "Sign in"}</ButtonText>
         </Button>
       </KeyboardAvoidingView>
