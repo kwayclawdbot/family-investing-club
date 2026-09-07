@@ -5,6 +5,9 @@
     "paths": {
       "@/*": [
         "./*"
+      ],
+      "nativewind": [
+        "./src/compat/nativewind.ts"
       ]
     }
   }

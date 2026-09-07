@@ -9,7 +9,20 @@ module.exports = function (api) {
   return {
     presets: [["babel-preset-expo"]],
     plugins: [
-      ["module-resolver", { root: ["./"], alias: { "@": "./" } }],
+      [
+        "module-resolver",
+        {
+          root: ["./"],
+          alias: {
+            "@": "./",
+            // gluestack generates `import { styled } from "nativewind"` and offers no way to
+            // change that after init. This app runs on UniWind, and NativeWind's native runtime
+            // refuses to load unless it wrapped the Metro config — which it does not. The alias
+            // lets gluestack's components stay exactly as generated. See src/compat/nativewind.ts.
+            nativewind: "./src/compat/nativewind.ts",
+          },
+        },
+      ],
       "react-native-worklets/plugin",
     ],
   };
