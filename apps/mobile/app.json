@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "Family Investing Club",
+    "slug": "family-investing-club",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#FAF3E5",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro",
+      "output": "single"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-splash-screen",
+      "expo-audio",
+      "expo-image",
+      "expo-secure-store"
+    ],
+    "scheme": "fic",
+    "backgroundColor": "#FAF3E5",
+    "splash": {
+      "backgroundColor": "#FAF3E5",
+      "resizeMode": "contain",
+      "image": "./assets/splash-icon.png"
+    },
+    "newArchEnabled": true
+  }
+}
